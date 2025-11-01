@@ -252,6 +252,8 @@ body {
     #fffaf0 50%,
     #fff5e6 100%);
   position: relative;
+  padding: 6rem 2rem;
+  min-height: 95vh;
 }
 
 [data-theme="light"] .hero-section::before {
@@ -378,8 +380,11 @@ body {
 }
 
 /* SECTIONS BACKGROUNDS - Alternando blanco puro y casi blanco */
+/* Asegurar dimensiones idénticas en ambos modos */
+
 [data-theme="light"] .features-section {
   background: #ffffff;
+  padding: 6rem 2rem;
 }
 
 [data-theme="light"] .features-section::before {
@@ -389,6 +394,7 @@ body {
 
 [data-theme="light"] .stats-section {
   background: linear-gradient(135deg, #fffaf0 0%, #fff5e6 100%);
+  padding: 6rem 2rem;
 }
 
 [data-theme="light"] .stats-section::before {
@@ -398,6 +404,7 @@ body {
 
 [data-theme="light"] .testimonials-section {
   background: #ffffff;
+  padding: 6rem 2rem;
 }
 
 [data-theme="light"] .testimonials-section::before {
@@ -407,6 +414,7 @@ body {
 
 [data-theme="light"] .social-section {
   background: linear-gradient(135deg, #fffaf0 0%, #fff5e6 100%);
+  padding: 6rem 2rem;
 }
 
 [data-theme="light"] .social-section::before {
@@ -416,6 +424,7 @@ body {
 
 [data-theme="light"] .newsletter-section {
   background: linear-gradient(135deg, #fff5e6 0%, #ffecd1 100%);
+  padding: 6rem 2rem;
 }
 
 [data-theme="light"] .newsletter-section::before {
