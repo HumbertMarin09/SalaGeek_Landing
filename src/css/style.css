@@ -216,6 +216,24 @@ a {
   box-shadow: 0 0 0 1px rgba(255, 209, 102, 0.3);
 }
 
+/* Home Link en menú legal */
+.menu .nav-link-home {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: var(--bg-primary);
+  font-weight: 600;
+  border: 2px solid transparent;
+}
+
+.menu .nav-link-home:hover {
+  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 209, 102, 0.3);
+}
+
+.menu .nav-link-home .nav-icon {
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+}
+
 /* Social Icons in Nav */
 .nav-social {
   display: flex;

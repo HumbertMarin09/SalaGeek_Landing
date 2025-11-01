@@ -586,6 +586,47 @@ function initHeaderScroll() {
 }
 
 /* ============================================
+   MENÚ ADAPTATIVO
+   ============================================ */
+
+/**
+ * Detecta el tipo de página y muestra el menú apropiado
+ */
+function initAdaptiveMenu() {
+  const menuLanding = document.querySelector('.menu-landing');
+  const menuLegal = document.querySelector('.menu-legal');
+  
+  if (!menuLanding || !menuLegal) {
+    console.log('⚠️ Menús no encontrados, esperando carga del header...');
+    return;
+  }
+
+  // Detectar si estamos en una página legal
+  const isLegalPage = window.location.pathname.includes('/legal/');
+  
+  if (isLegalPage) {
+    console.log('⚖️ Página legal detectada - Mostrando menú legal');
+    menuLanding.style.display = 'none';
+    menuLegal.style.display = 'flex';
+    
+    // Marcar el link activo según la página actual
+    const currentPage = window.location.pathname;
+    const legalLinks = menuLegal.querySelectorAll('.nav-link');
+    
+    legalLinks.forEach(link => {
+      const linkPath = new URL(link.href).pathname;
+      if (currentPage.includes(linkPath) && !link.classList.contains('nav-link-home')) {
+        link.classList.add('active');
+      }
+    });
+  } else {
+    console.log('🏠 Página principal - Mostrando menú landing');
+    menuLanding.style.display = 'flex';
+    menuLegal.style.display = 'none';
+  }
+}
+
+/* ============================================
    PÁGINAS LEGALES
    ============================================ */
 
@@ -813,7 +854,10 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('🎮 Sala Geek Landing Page - Initializing...');
   
   // Cargar componentes
-  loadIncludes();
+  loadIncludes().then(() => {
+    // Después de cargar el header, configurar el menú apropiado
+    initAdaptiveMenu();
+  });
   
   // Inicializar funcionalidades
   initResponsiveHandler();
