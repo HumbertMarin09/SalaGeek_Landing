@@ -586,6 +586,188 @@ function initHeaderScroll() {
 }
 
 /* ============================================
+   PÁGINAS LEGALES
+   ============================================ */
+
+/**
+ * Inicializa funcionalidades específicas de páginas legales
+ */
+function initLegalPages() {
+  const legalPage = document.querySelector('.legal-page');
+  if (!legalPage) return;
+
+  console.log('📄 Inicializando página legal...');
+
+  // Inicializar navegación del TOC
+  initLegalTOC();
+  
+  // Inicializar animaciones de secciones
+  initLegalSectionAnimations();
+  
+  // Inicializar progress bar de lectura
+  initReadingProgress();
+}
+
+/**
+ * Tabla de contenidos interactiva con scroll spy
+ */
+function initLegalTOC() {
+  const tocLinks = document.querySelectorAll('.legal-toc nav a');
+  const sections = document.querySelectorAll('.legal-section[id]');
+  
+  if (tocLinks.length === 0 || sections.length === 0) return;
+
+  // Función para actualizar enlaces activos
+  function updateActiveTOCLink() {
+    const scrollPosition = window.scrollY + 150;
+    
+    let currentSection = '';
+    
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        currentSection = section.id;
+      }
+    });
+    
+    // Actualizar clases activas
+    tocLinks.forEach(link => {
+      link.classList.remove('active');
+      const href = link.getAttribute('href');
+      if (href === `#${currentSection}`) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  // Scroll suave al hacer clic en enlaces del TOC
+  tocLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href');
+      const targetElement = document.querySelector(targetId);
+      
+      if (targetElement) {
+        const headerOffset = 120;
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // Usar throttle con requestAnimationFrame
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        updateActiveTOCLink();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Actualizar al cargar
+  updateActiveTOCLink();
+}
+
+/**
+ * Animaciones de entrada para secciones legales
+ */
+function initLegalSectionAnimations() {
+  const sections = document.querySelectorAll('.legal-section');
+  
+  if (sections.length === 0) return;
+
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    // Pausar animación inicial
+    section.style.animationPlayState = 'paused';
+    observer.observe(section);
+  });
+}
+
+/**
+ * Barra de progreso de lectura
+ */
+function initReadingProgress() {
+  // Crear barra de progreso
+  const progressBar = document.createElement('div');
+  progressBar.className = 'reading-progress';
+  progressBar.innerHTML = '<div class="reading-progress-bar"></div>';
+  
+  // Estilos inline para la barra de progreso
+  const style = document.createElement('style');
+  style.textContent = `
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 209, 102, 0.1);
+      z-index: 9999;
+      pointer-events: none;
+    }
+    
+    .reading-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+      width: 0%;
+      transition: width 0.1s ease;
+      box-shadow: 0 0 10px var(--accent-primary);
+    }
+  `;
+  document.head.appendChild(style);
+  document.body.appendChild(progressBar);
+
+  const progressBarFill = progressBar.querySelector('.reading-progress-bar');
+
+  function updateReadingProgress() {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight - windowHeight;
+    const scrolled = window.scrollY;
+    const progress = (scrolled / documentHeight) * 100;
+    
+    progressBarFill.style.width = `${Math.min(progress, 100)}%`;
+  }
+
+  // Throttle con requestAnimationFrame
+  let progressTicking = false;
+  window.addEventListener('scroll', () => {
+    if (!progressTicking) {
+      window.requestAnimationFrame(() => {
+        updateReadingProgress();
+        progressTicking = false;
+      });
+      progressTicking = true;
+    }
+  }, { passive: true });
+
+  // Actualizar al cargar
+  updateReadingProgress();
+}
+
+/* ============================================
    INICIALIZACIÓN GLOBAL
    ============================================ */
 
@@ -603,6 +785,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initSearch();
   initHeaderScroll();
+  
+  // Inicializar páginas legales si estamos en una
+  initLegalPages();
   
   console.log('✅ Landing Page initialized successfully');
 });
