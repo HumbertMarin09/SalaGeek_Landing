@@ -1,0 +1,15 @@
+﻿# Archivos temporales
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Backups locales (opcional: comentar si quieres versionar backups)
+Backup/
+
+# Node modules (si usas npm en el futuro)
+node_modules/
+package-lock.json
+
+# Archivos de distribución
+dist/
