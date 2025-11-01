@@ -598,6 +598,15 @@ function initLegalPages() {
 
   console.log('📄 Inicializando página legal...');
 
+  // Animar elementos iniciales
+  setTimeout(() => {
+    const header = document.querySelector('.legal-header');
+    const toc = document.querySelector('.legal-toc');
+    
+    if (header) header.classList.add('animate-in');
+    if (toc) toc.classList.add('animate-in');
+  }, 100);
+
   // Inicializar navegación del TOC
   initLegalTOC();
   
@@ -619,25 +628,30 @@ function initLegalTOC() {
 
   // Función para actualizar enlaces activos
   function updateActiveTOCLink() {
-    const scrollPosition = window.scrollY + 150;
+    const scrollPosition = window.scrollY + 200; // Ajustado para mejor precisión
     
     let currentSection = '';
+    let maxTop = -Infinity;
     
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
       
-      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+      // Encontrar la sección más cercana por encima del scroll actual
+      if (sectionTop <= scrollPosition && sectionTop > maxTop) {
+        maxTop = sectionTop;
         currentSection = section.id;
       }
     });
     
-    // Actualizar clases activas
+    // Actualizar clases activas con animación suave
     tocLinks.forEach(link => {
-      link.classList.remove('active');
       const href = link.getAttribute('href');
-      if (href === `#${currentSection}`) {
+      const shouldBeActive = href === `#${currentSection}`;
+      
+      if (shouldBeActive && !link.classList.contains('active')) {
         link.classList.add('active');
+      } else if (!shouldBeActive && link.classList.contains('active')) {
+        link.classList.remove('active');
       }
     });
   }
@@ -650,9 +664,13 @@ function initLegalTOC() {
       const targetElement = document.querySelector(targetId);
       
       if (targetElement) {
-        const headerOffset = 120;
+        const headerOffset = 130; // Ajustado para mejor posicionamiento
         const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        // Remover active temporalmente durante el scroll
+        tocLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
         
         window.scrollTo({
           top: offsetPosition,
@@ -674,8 +692,8 @@ function initLegalTOC() {
     }
   }, { passive: true });
 
-  // Actualizar al cargar
-  updateActiveTOCLink();
+  // Actualizar al cargar después de un delay
+  setTimeout(updateActiveTOCLink, 100);
 }
 
 /**
@@ -687,21 +705,21 @@ function initLegalSectionAnimations() {
   if (sections.length === 0) return;
 
   const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.15,
+    rootMargin: '0px 0px -80px 0px'
   };
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.style.animationPlayState = 'running';
+        entry.target.classList.add('animate-in');
+        // Dejar de observar después de animar
+        observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
   sections.forEach(section => {
-    // Pausar animación inicial
-    section.style.animationPlayState = 'paused';
     observer.observe(section);
   });
 }
@@ -710,6 +728,9 @@ function initLegalSectionAnimations() {
  * Barra de progreso de lectura
  */
 function initReadingProgress() {
+  // Verificar si ya existe
+  if (document.querySelector('.reading-progress')) return;
+  
   // Crear barra de progreso
   const progressBar = document.createElement('div');
   progressBar.className = 'reading-progress';
@@ -717,27 +738,37 @@ function initReadingProgress() {
   
   // Estilos inline para la barra de progreso
   const style = document.createElement('style');
+  style.id = 'reading-progress-styles';
   style.textContent = `
     .reading-progress {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 4px;
-      background: rgba(255, 209, 102, 0.1);
+      height: 3px;
+      background: rgba(255, 209, 102, 0.08);
       z-index: 9999;
       pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .reading-progress.visible {
+      opacity: 1;
     }
     
     .reading-progress-bar {
       height: 100%;
       background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
       width: 0%;
-      transition: width 0.1s ease;
-      box-shadow: 0 0 10px var(--accent-primary);
+      transition: width 0.15s ease-out;
+      box-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
     }
   `;
-  document.head.appendChild(style);
+  
+  if (!document.getElementById('reading-progress-styles')) {
+    document.head.appendChild(style);
+  }
   document.body.appendChild(progressBar);
 
   const progressBarFill = progressBar.querySelector('.reading-progress-bar');
@@ -748,7 +779,14 @@ function initReadingProgress() {
     const scrolled = window.scrollY;
     const progress = (scrolled / documentHeight) * 100;
     
-    progressBarFill.style.width = `${Math.min(progress, 100)}%`;
+    // Mostrar barra solo después de scrollear un poco
+    if (scrolled > 100) {
+      progressBar.classList.add('visible');
+    } else {
+      progressBar.classList.remove('visible');
+    }
+    
+    progressBarFill.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
   }
 
   // Throttle con requestAnimationFrame
@@ -764,7 +802,7 @@ function initReadingProgress() {
   }, { passive: true });
 
   // Actualizar al cargar
-  updateReadingProgress();
+  setTimeout(updateReadingProgress, 100);
 }
 
 /* ============================================
