@@ -224,14 +224,22 @@ body {
 
 [data-theme="light"] .hero-section::before {
   background: 
-    radial-gradient(circle at 30% 50%, rgba(255, 140, 0, 0.08) 0%, transparent 60%);
+    radial-gradient(circle at 20% 50%, rgba(255, 140, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 165, 0, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(255, 180, 50, 0.06) 0%, transparent 50%);
   opacity: 1;
-  animation: heroGradientPulse 10s ease-in-out infinite;
+  animation: gradientShiftLight 15s ease infinite;
 }
 
-@keyframes heroGradientPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+@keyframes gradientShiftLight {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(5deg);
+  }
 }
 
 [data-theme="light"] .hero-title {
@@ -245,6 +253,16 @@ body {
   background-clip: text;
   filter: drop-shadow(0 4px 10px rgba(230, 115, 0, 0.4));
   font-weight: 900;
+  animation: titleGlowLight 3s ease-in-out infinite;
+}
+
+@keyframes titleGlowLight {
+  0%, 100% {
+    filter: drop-shadow(0 4px 10px rgba(230, 115, 0, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 4px 15px rgba(255, 140, 0, 0.6));
+  }
 }
 
 [data-theme="light"] .hero-brand {
@@ -255,6 +273,17 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 3px 6px rgba(255, 140, 0, 0.4));
+  background-size: 200% 200%;
+  animation: gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 [data-theme="light"] .hero-subtitle {
