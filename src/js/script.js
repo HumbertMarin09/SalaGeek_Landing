@@ -9,6 +9,71 @@ const responsiveState = {
   isDesktop: window.innerWidth > 968
 };
 
+/* ============================================
+   THEME SWITCHER
+   ============================================ */
+
+/**
+ * Inicializa el sistema de cambio de tema (claro/oscuro)
+ */
+function initThemeSwitcher() {
+  // Obtener preferencia guardada o del sistema
+  const getPreferredTheme = () => {
+    const savedTheme = localStorage.getItem('sg_theme');
+    if (savedTheme) {
+      return savedTheme;
+    }
+    
+    // Si no hay preferencia guardada, usar preferencia del sistema
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  };
+
+  // Aplicar tema
+  const applyTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('sg_theme', theme);
+    
+    // Actualizar icono del botón
+    const themeIcon = document.querySelector('.theme-toggle-icon');
+    if (themeIcon) {
+      themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+    }
+  };
+
+  // Aplicar tema inicial
+  const currentTheme = getPreferredTheme();
+  applyTheme(currentTheme);
+
+  // Detectar cambios en la preferencia del sistema
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('sg_theme')) {
+      applyTheme(e.matches ? 'light' : 'dark');
+    }
+  });
+
+  // Toggle del tema al hacer clic
+  document.addEventListener('click', (e) => {
+    const themeToggle = e.target.closest('.theme-toggle');
+    if (themeToggle) {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      // Agregar clase de animación
+      themeToggle.classList.add('switching');
+      setTimeout(() => themeToggle.classList.remove('switching'), 600);
+      
+      // Aplicar nuevo tema
+      applyTheme(newTheme);
+      
+      // Notificación opcional
+      showNotification(
+        `Tema ${newTheme === 'light' ? 'claro' : 'oscuro'} activado`,
+        'info'
+      );
+    }
+  });
+}
+
 // Actualizar estado responsivo
 function updateResponsiveState() {
   responsiveState.isMobile = window.innerWidth <= 768;
@@ -852,6 +917,9 @@ function initReadingProgress() {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🎮 Sala Geek Landing Page - Initializing...');
+  
+  // Inicializar tema ANTES de cargar componentes
+  initThemeSwitcher();
   
   // Cargar componentes
   loadIncludes().then(() => {
