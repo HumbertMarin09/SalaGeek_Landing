@@ -1958,6 +1958,7 @@ a {
   opacity: 0;
   transform: translateX(-20px);
   transition: opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s;
+  z-index: 100;
 }
 
 .legal-toc.animate-in {
@@ -2051,6 +2052,8 @@ a {
   opacity: 0;
   transform: translateY(30px);
   transition: all var(--transition);
+  position: relative;
+  z-index: 1;
 }
 
 .legal-section.animate-in {
