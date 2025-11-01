@@ -745,6 +745,18 @@ body {
   font-weight: 700;
 }
 
+[data-theme="light"] .legal-header .section-title {
+  background: linear-gradient(135deg, 
+    #0d0d0d 0%, 
+    #1a1a1a 50%,
+    #0d0d0d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  font-weight: 900;
+}
+
 [data-theme="light"] .legal-section h2 {
   color: #0d0d0d;
   font-weight: 900;
