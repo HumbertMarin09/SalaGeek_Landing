@@ -517,12 +517,18 @@ body {
 [data-theme="light"] .cookie-link {
   color: var(--light-primary);
   font-weight: 600;
-  text-decoration-color: var(--light-primary);
+}
+
+[data-theme="light"] .cookie-link::after {
+  background: var(--light-primary);
 }
 
 [data-theme="light"] .cookie-link:hover {
   color: var(--light-dark);
-  opacity: 1;
+}
+
+[data-theme="light"] .cookie-link:hover::after {
+  background: var(--light-dark);
 }
 
 [data-theme="light"] .footer-legal-list a {
@@ -588,8 +594,14 @@ body {
 }
 
 [data-theme="light"] .btn-primary:hover {
-  box-shadow: 0 10px 45px rgba(255, 140, 0, 0.6);
+  box-shadow: 0 12px 45px rgba(255, 140, 0, 0.7);
   transform: translateY(-4px) scale(1.08);
+  animation: buttonPulse 0.6s ease;
+}
+
+[data-theme="light"] .btn-primary:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.5);
 }
 
 [data-theme="light"] .btn-secondary {
@@ -603,8 +615,14 @@ body {
   background: var(--light-primary);
   color: #ffffff;
   border-color: var(--light-dark);
-  box-shadow: 0 8px 30px rgba(255, 140, 0, 0.4);
+  box-shadow: 0 12px 40px rgba(255, 140, 0, 0.5);
   transform: translateY(-4px) scale(1.08);
+  animation: buttonPulse 0.6s ease;
+}
+
+[data-theme="light"] .btn-secondary:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3);
 }
 
 /* TITLES & TEXT - Gradiente radial naranja vibrante */
@@ -1681,26 +1699,51 @@ a {
 .btn::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(-100%);
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  z-index: 0;
 }
 
 .btn:hover::before {
-  transform: translateX(0);
+  width: 300px;
+  height: 300px;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  background-size: 200% 200%;
+  animation: shimmerButton 3s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes shimmerButton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
   color: var(--bg-primary);
-  box-shadow: 0 4px 20px rgba(255, 209, 102, 0.4);
+  box-shadow: 
+    0 4px 20px rgba(255, 209, 102, 0.4),
+    0 0 0 0 rgba(255, 209, 102, 0.4);
   background-size: 200% 200%;
-  animation: buttonGradient 3s ease infinite;
+  animation: buttonGradient 3s ease infinite, buttonGlow 2s ease-in-out infinite;
 }
 
 @keyframes buttonGradient {
@@ -1712,9 +1755,34 @@ a {
   }
 }
 
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow: 
+      0 4px 20px rgba(255, 209, 102, 0.4),
+      0 0 20px rgba(255, 209, 102, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 4px 25px rgba(255, 209, 102, 0.5),
+      0 0 30px rgba(255, 209, 102, 0.4);
+  }
+}
+
 .btn-primary:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(255, 209, 102, 0.6);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(255, 209, 102, 0.7);
+  animation: buttonPulse 0.6s ease;
+}
+
+@keyframes buttonPulse {
+  0% { transform: translateY(-3px) scale(1.02); }
+  50% { transform: translateY(-5px) scale(1.08); }
+  100% { transform: translateY(-3px) scale(1.05); }
+}
+
+.btn-primary:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 15px rgba(255, 209, 102, 0.5);
 }
 
 .btn-secondary {
@@ -1727,8 +1795,14 @@ a {
 .btn-secondary:hover {
   background: var(--accent-primary);
   color: var(--bg-primary);
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(255, 209, 102, 0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(255, 209, 102, 0.5);
+  animation: buttonPulse 0.6s ease;
+}
+
+.btn-secondary:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
 }
 
 .btn-large {
@@ -3479,13 +3553,30 @@ a {
 
 .cookie-link {
   color: var(--logo-accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: opacity var(--transition);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--transition);
+}
+
+.cookie-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--logo-accent);
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cookie-link:hover {
-  opacity: 0.8;
+  color: var(--accent-primary);
+}
+
+.cookie-link:hover::after {
+  width: 100%;
+  background: var(--accent-primary);
 }
 
 .cookie-actions {
