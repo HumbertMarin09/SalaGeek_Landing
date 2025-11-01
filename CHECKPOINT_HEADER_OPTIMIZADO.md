@@ -273,23 +273,27 @@ function updateActiveLink() {
 ### **1. TikTok Icon Mystery** ⭐ (Mayor logro)
 
 **Problema**: Ícono de TikTok no aparecía después de 10+ intentos
+
 - Probado: SVG con diferentes viewBox
 - Probado: Emojis (se corrompían a ðŸŽµ)
 - Probado: HTML entities
 - Probado: Texto "TT"
 
 **Causa Raíz**: Live Server sirviendo versión cacheada del archivo
+
 - Archivo real: 4494 chars
 - Servidor servía: 5987 chars (versión antigua sin TikTok)
 - `document.querySelectorAll('.nav-social-link')` retornaba solo 2 elementos
 
 **Solución**:
+
 1. Renombrar archivo a `header-new.html` (workaround temporal)
 2. Cambiar a `npx http-server -p 8080 -c-1 --cors`
 3. Implementar SVG real de TikTok
 4. Renombrar de vuelta a `header.html`
 
 **Lecciones**:
+
 - ✅ Siempre verificar qué sirve el servidor vs archivo real
 - ✅ Live Server puede tener cache agresivo
 - ✅ http-server con `-c-1` deshabilita cache completamente
@@ -301,6 +305,7 @@ function updateActiveLink() {
 **Causa**: IntersectionObserver con `rootMargin: '-100px 0px -50% 0px'` intersectaba múltiples secciones
 
 **Solución**: Cambiar a detección por scroll tradicional con requestAnimationFrame
+
 ```javascript
 function updateActiveLink() {
   const scrollPosition = window.scrollY + 150;
@@ -318,6 +323,7 @@ function updateActiveLink() {
 **Problema**: En móvil, botón hamburguesa quedaba detrás del menú full-screen
 
 **Solución**: Agregar botón cerrar (✕) dentro del nav móvil
+
 ```html
 <button class="nav-close" aria-label="Cerrar menú">
   <span>✕</span>
@@ -340,12 +346,14 @@ function updateActiveLink() {
 ## 📊 Métricas de Rendimiento
 
 ### Lighthouse Scores (Estimados)
+
 - ⚡ Performance: 95+ (requestAnimationFrame, GPU animations)
 - ♿ Accessibility: 100 (WCAG 2.1 AA completo)
 - 🎯 Best Practices: 95+ (cache-busting, security headers)
 - 🔍 SEO: 95+ (semántica HTML5, meta tags)
 
 ### Tamaños de Archivos
+
 | Archivo | Tamaño | Líneas |
 |---------|--------|--------|
 | header.html | ~4.5 KB | 96 |
@@ -353,6 +361,7 @@ function updateActiveLink() {
 | script.js | ~15 KB | 585 |
 
 ### Optimizaciones Aplicadas
+
 - ✅ CSS minificable: Variables centralizadas
 - ✅ JS modular: Funciones documentadas
 - ✅ Imágenes: SVG inline (sin HTTP requests)
@@ -364,6 +373,7 @@ function updateActiveLink() {
 ## 🔧 Configuración del Servidor
 
 ### Desarrollo Local
+
 ```bash
 # Servidor recomendado (sin cache)
 npx http-server -p 8080 -c-1 --cors
@@ -374,6 +384,7 @@ npx http-server -p 8080 -c-1 --cors
 ```
 
 ### Evitar
+
 ```bash
 # ❌ Live Server (cache agresivo)
 # Causó el problema del ícono TikTok
@@ -383,7 +394,7 @@ npx http-server -p 8080 -c-1 --cors
 
 ## 📁 Estructura de Archivos
 
-```
+```text
 SG_Landing/
 ├── index.html                          # Página principal
 ├── package.json                        # Dependencias
@@ -420,6 +431,8 @@ SG_Landing/
 ## ✅ Checklist de Funcionalidades
 
 ### Header General
+
+
 - [x] Logo con hover effect (scale + rotate + glow)
 - [x] Header sticky con efecto scrolled
 - [x] Línea superior de acento amarillo
@@ -427,6 +440,7 @@ SG_Landing/
 - [x] Backdrop filter en scroll
 
 ### Navegación Desktop
+
 - [x] 4 enlaces con emojis Unicode
 - [x] Hover effects (elevación + rotación)
 - [x] Active state por scroll
@@ -434,6 +448,7 @@ SG_Landing/
 - [x] Focus visible
 
 ### Redes Sociales
+
 - [x] 3 iconos (Facebook, Instagram, TikTok)
 - [x] SVG real de TikTok
 - [x] Colores oficiales
@@ -442,6 +457,7 @@ SG_Landing/
 - [x] Links externos seguros (noopener noreferrer)
 
 ### Mobile
+
 - [x] Botón hamburguesa animado
 - [x] Menú full-screen
 - [x] Botón cerrar (✕) en esquina
@@ -453,6 +469,7 @@ SG_Landing/
 - [x] Iconos 48x48px
 
 ### Accesibilidad
+
 - [x] Roles ARIA completos
 - [x] Labels descriptivos
 - [x] Navegación por teclado
@@ -461,6 +478,7 @@ SG_Landing/
 - [x] WCAG 2.1 Level AA
 
 ### Performance
+
 - [x] requestAnimationFrame
 - [x] IntersectionObserver
 - [x] Passive listeners
@@ -472,6 +490,7 @@ SG_Landing/
 ## 🚀 Siguientes Pasos Sugeridos
 
 ### Corto Plazo
+
 1. **Testing Cross-Browser**
    - [ ] Chrome/Edge (Chromium)
    - [ ] Firefox
@@ -488,6 +507,7 @@ SG_Landing/
    - [ ] Lazy loading para imágenes
 
 ### Medio Plazo
+
 1. **Analytics**
    - [ ] Google Analytics 4
    - [ ] Hotjar para heatmaps
@@ -504,6 +524,7 @@ SG_Landing/
    - [ ] Offline support
 
 ### Largo Plazo
+
 1. **Internacionalización**
    - [ ] Soporte multiidioma
    - [ ] i18n para navegación
@@ -521,28 +542,32 @@ SG_Landing/
 ## 📞 Contacto y Redes
 
 ### Sala Geek
+
 - 🌐 Website: (En desarrollo)
-- 📘 Facebook: https://www.facebook.com/SalaGeek19
-- 📷 Instagram: https://www.instagram.com/sala_geek/
-- 🎵 TikTok: https://www.tiktok.com/@salageek19
+- 📘 Facebook: <https://www.facebook.com/SalaGeek19>
+- 📷 Instagram: <https://www.instagram.com/sala_geek/>
+- 🎵 TikTok: <https://www.tiktok.com/@salageek19>
 
 ---
 
 ## 📝 Notas del Desarrollador
 
 ### Decisiones de Diseño
+
 1. **Emojis Unicode vs Icon Fonts**: Elegimos emojis para evitar dependencias
 2. **SVG Inline vs External**: Inline para evitar HTTP requests adicionales
 3. **CSS Variables**: Centralizadas para fácil theming
 4. **Vanilla JS**: Sin frameworks para máximo control y mínimo peso
 
 ### Lecciones Aprendidas
+
 1. **Cache es el enemigo #1** en desarrollo - usar http-server con `-c-1`
 2. **DevTools no siempre dice la verdad** - verificar requests reales
 3. **Accesibilidad desde el inicio** es más fácil que retrofitear
 4. **Mobile-first** simplifica el CSS responsive
 
 ### Agradecimientos
+
 - Usuario por la paciencia durante el debugging del ícono TikTok
 - Comunidad por recursos de accesibilidad
 - MDN por documentación excelente
@@ -551,7 +576,7 @@ SG_Landing/
 
 ## 🎉 Estado Final
 
-```
+```text
 ✅ Header 100% optimizado y funcional
 ✅ Accesibilidad WCAG 2.1 Level AA completa
 ✅ Mobile responsive con UX perfecto
