@@ -424,8 +424,10 @@ body {
 }
 
 [data-theme="light"] .footer-tagline,
-[data-theme="light"] .footer-copyright {
+[data-theme="light"] .footer-copyright,
+[data-theme="light"] .footer-love {
   color: #cbd5e1;
+  font-weight: 500;
 }
 
 [data-theme="light"] .cookie-text {
