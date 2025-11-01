@@ -693,18 +693,23 @@ body {
   color: #000000;
 }
 
-/* BUTTONS - Vibrantes */
+/* BUTTONS - Vibrantes con dimensiones idénticas */
+[data-theme="light"] .btn {
+  padding: 1.1rem 2.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
 [data-theme="light"] .btn-primary {
   background: linear-gradient(135deg, var(--light-primary), var(--light-dark));
   box-shadow: 0 6px 30px rgba(255, 140, 0, 0.4);
   border: none;
   color: #ffffff;
-  font-weight: 700;
 }
 
 [data-theme="light"] .btn-primary:hover {
   box-shadow: 0 12px 45px rgba(255, 140, 0, 0.7);
-  transform: translateY(-4px) scale(1.08);
+  transform: translateY(-3px) scale(1.05);
   animation: buttonPulse 0.6s ease;
 }
 
@@ -716,8 +721,7 @@ body {
 [data-theme="light"] .btn-secondary {
   background: #ffffff;
   color: var(--light-primary);
-  border: 3px solid var(--light-primary);
-  font-weight: 700;
+  border: 2px solid var(--light-primary);
 }
 
 [data-theme="light"] .btn-secondary:hover {
@@ -725,7 +729,7 @@ body {
   color: #ffffff;
   border-color: var(--light-dark);
   box-shadow: 0 12px 40px rgba(255, 140, 0, 0.5);
-  transform: translateY(-4px) scale(1.08);
+  transform: translateY(-3px) scale(1.05);
   animation: buttonPulse 0.6s ease;
 }
 
