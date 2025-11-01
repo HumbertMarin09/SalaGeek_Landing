@@ -6,6 +6,7 @@ Thumbs.db
 
 # Backups locales (opcional: comentar si quieres versionar backups)
 Backup/
+backups/
 
 # Node modules (si usas npm en el futuro)
 node_modules/
