@@ -546,9 +546,11 @@ body {
 /* INPUTS - Blanco puro con borde naranja */
 [data-theme="light"] .newsletter-input {
   background: #ffffff;
-  border: 3px solid var(--light-secondary);
+  border: 2px solid var(--light-secondary);
   color: var(--text-primary);
-  font-weight: 600;
+  padding: 1.3rem 1.5rem 1.3rem 3.5rem;
+  font-size: 1.05rem;
+  min-width: 250px;
 }
 
 [data-theme="light"] .newsletter-input:hover {
@@ -560,7 +562,7 @@ body {
 [data-theme="light"] .newsletter-input:focus {
   background: #ffffff;
   border-color: var(--light-primary);
-  border-width: 3px;
+  border-width: 2px;
   box-shadow: 
     0 0 0 4px rgba(255, 140, 0, 0.2),
     0 4px 25px rgba(255, 140, 0, 0.4);
@@ -871,11 +873,8 @@ body {
 
 [data-theme="light"] .newsletter-note {
   color: var(--text-secondary);
-  font-weight: 600;
-  background: rgba(245, 158, 11, 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  display: inline-block;
+  font-size: 0.95rem;
+  margin-top: 1rem;
 }
 
 [data-theme="light"] .newsletter-form::before {
