@@ -417,6 +417,12 @@ body {
   height: 5px;
 }
 
+[data-theme="light"] .footer-heading {
+  color: #ffffff;
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+}
+
 [data-theme="light"] .footer-tagline,
 [data-theme="light"] .footer-copyright {
   color: #cbd5e1;
