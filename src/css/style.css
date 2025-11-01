@@ -549,12 +549,17 @@ body {
   transform: translateY(-4px) scale(1.08);
 }
 
-/* TITLES & TEXT - NEGRO intenso con más peso visual */
+/* TITLES & TEXT - Gradiente negro intenso */
 [data-theme="light"] .section-title {
-  color: #0d0d0d;
+  background: linear-gradient(135deg, 
+    #0d0d0d 0%, 
+    #1a1a1a 50%,
+    #0d0d0d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
   font-weight: 900;
-  text-shadow: 2px 2px 4px rgba(255, 140, 0, 0.15),
-               0 0 30px rgba(255, 140, 0, 0.08);
 }
 
 [data-theme="light"] .section-description {
@@ -653,16 +658,16 @@ body {
   box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
 }
 
-/* NEWSLETTER - Amarillo/Naranja MÁS OSCURO para destacar */
+/* NEWSLETTER - Gradiente negro igual que otros títulos */
 [data-theme="light"] .newsletter-title {
   background: linear-gradient(135deg, 
-    #e67300 0%, 
-    #b35900 50%,
-    #804000 100%);
+    #0d0d0d 0%, 
+    #1a1a1a 50%,
+    #0d0d0d 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 4px 8px rgba(230, 115, 0, 0.4));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
   font-weight: 900;
 }
 
