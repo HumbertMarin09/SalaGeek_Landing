@@ -28,15 +28,51 @@ function initThemeSwitcher() {
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   };
 
-  // Aplicar tema
-  const applyTheme = (theme) => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('sg_theme', theme);
-    
-    // Actualizar icono del botón
-    const themeIcon = document.querySelector('.theme-toggle-icon');
-    if (themeIcon) {
-      themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+  // Aplicar tema con transición suave
+  const applyTheme = (theme, withTransition = false) => {
+    if (withTransition) {
+      // Agregar clase de transición al root
+      document.documentElement.classList.add('theme-transitioning');
+      
+      // Crear overlay de transición
+      const overlay = document.createElement('div');
+      overlay.className = 'theme-transition-overlay';
+      document.body.appendChild(overlay);
+      
+      // Trigger animation
+      requestAnimationFrame(() => {
+        overlay.classList.add('active');
+      });
+      
+      // Cambiar tema en medio de la transición
+      setTimeout(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('sg_theme', theme);
+        
+        // Actualizar icono del botón
+        const themeIcon = document.querySelector('.theme-toggle-icon');
+        if (themeIcon) {
+          themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
+      }, 300);
+      
+      // Limpiar después de la transición
+      setTimeout(() => {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+          overlay.remove();
+          document.documentElement.classList.remove('theme-transitioning');
+        }, 300);
+      }, 600);
+    } else {
+      // Aplicación inmediata sin transición (para carga inicial)
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('sg_theme', theme);
+      
+      const themeIcon = document.querySelector('.theme-toggle-icon');
+      if (themeIcon) {
+        themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+      }
     }
   };
 
@@ -58,18 +94,18 @@ function initThemeSwitcher() {
       const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
-      // Agregar clase de animación
+      // Agregar clase de animación al botón
       themeToggle.classList.add('switching');
       setTimeout(() => themeToggle.classList.remove('switching'), 600);
       
-      // Aplicar nuevo tema
-      applyTheme(newTheme);
+      // Aplicar nuevo tema CON transición
+      applyTheme(newTheme, true);
       
-      // Notificación opcional
-      showNotification(
-        `Tema ${newTheme === 'light' ? 'claro' : 'oscuro'} activado`,
-        'info'
-      );
+      // Notificación opcional (removida para experiencia más limpia)
+      // showNotification(
+      //   `Tema ${newTheme === 'light' ? 'claro' : 'oscuro'} activado`,
+      //   'info'
+      // );
     }
   });
 }
