@@ -382,6 +382,47 @@ body {
 /* SECTIONS BACKGROUNDS - Alternando blanco puro y casi blanco */
 /* Asegurar dimensiones idénticas en ambos modos */
 
+/* CONTENEDORES Y GRIDS - Dimensiones unificadas */
+[data-theme="light"] .hero-container {
+  max-width: 1200px;
+  width: 100%;
+  gap: 4rem;
+}
+
+[data-theme="light"] .features-grid {
+  max-width: 1200px;
+  gap: 2.5rem;
+  margin: 0 auto;
+}
+
+[data-theme="light"] .stats-grid {
+  max-width: 1100px;
+  gap: 2.5rem;
+  margin: 3rem auto 0;
+}
+
+[data-theme="light"] .testimonials-grid {
+  max-width: 1200px;
+  gap: 2.5rem;
+  margin: 0 auto;
+}
+
+[data-theme="light"] .social-grid {
+  max-width: 1000px;
+  gap: 2rem;
+  margin: 0 auto;
+}
+
+[data-theme="light"] .newsletter-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem;
+  background: #ffffff;
+  border: 4px solid var(--light-primary);
+  box-shadow: 0 15px 60px rgba(255, 140, 0, 0.35);
+  backdrop-filter: none;
+}
+
 [data-theme="light"] .features-section {
   background: #ffffff;
   padding: 6rem 2rem;
@@ -500,13 +541,6 @@ body {
   border-color: var(--light-primary);
   box-shadow: 0 12px 45px rgba(255, 140, 0, 0.35);
   transform: translateY(-10px) scale(1.02);
-}
-
-[data-theme="light"] .newsletter-container {
-  background: #ffffff;
-  border: 4px solid var(--light-primary);
-  box-shadow: 0 15px 60px rgba(255, 140, 0, 0.35);
-  backdrop-filter: none;
 }
 
 /* INPUTS - Blanco puro con borde naranja */
