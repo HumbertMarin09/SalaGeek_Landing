@@ -197,9 +197,10 @@ body {
 }
 
 [data-theme="light"] .hero-title {
-  color: #000000;
+  color: #1a1a1a;
   font-weight: 900;
-  text-shadow: 2px 2px 6px rgba(255, 140, 0, 0.2);
+  text-shadow: 3px 3px 8px rgba(255, 140, 0, 0.3),
+               0 0 40px rgba(255, 140, 0, 0.1);
 }
 
 [data-theme="light"] .hero-brand {
@@ -499,9 +500,10 @@ body {
 
 /* TITLES & TEXT - NEGRO intenso con más peso visual */
 [data-theme="light"] .section-title {
-  color: #000000;
+  color: #0d0d0d;
   font-weight: 900;
-  text-shadow: 1px 1px 2px rgba(255, 140, 0, 0.1);
+  text-shadow: 2px 2px 4px rgba(255, 140, 0, 0.15),
+               0 0 30px rgba(255, 140, 0, 0.08);
 }
 
 [data-theme="light"] .section-description {
@@ -511,8 +513,9 @@ body {
 
 [data-theme="light"] .newsletter-subtitle,
 [data-theme="light"] .social-subtitle {
-  color: #000000;
-  font-weight: 700;
+  color: #0d0d0d;
+  font-weight: 800;
+  text-shadow: 1px 1px 3px rgba(255, 140, 0, 0.15);
 }
 
 [data-theme="light"] .feature-text,
@@ -522,21 +525,24 @@ body {
 }
 
 [data-theme="light"] .feature-title {
-  color: #000000;
-  font-weight: 800;
+  color: #0d0d0d;
+  font-weight: 900;
+  text-shadow: 1px 1px 3px rgba(255, 140, 0, 0.12);
 }
 
 [data-theme="light"] .stat-label {
-  color: #000000;
-  font-weight: 800;
+  color: #0d0d0d;
+  font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.5px;
+  text-shadow: 1px 1px 2px rgba(255, 140, 0, 0.1);
 }
 
 [data-theme="light"] .author-name,
 [data-theme="light"] .social-name {
-  color: #000000;
-  font-weight: 800;
+  color: #0d0d0d;
+  font-weight: 900;
+  text-shadow: 1px 1px 2px rgba(255, 140, 0, 0.1);
 }
 
 [data-theme="light"] .author-role {
@@ -596,16 +602,16 @@ body {
   box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
 }
 
-/* NEWSLETTER - Amarillo/Naranja */
+/* NEWSLETTER - Amarillo/Naranja MÁS OSCURO para destacar */
 [data-theme="light"] .newsletter-title {
   background: linear-gradient(135deg, 
-    #ff8c00 0%, 
-    #cc7000 50%,
-    #994d00 100%);
+    #e67300 0%, 
+    #b35900 50%,
+    #804000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 3px 6px rgba(255, 140, 0, 0.3));
+  filter: drop-shadow(0 4px 8px rgba(230, 115, 0, 0.4));
   font-weight: 900;
 }
 
@@ -698,10 +704,11 @@ body {
 }
 
 [data-theme="light"] .legal-section h2 {
-  color: #000000;
-  font-weight: 800;
+  color: #0d0d0d;
+  font-weight: 900;
   border-left: 5px solid var(--light-primary);
   padding-left: 1rem;
+  text-shadow: 1px 1px 2px rgba(255, 140, 0, 0.1);
 }
 
 [data-theme="light"] .legal-section p,
