@@ -17,6 +17,7 @@ Header completamente optimizado con accesibilidad WCAG 2.1 Level AA, diseño res
 ### **1. Estructura del Header**
 
 #### HTML Semántico
+
 - ✅ `<header role="banner">` - Semántica completa
 - ✅ `<nav role="navigation" aria-label="Navegación principal">`
 - ✅ `<ul role="menubar">` con `<li role="none">` y `<a role="menuitem">`
@@ -24,7 +25,8 @@ Header completamente optimizado con accesibilidad WCAG 2.1 Level AA, diseño res
 - ✅ Botón hamburguesa con `aria-controls` y `aria-expanded`
 
 #### Componentes
-```
+
+```text
 Header
 ├── Logo (Icono_SG.ico - 80x80px)
 ├── Botón Hamburguesa (Mobile)
@@ -46,6 +48,7 @@ Header
 ### **2. Navegación Principal**
 
 #### Enlaces del Menú
+
 | Enlace | Emoji | Sección | Estado |
 |--------|-------|---------|--------|
 | Características | ✨ | #features | ✅ |
@@ -54,6 +57,7 @@ Header
 | Síguenos | 🌐 | #social | ✅ |
 
 #### Funcionalidades
+
 - ✅ Scroll suave a secciones con offset de 100px
 - ✅ Highlight automático según scroll (requestAnimationFrame)
 - ✅ Hover effects con elevación y rotación
@@ -65,24 +69,28 @@ Header
 ### **3. Iconos Sociales**
 
 #### Facebook
+
 - **Color**: `#1877f2` (azul oficial)
 - **SVG**: viewBox="0 0 24 24", 20x20px
 - **Hover**: Fondo azul sólido, ícono blanco
-- **Link**: https://www.facebook.com/SalaGeek19
+- **Link**: <https://www.facebook.com/SalaGeek19>
 
 #### Instagram
+
 - **Color**: `#e1306c` (rosa oficial)
 - **SVG**: viewBox="0 0 24 24", 20x20px
 - **Hover**: Gradiente multicolor (#f58529 → #dd2a7b → #8134af)
-- **Link**: https://www.instagram.com/sala_geek/
+- **Link**: <https://www.instagram.com/sala_geek/>
 
 #### TikTok
+
 - **Color**: `#00f2ea` (cyan oficial)
 - **SVG**: viewBox="0 0 24 24", 20x20px (SVG REAL de TikTok)
 - **Hover**: Fondo cyan, ícono negro
-- **Link**: https://www.tiktok.com/@salageek19
+- **Link**: <https://www.tiktok.com/@salageek19>
 
 #### Especificaciones CSS
+
 ```css
 .nav-social-link {
   width: 36px;
@@ -102,6 +110,7 @@ Header
 ### **4. Diseño Responsive**
 
 #### Desktop (>768px)
+
 - Header horizontal con logo izquierda
 - Menú inline con iconos
 - Redes sociales con separador vertical
@@ -109,6 +118,7 @@ Header
 - Sticky top
 
 #### Mobile (≤768px)
+
 - Botón hamburguesa visible (44x44px)
 - Menú full-screen con fade in/out
 - Botón cerrar (✕) en esquina superior derecha
@@ -118,6 +128,7 @@ Header
 - Iconos sociales: 48x48px
 
 #### Animaciones Mobile
+
 ```css
 .main-nav {
   transform: translateX(-100%);
@@ -140,6 +151,7 @@ Header
 ### **5. Accesibilidad (WCAG 2.1 AA)**
 
 #### Roles ARIA Implementados
+
 ```html
 <header role="banner">
 <nav role="navigation" aria-label="Navegación principal">
@@ -151,18 +163,21 @@ Header
 ```
 
 #### Navegación por Teclado
+
 - ✅ `Tab` - Navegar entre elementos
 - ✅ `Enter` - Activar enlaces/botones
 - ✅ `Escape` - Cerrar menú móvil
 - ✅ Focus visible en todos los elementos
 
 #### Screen Readers
+
 - ✅ `aria-hidden="true"` en iconos decorativos
 - ✅ `focusable="false"` en SVGs
 - ✅ Labels descriptivos: "Visítanos en Facebook (abre en nueva pestaña)"
 - ✅ `rel="noopener noreferrer"` en links externos
 
 #### Focus Visible
+
 ```css
 .logo:focus-visible,
 .nav-link:focus-visible,
@@ -179,7 +194,8 @@ Header
 
 #### Funciones Principales
 
-**loadPartial()**
+##### loadPartial()
+
 ```javascript
 async function loadPartial(selector, path) {
   const timestamp = Date.now();
@@ -195,14 +211,16 @@ async function loadPartial(selector, path) {
 }
 ```
 
-**initNavigation()**
+##### initNavigation()
+
 - Toggle menú móvil con accesibilidad
 - Scroll suave a secciones
 - Highlight activo por scroll (requestAnimationFrame)
 - Cerrar con Escape
 - Botón cerrar (✕) funcional
 
-**updateActiveLink()**
+##### updateActiveLink()
+
 ```javascript
 function updateActiveLink() {
   const scrollPosition = window.scrollY + 150;
@@ -218,6 +236,7 @@ function updateActiveLink() {
 ```
 
 #### Optimizaciones
+
 - ✅ requestAnimationFrame para scroll
 - ✅ Cache-busting con timestamp
 - ✅ IntersectionObserver para animaciones
