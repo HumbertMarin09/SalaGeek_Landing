@@ -235,14 +235,15 @@ body {
 }
 
 [data-theme="light"] .hero-title {
-  background: linear-gradient(135deg, 
-    #0d0d0d 0%, 
-    #1a1a1a 50%,
-    #0d0d0d 100%);
+  background: radial-gradient(circle at 30% 50%, 
+    #ff8c00 0%, 
+    #e67300 30%,
+    #cc5500 60%,
+    #b34700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 4px 10px rgba(230, 115, 0, 0.4));
   font-weight: 900;
 }
 
@@ -555,16 +556,17 @@ body {
   transform: translateY(-4px) scale(1.08);
 }
 
-/* TITLES & TEXT - Gradiente negro intenso */
+/* TITLES & TEXT - Gradiente radial naranja vibrante */
 [data-theme="light"] .section-title {
-  background: linear-gradient(135deg, 
-    #0d0d0d 0%, 
-    #1a1a1a 50%,
-    #0d0d0d 100%);
+  background: radial-gradient(circle at 30% 50%, 
+    #ff8c00 0%, 
+    #e67300 30%,
+    #cc5500 60%,
+    #b34700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 3px 8px rgba(230, 115, 0, 0.35));
   font-weight: 900;
 }
 
@@ -664,16 +666,17 @@ body {
   box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
 }
 
-/* NEWSLETTER - Gradiente negro igual que otros títulos */
+/* NEWSLETTER - Gradiente radial naranja igual que otros títulos */
 [data-theme="light"] .newsletter-title {
-  background: linear-gradient(135deg, 
-    #0d0d0d 0%, 
-    #1a1a1a 50%,
-    #0d0d0d 100%);
+  background: radial-gradient(circle at 30% 50%, 
+    #ff8c00 0%, 
+    #e67300 30%,
+    #cc5500 60%,
+    #b34700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 4px 8px rgba(230, 115, 0, 0.4));
   font-weight: 900;
 }
 
@@ -762,14 +765,15 @@ body {
 }
 
 [data-theme="light"] .legal-header .section-title {
-  background: linear-gradient(135deg, 
-    #0d0d0d 0%, 
-    #1a1a1a 50%,
-    #0d0d0d 100%);
+  background: radial-gradient(circle at 30% 50%, 
+    #ff8c00 0%, 
+    #e67300 30%,
+    #cc5500 60%,
+    #b34700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 4px 8px rgba(230, 115, 0, 0.35));
   font-weight: 900;
 }
 
