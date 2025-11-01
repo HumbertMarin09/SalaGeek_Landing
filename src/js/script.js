@@ -28,23 +28,13 @@ function initThemeSwitcher() {
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   };
 
-  // Aplicar tema con transición suave
+  // Aplicar tema con transición suave y natural
   const applyTheme = (theme, withTransition = false) => {
     if (withTransition) {
-      // Agregar clase de transición al root
+      // Agregar clase de transición al root para animar todos los elementos
       document.documentElement.classList.add('theme-transitioning');
       
-      // Crear overlay de transición
-      const overlay = document.createElement('div');
-      overlay.className = 'theme-transition-overlay';
-      document.body.appendChild(overlay);
-      
-      // Trigger animation
-      requestAnimationFrame(() => {
-        overlay.classList.add('active');
-      });
-      
-      // Cambiar tema en medio de la transición
+      // Cambiar tema inmediatamente - la transición CSS se encarga del resto
       setTimeout(() => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('sg_theme', theme);
@@ -54,16 +44,12 @@ function initThemeSwitcher() {
         if (themeIcon) {
           themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
         }
-      }, 300);
+      }, 50);
       
-      // Limpiar después de la transición
+      // Remover clase de transición después de completar
       setTimeout(() => {
-        overlay.classList.remove('active');
-        setTimeout(() => {
-          overlay.remove();
-          document.documentElement.classList.remove('theme-transitioning');
-        }, 300);
-      }, 600);
+        document.documentElement.classList.remove('theme-transitioning');
+      }, 500);
     } else {
       // Aplicación inmediata sin transición (para carga inicial)
       document.documentElement.setAttribute('data-theme', theme);
@@ -96,16 +82,10 @@ function initThemeSwitcher() {
       
       // Agregar clase de animación al botón
       themeToggle.classList.add('switching');
-      setTimeout(() => themeToggle.classList.remove('switching'), 600);
+      setTimeout(() => themeToggle.classList.remove('switching'), 500);
       
       // Aplicar nuevo tema CON transición
       applyTheme(newTheme, true);
-      
-      // Notificación opcional (removida para experiencia más limpia)
-      // showNotification(
-      //   `Tema ${newTheme === 'light' ? 'claro' : 'oscuro'} activado`,
-      //   'info'
-      // );
     }
   });
 }
