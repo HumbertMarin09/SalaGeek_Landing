@@ -1468,8 +1468,7 @@ a {
   content: '✉️';
   position: absolute;
   left: 1.2rem;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 1.3rem;
   font-size: 1.3rem;
   pointer-events: none;
   z-index: 1;
@@ -1477,7 +1476,7 @@ a {
 }
 
 .newsletter-form:focus-within::before {
-  transform: translateY(-50%) scale(1.2);
+  transform: scale(1.2);
   filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.6));
 }
 
@@ -2173,33 +2172,40 @@ a {
   .newsletter-container {
     padding: 2rem 1.5rem;
     border-radius: 16px;
+    max-width: 100%;
   }
 
   .newsletter-title {
     font-size: 1.8rem;
     margin-bottom: 0.8rem;
+    line-height: 1.2;
   }
 
   .newsletter-subtitle {
     font-size: 1rem;
     margin-bottom: 2rem;
+    line-height: 1.5;
   }
 
   .newsletter-form {
     flex-direction: column;
     gap: 0.8rem;
+    position: relative;
   }
 
   .newsletter-form::before {
     left: 1rem;
     font-size: 1.1rem;
+    transform: translateY(-50%);
   }
 
   .newsletter-input {
     min-width: 100%;
+    width: 100%;
     padding: 1.2rem 1rem 1.2rem 3rem;
     font-size: 1rem;
     border-radius: 10px;
+    box-sizing: border-box;
   }
 
   .btn {
@@ -2211,10 +2217,46 @@ a {
   .newsletter-note {
     font-size: 0.85rem;
     padding: 0 0.5rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* Social responsive mejorado */
+  .social-section {
+    padding: 4rem 1.5rem;
   }
 
   .social-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .social-card {
+    min-width: auto;
+    padding: 1.5rem;
+  }
+
+  .social-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.8rem;
+  }
+
+  .social-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .social-name {
+    font-size: 1.3rem;
+  }
+
+  .social-handle {
+    font-size: 0.95rem;
+  }
+
+  .social-arrow {
+    font-size: 1.3rem;
   }
   
   /* Footer responsive */
@@ -2327,41 +2369,105 @@ a {
   .newsletter-container {
     padding: 1.5rem 1rem;
     border-width: 1px;
+    max-width: 100%;
   }
 
   .newsletter-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     line-height: 1.3;
+    margin-bottom: 0.5rem;
   }
 
   .newsletter-subtitle {
     font-size: 0.9rem;
     margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .newsletter-form {
+    gap: 0.6rem;
   }
 
   .newsletter-form::before {
-    font-size: 1rem;
-    left: 0.8rem;
+    font-size: 0.95rem;
+    left: 0.75rem;
+    transform: translateY(-50%);
   }
 
   .newsletter-input {
-    padding: 1rem 0.8rem 1rem 2.5rem;
-    font-size: 0.95rem;
+    padding: 0.95rem 0.75rem 0.95rem 2.4rem;
+    font-size: 0.9rem;
     border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .newsletter-input::placeholder {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .btn {
-    padding: 1rem 1.5rem;
-    font-size: 0.95rem;
+    padding: 0.95rem 1.5rem;
+    font-size: 0.9rem;
+    width: 100%;
   }
 
   .newsletter-note {
-    font-size: 0.8rem;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 0;
+    margin-top: 0.5rem;
+  }
+
+  /* Social extra-small screens */
+  .social-section {
+    padding: 3rem 1rem;
+  }
+
+  .social-title {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .social-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  .social-grid {
+    gap: 0.8rem;
+  }
+
+  .social-card {
+    padding: 1.25rem 1rem;
+    min-width: auto;
+  }
+
+  .social-card::after {
+    height: 2px;
+  }
+
+  .social-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 1.6rem;
+  }
+
+  .social-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .social-name {
+    font-size: 1.15rem;
+  }
+
+  .social-handle {
+    font-size: 0.85rem;
+  }
+
+  .social-arrow {
+    font-size: 1.2rem;
   }
 }
 
