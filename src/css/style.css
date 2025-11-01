@@ -385,6 +385,7 @@ body {
 [data-theme="light"] .features-section {
   background: #ffffff;
   padding: 6rem 2rem;
+  margin: 0;
 }
 
 [data-theme="light"] .features-section::before {
@@ -395,6 +396,7 @@ body {
 [data-theme="light"] .stats-section {
   background: linear-gradient(135deg, #fffaf0 0%, #fff5e6 100%);
   padding: 6rem 2rem;
+  margin: 0;
 }
 
 [data-theme="light"] .stats-section::before {
@@ -405,6 +407,7 @@ body {
 [data-theme="light"] .testimonials-section {
   background: #ffffff;
   padding: 6rem 2rem;
+  margin: 0;
 }
 
 [data-theme="light"] .testimonials-section::before {
@@ -415,6 +418,7 @@ body {
 [data-theme="light"] .social-section {
   background: linear-gradient(135deg, #fffaf0 0%, #fff5e6 100%);
   padding: 6rem 2rem;
+  margin: 0;
 }
 
 [data-theme="light"] .social-section::before {
@@ -425,6 +429,7 @@ body {
 [data-theme="light"] .newsletter-section {
   background: linear-gradient(135deg, #fff5e6 0%, #ffecd1 100%);
   padding: 6rem 2rem;
+  margin: 0;
 }
 
 [data-theme="light"] .newsletter-section::before {
@@ -2777,7 +2782,6 @@ a {
    SOCIAL SECTION
    ============================================ */
 .social-section {
-  margin: 3rem 0;
   padding: 6rem 2rem;
   background: var(--bg-primary);
   position: relative;
