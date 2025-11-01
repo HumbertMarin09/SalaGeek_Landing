@@ -689,6 +689,7 @@ body {
 [data-theme="light"] .feature-card:hover .feature-icon {
   filter: drop-shadow(0 8px 25px rgba(255, 140, 0, 0.6));
   transform: scale(1.2) rotate(5deg);
+  animation: iconBounce 0.6s ease;
 }
 
 [data-theme="light"] .nav-icon {
@@ -715,6 +716,12 @@ body {
 
 [data-theme="light"] .testimonial-card:hover .author-avatar {
   box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
+  animation: avatarBounce 0.6s ease;
+}
+
+[data-theme="light"] .testimonial-card:hover .testimonial-stars {
+  filter: drop-shadow(0 0 8px rgba(255, 140, 0, 0.6));
+  animation: starsPulse 0.6s ease;
 }
 
 /* NEWSLETTER - Gradiente radial naranja igual que otros títulos */
@@ -765,6 +772,17 @@ body {
 [data-theme="light"] .social-card:hover .social-icon {
   box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);
   transform: scale(1.15) rotate(5deg);
+  animation: socialIconBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+[data-theme="light"] .social-card:hover .social-icon svg {
+  animation: iconWiggle 0.5s ease;
+}
+
+[data-theme="light"] .social-card:hover .social-arrow {
+  color: var(--light-primary);
+  filter: drop-shadow(0 0 8px rgba(255, 140, 0, 0.6));
+  animation: arrowSlide 0.6s ease infinite;
 }
 
 /* NAV SOCIAL LINKS - Mismo estilo que footer (naranjas vibrantes) */
