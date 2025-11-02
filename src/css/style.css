@@ -5166,7 +5166,15 @@ img.lazy-loaded {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding: 2rem 1rem;
+    padding: 2rem 0;
+    max-width: 100%;
+  }
+
+  .legal-header,
+  .legal-toc,
+  .legal-section {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 
   .legal-toc {
@@ -5228,7 +5236,14 @@ img.lazy-loaded {
 
 @media (max-width: 768px) {
   .legal-page {
-    padding: 1rem;
+    padding: 1rem 0;
+  }
+
+  .legal-header,
+  .legal-toc,
+  .legal-section {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 
   .legal-header {
@@ -5272,7 +5287,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 2.00.0
-   LEGAL PAGES - Clean Design (Rounded Corners)
+   VERSION: 2.01.0
+   LEGAL PAGES - Uniform Width Mobile (Same as Content)
    Last Modified: 2025-11-02
    ============================================ */
