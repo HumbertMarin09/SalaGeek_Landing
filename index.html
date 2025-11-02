@@ -78,17 +78,18 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-    <!-- Preconnect para recursos externos críticos (mejor que dns-prefetch) -->
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://formspree.io" />
+    <!-- DNS Prefetch para recursos externos -->
+    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="//formspree.io" />
     <link rel="dns-prefetch" href="//www.facebook.com" />
     <link rel="dns-prefetch" href="//www.instagram.com" />
     <link rel="dns-prefetch" href="//www.tiktok.com" />
 
-    <!-- Preload recursos críticos Above The Fold -->
+    <!-- Preload recursos críticos para mejor performance -->
     <link rel="preload" href="/src/css/normalize.css" as="style" />
     <link rel="preload" href="/src/css/style.css?v=94" as="style" />
-    <link rel="preload" href="/src/images/SalaGeek_LOGO.png" as="image" fetchpriority="high" />
+    <link rel="preload" href="/src/js/script.js?v=64" as="script" />
+    <link rel="preload" href="/src/images/SalaGeek_LOGO.png" as="image" />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
