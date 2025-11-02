@@ -6,28 +6,84 @@
   <meta name="description" content="Sala Geek - Tu espacio definitivo para películas, series, anime y videojuegos. Únete a la comunidad geek más activa." />
   <meta name="keywords" content="sala geek, peliculas, series, anime, videojuegos, noticias, comunidad geek" />
   <title>Sala Geek - Tu Espacio Geek Definitivo | Películas, Series, Anime y Videojuegos</title>
+  
+  <!-- Favicons Completos -->
   <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/src/images/SalaGeek_LOGO.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/src/images/Icono_SG.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/src/images/Icono_SG.ico" />
+  <meta name="theme-color" content="#1a1f3a" />
+  <link rel="manifest" href="/manifest.json" />
   
   <!-- DNS Prefetch para recursos externos -->
   <link rel="dns-prefetch" href="//www.facebook.com" />
   <link rel="dns-prefetch" href="//www.instagram.com" />
   <link rel="dns-prefetch" href="//www.tiktok.com" />
   
-  <!-- Preload recursos críticos -->
+  <!-- Preload recursos críticos para mejor performance -->
   <link rel="preload" href="/src/css/normalize.css" as="style" />
-  <link rel="preload" href="/src/css/style.css?v=92" as="style" />
-  <link rel="preload" href="/src/js/script.js?v=57" as="script" />
-  <link rel="preload" href="/src/images/Icono_SG.ico" as="image" />
+  <link rel="preload" href="/src/css/style.css?v=94" as="style" />
+  <link rel="preload" href="/src/js/script.js?v=64" as="script" />
+  <link rel="preload" href="/src/images/SalaGeek_LOGO.png" as="image" />
+  <link rel="dns-prefetch" href="https://formspree.io" />
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/src/css/normalize.css">
-  <link rel="stylesheet" href="/src/css/style.css?v=92">
+  <link rel="stylesheet" href="/src/css/style.css?v=94">
   <script>
     // Agregar clase 'js' inmediatamente para scroll animations
     document.documentElement.classList.add('js');
   </script>
-      <!-- Scripts -->
-    <script defer src="/src/js/script.js?v=57"></script>
+  
+  <!-- Schema.org Structured Data (SEO Avanzado) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Sala Geek",
+    "url": "https://salageek.com",
+    "logo": "https://salageek.com/src/images/SalaGeek_LOGO.png",
+    "description": "La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek.",
+    "foundingDate": "2017",
+    "sameAs": [
+      "https://facebook.com/salageek",
+      "https://twitter.com/salageek",
+      "https://instagram.com/salageek",
+      "https://youtube.com/salageek"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "email": "contacto@salageek.com"
+    }
+  }
+  </script>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Sala Geek",
+    "url": "https://salageek.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://salageek.com/buscar?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  
+  <!-- Google Analytics (Reemplazar con tu ID) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+  
+  <!-- Scripts -->
+  <script defer src="/src/js/script.js?v=64"></script>
 </head>
 <body class="home">
   <!-- Header inyectado -->
@@ -147,7 +203,18 @@
         
         <div class="features-grid">
           <div class="feature-card" data-scroll="fade-up" data-scroll-delay="200">
-            <div class="feature-icon">🎬</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+              </svg>
+            </div>
             <h3 class="feature-title">Contenido Curado</h3>
             <p class="feature-text">
               Noticias seleccionadas y verificadas sobre películas, series, anime y videojuegos
@@ -155,7 +222,11 @@
           </div>
           
           <div class="feature-card" data-scroll="fade-up" data-scroll-delay="300">
-            <div class="feature-icon">⚡</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+            </div>
             <h3 class="feature-title">Actualizaciones Diarias</h3>
             <p class="feature-text">
               Mantente al día con las últimas novedades del mundo del entretenimiento geek
@@ -163,7 +234,14 @@
           </div>
           
           <div class="feature-card" data-scroll="fade-up" data-scroll-delay="400">
-            <div class="feature-icon">👥</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
             <h3 class="feature-title">Comunidad Activa</h3>
             <p class="feature-text">
               Únete a miles de fans que comparten tu pasión por la cultura geek
@@ -171,7 +249,12 @@
           </div>
           
           <div class="feature-card" data-scroll="fade-up" data-scroll-delay="500">
-            <div class="feature-icon">📱</div>
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+            </div>
             <h3 class="feature-title">Multiplataforma</h3>
             <p class="feature-text">
               Accede desde cualquier dispositivo: móvil, tablet o escritorio
@@ -304,7 +387,7 @@
           <p class="newsletter-subtitle">
             Suscríbete a nuestro newsletter y recibe las mejores noticias directamente en tu correo
           </p>
-          <form class="newsletter-form" id="newsletter-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form class="newsletter-form" id="newsletter-form" action="https://formspree.io/f/xovpydqq" method="POST">
             <input 
               type="email" 
               id="newsletter-email"

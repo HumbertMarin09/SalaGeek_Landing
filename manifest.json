@@ -1,0 +1,27 @@
+{
+  "name": "Sala Geek - Tu Espacio Geek Definitivo",
+  "short_name": "Sala Geek",
+  "description": "La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1f3a",
+  "theme_color": "#1a1f3a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/src/images/SalaGeek_LOGO.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/src/images/SalaGeek_LOGO.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "news", "lifestyle"],
+  "lang": "es-ES",
+  "dir": "ltr"
+}

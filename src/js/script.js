@@ -1,8 +1,8 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.64.0
-   Description: Newsletter funcional + Back to Top (Landing 100% lista)
-   Last Modified: 2025-11-01
+   Version: 1.65.0 - FINAL
+   Description: Landing 100% completa (Schema.org + SVG icons + PWA + Analytics ready)
+   Last Modified: 2025-11-02
    ============================================ */
 
 /* ============================================
