@@ -497,48 +497,48 @@ function initHeroAnimations() {
     }, charDuration);
   }, 500); // Delay inicial
   
-  // Agregar interactividad adicional a los badges
+  // Sistema inteligente: Hover rápido = sutil, Hover mantenido = explosión
   const badges = document.querySelectorAll('.hero-badge');
-  badges.forEach((badge, index) => {
-    let isHovered = false;
-    let originalAnimation = '';
+  badges.forEach((badge) => {
+    let hoverStartTime = null;
+    let explodeTimeout = null;
     
     badge.addEventListener('mouseenter', () => {
-      // Guardar la animación original
-      originalAnimation = badge.style.animation || getComputedStyle(badge).animation;
+      // Guardar el tiempo de inicio del hover
+      hoverStartTime = Date.now();
       
-      // Badge desaparece
-      badge.classList.add('hiding');
-      badge.style.animationPlayState = 'paused';
-      isHovered = true;
+      // Limpiar cualquier timeout de explosión pendiente
+      if (explodeTimeout) {
+        clearTimeout(explodeTimeout);
+        explodeTimeout = null;
+      }
+      
+      // Remover clase de explosión si estaba
+      badge.classList.remove('badge-explode');
+      
+      // Añadir clase de hover (animación sutil, NO desaparece)
+      badge.classList.add('badge-hover');
     });
     
     badge.addEventListener('mouseleave', () => {
-      if (isHovered) {
-        // Esperar a que desaparezca completamente
-        setTimeout(() => {
-          badge.classList.remove('hiding');
-          
-          // Efecto de explosión al reaparecer
-          badge.classList.add('exploding');
-          
-          setTimeout(() => {
-            badge.classList.remove('exploding');
-            badge.style.animation = originalAnimation;
-            badge.style.animationPlayState = 'running';
-          }, 600);
-        }, 400);
-      }
+      // Calcular duración del hover
+      const hoverDuration = Date.now() - hoverStartTime;
       
-      isHovered = false;
-    });
-    
-    // Agregar un pequeño efecto de click
-    badge.addEventListener('click', () => {
-      badge.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        badge.style.transform = '';
-      }, 150);
+      // Quitar la animación de hover
+      badge.classList.remove('badge-hover');
+      
+      // Solo hacer explosión si el hover fue MANTENIDO (≥ 300ms)
+      if (hoverDuration >= 300) {
+        explodeTimeout = setTimeout(() => {
+          badge.classList.add('badge-explode');
+          
+          // Limpiar la clase después de la animación
+          setTimeout(() => {
+            badge.classList.remove('badge-explode');
+          }, 1000);
+        }, 150);
+      }
+      // Si fue hover rápido (< 300ms), no hacer nada especial
     });
   });
   

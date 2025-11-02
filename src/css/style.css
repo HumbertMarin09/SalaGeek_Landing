@@ -1570,79 +1570,115 @@ a {
 }
 
 /* Badge desaparece al hacer hover */
-.hero-badge.hiding {
-  animation: badgeDisappear 0.4s ease-out forwards;
+/* ===== SISTEMA DE BADGES: HOVER SUTIL + EXPLOSIÓN AL SALIR ===== */
+
+/* Animación SUTIL al hacer hover (NO desaparece, solo efecto visual) */
+.hero-badge.badge-hover {
+  animation: badgeHoverEffect 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
 }
 
-@keyframes badgeDisappear {
+@keyframes badgeHoverEffect {
   0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-}
-
-/* Efecto de explosión cuando reaparece */
-.hero-badge.exploding {
-  animation: badgeExplode 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards !important;
-}
-
-@keyframes badgeExplode {
-  0% {
-    opacity: 0;
-    transform: scale(0);
+    transform: scale(1) rotate(0deg);
   }
   50% {
+    transform: scale(1.15) rotate(5deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(0deg);
+  }
+}
+
+/* Mantener el efecto mientras está en hover */
+.hero-badge.badge-hover {
+  transform: scale(1.1) !important;
+  filter: brightness(1.2) !important;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 30px currentColor,
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Animación de EXPLOSIÓN al salir del badge (mouseleave) */
+.hero-badge.badge-explode {
+  animation: badgeExplodeEffect 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+}
+
+@keyframes badgeExplodeEffect {
+  0% {
     opacity: 1;
-    transform: scale(1.3);
+    transform: scale(1.1) rotate(0deg);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-90deg);
+    filter: blur(3px);
+  }
+  40% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.4) rotate(180deg);
+    filter: blur(0px) brightness(2);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(0.95) rotate(170deg);
+    filter: brightness(1.3);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) rotate(180deg);
+    filter: brightness(1);
   }
 }
 
-/* Onda expansiva al reaparecer */
-.hero-badge.exploding::after {
+/* Onda expansiva al explotar */
+.hero-badge.badge-explode::after {
   content: '';
   position: absolute;
-  inset: -10px;
+  inset: -20px;
   background: radial-gradient(circle, currentColor 0%, transparent 70%);
   opacity: 0;
-  animation: shockwave 0.6s ease-out;
+  animation: badgeShockwave 1s cubic-bezier(0.19, 1, 0.22, 1);
   pointer-events: none;
   z-index: -1;
-  border-radius: 50px;
+  border-radius: 50%;
 }
 
-@keyframes shockwave {
+@keyframes badgeShockwave {
   0% {
-    transform: scale(0.8);
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  40% {
     opacity: 0.8;
   }
   100% {
-    transform: scale(2);
+    transform: scale(3.5);
     opacity: 0;
   }
 }
 
-/* Partículas brillantes */
-.hero-badge.exploding::before {
-  animation: sparkles 0.6s ease-out;
-  filter: brightness(1.5);
+/* Partículas brillantes al explotar */
+.hero-badge.badge-explode::before {
+  animation: badgeSparkles 1s ease-out !important;
 }
 
-@keyframes sparkles {
-  0%, 100% {
-    opacity: 1;
+@keyframes badgeSparkles {
+  0% {
     filter: brightness(1);
   }
-  50% {
-    opacity: 1;
-    filter: brightness(2) saturate(1.5);
+  30% {
+    filter: brightness(2.5) saturate(2);
+  }
+  70% {
+    filter: brightness(1.8) saturate(1.5);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
   }
 }
 
