@@ -5172,8 +5172,8 @@ img.lazy-loaded {
     position: static;
     max-height: none;
     order: 1;
-    margin-left: -1rem;
-    margin-right: -1rem;
+    margin-left: 0;
+    margin-right: 0;
     margin-bottom: 1.5rem;
     border-radius: 0;
     background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 31, 58, 0.95) 100%);
@@ -5215,8 +5215,8 @@ img.lazy-loaded {
 
   .legal-header {
     order: 0;
-    margin-left: -1rem;
-    margin-right: -1rem;
+    margin-left: 0;
+    margin-right: 0;
     border-radius: 0;
   }
 
@@ -5235,11 +5235,15 @@ img.lazy-loaded {
 
 @media (max-width: 768px) {
   .legal-page {
-    padding: 1rem;
+    padding: 1rem 0;
   }
 
   .legal-header {
     padding: 2rem 1rem;
+  }
+
+  .legal-content {
+    padding: 0 1rem;
   }
 
   .legal-header .section-title {
@@ -5279,7 +5283,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 1.97.0
-   LEGAL PAGES - Full Width Header & TOC Mobile
+   VERSION: 1.98.0
+   LEGAL PAGES - Full Width Fix (Zero Margins)
    Last Modified: 2025-11-02
    ============================================ */
