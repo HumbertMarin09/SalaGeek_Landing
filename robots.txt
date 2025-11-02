@@ -1,0 +1,22 @@
+# Sala Geek - Robots.txt
+# https://salageek.com/robots.txt
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow admin and sensitive areas (if applicable in the future)
+Disallow: /admin/
+Disallow: /backup*/
+Disallow: /*.json$
+
+# Allow crawling of CSS, JS, and images for better indexing
+Allow: /src/css/
+Allow: /src/js/
+Allow: /src/images/
+
+# Sitemap location
+Sitemap: https://salageek.com/sitemap.xml
+
+# Crawl-delay (optional, helps with server load)
+Crawl-delay: 1
