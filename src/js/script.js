@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.62.0
-   Description: Stats Counter ajustado a 2.5 segundos (timing óptimo)
+   Version: 1.63.0
+   Description: Stats Counter con ease-out-cubic (sin freno evidente)
    Last Modified: 2025-11-01
    ============================================ */
 
@@ -530,9 +530,10 @@ function initStatsCounter() {
 
   let hasAnimated = false;
 
-  // Función de easing para animación suave (easeOutExpo)
-  const easeOutExpo = (t) => {
-    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  // Función de easing para animación suave (easeOutCubic)
+  // Desacelera suavemente sin freno evidente - Usado en Material Design
+  const easeOutCubic = (t) => {
+    return 1 - Math.pow(1 - t, 3);
   };
 
   // Función para animar un contador individual
@@ -545,7 +546,7 @@ function initStatsCounter() {
     const updateCounter = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutExpo(progress);
+      const easedProgress = easeOutCubic(progress);
       const currentValue = Math.floor(easedProgress * target);
 
       // Actualizar el texto
