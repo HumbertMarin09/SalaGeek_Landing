@@ -182,8 +182,6 @@ async function loadIncludes() {
     
     // Inicializar navegación después de cargar el header
     initNavigation();
-    
-    console.log('Partials loaded successfully');
   } catch (error) {
     console.error('Error loading includes:', error);
   }
@@ -416,8 +414,6 @@ function initScrollAnimations() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        console.log('🎯 Revelando:', entry.target.tagName, entry.target.getAttribute('data-scroll'));
-        
         // Usar requestAnimationFrame para asegurar que el cambio se aplique
         requestAnimationFrame(() => {
           entry.target.classList.add('reveal');
@@ -429,8 +425,6 @@ function initScrollAnimations() {
           // Forzar reflow
           void entry.target.offsetHeight;
           entry.target.style.backgroundImage = background;
-          
-          console.log('   ✓ Clase agregada. Clases actuales:', entry.target.className);
         });
         
         // Dejar de observar después de animar
@@ -444,15 +438,11 @@ function initScrollAnimations() {
     const scrollElements = document.querySelectorAll('[data-scroll]');
     
     if (scrollElements.length === 0) {
-      console.warn('⚠️ No se encontraron elementos con data-scroll');
       return;
     }
     
-    console.log(`🎬 Scroll Reveal encontró ${scrollElements.length} elementos`);
-    
     // Observar todos los elementos
-    scrollElements.forEach((element, index) => {
-      console.log(`   ${index + 1}. ${element.tagName} con data-scroll="${element.getAttribute('data-scroll')}"`);
+    scrollElements.forEach((element) => {
       observer.observe(element);
     });
   };
@@ -465,6 +455,75 @@ function initScrollAnimations() {
   } else {
     setTimeout(initObserver, 150);
   }
+}
+
+/* ============================================
+   LAZY LOADING DE IMÁGENES
+   ============================================ */
+
+function initLazyLoading() {
+  // Verificar soporte nativo de lazy loading
+  if ('loading' in HTMLImageElement.prototype) {
+    // El navegador soporta loading="lazy" nativamente
+    const images = document.querySelectorAll('img[data-src]');
+    images.forEach(img => {
+      img.src = img.dataset.src;
+      img.removeAttribute('data-src');
+    });
+  } else {
+    // Fallback con Intersection Observer para navegadores antiguos
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          
+          // Cargar imagen
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          
+          // Cargar srcset si existe
+          if (img.dataset.srcset) {
+            img.srcset = img.dataset.srcset;
+            img.removeAttribute('data-srcset');
+          }
+          
+          // Agregar clase loaded para animaciones
+          img.classList.add('lazy-loaded');
+          
+          // Dejar de observar
+          observer.unobserve(img);
+        }
+      });
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.01
+    });
+
+    // Observar todas las imágenes con data-src
+    const lazyImages = document.querySelectorAll('img[data-src]');
+    lazyImages.forEach(img => imageObserver.observe(img));
+  }
+
+  // Lazy loading para iframes (videos de YouTube, etc)
+  const iframeObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const iframe = entry.target;
+        if (iframe.dataset.src) {
+          iframe.src = iframe.dataset.src;
+          iframe.removeAttribute('data-src');
+          observer.unobserve(iframe);
+        }
+      }
+    });
+  }, {
+    rootMargin: '100px 0px'
+  });
+
+  const lazyIframes = document.querySelectorAll('iframe[data-src]');
+  lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
 }
 
 /* ============================================
@@ -713,7 +772,6 @@ function initAdaptiveMenu() {
   const menuLegal = document.querySelector('.menu-legal');
   
   if (!menuLanding || !menuLegal) {
-    console.log('⚠️ Menús no encontrados, esperando carga del header...');
     return;
   }
 
@@ -721,7 +779,6 @@ function initAdaptiveMenu() {
   const isLegalPage = window.location.pathname.includes('/legal/');
   
   if (isLegalPage) {
-    console.log('⚖️ Página legal detectada - Mostrando menú legal');
     menuLanding.style.display = 'none';
     menuLegal.style.display = 'flex';
     
@@ -736,7 +793,6 @@ function initAdaptiveMenu() {
       }
     });
   } else {
-    console.log('🏠 Página principal - Mostrando menú landing');
     menuLanding.style.display = 'flex';
     menuLegal.style.display = 'none';
   }
@@ -752,8 +808,6 @@ function initAdaptiveMenu() {
 function initLegalPages() {
   const legalPage = document.querySelector('.legal-page');
   if (!legalPage) return;
-
-  console.log('📄 Inicializando página legal...');
 
   // Animar elementos iniciales
   setTimeout(() => {
@@ -967,8 +1021,6 @@ function initReadingProgress() {
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('🎮 Sala Geek Landing Page - Initializing...');
-  
   // Inicializar tema ANTES de cargar componentes
   initThemeSwitcher();
   
@@ -981,6 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializar funcionalidades
   initResponsiveHandler();
   initScrollAnimations();
+  initLazyLoading();
   initNewsletterForm();
   initCookieConsent();
   initSmoothScroll();
@@ -989,8 +1042,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Inicializar páginas legales si estamos en una
   initLegalPages();
-  
-  console.log('✅ Landing Page initialized successfully');
 });
 
 // Prevenir FOUC (Flash of Unstyled Content)
