@@ -5162,6 +5162,11 @@ img.lazy-loaded {
 
 /* Responsive Design para Páginas Legales */
 @media (max-width: 968px) {
+  .container.legal-page {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   .legal-page {
     display: flex;
     flex-direction: column;
@@ -5234,6 +5239,10 @@ img.lazy-loaded {
 }
 
 @media (max-width: 768px) {
+  .container.legal-page {
+    padding: 1rem 0 !important;
+  }
+
   .legal-page {
     padding: 1rem 0;
   }
@@ -5283,7 +5292,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 1.98.0
-   LEGAL PAGES - Full Width Fix (Zero Margins)
+   VERSION: 1.99.0
+   LEGAL PAGES - Container Override Fix
    Last Modified: 2025-11-02
    ============================================ */
