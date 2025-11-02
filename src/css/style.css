@@ -5172,9 +5172,12 @@ img.lazy-loaded {
     position: static;
     max-height: none;
     order: 1;
+    margin-left: -1rem;
+    margin-right: -1rem;
     margin-bottom: 1.5rem;
-    border-radius: 12px;
+    border-radius: 0;
     background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 31, 58, 0.95) 100%);
+    padding: 1.5rem 1rem;
   }
 
   .legal-toc-title {
@@ -5212,6 +5215,9 @@ img.lazy-loaded {
 
   .legal-header {
     order: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    border-radius: 0;
   }
 
   .legal-content {
@@ -5273,7 +5279,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 1.96.0
-   LEGAL PAGES TOC MOBILE FIX - Display Flex Fix
+   VERSION: 1.97.0
+   LEGAL PAGES - Full Width Header & TOC Mobile
    Last Modified: 2025-11-02
    ============================================ */
