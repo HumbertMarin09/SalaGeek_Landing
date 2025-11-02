@@ -5162,27 +5162,18 @@ img.lazy-loaded {
 
 /* Responsive Design para Páginas Legales */
 @media (max-width: 968px) {
-  .container.legal-page {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
   .legal-page {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 2rem 1rem;
   }
 
   .legal-toc {
     position: static;
     max-height: none;
     order: 1;
-    margin-left: 0;
-    margin-right: 0;
     margin-bottom: 1.5rem;
-    border-radius: 0;
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 31, 58, 0.95) 100%);
-    padding: 1.5rem 1rem;
   }
 
   .legal-toc-title {
@@ -5220,9 +5211,6 @@ img.lazy-loaded {
 
   .legal-header {
     order: 0;
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0;
   }
 
   .legal-content {
@@ -5239,20 +5227,12 @@ img.lazy-loaded {
 }
 
 @media (max-width: 768px) {
-  .container.legal-page {
-    padding: 1rem 0 !important;
-  }
-
   .legal-page {
-    padding: 1rem 0;
+    padding: 1rem;
   }
 
   .legal-header {
     padding: 2rem 1rem;
-  }
-
-  .legal-content {
-    padding: 0 1rem;
   }
 
   .legal-header .section-title {
@@ -5292,7 +5272,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 1.99.0
-   LEGAL PAGES - Container Override Fix
+   VERSION: 2.00.0
+   LEGAL PAGES - Clean Design (Rounded Corners)
    Last Modified: 2025-11-02
    ============================================ */
