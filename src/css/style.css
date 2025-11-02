@@ -5171,6 +5171,42 @@ img.lazy-loaded {
     position: static;
     max-height: none;
     order: 1;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 31, 58, 0.95) 100%);
+  }
+
+  .legal-toc-title {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 2rem;
+  }
+
+  .legal-toc-title::after {
+    content: "▼";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+    color: var(--accent-primary);
+  }
+
+  .legal-toc.collapsed .legal-toc-title::after {
+    transform: translateY(-50%) rotate(-90deg);
+  }
+
+  .legal-toc nav {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .legal-toc.collapsed nav {
+    max-height: 0;
+    opacity: 0;
   }
 
   .legal-header {
@@ -5237,7 +5273,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 1.92.0
-   ABOUT SECTION + CONTENT REORGANIZATION
-   Last Modified: 2025-01-11
+   VERSION: 1.95.0
+   LEGAL PAGES TOC MOBILE FIX
+   Last Modified: 2025-11-02
    ============================================ */

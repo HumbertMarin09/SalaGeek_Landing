@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.65.0 - FINAL
-   Description: Landing 100% completa (Schema.org + SVG icons + PWA + Analytics ready)
+   Version: 1.68.0
+   Description: Legal pages TOC mobile fix + collapse functionality
    Last Modified: 2025-11-02
    ============================================ */
 
@@ -1315,8 +1315,36 @@ function initLegalPages() {
 function initLegalTOC() {
   const tocLinks = document.querySelectorAll(".legal-toc nav a");
   const sections = document.querySelectorAll(".legal-section[id]");
+  const toc = document.querySelector(".legal-toc");
+  const tocTitle = document.querySelector(".legal-toc-title");
 
   if (tocLinks.length === 0 || sections.length === 0) return;
+
+  // Funcionalidad de collapse para móvil
+  if (tocTitle && toc) {
+    // Iniciar colapsado en móvil
+    if (window.innerWidth <= 992) {
+      toc.classList.add("collapsed");
+    }
+
+    // Toggle al hacer click en el título
+    tocTitle.addEventListener("click", () => {
+      toc.classList.toggle("collapsed");
+    });
+
+    // Manejar resize de ventana
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (window.innerWidth > 992) {
+          toc.classList.remove("collapsed");
+        } else if (!toc.classList.contains("collapsed")) {
+          toc.classList.add("collapsed");
+        }
+      }, 250);
+    });
+  }
 
   // Función para actualizar enlaces activos
   function updateActiveTOCLink() {
