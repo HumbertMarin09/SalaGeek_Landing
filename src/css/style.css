@@ -2203,7 +2203,7 @@ a {
 }
 
 /* ============================================
-   TESTIMONIALS SECTION
+   TESTIMONIALS CAROUSEL SECTION
    ============================================ */
 .testimonials-section {
   padding: 6rem 2rem;
@@ -2225,25 +2225,45 @@ a {
   pointer-events: none;
 }
 
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
-  max-width: 1200px;
+/* Carousel Container */
+.testimonials-carousel {
+  max-width: 900px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
 }
 
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
 .testimonial-card {
   background: linear-gradient(135deg, rgba(10, 14, 39, 0.8) 0%, rgba(26, 31, 58, 0.6) 100%);
-  padding: 2.5rem;
+  padding: 3rem;
   border-radius: 20px;
   border: 1px solid rgba(255, 209, 102, 0.1);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
+  min-width: 100%;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-card.active {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .testimonial-card::before {
@@ -2414,6 +2434,156 @@ a {
 
 .testimonial-card:hover .author-role {
   color: var(--accent-primary);
+}
+
+/* Carousel Navigation Buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.9) 0%, rgba(231, 111, 81, 0.9) 100%);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+}
+
+.carousel-btn:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 25px rgba(255, 209, 102, 0.5);
+}
+
+.carousel-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-btn svg {
+  color: var(--bg-primary);
+  width: 24px;
+  height: 24px;
+}
+
+.carousel-prev {
+  left: -25px;
+}
+
+.carousel-next {
+  right: -25px;
+}
+
+/* Carousel Indicators (Dots) */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 2.5rem;
+}
+
+.carousel-indicators .indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 209, 102, 0.4);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+}
+
+.carousel-indicators .indicator:hover {
+  border-color: var(--accent-primary);
+  transform: scale(1.2);
+}
+
+.carousel-indicators .indicator.active {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  border-color: var(--accent-primary);
+  width: 32px;
+  border-radius: 6px;
+}
+
+/* Carousel Touch Support */
+.carousel-container {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Carousel Responsive */
+@media (max-width: 968px) {
+  .testimonials-carousel {
+    max-width: 600px;
+  }
+  
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .carousel-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .carousel-prev {
+    left: -15px;
+  }
+  
+  .carousel-next {
+    right: -15px;
+  }
+  
+  .testimonial-card {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-prev {
+    left: 5px;
+  }
+  
+  .carousel-next {
+    right: 5px;
+  }
+  
+  .carousel-btn {
+    width: 36px;
+    height: 36px;
+    opacity: 0.8;
+    background: linear-gradient(135deg, rgba(255, 209, 102, 0.95) 0%, rgba(231, 111, 81, 0.95) 100%);
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+  
+  .testimonial-text {
+    font-size: 1rem;
+  }
+  
+  .carousel-indicators {
+    gap: 8px;
+    margin-top: 2rem;
+  }
+  
+  .carousel-indicators .indicator {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .carousel-indicators .indicator.active {
+    width: 24px;
+  }
 }
 
 /* ============================================

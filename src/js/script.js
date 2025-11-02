@@ -1,4 +1,11 @@
 /* ============================================
+   SALA GEEK - MAIN JAVASCRIPT
+   Version: 1.57.0
+   Description: Testimonials carousel con auto-slide + swipe
+   Last Modified: 2025-11-01
+   ============================================ */
+
+/* ============================================
    UTILIDADES GLOBALES
    ============================================ */
 
@@ -575,6 +582,177 @@ function initHeroAnimations() {
 }
 
 /* ============================================
+   TESTIMONIALS CAROUSEL
+   ============================================ */
+
+function initTestimonialsCarousel() {
+  const track = document.querySelector('.carousel-track');
+  const cards = document.querySelectorAll('.testimonial-card');
+  const prevBtn = document.querySelector('.carousel-prev');
+  const nextBtn = document.querySelector('.carousel-next');
+  const indicators = document.querySelectorAll('.carousel-indicators .indicator');
+  
+  if (!track || cards.length === 0) return;
+
+  let currentIndex = 0;
+  let isTransitioning = false;
+  let autoSlideInterval;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+  // Función para actualizar el carrusel
+  function updateCarousel(animate = true) {
+    if (isTransitioning) return;
+    isTransitioning = true;
+
+    // Actualizar cards
+    cards.forEach((card, index) => {
+      card.classList.remove('active');
+      if (index === currentIndex) {
+        card.classList.add('active');
+      }
+    });
+
+    // Mover el track
+    const offset = -currentIndex * 100;
+    if (animate) {
+      track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+    } else {
+      track.style.transition = 'none';
+    }
+    track.style.transform = `translateX(${offset}%)`;
+
+    // Actualizar indicadores
+    indicators.forEach((indicator, index) => {
+      indicator.classList.toggle('active', index === currentIndex);
+    });
+
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 600);
+  }
+
+  // Navegación anterior
+  function goToPrev() {
+    if (isTransitioning) return;
+    currentIndex = currentIndex === 0 ? cards.length - 1 : currentIndex - 1;
+    updateCarousel();
+    resetAutoSlide();
+  }
+
+  // Navegación siguiente
+  function goToNext() {
+    if (isTransitioning) return;
+    currentIndex = currentIndex === cards.length - 1 ? 0 : currentIndex + 1;
+    updateCarousel();
+    resetAutoSlide();
+  }
+
+  // Ir a slide específico
+  function goToSlide(index) {
+    if (isTransitioning || index === currentIndex) return;
+    currentIndex = index;
+    updateCarousel();
+    resetAutoSlide();
+  }
+
+  // Auto-slide
+  function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+      goToNext();
+    }, 5000); // 5 segundos
+  }
+
+  function stopAutoSlide() {
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+    }
+  }
+
+  function resetAutoSlide() {
+    stopAutoSlide();
+    startAutoSlide();
+  }
+
+  // Touch/Swipe support
+  function handleTouchStart(e) {
+    isDragging = true;
+    startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    track.style.transition = 'none';
+    stopAutoSlide();
+  }
+
+  function handleTouchMove(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+    const diff = currentX - startX;
+    const offset = -currentIndex * 100 + (diff / track.offsetWidth) * 100;
+    track.style.transform = `translateX(${offset}%)`;
+  }
+
+  function handleTouchEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = currentX - startX;
+    const threshold = track.offsetWidth * 0.2; // 20% del ancho
+
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) {
+        goToPrev();
+      } else {
+        goToNext();
+      }
+    } else {
+      updateCarousel();
+    }
+    resetAutoSlide();
+  }
+
+  // Event Listeners
+  if (prevBtn) prevBtn.addEventListener('click', goToPrev);
+  if (nextBtn) nextBtn.addEventListener('click', goToNext);
+
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => goToSlide(index));
+  });
+
+  // Touch events
+  const container = document.querySelector('.carousel-container');
+  if (container) {
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
+    
+    // Mouse events para desktop
+    container.addEventListener('mousedown', handleTouchStart);
+    container.addEventListener('mousemove', handleTouchMove);
+    container.addEventListener('mouseup', handleTouchEnd);
+    container.addEventListener('mouseleave', () => {
+      if (isDragging) handleTouchEnd();
+    });
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goToPrev();
+    if (e.key === 'ArrowRight') goToNext();
+  });
+
+  // Pausar auto-slide en hover
+  const carousel = document.querySelector('.testimonials-carousel');
+  if (carousel) {
+    carousel.addEventListener('mouseenter', stopAutoSlide);
+    carousel.addEventListener('mouseleave', startAutoSlide);
+  }
+
+  // Inicializar
+  updateCarousel(false);
+  startAutoSlide();
+}
+
+/* ============================================
    NEWSLETTER FORM
    ============================================ */
 
@@ -1083,6 +1261,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroAnimations();
   initScrollAnimations();
   initLazyLoading();
+  initTestimonialsCarousel();
   initNewsletterForm();
   initCookieConsent();
   initSmoothScroll();
