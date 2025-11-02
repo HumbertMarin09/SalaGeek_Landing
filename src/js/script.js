@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.57.0
-   Description: Testimonials carousel con auto-slide + swipe
+   Version: 1.58.0
+   Description: Hero Parallax + Particles (WOW effect)
    Last Modified: 2025-11-01
    ============================================ */
 
@@ -465,6 +465,58 @@ function initLazyLoading() {
 
   const lazyIframes = document.querySelectorAll('iframe[data-src]');
   lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
+}
+
+/* ============================================
+   HERO PARALLAX EFFECT
+   ============================================ */
+
+function initHeroParallax() {
+  // Only enable on desktop
+  if (window.innerWidth <= 768) return;
+  
+  const badges = document.querySelectorAll('.hero-badge');
+  const heroSection = document.querySelector('.hero-section');
+  
+  if (!badges.length || !heroSection) return;
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  // Track mouse movement
+  heroSection.addEventListener('mousemove', (e) => {
+    const rect = heroSection.getBoundingClientRect();
+    mouseX = (e.clientX - rect.left - rect.width / 2) / rect.width;
+    mouseY = (e.clientY - rect.top - rect.height / 2) / rect.height;
+  });
+
+  // Reset on mouse leave
+  heroSection.addEventListener('mouseleave', () => {
+    mouseX = 0;
+    mouseY = 0;
+  });
+
+  // Smooth animation loop
+  function animate() {
+    // Smooth interpolation
+    targetX += (mouseX - targetX) * 0.1;
+    targetY += (mouseY - targetY) * 0.1;
+
+    badges.forEach((badge, index) => {
+      // Different movement intensity for each badge
+      const intensity = (index + 1) * 8;
+      const offsetX = targetX * intensity;
+      const offsetY = targetY * intensity;
+      
+      badge.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 }
 
 /* ============================================
@@ -1259,6 +1311,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializar funcionalidades
   initResponsiveHandler();
   initHeroAnimations();
+  initHeroParallax();
   initScrollAnimations();
   initLazyLoading();
   initTestimonialsCarousel();
