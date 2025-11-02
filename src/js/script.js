@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.61.0
-   Description: Stats Counter ajustado a 3 segundos (timing perfecto)
+   Version: 1.62.0
+   Description: Stats Counter ajustado a 2.5 segundos (timing óptimo)
    Last Modified: 2025-11-01
    ============================================ */
 
@@ -539,7 +539,7 @@ function initStatsCounter() {
   const animateCounter = (element) => {
     const target = parseInt(element.getAttribute('data-count'));
     const suffix = element.getAttribute('data-suffix') || '';
-    const duration = 3000; // 3 segundos (balance perfecto)
+    const duration = 2500; // 2.5 segundos (timing óptimo)
     const startTime = performance.now();
 
     const updateCounter = (currentTime) => {
