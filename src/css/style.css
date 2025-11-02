@@ -1593,6 +1593,7 @@ a {
   transform: none;
 }
 
+/* ANIMACIONES ANTIGUAS DESACTIVADAS - Ahora usamos data-scroll
 .js .animate-fade {
   opacity: 0;
   transform: translateY(8px);
@@ -1615,6 +1616,7 @@ a {
   opacity: 1;
   transform: none;
 }
+*/
 
 /* ============================================
    SEPARADORES Y TÍTULOS
@@ -3330,6 +3332,87 @@ a {
   0%, 100% { transform: scale(1); }
   10%, 30% { transform: scale(1.15); }
 }
+
+/* ============================================
+   SCROLL REVEAL ANIMATIONS
+   ============================================ */
+
+/* ========== SCROLL REVEAL ANIMATIONS ========== */
+/* Fallback: Mostrar elementos si JavaScript no está disponible */
+[data-scroll] {
+  opacity: 1;
+}
+
+/* Estado inicial (oculto) cuando JS está activo */
+.js [data-scroll="fade-up"]:not(.reveal),
+.js [data-scroll="fade-down"]:not(.reveal),
+.js [data-scroll="fade-left"]:not(.reveal),
+.js [data-scroll="fade-right"]:not(.reveal),
+.js [data-scroll="scale"]:not(.reveal),
+.js [data-scroll="flip"]:not(.reveal) {
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Posiciones iniciales específicas */
+.js [data-scroll="fade-up"]:not(.reveal) {
+  transform: translateY(50px);
+}
+
+.js [data-scroll="fade-down"]:not(.reveal) {
+  transform: translateY(-50px);
+}
+
+.js [data-scroll="fade-left"]:not(.reveal) {
+  transform: translateX(-50px);
+}
+
+.js [data-scroll="fade-right"]:not(.reveal) {
+  transform: translateX(50px);
+}
+
+.js [data-scroll="scale"]:not(.reveal) {
+  transform: scale(0.8);
+}
+
+.js [data-scroll="flip"]:not(.reveal) {
+  transform: rotateY(-90deg);
+  transform-style: preserve-3d;
+}
+
+/* Estado revelado */
+.js .reveal[data-scroll="fade-up"],
+.js .reveal[data-scroll="fade-down"],
+.js .reveal[data-scroll="fade-left"],
+.js .reveal[data-scroll="fade-right"] {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.js .reveal[data-scroll="scale"] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.js .reveal[data-scroll="flip"] {
+  opacity: 1;
+  transform: rotateY(0);
+}
+
+/* Delays para efecto stagger (cascada) */
+[data-scroll-delay="100"] { transition-delay: 0.1s; }
+[data-scroll-delay="200"] { transition-delay: 0.2s; }
+[data-scroll-delay="300"] { transition-delay: 0.3s; }
+[data-scroll-delay="400"] { transition-delay: 0.4s; }
+[data-scroll-delay="500"] { transition-delay: 0.5s; }
+[data-scroll-delay="600"] { transition-delay: 0.6s; }
+[data-scroll-delay="700"] { transition-delay: 0.7s; }
+[data-scroll-delay="800"] { transition-delay: 0.8s; }
+
+/* Duraciones personalizadas */
+[data-scroll-duration="fast"] { transition-duration: 0.4s; }
+[data-scroll-duration="normal"] { transition-duration: 0.8s; }
+[data-scroll-duration="slow"] { transition-duration: 1.2s; }
 
 /* ============================================
    RESPONSIVE STYLES

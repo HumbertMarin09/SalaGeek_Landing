@@ -406,30 +406,65 @@ function initSearch() {
    ============================================ */
 
 function initScrollAnimations() {
-  // Marcar que JavaScript está activo
-  document.documentElement.classList.add('js');
-
+  // Configuración del Intersection Observer
   const observerOptions = {
-    threshold: 0.15,
-    rootMargin: '0px 0px -100px 0px'
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
   };
 
+  // Crear el observer
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-        // Opcional: dejar de observar después de animar
-        // observer.unobserve(entry.target);
+        console.log('🎯 Revelando:', entry.target.tagName, entry.target.getAttribute('data-scroll'));
+        
+        // Usar requestAnimationFrame para asegurar que el cambio se aplique
+        requestAnimationFrame(() => {
+          entry.target.classList.add('reveal');
+          
+          // FORZAR REPAINT para fix de webkit gradient rendering
+          const computedStyle = window.getComputedStyle(entry.target);
+          const background = computedStyle.backgroundImage;
+          entry.target.style.backgroundImage = 'none';
+          // Forzar reflow
+          void entry.target.offsetHeight;
+          entry.target.style.backgroundImage = background;
+          
+          console.log('   ✓ Clase agregada. Clases actuales:', entry.target.className);
+        });
+        
+        // Dejar de observar después de animar
+        observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
 
-  // Observar elementos con clases de animación
-  const animatedElements = document.querySelectorAll(
-    '.animate-fade, .animate-slide-up, .animate-slide-down'
-  );
-  
-  animatedElements.forEach(el => observer.observe(el));
+  // Función para inicializar cuando el DOM esté listo
+  const initObserver = () => {
+    const scrollElements = document.querySelectorAll('[data-scroll]');
+    
+    if (scrollElements.length === 0) {
+      console.warn('⚠️ No se encontraron elementos con data-scroll');
+      return;
+    }
+    
+    console.log(`🎬 Scroll Reveal encontró ${scrollElements.length} elementos`);
+    
+    // Observar todos los elementos
+    scrollElements.forEach((element, index) => {
+      console.log(`   ${index + 1}. ${element.tagName} con data-scroll="${element.getAttribute('data-scroll')}"`);
+      observer.observe(element);
+    });
+  };
+
+  // Inicializar después de un pequeño delay para asegurar que todo esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initObserver, 150);
+    });
+  } else {
+    setTimeout(initObserver, 150);
+  }
 }
 
 /* ============================================
