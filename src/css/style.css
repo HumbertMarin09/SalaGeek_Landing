@@ -5163,7 +5163,8 @@ img.lazy-loaded {
 /* Responsive Design para Páginas Legales */
 @media (max-width: 968px) {
   .legal-page {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
   }
 
@@ -5213,12 +5214,11 @@ img.lazy-loaded {
     order: 0;
   }
 
-  .legal-section {
+  .legal-content {
     order: 2;
   }
 
   .legal-backtop {
-    grid-column: 1 / -1;
     order: 3;
   }
 
@@ -5273,7 +5273,7 @@ img.lazy-loaded {
 }
 
 /* ============================================
-   VERSION: 1.95.0
-   LEGAL PAGES TOC MOBILE FIX
+   VERSION: 1.96.0
+   LEGAL PAGES TOC MOBILE FIX - Display Flex Fix
    Last Modified: 2025-11-02
    ============================================ */
