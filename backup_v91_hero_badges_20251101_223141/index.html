@@ -15,19 +15,19 @@
   
   <!-- Preload recursos críticos -->
   <link rel="preload" href="/src/css/normalize.css" as="style" />
-  <link rel="preload" href="/src/css/style.css?v=92" as="style" />
-  <link rel="preload" href="/src/js/script.js?v=57" as="script" />
+  <link rel="preload" href="/src/css/style.css?v=91" as="style" />
+  <link rel="preload" href="/src/js/script.js?v=56" as="script" />
   <link rel="preload" href="/src/images/Icono_SG.ico" as="image" />
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/src/css/normalize.css">
-  <link rel="stylesheet" href="/src/css/style.css?v=92">
+  <link rel="stylesheet" href="/src/css/style.css?v=91">
   <script>
     // Agregar clase 'js' inmediatamente para scroll animations
     document.documentElement.classList.add('js');
   </script>
       <!-- Scripts -->
-    <script defer src="/src/js/script.js?v=57"></script>
+    <script defer src="/src/js/script.js?v=56"></script>
 </head>
 <body class="home">
   <!-- Header inyectado -->
@@ -36,12 +36,6 @@
   <main>
     <!-- Hero Section -->
     <section class="hero-section">
-      <!-- Animated Background -->
-      <div class="hero-background">
-        <div class="hero-particles"></div>
-        <div class="hero-gradient"></div>
-      </div>
-      
       <div class="hero-container">
         <div class="hero-content">
           <h1 class="hero-title">
@@ -52,7 +46,7 @@
           </p>
           <div class="hero-cta hero-animate" data-delay="2">
             <a href="#newsletter" class="btn btn-primary btn-pulse">Únete Ahora</a>
-            <a href="#about" class="btn btn-secondary">Descubre Más</a>
+            <a href="#features" class="btn btn-secondary">Descubre Más</a>
           </div>
         </div>
         <div class="hero-image">
@@ -76,74 +70,11 @@
       </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about-section">
+    <!-- Features Section -->
+    <section id="features" class="features-section">
       <div class="container">
-        <h2 class="section-title" data-scroll="fade-down">Acerca de Sala Geek</h2>
-        <p class="about-intro" data-scroll="fade-up" data-scroll-delay="100">
-          Somos la comunidad geek de habla hispana más grande y activa. Desde 2017, conectamos a miles de fans apasionados por el entretenimiento, 
-          ofreciendo contenido de calidad, noticias actualizadas y un espacio donde la cultura geek cobra vida.
-        </p>
-
-        <!-- About Grid -->
-        <div class="about-grid">
-          <div class="about-card" data-scroll="fade-up" data-scroll-delay="200">
-            <div class="about-icon">🎯</div>
-            <h3 class="about-title">Nuestra Misión</h3>
-            <p class="about-text">
-              Ser el punto de encuentro definitivo para la comunidad geek, proporcionando contenido relevante, 
-              actualizado y de calidad sobre películas, series, anime y videojuegos.
-            </p>
-          </div>
-
-          <div class="about-card" data-scroll="fade-up" data-scroll-delay="300">
-            <div class="about-icon">🌟</div>
-            <h3 class="about-title">Nuestra Visión</h3>
-            <p class="about-text">
-              Convertirnos en la plataforma de referencia para los geeks de habla hispana, 
-              creando una comunidad global donde cada fan encuentre su lugar.
-            </p>
-          </div>
-
-          <div class="about-card" data-scroll="fade-up" data-scroll-delay="400">
-            <div class="about-icon">💎</div>
-            <h3 class="about-title">Nuestros Valores</h3>
-            <p class="about-text">
-              Pasión por la cultura geek, compromiso con la calidad, comunidad inclusiva, 
-              y dedicación constante a mantener informada a nuestra audiencia.
-            </p>
-          </div>
-        </div>
-
-        <!-- Stats integrados -->
-        <div class="about-stats">
-          <div class="about-stat" data-scroll="scale" data-scroll-delay="100">
-            <span class="about-stat-number" data-count="8" data-suffix="+">0</span>
-            <span class="about-stat-label">Años de experiencia</span>
-          </div>
-          <div class="about-stat" data-scroll="scale" data-scroll-delay="200">
-            <span class="about-stat-number" data-count="10" data-suffix="K+">0</span>
-            <span class="about-stat-label">Seguidores activos</span>
-          </div>
-          <div class="about-stat" data-scroll="scale" data-scroll-delay="300">
-            <span class="about-stat-number" data-count="10" data-suffix="K+">0</span>
-            <span class="about-stat-label">Artículos publicados</span>
-          </div>
-          <div class="about-stat" data-scroll="scale" data-scroll-delay="400">
-            <span class="about-stat-number" data-count="24" data-suffix="/7">0</span>
-            <span class="about-stat-label">Cobertura continua</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-separator"></div>
-
-    <!-- Services Section (anteriormente Features) -->
-    <section id="services" class="features-section services-section">
-      <div class="container">
-        <h2 class="section-title" data-scroll="fade-down">¿Qué Ofrecemos?</h2>
-        <p class="section-description" data-scroll="fade-down" data-scroll-delay="100">Todo lo que necesitas para estar al día en el mundo geek</p>
+        <h2 class="section-title" data-scroll="fade-down">¿Por qué elegir Sala Geek?</h2>
+        <p class="section-description" data-scroll="fade-down" data-scroll-delay="100">Descubre todo lo que tenemos para ofrecerte</p>
         
         <div class="features-grid">
           <div class="feature-card" data-scroll="fade-up" data-scroll-delay="200">
@@ -183,112 +114,80 @@
 
     <div class="section-separator"></div>
 
-    <!-- Testimonials Carousel Section -->
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <h2 class="section-title" data-scroll="scale">Sala Geek en Números</h2>
+        <div class="stats-grid">
+          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="100">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Seguidores</div>
+          </div>
+          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="200">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Artículos</div>
+          </div>
+          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="300">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Cobertura</div>
+          </div>
+          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="400">
+            <div class="stat-number">4</div>
+            <div class="stat-label">Categorías</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-separator"></div>
+
+    <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials-section">
       <div class="container">
         <h2 class="section-title" data-scroll="fade-down">Lo que dicen nuestros usuarios</h2>
         <p class="section-description" data-scroll="fade-down" data-scroll-delay="100">Miles de geeks confían en nosotros cada día</p>
         
-        <div class="testimonials-carousel" data-scroll="fade-up" data-scroll-delay="200">
-          <!-- Carousel Container -->
-          <div class="carousel-container">
-            <div class="carousel-track">
-              <!-- Testimonial 1 -->
-              <div class="testimonial-card active">
-                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">
-                  "Sala Geek es mi fuente principal de noticias. Siempre están al día con los últimos estrenos y novedades. ¡No puedo empezar mi día sin revisar su contenido!"
-                </p>
-                <div class="testimonial-author">
-                  <div class="author-avatar">JL</div>
-                  <div class="author-info">
-                    <div class="author-name">Jorge López</div>
-                    <div class="author-role">Fan de Anime</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Testimonial 2 -->
-              <div class="testimonial-card">
-                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">
-                  "La mejor comunidad geek de habla hispana. Contenido de calidad y siempre actualizado. El equipo realmente entiende lo que los fans queremos ver."
-                </p>
-                <div class="testimonial-author">
-                  <div class="author-avatar">MR</div>
-                  <div class="author-info">
-                    <div class="author-name">María Rodríguez</div>
-                    <div class="author-role">Gamer Profesional</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Testimonial 3 -->
-              <div class="testimonial-card">
-                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">
-                  "Excelente selección de contenido. Me encanta que cubran tanto películas como series y videojuegos. Es mi one-stop-shop para todo lo geek."
-                </p>
-                <div class="testimonial-author">
-                  <div class="author-avatar">CP</div>
-                  <div class="author-info">
-                    <div class="author-name">Carlos Pérez</div>
-                    <div class="author-role">Cinéfilo</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Testimonial 4 -->
-              <div class="testimonial-card">
-                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">
-                  "Descubrí Sala Geek hace 2 años y desde entonces es mi referencia obligada. Las reseñas son honestas y el contenido siempre está a la vanguardia."
-                </p>
-                <div class="testimonial-author">
-                  <div class="author-avatar">AL</div>
-                  <div class="author-info">
-                    <div class="author-name">Ana López</div>
-                    <div class="author-role">Coleccionista</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Testimonial 5 -->
-              <div class="testimonial-card">
-                <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">
-                  "Como streamer, necesito estar al día con todo. Sala Geek me mantiene informado con las últimas tendencias y lanzamientos. ¡Indispensable!"
-                </p>
-                <div class="testimonial-author">
-                  <div class="author-avatar">DM</div>
-                  <div class="author-info">
-                    <div class="author-name">David Martínez</div>
-                    <div class="author-role">Streamer</div>
-                  </div>
-                </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card" data-scroll="fade-left" data-scroll-delay="200">
+            <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testimonial-text">
+              "Sala Geek es mi fuente principal de noticias. Siempre están al día con los últimos estrenos y novedades."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">JL</div>
+              <div class="author-info">
+                <div class="author-name">Jorge López</div>
+                <div class="author-role">Fan de Anime</div>
               </div>
             </div>
           </div>
 
-          <!-- Navigation Arrows -->
-          <button class="carousel-btn carousel-prev" aria-label="Testimonio anterior">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <button class="carousel-btn carousel-next" aria-label="Siguiente testimonio">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
+          <div class="testimonial-card" data-scroll="fade-up" data-scroll-delay="300">
+            <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testimonial-text">
+              "La mejor comunidad geek de habla hispana. Contenido de calidad y siempre actualizado."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">MR</div>
+              <div class="author-info">
+                <div class="author-name">María Rodríguez</div>
+                <div class="author-role">Gamer Profesional</div>
+              </div>
+            </div>
+          </div>
 
-          <!-- Indicators (Dots) -->
-          <div class="carousel-indicators">
-            <button class="indicator active" aria-label="Ver testimonio 1" data-slide="0"></button>
-            <button class="indicator" aria-label="Ver testimonio 2" data-slide="1"></button>
-            <button class="indicator" aria-label="Ver testimonio 3" data-slide="2"></button>
-            <button class="indicator" aria-label="Ver testimonio 4" data-slide="3"></button>
-            <button class="indicator" aria-label="Ver testimonio 5" data-slide="4"></button>
+          <div class="testimonial-card" data-scroll="fade-right" data-scroll-delay="400">
+            <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testimonial-text">
+              "Excelente selección de contenido. Me encanta que cubran tanto películas como series y videojuegos."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">CP</div>
+              <div class="author-info">
+                <div class="author-name">Carlos Pérez</div>
+                <div class="author-role">Cinéfilo</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -304,7 +203,7 @@
           <p class="newsletter-subtitle">
             Suscríbete a nuestro newsletter y recibe las mejores noticias directamente en tu correo
           </p>
-          <form class="newsletter-form" id="newsletter-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form class="newsletter-form" id="newsletter-form">
             <input 
               type="email" 
               id="newsletter-email"
@@ -315,19 +214,10 @@
               autocomplete="email"
               aria-label="Correo electrónico"
             />
-            <button type="submit" class="btn btn-primary btn-large" id="newsletter-submit">
-              <span class="btn-text">Suscribirme Gratis</span>
-              <span class="btn-loader" style="display: none;">
-                <span class="spinner"></span>
-              </span>
+            <button type="submit" class="btn btn-primary btn-large">
+              Suscribirme Gratis
             </button>
           </form>
-          
-          <!-- Mensajes de éxito/error -->
-          <div class="newsletter-message" id="newsletter-message" style="display: none;">
-            <p class="message-text"></p>
-          </div>
-          
           <p class="newsletter-note">
             🔒 No spam. Cancela cuando quieras. 100% gratis.
           </p>
@@ -407,16 +297,5 @@
       </div>
     </div>
   </div>
-
-  <!-- Back to Top Button con Scroll Progress -->
-  <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
-    <svg class="progress-ring" width="50" height="50">
-      <circle class="progress-ring-circle" stroke="rgba(255, 209, 102, 0.2)" stroke-width="3" fill="transparent" r="20" cx="25" cy="25"/>
-      <circle class="progress-ring-progress" stroke="#ffd166" stroke-width="3" fill="transparent" r="20" cx="25" cy="25"/>
-    </svg>
-    <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <path d="M12 19V5M5 12l7-7 7 7"/>
-    </svg>
-  </button>
 </body>
 </html>

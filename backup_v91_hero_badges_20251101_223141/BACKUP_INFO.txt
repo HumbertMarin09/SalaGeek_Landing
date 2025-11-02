@@ -1,0 +1,132 @@
+﻿====================================
+BACKUP SALA GEEK - VERSIÓN v91
+====================================
+
+Fecha: 01/11/2025 22:32:18
+Versiones: CSS v91, JS v56
+
+====================================
+CARACTERÍSTICAS INCLUIDAS
+====================================
+
+ HERO ANIMATIONS (v66-v85, JS v48):
+    Typewriter effect cross-browser (solución JS)
+    Gradient flow en 'Sala Geek'
+    Button pulse con ripple
+    Hero fade-in y stagger effects
+    Easter egg: Triple-click rainbow
+
+ SISTEMA INTELIGENTE DE BADGES (v86-v91, JS v49-v56):
+    Detección de duración de hover (300ms threshold)
+    Hover rápido: Efecto sutil sin explosión
+    Hover mantenido: Explosión dramática al salir
+    Scale 1.1x + brightness 1.2x en hover
+    Explosión: Rotate 360° + shockwave 3.5x
+    Brightness 2.5x + partículas brillantes
+    UX inteligente que no molesta
+
+ SCROLL ANIMATIONS (v65):
+    22 elementos animados
+    Intersection Observer
+    6 tipos de efectos
+
+ LAZY LOADING (v29):
+    Imágenes optimizadas
+    DNS prefetch
+    Resource preloading
+
+ OPTIMIZACIONES (v73):
+    Modo claro eliminado (-29.5% CSS)
+    Theme system simplificado (-92% JS)
+    Solo modo oscuro permanente
+
+====================================
+COMMITS GUARDADOS
+====================================
+
+1. Scroll animations + lazy loading (58979cb)
+2. Hero animations + typewriter fix (4859357)
+3. Sistema inteligente de badges (2cff2a7)
+
+====================================
+ARCHIVOS RESPALDADOS
+====================================
+
+ index.html
+ package.json
+ src/css/normalize.css
+ src/css/style.css (v91)
+ src/js/script.js (v56)
+ src/pages/partials/header.html
+ src/pages/partials/footer.html
+ src/pages/legal/cookies.html
+ src/pages/legal/privacy.html
+ src/pages/legal/terms.html
+ src/images/
+
+====================================
+ESTADO DEL PROYECTO
+====================================
+
+ Líneas de código:
+    CSS: ~3,944 líneas (reducido 29.5% vs v65)
+    JavaScript: ~1,110 líneas (optimizado)
+    HTML: Limpio y semántico
+
+ Animaciones:
+    Hero: 6 tipos + typewriter JS
+    Badges: Sistema inteligente 2 fases
+    Scroll: 22 elementos con 6 efectos
+    Lazy loading: Activo
+
+ Rendimiento:
+    Modo claro eliminado
+    DNS prefetch configurado
+    Resource preloading activo
+    Lazy loading implementado
+
+ Cross-browser:
+    Firefox: 
+    Chrome: 
+    Opera: 
+    Edge: 
+    Safari:  (probable)
+    Brave:  (probable)
+
+====================================
+NOTAS DE DESARROLLO
+====================================
+
+ Typewriter: Solución JS tras 15 iteraciones (Chrome bug)
+ Badges: 6 iteraciones hasta sistema final perfecto
+ Simplificación: De 5 fases  2 animaciones simples
+ Detección inteligente: 300ms threshold óptimo
+ Sin bugs conocidos en consola
+
+====================================
+PRÓXIMOS PASOS SUGERIDOS
+====================================
+
+ Pendientes:
+    Sincronizar páginas legales (CSS v91, JS v56)
+    Testing móvil/tablet completo
+    Auditoría de rendimiento Lighthouse
+    Optimización de imágenes adicional
+
+ Posibles mejoras:
+    prefers-reduced-motion para accesibilidad
+    Service Worker para PWA
+    Más easter eggs interactivos
+    Animaciones adicionales en otras secciones
+
+====================================
+RESTAURACIÓN
+====================================
+
+Para restaurar este backup:
+1. Copiar contenido de este directorio
+2. Reemplazar archivos en proyecto principal
+3. Verificar versiones CSS v91, JS v56
+4. Probar en navegadores
+
+====================================

@@ -1,11 +1,4 @@
 /* ============================================
-   SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.64.0
-   Description: Newsletter funcional + Back to Top (Landing 100% lista)
-   Last Modified: 2025-11-01
-   ============================================ */
-
-/* ============================================
    UTILIDADES GLOBALES
    ============================================ */
 
@@ -468,134 +461,6 @@ function initLazyLoading() {
 }
 
 /* ============================================
-   HERO PARALLAX EFFECT
-   ============================================ */
-
-function initHeroParallax() {
-  // Only enable on desktop
-  if (window.innerWidth <= 768) return;
-  
-  const badges = document.querySelectorAll('.hero-badge');
-  const heroSection = document.querySelector('.hero-section');
-  
-  if (!badges.length || !heroSection) return;
-
-  let mouseX = 0;
-  let mouseY = 0;
-  let targetX = 0;
-  let targetY = 0;
-
-  // Track mouse movement
-  heroSection.addEventListener('mousemove', (e) => {
-    const rect = heroSection.getBoundingClientRect();
-    mouseX = (e.clientX - rect.left - rect.width / 2) / rect.width;
-    mouseY = (e.clientY - rect.top - rect.height / 2) / rect.height;
-  });
-
-  // Reset on mouse leave
-  heroSection.addEventListener('mouseleave', () => {
-    mouseX = 0;
-    mouseY = 0;
-  });
-
-  // Smooth animation loop
-  function animate() {
-    // Smooth interpolation
-    targetX += (mouseX - targetX) * 0.1;
-    targetY += (mouseY - targetY) * 0.1;
-
-    badges.forEach((badge, index) => {
-      // Different movement intensity for each badge
-      const intensity = (index + 1) * 8;
-      const offsetX = targetX * intensity;
-      const offsetY = targetY * intensity;
-      
-      badge.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-    });
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
-}
-
-/* ============================================
-   STATS COUNTER ANIMATION
-   ============================================ */
-
-function initStatsCounter() {
-  const statNumbers = document.querySelectorAll('.about-stat-number[data-count]');
-  
-  if (statNumbers.length === 0) return;
-
-  let hasAnimated = false;
-
-  // Función de easing para animación suave (easeOutCubic)
-  // Desacelera suavemente sin freno evidente - Usado en Material Design
-  const easeOutCubic = (t) => {
-    return 1 - Math.pow(1 - t, 3);
-  };
-
-  // Función para animar un contador individual
-  const animateCounter = (element) => {
-    const target = parseInt(element.getAttribute('data-count'));
-    const suffix = element.getAttribute('data-suffix') || '';
-    const duration = 2500; // 2.5 segundos (timing óptimo)
-    const startTime = performance.now();
-
-    const updateCounter = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-      const currentValue = Math.floor(easedProgress * target);
-
-      // Actualizar el texto
-      element.textContent = currentValue + suffix;
-
-      // Continuar animación si no ha terminado
-      if (progress < 1) {
-        requestAnimationFrame(updateCounter);
-      } else {
-        // Asegurar valor final exacto
-        element.textContent = target + suffix;
-      }
-    };
-
-    requestAnimationFrame(updateCounter);
-  };
-
-  // Intersection Observer para activar cuando sea visible
-  const observerOptions = {
-    threshold: 0.3, // Activar cuando 30% sea visible
-    rootMargin: '0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !hasAnimated) {
-        hasAnimated = true;
-        
-        // Animar cada contador con un pequeño delay
-        statNumbers.forEach((stat, index) => {
-          setTimeout(() => {
-            animateCounter(stat);
-          }, index * 150); // 150ms de delay entre cada uno (más escalonado)
-        });
-
-        // Dejar de observar después de animar
-        observer.disconnect();
-      }
-    });
-  }, observerOptions);
-
-  // Observar el contenedor de stats
-  const statsContainer = document.querySelector('.about-stats');
-  if (statsContainer) {
-    observer.observe(statsContainer);
-  }
-}
-
-/* ============================================
    HERO ANIMATIONS
    ============================================ */
 
@@ -710,267 +575,63 @@ function initHeroAnimations() {
 }
 
 /* ============================================
-   TESTIMONIALS CAROUSEL
-   ============================================ */
-
-function initTestimonialsCarousel() {
-  const track = document.querySelector('.carousel-track');
-  const cards = document.querySelectorAll('.testimonial-card');
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
-  const indicators = document.querySelectorAll('.carousel-indicators .indicator');
-  
-  if (!track || cards.length === 0) return;
-
-  let currentIndex = 0;
-  let isTransitioning = false;
-  let autoSlideInterval;
-  let startX = 0;
-  let currentX = 0;
-  let isDragging = false;
-
-  // Función para actualizar el carrusel
-  function updateCarousel(animate = true) {
-    if (isTransitioning) return;
-    isTransitioning = true;
-
-    // Actualizar cards
-    cards.forEach((card, index) => {
-      card.classList.remove('active');
-      if (index === currentIndex) {
-        card.classList.add('active');
-      }
-    });
-
-    // Mover el track
-    const offset = -currentIndex * 100;
-    if (animate) {
-      track.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-    } else {
-      track.style.transition = 'none';
-    }
-    track.style.transform = `translateX(${offset}%)`;
-
-    // Actualizar indicadores
-    indicators.forEach((indicator, index) => {
-      indicator.classList.toggle('active', index === currentIndex);
-    });
-
-    setTimeout(() => {
-      isTransitioning = false;
-    }, 600);
-  }
-
-  // Navegación anterior
-  function goToPrev() {
-    if (isTransitioning) return;
-    currentIndex = currentIndex === 0 ? cards.length - 1 : currentIndex - 1;
-    updateCarousel();
-    resetAutoSlide();
-  }
-
-  // Navegación siguiente
-  function goToNext() {
-    if (isTransitioning) return;
-    currentIndex = currentIndex === cards.length - 1 ? 0 : currentIndex + 1;
-    updateCarousel();
-    resetAutoSlide();
-  }
-
-  // Ir a slide específico
-  function goToSlide(index) {
-    if (isTransitioning || index === currentIndex) return;
-    currentIndex = index;
-    updateCarousel();
-    resetAutoSlide();
-  }
-
-  // Auto-slide
-  function startAutoSlide() {
-    autoSlideInterval = setInterval(() => {
-      goToNext();
-    }, 5000); // 5 segundos
-  }
-
-  function stopAutoSlide() {
-    if (autoSlideInterval) {
-      clearInterval(autoSlideInterval);
-    }
-  }
-
-  function resetAutoSlide() {
-    stopAutoSlide();
-    startAutoSlide();
-  }
-
-  // Touch/Swipe support
-  function handleTouchStart(e) {
-    isDragging = true;
-    startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-    track.style.transition = 'none';
-    stopAutoSlide();
-  }
-
-  function handleTouchMove(e) {
-    if (!isDragging) return;
-    e.preventDefault();
-    currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-    const diff = currentX - startX;
-    const offset = -currentIndex * 100 + (diff / track.offsetWidth) * 100;
-    track.style.transform = `translateX(${offset}%)`;
-  }
-
-  function handleTouchEnd() {
-    if (!isDragging) return;
-    isDragging = false;
-    const diff = currentX - startX;
-    const threshold = track.offsetWidth * 0.2; // 20% del ancho
-
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) {
-        goToPrev();
-      } else {
-        goToNext();
-      }
-    } else {
-      updateCarousel();
-    }
-    resetAutoSlide();
-  }
-
-  // Event Listeners
-  if (prevBtn) prevBtn.addEventListener('click', goToPrev);
-  if (nextBtn) nextBtn.addEventListener('click', goToNext);
-
-  indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', () => goToSlide(index));
-  });
-
-  // Touch events
-  const container = document.querySelector('.carousel-container');
-  if (container) {
-    container.addEventListener('touchstart', handleTouchStart, { passive: false });
-    container.addEventListener('touchmove', handleTouchMove, { passive: false });
-    container.addEventListener('touchend', handleTouchEnd);
-    
-    // Mouse events para desktop
-    container.addEventListener('mousedown', handleTouchStart);
-    container.addEventListener('mousemove', handleTouchMove);
-    container.addEventListener('mouseup', handleTouchEnd);
-    container.addEventListener('mouseleave', () => {
-      if (isDragging) handleTouchEnd();
-    });
-  }
-
-  // Keyboard navigation
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') goToPrev();
-    if (e.key === 'ArrowRight') goToNext();
-  });
-
-  // Pausar auto-slide en hover
-  const carousel = document.querySelector('.testimonials-carousel');
-  if (carousel) {
-    carousel.addEventListener('mouseenter', stopAutoSlide);
-    carousel.addEventListener('mouseleave', startAutoSlide);
-  }
-
-  // Inicializar
-  updateCarousel(false);
-  startAutoSlide();
-}
-
-/* ============================================
    NEWSLETTER FORM
    ============================================ */
 
 function initNewsletterForm() {
   const form = document.getElementById('newsletter-form');
-  const messageContainer = document.getElementById('newsletter-message');
-  
   if (!form) return;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const emailInput = form.querySelector('input[type="email"]');
-    const submitBtn = document.getElementById('newsletter-submit');
-    const btnText = submitBtn.querySelector('.btn-text');
-    const btnLoader = submitBtn.querySelector('.btn-loader');
+    const submitBtn = form.querySelector('button[type="submit"]');
     const email = emailInput.value.trim();
     
     if (!email) return;
 
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      showNewsletterMessage('Por favor, ingresa un correo electrónico válido', 'error');
-      return;
-    }
-
-    // Deshabilitar el botón y mostrar loader
+    // Deshabilitar el botón durante el proceso
+    const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    btnText.style.display = 'none';
-    btnLoader.style.display = 'inline-flex';
-    
-    // Ocultar mensaje anterior si existe
-    if (messageContainer) {
-      messageContainer.style.display = 'none';
-    }
+    submitBtn.innerHTML = '⏳ Procesando...';
     
     try {
-      // Enviar a Formspree
-      const formData = new FormData(form);
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      // Aquí iría la integración con tu servicio de newsletter
+      // Por ahora, simulamos una petición
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      if (response.ok) {
-        // Éxito
-        showNewsletterMessage('¡Gracias por suscribirte! Pronto recibirás nuestras últimas noticias en tu correo.', 'success');
-        
-        // Limpiar el formulario
-        emailInput.value = '';
-        
-        // Guardar en localStorage para no mostrar nuevamente
-        localStorage.setItem('newsletter_subscribed', 'true');
-        
-      } else {
-        // Error del servidor
-        const data = await response.json();
-        throw new Error(data.error || 'Error al procesar la suscripción');
-      }
+      // Mostrar mensaje de éxito
+      submitBtn.innerHTML = '✓ ¡Suscrito!';
+      submitBtn.style.background = 'linear-gradient(135deg, #48bb78 0%, #38a169 100%)';
+      
+      // Limpiar el formulario
+      emailInput.value = '';
+      
+      // Mostrar notificación
+      showNotification('¡Gracias por suscribirte! Pronto recibirás nuestras últimas noticias.', 'success');
+      
+      // Restaurar el botón después de 3 segundos
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.style.background = '';
+      }, 3000);
       
     } catch (error) {
       console.error('Error al suscribir:', error);
-      showNewsletterMessage('Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.', 'error');
-    } finally {
-      // Restaurar el botón
-      submitBtn.disabled = false;
-      btnText.style.display = 'inline';
-      btnLoader.style.display = 'none';
+      submitBtn.innerHTML = '✗ Error';
+      submitBtn.style.background = 'linear-gradient(135deg, #f56565 0%, #e53e3e 100%)';
+      
+      showNotification('Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.', 'error');
+      
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.style.background = '';
+      }, 3000);
     }
   });
-  
-  // Función helper para mostrar mensajes
-  function showNewsletterMessage(text, type) {
-    if (!messageContainer) return;
-    
-    const messageText = messageContainer.querySelector('.message-text');
-    messageText.textContent = text;
-    
-    messageContainer.className = 'newsletter-message ' + type;
-    messageContainer.style.display = 'block';
-    
-    // Auto-ocultar después de 8 segundos
-    setTimeout(() => {
-      messageContainer.style.display = 'none';
-    }, 8000);
-  }
 }
 
 /* ============================================
@@ -1089,57 +750,6 @@ function initCookieConsent() {
       setTimeout(() => cookieBanner.remove(), 400);
     });
   }
-}
-
-/* ============================================
-   BACK TO TOP BUTTON + SCROLL PROGRESS
-   ============================================ */
-
-function initBackToTop() {
-  const backToTopBtn = document.getElementById('back-to-top');
-  if (!backToTopBtn) return;
-
-  const progressCircle = backToTopBtn.querySelector('.progress-ring-progress');
-  const circumference = 2 * Math.PI * 20; // r=20
-
-  // Configurar el círculo de progreso
-  progressCircle.style.strokeDasharray = circumference;
-  progressCircle.style.strokeDashoffset = circumference;
-
-  // Función para actualizar el progreso
-  function updateScrollProgress() {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    // Calcular porcentaje de scroll
-    const scrollPercent = scrollTop / (documentHeight - windowHeight);
-    const offset = circumference - (scrollPercent * circumference);
-    
-    progressCircle.style.strokeDashoffset = offset;
-
-    // Mostrar/ocultar botón
-    if (scrollTop > 300) {
-      backToTopBtn.classList.add('visible');
-    } else {
-      backToTopBtn.classList.remove('visible');
-    }
-  }
-
-  // Event listeners
-  window.addEventListener('scroll', updateScrollProgress);
-  window.addEventListener('resize', updateScrollProgress);
-
-  // Click para volver arriba
-  backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  });
-
-  // Inicializar
-  updateScrollProgress();
 }
 
 /* ============================================
@@ -1471,15 +1081,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializar funcionalidades
   initResponsiveHandler();
   initHeroAnimations();
-  initHeroParallax();
-  initStatsCounter();
   initScrollAnimations();
   initLazyLoading();
-  initTestimonialsCarousel();
   initNewsletterForm();
   initCookieConsent();
   initSmoothScroll();
-  initBackToTop();
   initSearch();
   initHeaderScroll();
   
