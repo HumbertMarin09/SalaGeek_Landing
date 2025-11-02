@@ -16,78 +16,12 @@ const responsiveState = {
 /**
  * Inicializa el sistema de cambio de tema (claro/oscuro)
  */
-function initThemeSwitcher() {
-  // Obtener preferencia guardada o del sistema
-  const getPreferredTheme = () => {
-    const savedTheme = localStorage.getItem('sg_theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    
-    // Si no hay preferencia guardada, usar preferencia del sistema
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  };
-
-  // Aplicar tema con transición suave y natural
-  const applyTheme = (theme, withTransition = false) => {
-    if (withTransition) {
-      // Agregar clase de transición al root para animar todos los elementos
-      document.documentElement.classList.add('theme-transitioning');
-      
-      // Cambiar tema inmediatamente - la transición CSS se encarga del resto
-      setTimeout(() => {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('sg_theme', theme);
-        
-        // Actualizar icono del botón
-        const themeIcon = document.querySelector('.theme-toggle-icon');
-        if (themeIcon) {
-          themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
-        }
-      }, 50);
-      
-      // Remover clase de transición después de completar
-      setTimeout(() => {
-        document.documentElement.classList.remove('theme-transitioning');
-      }, 500);
-    } else {
-      // Aplicación inmediata sin transición (para carga inicial)
-      document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('sg_theme', theme);
-      
-      const themeIcon = document.querySelector('.theme-toggle-icon');
-      if (themeIcon) {
-        themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
-      }
-    }
-  };
-
-  // Aplicar tema inicial
-  const currentTheme = getPreferredTheme();
-  applyTheme(currentTheme);
-
-  // Detectar cambios en la preferencia del sistema
-  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('sg_theme')) {
-      applyTheme(e.matches ? 'light' : 'dark');
-    }
-  });
-
-  // Toggle del tema al hacer clic
-  document.addEventListener('click', (e) => {
-    const themeToggle = e.target.closest('.theme-toggle');
-    if (themeToggle) {
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      // Agregar clase de animación al botón
-      themeToggle.classList.add('switching');
-      setTimeout(() => themeToggle.classList.remove('switching'), 500);
-      
-      // Aplicar nuevo tema CON transición
-      applyTheme(newTheme, true);
-    }
-  });
+// Tema oscuro permanente - modo claro eliminado
+function initDarkMode() {
+  // Forzar modo oscuro siempre
+  document.documentElement.setAttribute('data-theme', 'dark');
+  // Limpiar cualquier preferencia guardada del modo claro
+  localStorage.removeItem('sg_theme');
 }
 
 // Actualizar estado responsivo
@@ -524,6 +458,120 @@ function initLazyLoading() {
 
   const lazyIframes = document.querySelectorAll('iframe[data-src]');
   lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
+}
+
+/* ============================================
+   HERO ANIMATIONS
+   ============================================ */
+
+function initHeroAnimations() {
+  const typewriterElement = document.querySelector('.typewriter');
+  
+  if (!typewriterElement) return;
+  
+  // Solución JavaScript universal - Mostrar letra por letra
+  const fullText = typewriterElement.textContent;
+  const chars = fullText.split('');
+  const duration = 1500; // 1.5 segundos (más rápido y fluido)
+  const charDuration = duration / chars.length; // ~115ms por carácter
+  
+  // Vaciar el elemento inicialmente
+  typewriterElement.textContent = '';
+  typewriterElement.style.width = 'auto';
+  
+  // Animar mostrando caracteres después del delay
+  setTimeout(() => {
+    let currentChar = 0;
+    
+    const interval = setInterval(() => {
+      if (currentChar < chars.length) {
+        typewriterElement.textContent += chars[currentChar];
+        currentChar++;
+      } else {
+        clearInterval(interval);
+        // Remover cursor después de completar
+        setTimeout(() => {
+          typewriterElement.classList.add('typing-complete');
+        }, 200);
+      }
+    }, charDuration);
+  }, 500); // Delay inicial
+  
+  // Agregar interactividad adicional a los badges
+  const badges = document.querySelectorAll('.hero-badge');
+  badges.forEach((badge, index) => {
+    let isHovered = false;
+    let originalAnimation = '';
+    
+    badge.addEventListener('mouseenter', () => {
+      // Guardar la animación original
+      originalAnimation = badge.style.animation || getComputedStyle(badge).animation;
+      
+      // Badge desaparece
+      badge.classList.add('hiding');
+      badge.style.animationPlayState = 'paused';
+      isHovered = true;
+    });
+    
+    badge.addEventListener('mouseleave', () => {
+      if (isHovered) {
+        // Esperar a que desaparezca completamente
+        setTimeout(() => {
+          badge.classList.remove('hiding');
+          
+          // Efecto de explosión al reaparecer
+          badge.classList.add('exploding');
+          
+          setTimeout(() => {
+            badge.classList.remove('exploding');
+            badge.style.animation = originalAnimation;
+            badge.style.animationPlayState = 'running';
+          }, 600);
+        }, 400);
+      }
+      
+      isHovered = false;
+    });
+    
+    // Agregar un pequeño efecto de click
+    badge.addEventListener('click', () => {
+      badge.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        badge.style.transform = '';
+      }, 150);
+    });
+  });
+  
+  // Easter egg: Efecto especial al hacer triple click en "Sala Geek"
+  const heroBrand = document.querySelector('.hero-brand');
+  if (heroBrand) {
+    let clickCount = 0;
+    let clickTimer = null;
+    
+    heroBrand.addEventListener('click', () => {
+      clickCount++;
+      
+      if (clickTimer) clearTimeout(clickTimer);
+      
+      if (clickCount === 3) {
+        // Efecto arcoíris especial
+        heroBrand.style.animation = 'none';
+        heroBrand.style.background = 'linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)';
+        heroBrand.style.backgroundSize = '200% 100%';
+        heroBrand.style.animation = 'gradientFlow 1s ease-in-out infinite';
+        
+        setTimeout(() => {
+          heroBrand.style.animation = '';
+        }, 3000);
+        
+        clickCount = 0;
+      }
+      
+      clickTimer = setTimeout(() => {
+        clickCount = 0;
+      }, 500);
+    });
+  }
 }
 
 /* ============================================
@@ -1021,8 +1069,8 @@ function initReadingProgress() {
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar tema ANTES de cargar componentes
-  initThemeSwitcher();
+  // Forzar modo oscuro
+  initDarkMode();
   
   // Cargar componentes
   loadIncludes().then(() => {
@@ -1032,6 +1080,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Inicializar funcionalidades
   initResponsiveHandler();
+  initHeroAnimations();
   initScrollAnimations();
   initLazyLoading();
   initNewsletterForm();

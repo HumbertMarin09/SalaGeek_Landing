@@ -15,19 +15,19 @@
   
   <!-- Preload recursos críticos -->
   <link rel="preload" href="/src/css/normalize.css" as="style" />
-  <link rel="preload" href="/src/css/style.css?v=65" as="style" />
-  <link rel="preload" href="/src/js/script.js?v=29" as="script" />
+  <link rel="preload" href="/src/css/style.css?v=85" as="style" />
+  <link rel="preload" href="/src/js/script.js?v=48" as="script" />
   <link rel="preload" href="/src/images/Icono_SG.ico" as="image" />
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/src/css/normalize.css">
-  <link rel="stylesheet" href="/src/css/style.css?v=65">
+  <link rel="stylesheet" href="/src/css/style.css?v=85">
   <script>
     // Agregar clase 'js' inmediatamente para scroll animations
     document.documentElement.classList.add('js');
   </script>
       <!-- Scripts -->
-    <script defer src="/src/js/script.js?v=29"></script>
+    <script defer src="/src/js/script.js?v=48"></script>
 </head>
 <body class="home">
   <!-- Header inyectado -->
@@ -39,13 +39,13 @@
       <div class="hero-container">
         <div class="hero-content">
           <h1 class="hero-title">
-            Bienvenido a <span class="hero-brand">Sala Geek</span>
+            <span class="typewriter" data-text="Bienvenido a ">Bienvenido a </span><span class="hero-brand">Sala Geek</span>
           </h1>
-          <p class="hero-subtitle">
+          <p class="hero-subtitle hero-animate" data-delay="1">
             Tu espacio definitivo para mantenerte al día con lo último en películas, series, anime y videojuegos
           </p>
-          <div class="hero-cta">
-            <a href="#newsletter" class="btn btn-primary">Únete Ahora</a>
+          <div class="hero-cta hero-animate" data-delay="2">
+            <a href="#newsletter" class="btn btn-primary btn-pulse">Únete Ahora</a>
             <a href="#features" class="btn btn-secondary">Descubre Más</a>
           </div>
         </div>
