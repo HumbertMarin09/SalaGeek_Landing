@@ -15,13 +15,13 @@
   
   <!-- Preload recursos críticos -->
   <link rel="preload" href="/src/css/normalize.css" as="style" />
-  <link rel="preload" href="/src/css/style.css?v=91" as="style" />
+  <link rel="preload" href="/src/css/style.css?v=92" as="style" />
   <link rel="preload" href="/src/js/script.js?v=56" as="script" />
   <link rel="preload" href="/src/images/Icono_SG.ico" as="image" />
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/src/css/normalize.css">
-  <link rel="stylesheet" href="/src/css/style.css?v=91">
+  <link rel="stylesheet" href="/src/css/style.css?v=92">
   <script>
     // Agregar clase 'js' inmediatamente para scroll animations
     document.documentElement.classList.add('js');
@@ -70,11 +70,74 @@
       </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features-section">
+    <!-- About Section -->
+    <section id="about" class="about-section">
       <div class="container">
-        <h2 class="section-title" data-scroll="fade-down">¿Por qué elegir Sala Geek?</h2>
-        <p class="section-description" data-scroll="fade-down" data-scroll-delay="100">Descubre todo lo que tenemos para ofrecerte</p>
+        <h2 class="section-title" data-scroll="fade-down">Acerca de Sala Geek</h2>
+        <p class="about-intro" data-scroll="fade-up" data-scroll-delay="100">
+          Somos la comunidad geek de habla hispana más grande y activa. Desde 2020, conectamos a miles de fans apasionados por el entretenimiento, 
+          ofreciendo contenido de calidad, noticias actualizadas y un espacio donde la cultura geek cobra vida.
+        </p>
+
+        <!-- About Grid -->
+        <div class="about-grid">
+          <div class="about-card" data-scroll="fade-up" data-scroll-delay="200">
+            <div class="about-icon">🎯</div>
+            <h3 class="about-title">Nuestra Misión</h3>
+            <p class="about-text">
+              Ser el punto de encuentro definitivo para la comunidad geek, proporcionando contenido relevante, 
+              actualizado y de calidad sobre películas, series, anime y videojuegos.
+            </p>
+          </div>
+
+          <div class="about-card" data-scroll="fade-up" data-scroll-delay="300">
+            <div class="about-icon">🌟</div>
+            <h3 class="about-title">Nuestra Visión</h3>
+            <p class="about-text">
+              Convertirnos en la plataforma de referencia para los geeks de habla hispana, 
+              creando una comunidad global donde cada fan encuentre su lugar.
+            </p>
+          </div>
+
+          <div class="about-card" data-scroll="fade-up" data-scroll-delay="400">
+            <div class="about-icon">💎</div>
+            <h3 class="about-title">Nuestros Valores</h3>
+            <p class="about-text">
+              Pasión por la cultura geek, compromiso con la calidad, comunidad inclusiva, 
+              y dedicación constante a mantener informada a nuestra audiencia.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats integrados -->
+        <div class="about-stats">
+          <div class="about-stat" data-scroll="scale" data-scroll-delay="100">
+            <span class="about-stat-number">5+</span>
+            <span class="about-stat-label">Años de experiencia</span>
+          </div>
+          <div class="about-stat" data-scroll="scale" data-scroll-delay="200">
+            <span class="about-stat-number">50K+</span>
+            <span class="about-stat-label">Seguidores activos</span>
+          </div>
+          <div class="about-stat" data-scroll="scale" data-scroll-delay="300">
+            <span class="about-stat-number">500+</span>
+            <span class="about-stat-label">Artículos publicados</span>
+          </div>
+          <div class="about-stat" data-scroll="scale" data-scroll-delay="400">
+            <span class="about-stat-number">24/7</span>
+            <span class="about-stat-label">Cobertura continua</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-separator"></div>
+
+    <!-- Services Section (anteriormente Features) -->
+    <section id="services" class="features-section services-section">
+      <div class="container">
+        <h2 class="section-title" data-scroll="fade-down">¿Qué Ofrecemos?</h2>
+        <p class="section-description" data-scroll="fade-down" data-scroll-delay="100">Todo lo que necesitas para estar al día en el mundo geek</p>
         
         <div class="features-grid">
           <div class="feature-card" data-scroll="fade-up" data-scroll-delay="200">
@@ -107,33 +170,6 @@
             <p class="feature-text">
               Accede desde cualquier dispositivo: móvil, tablet o escritorio
             </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-separator"></div>
-
-    <!-- Stats Section -->
-    <section class="stats-section">
-      <div class="container">
-        <h2 class="section-title" data-scroll="scale">Sala Geek en Números</h2>
-        <div class="stats-grid">
-          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="100">
-            <div class="stat-number">50K+</div>
-            <div class="stat-label">Seguidores</div>
-          </div>
-          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="200">
-            <div class="stat-number">500+</div>
-            <div class="stat-label">Artículos</div>
-          </div>
-          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="300">
-            <div class="stat-number">24/7</div>
-            <div class="stat-label">Cobertura</div>
-          </div>
-          <div class="stat-card" data-scroll="fade-up" data-scroll-delay="400">
-            <div class="stat-number">4</div>
-            <div class="stat-label">Categorías</div>
           </div>
         </div>
       </div>
