@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.59.0
-   Description: Stats Counter Animation (segundo momento WOW)
+   Version: 1.60.0
+   Description: Stats Counter optimizado + datos actualizados
    Last Modified: 2025-11-01
    ============================================ */
 
@@ -539,7 +539,7 @@ function initStatsCounter() {
   const animateCounter = (element) => {
     const target = parseInt(element.getAttribute('data-count'));
     const suffix = element.getAttribute('data-suffix') || '';
-    const duration = 2000; // 2 segundos
+    const duration = 3500; // 3.5 segundos (más pausado y natural)
     const startTime = performance.now();
 
     const updateCounter = (currentTime) => {
@@ -578,7 +578,7 @@ function initStatsCounter() {
         statNumbers.forEach((stat, index) => {
           setTimeout(() => {
             animateCounter(stat);
-          }, index * 100); // 100ms de delay entre cada uno
+          }, index * 150); // 150ms de delay entre cada uno (más escalonado)
         });
 
         // Dejar de observar después de animar
