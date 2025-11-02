@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.58.0
-   Description: Hero Parallax + Particles (WOW effect)
+   Version: 1.59.0
+   Description: Stats Counter Animation (segundo momento WOW)
    Last Modified: 2025-11-01
    ============================================ */
 
@@ -517,6 +517,81 @@ function initHeroParallax() {
   }
 
   animate();
+}
+
+/* ============================================
+   STATS COUNTER ANIMATION
+   ============================================ */
+
+function initStatsCounter() {
+  const statNumbers = document.querySelectorAll('.about-stat-number[data-count]');
+  
+  if (statNumbers.length === 0) return;
+
+  let hasAnimated = false;
+
+  // Función de easing para animación suave (easeOutExpo)
+  const easeOutExpo = (t) => {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  };
+
+  // Función para animar un contador individual
+  const animateCounter = (element) => {
+    const target = parseInt(element.getAttribute('data-count'));
+    const suffix = element.getAttribute('data-suffix') || '';
+    const duration = 2000; // 2 segundos
+    const startTime = performance.now();
+
+    const updateCounter = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutExpo(progress);
+      const currentValue = Math.floor(easedProgress * target);
+
+      // Actualizar el texto
+      element.textContent = currentValue + suffix;
+
+      // Continuar animación si no ha terminado
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        // Asegurar valor final exacto
+        element.textContent = target + suffix;
+      }
+    };
+
+    requestAnimationFrame(updateCounter);
+  };
+
+  // Intersection Observer para activar cuando sea visible
+  const observerOptions = {
+    threshold: 0.3, // Activar cuando 30% sea visible
+    rootMargin: '0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true;
+        
+        // Animar cada contador con un pequeño delay
+        statNumbers.forEach((stat, index) => {
+          setTimeout(() => {
+            animateCounter(stat);
+          }, index * 100); // 100ms de delay entre cada uno
+        });
+
+        // Dejar de observar después de animar
+        observer.disconnect();
+      }
+    });
+  }, observerOptions);
+
+  // Observar el contenedor de stats
+  const statsContainer = document.querySelector('.about-stats');
+  if (statsContainer) {
+    observer.observe(statsContainer);
+  }
 }
 
 /* ============================================
@@ -1312,6 +1387,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initResponsiveHandler();
   initHeroAnimations();
   initHeroParallax();
+  initStatsCounter();
   initScrollAnimations();
   initLazyLoading();
   initTestimonialsCarousel();
