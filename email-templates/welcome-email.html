@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Sala Geek</title>
+    <style>
+        /* Reset básico */
+        body, table, td, a { 
+            -webkit-text-size-adjust: 100%; 
+            -ms-text-size-adjust: 100%; 
+        }
+        table, td { 
+            mso-table-lspace: 0pt; 
+            mso-table-rspace: 0pt; 
+        }
+        img { 
+            -ms-interpolation-mode: bicubic; 
+            border: 0; 
+            height: auto; 
+            line-height: 100%; 
+            outline: none; 
+            text-decoration: none; 
+        }
+        
+        /* Estilos generales */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        
+        /* Container principal */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+        
+        /* Content */
+        .content {
+            padding: 40px 30px;
+            color: #333333;
+        }
+        
+        .welcome-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .welcome-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555555;
+            margin: 0 0 20px 0;
+        }
+        
+        /* Benefits section */
+        .benefits {
+            background-color: #f8f9ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .benefit-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .benefit-text {
+            font-size: 15px;
+            color: #333333;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        /* CTA Button */
+        .cta-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Social section */
+        .social {
+            text-align: center;
+            padding: 30px 0;
+            background-color: #f8f9ff;
+        }
+        
+        .social-title {
+            font-size: 18px;
+            color: #333333;
+            margin: 0 0 20px 0;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .social-link {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            background-color: #667eea;
+            border-radius: 50%;
+            text-decoration: none;
+            line-height: 45px;
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 30px;
+            text-align: center;
+            background-color: #1a1f3a;
+            color: #ffffff;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #cccccc;
+            margin: 5px 0;
+        }
+        
+        .footer-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px !important;
+            }
+            
+            .welcome-title {
+                font-size: 24px !important;
+            }
+            
+            .benefits {
+                padding: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px;">
+            
+            <!-- HEADER -->
+            <tr>
+                <td class="header">
+                    <img src="https://salageek.com/src/images/SalaGeek_LOGO.png" alt="Sala Geek" class="logo" width="200">
+                </td>
+            </tr>
+            
+            <!-- CONTENT -->
+            <tr>
+                <td class="content">
+                    <h1 class="welcome-title">¡Bienvenido a Sala Geek! 🎮🎬</h1>
+                    
+                    <p class="welcome-text">
+                        ¡Hola! Nos emociona tenerte aquí.
+                    </p>
+                    
+                    <p class="welcome-text">
+                        Acabas de unirte a <strong>la comunidad geek más activa de habla hispana</strong>. Desde 2017, conectamos a miles de fans apasionados por el entretenimiento, y ahora tú formas parte de esta gran familia.
+                    </p>
+                    
+                    <!-- BENEFITS -->
+                    <div class="benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">✨</div>
+                            <p class="benefit-text"><strong>Contenido exclusivo</strong> sobre películas, series y anime antes que nadie</p>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🎮</div>
+                            <p class="benefit-text"><strong>Reviews y análisis</strong> de los videojuegos más esperados</p>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">📰</div>
+                            <p class="benefit-text"><strong>Noticias frescas</strong> cada semana en tu bandeja de entrada</p>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon">🎁</div>
+                            <p class="benefit-text"><strong>Ofertas especiales</strong> y promociones exclusivas para suscriptores</p>
+                        </div>
+                    </div>
+                    
+                    <p class="welcome-text">
+                        Mantente atento a tu correo. Muy pronto recibirás nuestro primer newsletter con contenido que no querrás perderte.
+                    </p>
+                    
+                    <!-- CTA -->
+                    <div class="cta-container">
+                        <a href="https://salageek.com" class="cta-button">
+                            Visitar Sala Geek
+                        </a>
+                    </div>
+                    
+                    <p class="welcome-text" style="text-align: center; color: #888; font-size: 14px;">
+                        ¿Alguna pregunta? Responde a este correo, ¡estamos aquí para ayudarte!
+                    </p>
+                </td>
+            </tr>
+            
+            <!-- SOCIAL -->
+            <tr>
+                <td class="social">
+                    <h3 class="social-title">Síguenos en Redes Sociales</h3>
+                    
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tr>
+                            <td style="padding: 0 10px;">
+                                <a href="https://facebook.com/SalaGeek19" class="social-link" style="color: #ffffff;">
+                                    📘
+                                </a>
+                            </td>
+                            <td style="padding: 0 10px;">
+                                <a href="https://instagram.com/sala_geek" class="social-link" style="color: #ffffff;">
+                                    📷
+                                </a>
+                            </td>
+                            <td style="padding: 0 10px;">
+                                <a href="https://x.com/Sala_Geek" class="social-link" style="color: #ffffff;">
+                                    𝕏
+                                </a>
+                            </td>
+                            <td style="padding: 0 10px;">
+                                <a href="https://tiktok.com/@salageek19" class="social-link" style="color: #ffffff;">
+                                    🎵
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            
+            <!-- FOOTER -->
+            <tr>
+                <td class="footer">
+                    <p class="footer-text">
+                        © 2024 Sala Geek. Todos los derechos reservados.
+                    </p>
+                    <p class="footer-text">
+                        <a href="https://salageek.com/src/pages/legal/privacy.html" class="footer-link">Política de Privacidad</a> | 
+                        <a href="https://salageek.com/src/pages/legal/terms.html" class="footer-link">Términos de Servicio</a>
+                    </p>
+                    <p class="footer-text">
+                        ¿Ya no quieres recibir estos correos? 
+                        <a href="*|UNSUB|*" class="footer-link">Cancelar suscripción</a>
+                    </p>
+                    <p class="footer-text" style="margin-top: 15px;">
+                        contacto@salageek.com | www.salageek.com
+                    </p>
+                </td>
+            </tr>
+            
+        </table>
+    </center>
+</body>
+</html>

@@ -950,37 +950,37 @@ function initNewsletterForm() {
     }
 
     try {
-      // Enviar a Formspree
-      const formData = new FormData(form);
-      const response = await fetch(form.action, {
+      // Enviar a Netlify Function que conecta con Mailchimp
+      const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
         method: "POST",
-        body: formData,
         headers: {
-          Accept: "application/json",
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({ email }),
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         // Éxito
         showNewsletterMessage(
-          "¡Gracias por suscribirte! Pronto recibirás nuestras últimas noticias en tu correo.",
+          data.message || "¡Gracias por suscribirte! Revisa tu correo para el mensaje de bienvenida.",
           "success",
         );
 
         // Limpiar el formulario
         emailInput.value = "";
 
-        // Guardar en localStorage para no mostrar nuevamente
+        // Guardar en localStorage
         localStorage.setItem("newsletter_subscribed", "true");
       } else {
         // Error del servidor
-        const data = await response.json();
         throw new Error(data.error || "Error al procesar la suscripción");
       }
     } catch (error) {
       console.error("Error al suscribir:", error);
       showNewsletterMessage(
-        "Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.",
+        error.message || "Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.",
         "error",
       );
     } finally {

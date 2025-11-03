@@ -8,6 +8,9 @@
     "clean": "powershell -NoProfile -Command \"Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue\"",
     "serve": "npx http-server dist -p 5173 -o"
   },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  },
   "devDependencies": {
     "esbuild": "^0.24.0",
     "fs-extra": "^11.2.0",

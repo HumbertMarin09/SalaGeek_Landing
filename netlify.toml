@@ -4,6 +4,7 @@
 [build]
   publish = "."
   command = ""
+  functions = "netlify/functions"
 
 # Forzar HTTPS en todo el sitio
 [[redirects]]
