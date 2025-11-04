@@ -28,9 +28,9 @@
       property="og:description"
       content="La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek."
     />
-    <meta property="og:image" content="https://salageek.com/src/images/SalaGeek_LOGO.png" />
-    <meta property="og:image:secure_url" content="https://salageek.com/src/images/SalaGeek_LOGO.png" />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image" content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" />
+    <meta property="og:image:secure_url" content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" />
+    <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Sala Geek - Logo oficial de la comunidad geek" />
@@ -50,7 +50,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://salageek.com/src/images/SalaGeek_LOGO.png"
+      content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp"
     />
     <meta name="twitter:site" content="@Sala_Geek" />
     <meta name="twitter:creator" content="@Sala_Geek" />
@@ -87,14 +87,26 @@
 
     <!-- Preload recursos críticos para mejor performance -->
     <link rel="preload" href="/src/css/normalize.css" as="style" />
-    <link rel="preload" href="/src/css/style.css?v=104" as="style" />
+    <link rel="preload" href="/src/css/style.css?v=105" as="style" />
     <link rel="preload" href="/src/js/script.js?v=69" as="script" />
-    <link rel="preload" href="/src/images/SalaGeek_LOGO.webp" as="image" type="image/webp" />
-    <link rel="preload" href="/src/images/SalaGeek_LOGO.png" as="image" type="image/png" />
 
-    <!-- Stylesheets -->
+    <!-- Critical CSS inline para above-the-fold -->
+    <style>
+      body{margin:0;background:#0a0e27;color:#f0f2f7;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;overflow-x:hidden}
+      .hero-section{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+      .hero-background{position:absolute;inset:0;background:linear-gradient(135deg,#0a0e27 0%,#1a1f3a 100%);z-index:1}
+      .hero-container{position:relative;z-index:2;max-width:1200px;padding:2rem;text-align:center}
+      .hero-title{font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;line-height:1}
+      .hero-brand{color:#ffd166}
+      .typewriter{display:inline-block}
+      @media (max-width:768px){.hero-title{font-size:1.8rem}}
+    </style>
+
+    <!-- Stylesheets - Cargar normalize inmediatamente, style.css de forma no bloqueante -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.css?v=104" />
+    <link rel="stylesheet" href="/src/css/style.css?v=105" media="print" onload="this.media='all';this.onload=null;" />
+    <noscript><link rel="stylesheet" href="/src/css/style.css?v=105" /></noscript>
+    
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
       document.documentElement.classList.add("js");
@@ -107,7 +119,7 @@
         "@type": "Organization",
         "name": "Sala Geek",
         "url": "https://salageek.com",
-        "logo": "https://salageek.com/src/images/SalaGeek_LOGO.png",
+        "logo": "https://salageek.com/src/images/SalaGeek_LOGO_social.webp",
         "description": "La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek.",
         "foundingDate": "2017",
         "sameAs": [
