@@ -64,8 +64,8 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Página 404 personalizada (opcional - puedes crearla después)
-# [[redirects]]
-#   from = "/*"
-#   to = "/404.html"
-#   status = 404
+# Página 404 personalizada
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
