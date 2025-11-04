@@ -929,7 +929,7 @@ a {
 .hero-title {
   font-size: clamp(2.8rem, 6vw, 4.5rem);
   font-weight: 900;
-  line-height: 1.1;
+  line-height: 1;
   margin-bottom: 1.5rem;
   background: linear-gradient(
     135deg,
@@ -947,6 +947,15 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0;
+}
+
+/* Desktop: alinear a la izquierda */
+@media (min-width: 769px) {
+  .hero-title {
+    align-items: flex-start;
+    text-align: left;
+  }
 }
 
 @keyframes titleGlow {
