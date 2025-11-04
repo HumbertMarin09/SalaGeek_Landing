@@ -1,8 +1,8 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.68.0
-   Description: Legal pages TOC mobile fix + collapse functionality
-   Last Modified: 2025-11-02
+   Version: 1.69.0
+   Description: Hero brand aparece después de typewriter animation
+   Last Modified: 2025-11-03
    ============================================ */
 
 /* ============================================
@@ -622,8 +622,15 @@ function initStatsCounter() {
 
 function initHeroAnimations() {
   const typewriterElement = document.querySelector(".typewriter");
+  const heroBrand = document.querySelector(".hero-brand");
 
   if (!typewriterElement) return;
+
+  // Ocultar "Sala Geek" inicialmente
+  if (heroBrand) {
+    heroBrand.style.opacity = "0";
+    heroBrand.style.transform = "translateY(20px)";
+  }
 
   // Solución JavaScript universal - Mostrar letra por letra
   const fullText = typewriterElement.textContent;
@@ -648,6 +655,13 @@ function initHeroAnimations() {
         // Remover cursor después de completar
         setTimeout(() => {
           typewriterElement.classList.add("typing-complete");
+          
+          // Mostrar "Sala Geek" con animación después de completar typewriter
+          if (heroBrand) {
+            heroBrand.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            heroBrand.style.opacity = "1";
+            heroBrand.style.transform = "translateY(0)";
+          }
         }, 200);
       }
     }, charDuration);
@@ -699,26 +713,26 @@ function initHeroAnimations() {
   });
 
   // Easter egg: Efecto especial al hacer triple click en "Sala Geek"
-  const heroBrand = document.querySelector(".hero-brand");
-  if (heroBrand) {
+  const heroBrandEasterEgg = document.querySelector(".hero-brand");
+  if (heroBrandEasterEgg) {
     let clickCount = 0;
     let clickTimer = null;
 
-    heroBrand.addEventListener("click", () => {
+    heroBrandEasterEgg.addEventListener("click", () => {
       clickCount++;
 
       if (clickTimer) clearTimeout(clickTimer);
 
       if (clickCount === 3) {
         // Efecto arcoíris especial
-        heroBrand.style.animation = "none";
-        heroBrand.style.background =
+        heroBrandEasterEgg.style.animation = "none";
+        heroBrandEasterEgg.style.background =
           "linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3)";
-        heroBrand.style.backgroundSize = "200% 100%";
-        heroBrand.style.animation = "gradientFlow 1s ease-in-out infinite";
+        heroBrandEasterEgg.style.backgroundSize = "200% 100%";
+        heroBrandEasterEgg.style.animation = "gradientFlow 1s ease-in-out infinite";
 
         setTimeout(() => {
-          heroBrand.style.animation = "";
+          heroBrandEasterEgg.style.animation = "";
         }, 3000);
 
         clickCount = 0;
