@@ -942,6 +942,11 @@ a {
   letter-spacing: -0.02em;
   text-shadow: 0 4px 20px rgba(255, 209, 102, 0.1);
   animation: titleGlow 3s ease-in-out infinite;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes titleGlow {
@@ -1638,21 +1643,20 @@ a {
 /* Typewriter effect para el título */
 .typewriter {
   display: inline-block !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   border-right: 4px solid var(--accent-primary);
   white-space: nowrap !important;
-  width: 0;
   padding-right: 2px;
   vertical-align: bottom;
-  animation:
-    typing 2s steps(14) 0.5s forwards,
-    blink 0.75s step-end infinite;
+  animation: blink 0.75s step-end infinite;
   /* Remover efectos de gradient para evitar difuminado */
   background: none !important;
   -webkit-background-clip: unset !important;
   -webkit-text-fill-color: inherit !important;
   background-clip: unset !important;
   color: inherit;
+  text-align: center;
+  min-height: 1em;
 }
 
 /* Animación única que se adapta al tamaño de fuente */
