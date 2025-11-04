@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Sala Geek - Tu espacio definitivo para películas, series, anime y videojuegos. Únete a la comunidad geek más activa."
+      content="Sala Geek: La comunidad geek de habla hispana más grande. Noticias, reseñas y análisis de películas, series, anime, videojuegos, cómics y tecnología. Únete gratis y mantente al día con la cultura geek."
     />
     <meta
       name="keywords"
-      content="sala geek, peliculas, series, anime, videojuegos, noticias, comunidad geek"
+      content="sala geek, comunidad geek, noticias geek, películas 2024, series netflix, anime temporada, videojuegos pc, videojuegos ps5, xbox series, nintendo switch, marvel, dc comics, star wars, harry potter, el señor de los anillos, game of thrones, anime shonen, manga, cosplay, cultura geek, tecnología gaming, reseñas videojuegos, estrenos películas, críticas series, comunidad gaming, fandom hispano"
     />
+    <meta name="author" content="Sala Geek" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="google" content="notranslate" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <link rel="canonical" href="https://salageek.com/" />
     <title>
       Sala Geek - Tu Espacio Geek Definitivo | Películas, Series, Anime y
       Videojuegos
@@ -26,15 +33,18 @@
     />
     <meta
       property="og:description"
-      content="La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek."
+      content="Únete a miles de geeks. Noticias diarias, reseñas exclusivas y análisis de películas, series, anime, videojuegos y tecnología. Contenido 100% en español. ¡Suscríbete gratis!"
     />
     <meta property="og:image" content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" />
     <meta property="og:image:secure_url" content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" />
     <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Sala Geek - Logo oficial de la comunidad geek" />
+    <meta property="og:image:alt" content="Sala Geek - La comunidad geek hispana más grande con noticias de películas, series, anime y videojuegos" />
     <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale:alternate" content="es_MX" />
+    <meta property="og:locale:alternate" content="es_AR" />
+    <meta property="og:locale:alternate" content="es_CO" />
     <meta property="og:site_name" content="Sala Geek" />
 
     <!-- Twitter Card -->
@@ -46,14 +56,16 @@
     />
     <meta
       name="twitter:description"
-      content="La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek."
+      content="Noticias, reseñas y análisis de películas, series, anime, videojuegos y tecnología. Contenido diario en español. ¡Únete gratis a la comunidad!"
     />
     <meta
       name="twitter:image"
       content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp"
     />
+    <meta name="twitter:image:alt" content="Sala Geek - Comunidad geek hispana con noticias y reseñas" />
     <meta name="twitter:site" content="@Sala_Geek" />
     <meta name="twitter:creator" content="@Sala_Geek" />
+    <meta name="twitter:dnt" content="on" />
 
     <!-- Favicons Completos -->
     <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
@@ -74,9 +86,25 @@
       sizes="16x16"
       href="/src/images/Icono_SG.ico"
     />
-    <meta name="theme-color" content="#1a1f3a" />
+    <meta name="theme-color" content="#1a1f3a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="language" content="Spanish" />
+    <meta name="coverage" content="Worldwide" />
+    <meta name="distribution" content="Global" />
+    <meta name="rating" content="General" />
+    <meta name="revisit-after" content="1 days" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Sala Geek" />
+    <meta name="application-name" content="Sala Geek" />
+    <meta name="msapplication-TileColor" content="#1a1f3a" />
+    <meta name="msapplication-TileImage" content="/src/images/SalaGeek_LOGO.webp" />
 
     <!-- DNS Prefetch para recursos externos -->
     <link rel="dns-prefetch" href="//www.googletagmanager.com" />
@@ -84,6 +112,8 @@
     <link rel="dns-prefetch" href="//www.facebook.com" />
     <link rel="dns-prefetch" href="//www.instagram.com" />
     <link rel="dns-prefetch" href="//www.tiktok.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
 
     <!-- Preload recursos críticos para mejor performance -->
     <link rel="preload" href="/src/css/normalize.css" as="style" />
@@ -118,10 +148,21 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Sala Geek",
+        "alternateName": "SalaGeek",
         "url": "https://salageek.com",
         "logo": "https://salageek.com/src/images/SalaGeek_LOGO_social.webp",
-        "description": "La comunidad geek de habla hispana más grande y activa. Noticias, reviews y contenido sobre videojuegos, tecnología, cine y cultura geek.",
+        "description": "La comunidad geek de habla hispana más grande. Noticias, reseñas y análisis de películas, series, anime, videojuegos, cómics y tecnología.",
         "foundingDate": "2017",
+        "slogan": "Tu espacio geek definitivo",
+        "keywords": "comunidad geek, noticias geek, películas, series, anime, videojuegos, tecnología, cómics, cultura pop",
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "Geeks, gamers, otakus y entusiastas de la cultura pop",
+          "geographicArea": {
+            "@type": "Place",
+            "name": "Latinoamérica y España"
+          }
+        },
         "sameAs": [
           "https://facebook.com/SalaGeek19",
           "https://x.com/Sala_Geek",
@@ -131,7 +172,8 @@
         "contactPoint": {
           "@type": "ContactPoint",
           "contactType": "Customer Service",
-          "email": "contacto@salageek.com"
+          "email": "contacto@salageek.com",
+          "availableLanguage": ["Spanish", "es"]
         }
       }
     </script>
@@ -142,11 +184,57 @@
         "@type": "WebSite",
         "name": "Sala Geek",
         "url": "https://salageek.com",
+        "description": "Portal de noticias y comunidad geek en español",
+        "inLanguage": "es",
+        "copyrightYear": 2017,
+        "publisher": {
+          "@type": "Organization",
+          "name": "Sala Geek",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://salageek.com/src/images/SalaGeek_LOGO_social.webp"
+          }
+        },
         "potentialAction": {
           "@type": "SearchAction",
           "target": "https://salageek.com/buscar?q={search_term_string}",
           "query-input": "required name=search_term_string"
         }
+      }
+    </script>
+    
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Categorías de Sala Geek",
+        "description": "Contenido disponible en Sala Geek",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Películas",
+            "description": "Noticias, críticas y análisis de películas"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Series",
+            "description": "Reseñas y noticias de series de TV y streaming"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Anime",
+            "description": "Noticias, reseñas y guías de anime y manga"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "Videojuegos",
+            "description": "Reviews, noticias y guías de videojuegos"
+          }
+        ]
       }
     </script>
 
