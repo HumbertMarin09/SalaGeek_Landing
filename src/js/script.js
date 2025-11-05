@@ -3717,29 +3717,42 @@ function initMobileEasterEggs() {
   }
 
   // 5. LONG PRESS en "Sala Geek" del footer -> Combo mode
-  let footerBrandLongPress = null;
-  const footerBrand = document.querySelector(".footer-bottom strong");
-  
-  if (footerBrand) {
-    // Hacer el área de toque más grande
-    footerBrand.style.padding = "8px";
-    footerBrand.style.margin = "-8px";
-    footerBrand.style.display = "inline-block";
-    footerBrand.style.cursor = "pointer";
+  // Esperar a que el footer se cargue (es dinámico)
+  setTimeout(() => {
+    let footerBrandLongPress = null;
     
-    footerBrand.addEventListener("touchstart", (e) => {
-      // NO prevenir default para no bloquear el touch
+    // Intentar múltiples selectores
+    let footerBrand = document.querySelector(".footer-bottom strong");
+    
+    if (!footerBrand) {
+      // Selector alternativo: buscar "Sala Geek" en el copyright
+      const allStrong = document.querySelectorAll("strong");
+      allStrong.forEach(el => {
+        if (el.textContent.includes("Sala Geek")) {
+          footerBrand = el;
+        }
+      });
+    }
+    
+    console.log("🔍 Footer Brand encontrado:", footerBrand ? "✅ SÍ" : "❌ NO");
+    
+    if (footerBrand) {
+      console.log("✅ Configurando Easter Egg en:", footerBrand.textContent);
       
-      // Feedback visual INMEDIATO
-      footerBrand.style.transform = "scale(0.95)";
-      footerBrand.style.color = "var(--accent-secondary)";
-      footerBrand.style.transition = "all 0.1s ease";
+      // Hacer el área de toque MÁS grande
+      footerBrand.style.padding = "12px";
+      footerBrand.style.margin = "-12px";
+      footerBrand.style.display = "inline-block";
+      footerBrand.style.cursor = "pointer";
+      footerBrand.style.border = "2px solid transparent"; // Para debugging
       
-      footerBrandLongPress = setTimeout(() => {
+      const activateCombo = () => {
+        console.log("🎮 COMBO BREAKER ACTIVADO!");
+        
         // EFECTO GEEK MODE - MUY VISIBLE
         playSound("levelup");
         easterEggTracker.unlock("combo");
-        showNotification("🤓 ¡GEEK MODE ACTIVADO! Modo inverso activado", "success");
+        showNotification("🤓 ¡COMBO BREAKER! Modo inverso activado", "success");
         
         // Efecto visual SUPER llamativo
         document.body.style.filter = "invert(1) hue-rotate(180deg)";
@@ -3760,28 +3773,47 @@ function initMobileEasterEggs() {
           footerBrand.style.color = "";
           footerBrand.style.textShadow = "";
         }, 4000);
-      }, 600);
-    }, { passive: true });
-    
-    footerBrand.addEventListener("touchend", () => {
-      clearTimeout(footerBrandLongPress);
-      // Restaurar estilos
-      footerBrand.style.transform = "";
-      footerBrand.style.color = "";
-    }, { passive: true });
-    
-    footerBrand.addEventListener("touchmove", () => {
-      clearTimeout(footerBrandLongPress);
-      // Restaurar estilos
-      footerBrand.style.transform = "";
-      footerBrand.style.color = "";
-    }, { passive: true });
-  } else {
-    console.log("❌ Footer Brand (strong) NO encontrado - Intentando selector alternativo");
-    
-    // Selector alternativo: toda la línea de copyright
-    const footerCopyright = document.querySelector(".footer-copyright");
-    if (footerCopyright) {
+      };
+      
+      footerBrand.addEventListener("touchstart", (e) => {
+        console.log("👆 Touch start detectado");
+        
+        // Feedback visual INMEDIATO
+        footerBrand.style.transform = "scale(0.95)";
+        footerBrand.style.color = "var(--accent-primary)"; // Más visible
+        footerBrand.style.border = "2px solid var(--accent-primary)"; // Debug visual
+        footerBrand.style.transition = "all 0.1s ease";
+        
+        footerBrandLongPress = setTimeout(() => {
+          console.log("⏰ Timeout alcanzado - activando combo");
+          activateCombo();
+        }, 600);
+      }, { passive: true });
+      
+      footerBrand.addEventListener("touchend", () => {
+        console.log("👆 Touch end detectado");
+        clearTimeout(footerBrandLongPress);
+        // Restaurar estilos
+        footerBrand.style.transform = "";
+        footerBrand.style.color = "";
+        footerBrand.style.border = "2px solid transparent";
+      }, { passive: true });
+      
+      footerBrand.addEventListener("touchmove", () => {
+        console.log("👆 Touch move detectado - cancelando");
+        clearTimeout(footerBrandLongPress);
+        // Restaurar estilos
+        footerBrand.style.transform = "";
+        footerBrand.style.color = "";
+        footerBrand.style.border = "2px solid transparent";
+      }, { passive: true });
+    } else {
+      console.log("❌ Footer Brand (strong) NO encontrado después de timeout");
+      
+      // Selector alternativo: toda la línea de copyright
+      const footerCopyright = document.querySelector(".footer-copyright");
+      if (footerCopyright) {
+        console.log("✅ Usando selector alternativo: .footer-copyright");
       footerCopyright.style.cursor = "pointer";
       footerCopyright.style.userSelect = "none";
       
@@ -3816,8 +3848,9 @@ function initMobileEasterEggs() {
         clearTimeout(footerBrandLongPress);
         footerCopyright.style.opacity = "1";
       }, { passive: true });
+      }
     }
-  }
+  }, 1000); // Esperar 1 segundo a que el footer se cargue
 
   // Notificación de ayuda móvil
   setTimeout(() => {
