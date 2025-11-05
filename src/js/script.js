@@ -3716,21 +3716,30 @@ function initMobileEasterEggs() {
       footerBrand.style.transition = "all 0.1s ease";
       
       footerBrandLongPress = setTimeout(() => {
-        // Modo ligero: solo CSS sin Matrix pesado
-        document.body.style.filter = "hue-rotate(180deg)";
-        playSound("coin");
+        // EFECTO GEEK MODE - MUY VISIBLE
+        playSound("levelup");
         easterEggTracker.unlock("combo");
+        showNotification("🤓 ¡GEEK MODE ACTIVADO! Modo inverso activado", "success");
         
-        // Feedback visual y haptic de éxito
-        footerBrand.style.transform = "scale(1.2)";
-        footerBrand.style.color = "var(--accent-primary)";
+        // Efecto visual SUPER llamativo
+        document.body.style.filter = "invert(1) hue-rotate(180deg)";
+        document.body.style.transition = "filter 0.5s ease";
+        
+        // Feedback en el elemento
+        footerBrand.style.transform = "scale(1.3) rotate(360deg)";
+        footerBrand.style.color = "#00ff00";
+        footerBrand.style.textShadow = "0 0 20px #00ff00";
+        
+        // Haptic feedback
         if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
         
+        // Restaurar después de 4 segundos
         setTimeout(() => {
           document.body.style.filter = "none";
           footerBrand.style.transform = "";
           footerBrand.style.color = "";
-        }, 3000);
+          footerBrand.style.textShadow = "";
+        }, 4000);
       }, 600);
     }, { passive: true });
     
@@ -3760,16 +3769,21 @@ function initMobileEasterEggs() {
         footerCopyright.style.opacity = "0.7";
         
         footerBrandLongPress = setTimeout(() => {
-          document.body.style.filter = "hue-rotate(180deg)";
-          playSound("coin");
+          // EFECTO GEEK MODE - MUY VISIBLE
+          playSound("levelup");
           easterEggTracker.unlock("combo");
+          showNotification("🤓 ¡GEEK MODE ACTIVADO! Modo inverso activado", "success");
+          
+          // Efecto visual SUPER llamativo
+          document.body.style.filter = "invert(1) hue-rotate(180deg)";
+          document.body.style.transition = "filter 0.5s ease";
           
           if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
           
           setTimeout(() => {
             document.body.style.filter = "none";
             footerCopyright.style.opacity = "1";
-          }, 3000);
+          }, 4000);
         }, 600);
       }, { passive: true });
       
