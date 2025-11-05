@@ -1660,21 +1660,29 @@ function initKonamiCode() {
 
   document.addEventListener("keydown", (e) => {
     const key = e.key.toLowerCase();
+    const expectedKey = konamiCode[konamiIndex];
 
-    if (key === konamiCode[konamiIndex]) {
+    // Comparar correctamente (sin lowercase para flechas)
+    const isMatch = e.key === expectedKey || key === expectedKey;
+
+    if (isMatch) {
       konamiIndex++;
+      console.log(`Konami progress: ${konamiIndex}/${konamiCode.length}`);
 
       if (konamiIndex === konamiCode.length) {
-        activateMatrixMode();
+        activateNESMode();
         konamiIndex = 0;
       }
     } else {
+      if (konamiIndex > 0) {
+        console.log("Konami code reset!");
+      }
       konamiIndex = 0;
     }
   });
 }
 
-function activateMatrixMode() {
+function activateNESMode() {
   playSound("powerup");
   showNotification("🎮 ¡CÓDIGO KONAMI DESBLOQUEADO! NES Mode Activated", "success");
 
@@ -1738,11 +1746,17 @@ function activateMatrixMode() {
   `;
   document.body.appendChild(scanlines);
 
-  // Crear mensaje estilo NES
+  // Crear mensaje estilo NES - aparece donde está el viewport
   const nesMessage = document.createElement("div");
+  
+  // Calcular posición del viewport actual
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const viewportHeight = window.innerHeight;
+  const centerY = scrollTop + (viewportHeight / 2);
+  
   nesMessage.style.cssText = `
-    position: fixed;
-    top: 50%;
+    position: absolute;
+    top: ${centerY}px;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000000;
@@ -1859,43 +1873,78 @@ function activateMatrixMode() {
   }, 7000);
 }
 
-// EASTER EGG 2: DOBLE CLICK EN EL LOGO
+// EASTER EGG 2: DOBLE CLICK EN "SALA GEEK" DEL HERO
 function initLogoEasterEgg() {
-  const logo = document.querySelector(".site-logo");
-  if (!logo) return;
+  // Esperar a que el hero se cargue
+  setTimeout(() => {
+    const heroTitle = document.querySelector(".hero-content h1");
+    if (!heroTitle) return;
 
-  let clickCount = 0;
-  let clickTimer = null;
+    let clickCount = 0;
+    let clickTimer = null;
 
-  logo.addEventListener("click", (e) => {
-    clickCount++;
-
-    if (clickTimer) clearTimeout(clickTimer);
-
-    if (clickCount === 2) {
+    heroTitle.addEventListener("click", (e) => {
       e.preventDefault();
-      activateGlitchStats();
-      clickCount = 0;
-    }
+      clickCount++;
 
-    clickTimer = setTimeout(() => {
-      clickCount = 0;
-    }, 500);
-  });
+      if (clickTimer) clearTimeout(clickTimer);
+
+      if (clickCount === 2) {
+        activateGlitchStats();
+        clickCount = 0;
+      }
+
+      clickTimer = setTimeout(() => {
+        clickCount = 0;
+      }, 500);
+    });
+
+    // Agregar cursor pointer para indicar que es clickeable
+    heroTitle.style.cursor = "pointer";
+    heroTitle.style.userSelect = "none";
+  }, 1000);
 }
 
 function activateGlitchStats() {
-  const logo = document.querySelector(".site-logo");
-  if (!logo) return;
-
   playSound("glitch");
 
-  // Efecto glitch en el logo
-  logo.style.animation = "glitch 0.5s ease";
+  // Aplicar efecto glitch al título del hero
+  const heroTitle = document.querySelector(".hero-content h1");
+  if (heroTitle) {
+    const originalText = heroTitle.textContent;
+    heroTitle.style.animation = "glitch 0.5s ease";
+    
+    // Glitch en el texto
+    let glitchCount = 0;
+    const glitchInterval = setInterval(() => {
+      const glitchChars = "!@#$%^&*()_+{}|:<>?[];',./`~";
+      const glitched = originalText
+        .split("")
+        .map((char) =>
+          Math.random() > 0.7
+            ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
+            : char
+        )
+        .join("");
+      heroTitle.textContent = glitched;
+      glitchCount++;
 
-  setTimeout(() => {
-    logo.style.animation = "";
-  }, 500);
+      if (glitchCount > 10) {
+        clearInterval(glitchInterval);
+        heroTitle.textContent = originalText;
+        heroTitle.style.animation = "";
+      }
+    }, 50);
+  }
+
+  // Aplicar efecto glitch al logo también
+  const logo = document.querySelector(".site-logo");
+  if (logo) {
+    logo.style.animation = "glitch 0.5s ease";
+    setTimeout(() => {
+      logo.style.animation = "";
+    }, 500);
+  }
 
   // Mostrar stats aleatorios
   const stats = [
@@ -1929,7 +1978,7 @@ function activateGlitchStats() {
 function initSecretWords() {
   let typedWord = "";
   const secretWords = {
-    matrix: activateMatrixMode,
+    matrix: activateMatrixRainMode,
     retro: activate8BitMode,
     thanos: activateSnapEffect,
   };
@@ -1953,6 +2002,96 @@ function initSecretWords() {
       });
     }
   });
+}
+
+// NUEVO: Efecto Matrix real (diferente del Konami)
+function activateMatrixRainMode() {
+  playSound("glitch");
+  showNotification("🟢 MATRIX MODE: Follow the white rabbit...", "success");
+
+  // Crear canvas para lluvia Matrix
+  const canvas = document.createElement("canvas");
+  canvas.id = "matrix-rain-canvas";
+  canvas.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  `;
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const chars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01";
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  // Fade in
+  setTimeout(() => (canvas.style.opacity = "0.9"), 100);
+
+  let matrixInterval = setInterval(() => {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }, 33);
+
+  // Mensaje "Wake up, Neo..."
+  setTimeout(() => {
+    const message = document.createElement("div");
+    message.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000000;
+      color: #0F0;
+      font-family: 'Courier New', monospace;
+      font-size: 2rem;
+      text-align: center;
+      text-shadow: 0 0 10px #0F0;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+    `;
+    message.innerHTML = `
+      <div>Wake up, Neo...</div>
+      <div style="font-size: 1rem; margin-top: 1rem;">The Matrix has you.</div>
+    `;
+    document.body.appendChild(message);
+
+    setTimeout(() => {
+      message.style.animation = "fadeOut 1s ease forwards";
+      setTimeout(() => message.remove(), 1000);
+    }, 3000);
+  }, 2000);
+
+  // Desactivar después de 10 segundos
+  setTimeout(() => {
+    canvas.style.opacity = "0";
+    setTimeout(() => {
+      clearInterval(matrixInterval);
+      canvas.remove();
+    }, 500);
+  }, 10000);
 }
 
 function activate8BitMode() {
@@ -2035,37 +2174,118 @@ function activateSnapEffect() {
   }, 4000);
 }
 
-// EASTER EGG 4: HORA ESPECÍFICA (3:33 AM)
+// EASTER EGG 4: HORA ESPECÍFICA (3:33 AM) + JUMPSCARE
 function initTimeEasterEgg() {
+  let hasTriggered = false;
+  
   setInterval(() => {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
 
     if (
-      (hours === 3 && minutes === 33) ||
-      (hours === 15 && minutes === 33)
+      ((hours === 3 && minutes === 33) || (hours === 15 && minutes === 33)) &&
+      !hasTriggered
     ) {
-      showNotification(
-        "⏰ Son las 3:33... Hora mágica detectada 👻",
-        "info",
-      );
+      hasTriggered = true;
+      activateJumpScare();
+      
+      // Reset después de 2 minutos
+      setTimeout(() => {
+        hasTriggered = false;
+      }, 120000);
     }
   }, 60000); // Verificar cada minuto
 }
 
-// EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA
+function activateJumpScare() {
+  console.log("🚨 JUMPSCARE ACTIVADO!");
+  playSound("error");
+  
+  // Overlay negro que aparece súbitamente
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 99999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+  `;
+  document.body.appendChild(overlay);
+
+  // Imagen/texto de jumpscare
+  const scare = document.createElement("div");
+  scare.style.cssText = `
+    font-size: 10rem;
+    animation: glitchScare 0.1s infinite;
+    text-shadow: 0 0 30px #ff0000;
+    z-index: 100000000;
+  `;
+  scare.textContent = "👻";
+  overlay.appendChild(scare);
+
+  // Mensaje
+  const message = document.createElement("div");
+  message.style.cssText = `
+    position: absolute;
+    bottom: 30%;
+    color: #ff0000;
+    font-size: 2.5rem;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    animation: blink 0.3s infinite;
+    z-index: 100000000;
+    text-shadow: 0 0 10px #ff0000;
+    font-weight: bold;
+  `;
+  message.textContent = "3:33... LA HORA DEL DIABLO";
+  overlay.appendChild(message);
+
+  // Agregar estilos de animación
+  if (!document.getElementById("jumpscare-styles")) {
+    const style = document.createElement("style");
+    style.id = "jumpscare-styles";
+    style.textContent = `
+      @keyframes glitchScare {
+        0% { transform: translate(0) scale(1); filter: hue-rotate(0deg); }
+        20% { transform: translate(-10px, 10px) scale(1.1); filter: hue-rotate(90deg); }
+        40% { transform: translate(10px, -10px) scale(0.9); filter: hue-rotate(180deg); }
+        60% { transform: translate(-10px, -10px) scale(1.1); filter: hue-rotate(270deg); }
+        80% { transform: translate(10px, 10px) scale(0.9); filter: hue-rotate(360deg); }
+        100% { transform: translate(0) scale(1); filter: hue-rotate(0deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Desaparecer después de 3 segundos
+  setTimeout(() => {
+    overlay.style.transition = "opacity 0.5s ease";
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 500);
+    
+    showNotification("⏰ ¿Te asusté? 😈 Son las 3:33... hora mágica", "error");
+  }, 3000);
+}
+
+// EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA (MEJORADO)
 function initCornerClicks() {
-  const corners = [];
   const sequence = ["top-left", "top-right", "bottom-right", "bottom-left"];
   let currentStep = 0;
+  let lastClickTime = Date.now();
 
   document.addEventListener("click", (e) => {
     const x = e.clientX;
     const y = e.clientY;
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const threshold = 50;
+    const threshold = 100; // Área más grande para que sea más fácil
 
     let corner = null;
 
@@ -2074,17 +2294,56 @@ function initCornerClicks() {
     else if (x > w - threshold && y > h - threshold) corner = "bottom-right";
     else if (x < threshold && y > h - threshold) corner = "bottom-left";
 
+    // Reset si pasa más de 5 segundos
+    if (Date.now() - lastClickTime > 5000) {
+      currentStep = 0;
+    }
+
     if (corner && corner === sequence[currentStep]) {
       currentStep++;
+      lastClickTime = Date.now();
+      
+      // Feedback visual en la esquina
+      const indicator = document.createElement("div");
+      indicator.style.cssText = `
+        position: fixed;
+        ${corner.includes("top") ? "top: 10px" : "bottom: 10px"};
+        ${corner.includes("left") ? "left: 10px" : "right: 10px"};
+        width: 30px;
+        height: 30px;
+        background: #06ffa5;
+        border-radius: 50%;
+        z-index: 10001;
+        animation: pulseCorner 0.3s ease;
+      `;
+      document.body.appendChild(indicator);
+      setTimeout(() => indicator.remove(), 300);
+
+      console.log(`Corner ${currentStep}/${sequence.length} clicked!`);
 
       if (currentStep === sequence.length) {
         activateDeveloperConsole();
         currentStep = 0;
       }
     } else if (corner) {
+      console.log("Wrong corner! Starting over...");
       currentStep = 0;
     }
   });
+
+  // Agregar estilo de animación
+  if (!document.getElementById("corner-pulse-style")) {
+    const style = document.createElement("style");
+    style.id = "corner-pulse-style";
+    style.textContent = `
+      @keyframes pulseCorner {
+        0% { transform: scale(0); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.8; }
+        100% { transform: scale(0); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
 }
 
 function activateDeveloperConsole() {
@@ -2267,7 +2526,7 @@ function activateGeekMode() {
   document.addEventListener("keydown", escHandler);
 }
 
-// EASTER EGG 8: FECHAS ESPECIALES
+// EASTER EGG 8: FECHAS ESPECIALES CON TEMAS
 function initSpecialDates() {
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -2277,6 +2536,7 @@ function initSpecialDates() {
   if (month === 5 && day === 4) {
     setTimeout(() => {
       showNotification("🌟 May the 4th be with you! Happy Star Wars Day!", "info");
+      applyStarWarsTheme();
     }, 2000);
   }
 
@@ -2285,6 +2545,7 @@ function initSpecialDates() {
     setTimeout(() => {
       showNotification("🥧 Happy Pi Day! π = 3.14159265...", "info");
       rainPiNumbers();
+      applyMathTheme();
     }, 2000);
   }
 
@@ -2292,8 +2553,329 @@ function initSpecialDates() {
   if (month === 10 && day === 31) {
     setTimeout(() => {
       showNotification("🎃 Happy Halloween! Boo! 👻", "info");
+      applyHalloweenTheme();
     }, 2000);
   }
+
+  // Navidad (24-25 diciembre)
+  if (month === 12 && (day === 24 || day === 25)) {
+    setTimeout(() => {
+      showNotification("🎄 ¡Feliz Navidad! Ho Ho Ho! 🎅", "success");
+      applyChristmasTheme();
+    }, 2000);
+  }
+
+  // Año Nuevo (31 dic - 1 ene)
+  if ((month === 12 && day === 31) || (month === 1 && day === 1)) {
+    setTimeout(() => {
+      showNotification("🎆 ¡Feliz Año Nuevo! 2025 🎉", "success");
+      applyNewYearTheme();
+    }, 2000);
+  }
+}
+
+// TEMAS ESPECIALES
+
+function applyStarWarsTheme() {
+  console.log("🌟 Aplicando tema Star Wars");
+  playSound("powerup");
+  
+  // Overlay con estrellas
+  const overlay = document.createElement("div");
+  overlay.id = "starwars-overlay";
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, #000000 0%, #0a0a2e 100%);
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  `;
+  document.body.appendChild(overlay);
+  
+  setTimeout(() => overlay.style.opacity = "0.8", 100);
+  
+  // Estrellas de fondo
+  for (let i = 0; i < 150; i++) {
+    setTimeout(() => {
+      const star = document.createElement("div");
+      star.className = "starwars-star";
+      star.style.cssText = `
+        position: fixed;
+        width: ${1 + Math.random() * 3}px;
+        height: ${1 + Math.random() * 3}px;
+        background: white;
+        border-radius: 50%;
+        left: ${Math.random() * 100}vw;
+        top: ${Math.random() * 100}vh;
+        z-index: 9999;
+        pointer-events: none;
+        animation: twinkle ${1 + Math.random() * 2}s infinite;
+        box-shadow: 0 0 ${2 + Math.random() * 4}px white;
+      `;
+      document.body.appendChild(star);
+    }, i * 20);
+  }
+  
+  // Texto "May the 4th be with you"
+  setTimeout(() => {
+    const text = document.createElement("div");
+    text.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #FFE81F;
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+      z-index: 10000;
+      text-shadow: 0 0 20px #FFE81F;
+      animation: fadeIn 2s ease;
+    `;
+    text.textContent = "May the 4th be with you";
+    document.body.appendChild(text);
+    
+    setTimeout(() => {
+      text.style.animation = "fadeOut 1s ease";
+      setTimeout(() => text.remove(), 1000);
+    }, 4000);
+  }, 1000);
+  
+  // Limpiar después de 12 segundos
+  setTimeout(() => {
+    overlay.style.opacity = "0";
+    const stars = document.querySelectorAll(".starwars-star");
+    stars.forEach(star => star.remove());
+    setTimeout(() => overlay.remove(), 1000);
+  }, 12000);
+}
+
+function applyMathTheme() {
+  console.log("🥧 Aplicando tema matemático");
+  
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 209, 102, 0.1);
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  `;
+  document.body.appendChild(overlay);
+  
+  setTimeout(() => overlay.style.opacity = "1", 100);
+  
+  setTimeout(() => {
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 1000);
+  }, 12000);
+}
+
+function applyHalloweenTheme() {
+  console.log("🎃 Aplicando tema Halloween");
+  playSound("error");
+  
+  // Agregar animación fall si no existe
+  if (!document.getElementById("fall-animation")) {
+    const style = document.createElement("style");
+    style.id = "fall-animation";
+    style.textContent = `
+      @keyframes fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Overlay oscuro
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 102, 0, 0.15);
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  `;
+  document.body.appendChild(overlay);
+  
+  setTimeout(() => overlay.style.opacity = "1", 100);
+  
+  // Calabazas flotantes
+  for (let i = 0; i < 15; i++) {
+    setTimeout(() => {
+      const pumpkin = document.createElement("div");
+      pumpkin.textContent = ["🎃", "👻", "🦇", "💀"][Math.floor(Math.random() * 4)];
+      pumpkin.style.cssText = `
+        position: fixed;
+        font-size: ${30 + Math.random() * 40}px;
+        left: ${Math.random() * 100}vw;
+        top: -100px;
+        z-index: 9999;
+        pointer-events: none;
+        animation: fall ${5 + Math.random() * 3}s linear forwards;
+        filter: drop-shadow(0 0 10px orange);
+      `;
+      document.body.appendChild(pumpkin);
+      setTimeout(() => pumpkin.remove(), 8000);
+    }, i * 400);
+  }
+  
+  setTimeout(() => {
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 1000);
+  }, 12000);
+}
+
+function applyChristmasTheme() {
+  console.log("🎄 Aplicando tema Navidad");
+  playSound("success");
+  
+  // Agregar animación fall si no existe
+  if (!document.getElementById("fall-animation")) {
+    const style = document.createElement("style");
+    style.id = "fall-animation";
+    style.textContent = `
+      @keyframes fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Overlay azul navideño
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(135, 206, 250, 0.1);
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  `;
+  document.body.appendChild(overlay);
+  
+  setTimeout(() => overlay.style.opacity = "1", 100);
+  
+  // Nieve cayendo
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const snow = document.createElement("div");
+      snow.textContent = ["❄️", "⛄", "🎄", "🎅"][Math.floor(Math.random() * 10) < 7 ? 0 : Math.floor(Math.random() * 4)];
+      snow.style.cssText = `
+        position: fixed;
+        font-size: ${10 + Math.random() * 25}px;
+        left: ${Math.random() * 100}vw;
+        top: -50px;
+        z-index: 9999;
+        pointer-events: none;
+        animation: fall ${3 + Math.random() * 3}s linear forwards;
+        opacity: ${0.6 + Math.random() * 0.4};
+        filter: drop-shadow(0 0 5px white);
+      `;
+      document.body.appendChild(snow);
+      setTimeout(() => snow.remove(), 6000);
+    }, i * 80);
+  }
+  
+  setTimeout(() => {
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 1000);
+  }, 15000);
+}
+
+function applyNewYearTheme() {
+  console.log("🎆 Aplicando tema Año Nuevo");
+  playSound("success");
+  
+  // Overlay festivo
+  const overlay = document.createElement("div");
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(255,215,0,0.1) 0%, rgba(255,20,147,0.1) 100%);
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1s ease;
+  `;
+  document.body.appendChild(overlay);
+  
+  setTimeout(() => overlay.style.opacity = "1", 100);
+  
+  // Fuegos artificiales
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const firework = document.createElement("div");
+      firework.textContent = ["🎆", "🎇", "✨", "💥", "🎉"][Math.floor(Math.random() * 5)];
+      firework.style.cssText = `
+        position: fixed;
+        font-size: ${40 + Math.random() * 50}px;
+        left: ${Math.random() * 100}vw;
+        top: ${Math.random() * 60}vh;
+        z-index: 9999;
+        pointer-events: none;
+        animation: explode 1.5s ease-out;
+        filter: drop-shadow(0 0 10px gold);
+      `;
+      document.body.appendChild(firework);
+      setTimeout(() => firework.remove(), 1500);
+    }, i * 250);
+  }
+  
+  // Agregar estilo de explosión
+  if (!document.getElementById("explode-animation")) {
+    const style = document.createElement("style");
+    style.id = "explode-animation";
+    style.textContent = `
+      @keyframes explode {
+        0% { transform: scale(0) rotate(0deg); opacity: 1; }
+        50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+        100% { transform: scale(0) rotate(360deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  setTimeout(() => {
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 1000);
+  }, 12000);
 }
 
 function rainPiNumbers() {
