@@ -3266,10 +3266,6 @@ const easterEggTracker = {
       // Si el tracker está a punto de chocar con el footer
       if (trackerRect.bottom > footerTop && footerTop < viewportHeight) {
         // Calcular posición para quedar debajo del header y arriba del footer
-        const spaceFromTop = trackerRect.top;
-        const spaceFromBottom = viewportHeight - trackerRect.bottom;
-        
-        // Si está muy cerca del footer, fijarlo en posición absoluta respecto al footer
         const distanceToFooter = footerTop - trackerRect.bottom;
         
         if (distanceToFooter < 20) {
@@ -3278,9 +3274,16 @@ const easterEggTracker = {
           tracker.style.bottom = "auto";
           
           // Calcular posición top para quedar arriba del footer
-          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
           const footerOffsetTop = footer.offsetTop;
-          const newTop = footerOffsetTop - tracker.offsetHeight - 10;
+          const headerOffsetBottom = header.offsetTop + header.offsetHeight;
+          
+          let newTop = footerOffsetTop - tracker.offsetHeight - 10;
+          
+          // VALIDAR: No debe quedar arriba del header
+          const minTop = headerOffsetBottom + 20; // 20px debajo del header
+          if (newTop < minTop) {
+            newTop = minTop; // Forzar a quedar debajo del header
+          }
           
           tracker.style.top = `${newTop}px`;
           tracker.style.transition = "none";
