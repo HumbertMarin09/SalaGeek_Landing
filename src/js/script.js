@@ -3269,65 +3269,43 @@ const easterEggTracker = {
     const tracker = document.getElementById("easter-egg-tracker");
     if (!tracker) return;
 
-    const adjustTrackerPosition = () => {
-      const header = document.querySelector(".site-header");
-      const footer = document.querySelector(".site-footer");
-      if (!header || !footer) return;
+    // Agregar transición suave para opacity
+    tracker.style.transition = "opacity 0.3s ease, bottom 0.3s ease";
 
-      const headerRect = header.getBoundingClientRect();
+    const adjustTrackerPosition = () => {
+      const footer = document.querySelector(".site-footer");
+      if (!footer) return;
+
       const footerRect = footer.getBoundingClientRect();
-      const trackerRect = tracker.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
-      // VALIDACIÓN CRÍTICA: Si el tracker está cubriendo el header en position fixed
-      if (tracker.style.position === "fixed" || !tracker.style.position || tracker.style.position === "") {
-        const headerBottom = headerRect.bottom;
-        
-        // Si el tracker está sobre el header
-        if (trackerRect.top < headerBottom) {
-          // Calcular nuevo bottom para que no cubra el header
-          const overlap = headerBottom - trackerRect.top;
-          const currentBottom = parseInt(getComputedStyle(tracker).bottom) || 20;
-          const newBottom = currentBottom - overlap - 10;
-          
-          // Solo ajustar si es necesario (no valores negativos)
-          if (newBottom < 20) {
-            // Cambiar temporalmente la posición
-            tracker.style.bottom = "20px";
-          }
-        }
-      }
+      // Calcular distancia del footer al viewport
+      const footerDistanceFromBottom = viewportHeight - footerRect.top;
       
-      // Si el tracker está a punto de chocar con el footer
-      if (trackerRect.bottom > footerRect.top && footerRect.top < viewportHeight) {
-        const distanceToFooter = footerRect.top - trackerRect.bottom;
+      // Si el footer está entrando al viewport (menos de 200px del borde inferior)
+      if (footerDistanceFromBottom > 0) {
+        // OCULTAR tracker con fade out
+        tracker.style.opacity = "0";
+        tracker.style.pointerEvents = "none"; // Deshabilitar interacción
         
-        if (distanceToFooter < 20) {
-          // Cambiar a position absolute y posicionarlo justo arriba del footer
-          tracker.style.position = "absolute";
-          tracker.style.bottom = "auto";
-          
-          // Calcular posición top para quedar arriba del footer
-          const footerOffsetTop = footer.offsetTop;
-          const headerOffsetBottom = header.offsetTop + header.offsetHeight;
-          
-          let newTop = footerOffsetTop - tracker.offsetHeight - 10;
-          
-          // VALIDAR: No debe quedar arriba del header
-          const minTop = headerOffsetBottom + 20; // 20px debajo del header
-          if (newTop < minTop) {
-            newTop = minTop; // Forzar a quedar debajo del header
+        // Después de la animación, ocultarlo completamente
+        setTimeout(() => {
+          if (tracker.style.opacity === "0") {
+            tracker.style.display = "none";
           }
-          
-          tracker.style.top = `${newTop}px`;
-          tracker.style.transition = "none";
-        }
-      } else if (footerRect.top > viewportHeight) {
-        // Footer fuera del viewport, volver a fixed position
+        }, 300);
+      } else {
+        // Footer fuera del viewport - MOSTRAR tracker con fade in
+        tracker.style.display = "block";
         tracker.style.position = "fixed";
         tracker.style.bottom = "20px";
         tracker.style.top = "auto";
-        tracker.style.transition = "bottom 0.3s ease";
+        
+        // Pequeño delay para que la transición se vea
+        setTimeout(() => {
+          tracker.style.opacity = "1";
+          tracker.style.pointerEvents = "auto"; // Rehabilitar interacción
+        }, 10);
       }
     };
 
