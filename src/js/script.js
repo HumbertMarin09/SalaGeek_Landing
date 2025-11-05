@@ -2475,7 +2475,7 @@ function activateDeveloperConsole() {
   };
 }
 
-// EASTER EGG 6: SHAKE DEL MOUSE (Desktop only)
+// EASTER EGG 6: SHAKE DEL MOUSE (Desktop only - MEJORADO)
 function initMouseShake() {
   // Solo en desktop
   const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -2486,31 +2486,69 @@ function initMouseShake() {
   let shakeCount = 0;
   let shakeTimer = null;
   let shakeActivated = false;
+  let movementHistory = [];
+  const requiredShakes = 15; // Aumentado para más consistencia
 
   document.addEventListener("mousemove", (e) => {
     // No activar si ya se activó
     if (shakeActivated) return;
 
-    const deltaX = Math.abs(e.clientX - lastX);
-    const deltaY = Math.abs(e.clientY - lastY);
+    const currentX = e.clientX;
+    const currentY = e.clientY;
 
-    if (deltaX > 50 || deltaY > 50) {
-      shakeCount++;
+    // Calcular velocidad del movimiento
+    const deltaX = currentX - lastX;
+    const deltaY = currentY - lastY;
+    const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-      if (shakeCount > 10) {
-        activateMouseDodge();
-        shakeCount = 0;
-        shakeActivated = true;
+    // Solo contar movimientos rápidos (velocidad > 30px)
+    if (speed > 30) {
+      movementHistory.push({
+        x: currentX,
+        y: currentY,
+        time: Date.now()
+      });
+
+      // Mantener solo los últimos 20 movimientos
+      if (movementHistory.length > 20) {
+        movementHistory.shift();
+      }
+
+      // Detectar cambios de dirección (zigzag)
+      if (movementHistory.length >= 3) {
+        const recent = movementHistory.slice(-3);
+        const dir1 = recent[1].x - recent[0].x;
+        const dir2 = recent[2].x - recent[1].x;
+        
+        // Si cambia de dirección (shake/zigzag)
+        if ((dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0)) {
+          shakeCount++;
+        }
+      }
+
+      // Activar cuando se detecten suficientes shakes en poco tiempo
+      if (shakeCount >= requiredShakes) {
+        const timeRange = movementHistory[movementHistory.length - 1].time - movementHistory[0].time;
+        
+        // Debe ser en menos de 2 segundos
+        if (timeRange < 2000) {
+          activateMouseDodge();
+          shakeCount = 0;
+          shakeActivated = true;
+          movementHistory = [];
+        }
       }
     }
 
+    // Reset después de 1 segundo de inactividad
     if (shakeTimer) clearTimeout(shakeTimer);
     shakeTimer = setTimeout(() => {
       shakeCount = 0;
-    }, 500);
+      movementHistory = [];
+    }, 1000);
 
-    lastX = e.clientX;
-    lastY = e.clientY;
+    lastX = currentX;
+    lastY = currentY;
   });
 }
 
@@ -3199,6 +3237,49 @@ const easterEggTracker = {
         this.showFloatingHint();
       }
     }, 3000);
+
+    // Ajustar posición del tracker según scroll para no cubrir el footer
+    this.initTrackerPositioning();
+  },
+
+  initTrackerPositioning() {
+    const tracker = document.getElementById("easter-egg-tracker");
+    if (!tracker) return;
+
+    const adjustTrackerPosition = () => {
+      const footer = document.querySelector(".site-footer");
+      if (!footer) return;
+
+      const footerRect = footer.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const trackerHeight = tracker.offsetHeight;
+      
+      // Si el footer está visible en el viewport
+      if (footerRect.top < viewportHeight) {
+        // Calcular cuánto del footer está visible
+        const footerVisibleHeight = viewportHeight - footerRect.top;
+        
+        // Si el tracker colisionaría con el footer
+        if (footerVisibleHeight > 20) { // 20px es el bottom original
+          // Mover el tracker hacia arriba
+          const newBottom = Math.max(20, footerVisibleHeight + 10);
+          tracker.style.bottom = `${newBottom}px`;
+          tracker.style.transition = "bottom 0.3s ease";
+        }
+      } else {
+        // Footer no visible, posición normal
+        tracker.style.bottom = "20px";
+      }
+    };
+
+    // Ajustar en scroll
+    window.addEventListener("scroll", adjustTrackerPosition);
+    
+    // Ajustar en resize
+    window.addEventListener("resize", adjustTrackerPosition);
+    
+    // Ajustar al inicio
+    adjustTrackerPosition();
   },
 
   unlock(eggName) {
