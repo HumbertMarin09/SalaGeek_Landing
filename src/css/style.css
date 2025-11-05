@@ -4479,15 +4479,21 @@ img.lazy-loaded {
     margin-bottom: 2rem;
   }
 
-  /* Ocultar badges en pantallas muy pequeñas para mejor UX */
+  /* Badges más grandes y legibles en móvil */
   .hero-badge {
-    padding: 0.5rem 0.8rem;
-    font-size: 0.8rem;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.95rem;
     min-width: auto;
+    gap: 0.5rem;
   }
   
   .badge-icon {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
+  }
+  
+  .badge-text {
+    font-size: 0.85rem;
+    letter-spacing: 0.6px;
   }
 
   .hero-image {
