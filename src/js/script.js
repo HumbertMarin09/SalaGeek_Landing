@@ -1585,3 +1585,672 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("load", () => {
   document.body.classList.add("loaded");
 });
+
+/* ============================================
+   🎮 EASTER EGGS - FULL GEEK MODE
+   ============================================ */
+
+// EASTER EGG 1: CÓDIGO KONAMI (↑↑↓↓←→←→BA)
+function initKonamiCode() {
+  const konamiCode = [
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "b",
+    "a",
+  ];
+  let konamiIndex = 0;
+
+  document.addEventListener("keydown", (e) => {
+    const key = e.key.toLowerCase();
+
+    if (key === konamiCode[konamiIndex]) {
+      konamiIndex++;
+
+      if (konamiIndex === konamiCode.length) {
+        activateMatrixMode();
+        konamiIndex = 0;
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+}
+
+function activateMatrixMode() {
+  showNotification("🎮 CÓDIGO KONAMI ACTIVADO! Matrix Mode ON", "success");
+
+  // Crear canvas para efecto Matrix
+  const canvas = document.createElement("canvas");
+  canvas.id = "matrix-canvas";
+  canvas.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  `;
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const chars =
+    "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  // Fade in
+  setTimeout(() => (canvas.style.opacity = "0.8"), 100);
+
+  let matrixInterval = setInterval(() => {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#0F0";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }, 33);
+
+  // Desactivar después de 8 segundos
+  setTimeout(() => {
+    canvas.style.opacity = "0";
+    setTimeout(() => {
+      clearInterval(matrixInterval);
+      canvas.remove();
+    }, 500);
+  }, 8000);
+}
+
+// EASTER EGG 2: DOBLE CLICK EN EL LOGO
+function initLogoEasterEgg() {
+  const logo = document.querySelector(".site-logo");
+  if (!logo) return;
+
+  let clickCount = 0;
+  let clickTimer = null;
+
+  logo.addEventListener("click", (e) => {
+    clickCount++;
+
+    if (clickTimer) clearTimeout(clickTimer);
+
+    if (clickCount === 2) {
+      e.preventDefault();
+      activateGlitchStats();
+      clickCount = 0;
+    }
+
+    clickTimer = setTimeout(() => {
+      clickCount = 0;
+    }, 500);
+  });
+}
+
+function activateGlitchStats() {
+  const logo = document.querySelector(".site-logo");
+  if (!logo) return;
+
+  // Efecto glitch en el logo
+  logo.style.animation = "glitch 0.5s ease";
+
+  setTimeout(() => {
+    logo.style.animation = "";
+  }, 500);
+
+  // Mostrar stats aleatorios
+  const stats = [
+    `👾 Geeks conectados: ${Math.floor(Math.random() * 9000) + 1000}`,
+    `🎮 Easter Eggs encontrados: ${Math.floor(Math.random() * 9) + 1}/9`,
+    `⚡ Nivel Geek: ${Math.floor(Math.random() * 100)}%`,
+    `🔥 Racha actual: ${Math.floor(Math.random() * 50)} días`,
+  ];
+
+  const randomStat = stats[Math.floor(Math.random() * stats.length)];
+  showNotification(randomStat, "info");
+
+  // Agregar estilos de glitch si no existen
+  if (!document.getElementById("glitch-styles")) {
+    const style = document.createElement("style");
+    style.id = "glitch-styles";
+    style.textContent = `
+      @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+// EASTER EGG 3: PALABRAS SECRETAS (matrix, retro, thanos)
+function initSecretWords() {
+  let typedWord = "";
+  const secretWords = {
+    matrix: activateMatrixMode,
+    retro: activate8BitMode,
+    thanos: activateSnapEffect,
+  };
+
+  document.addEventListener("keypress", (e) => {
+    // Solo letras
+    if (/^[a-z]$/i.test(e.key)) {
+      typedWord += e.key.toLowerCase();
+
+      // Mantener solo los últimos 10 caracteres
+      if (typedWord.length > 10) {
+        typedWord = typedWord.slice(-10);
+      }
+
+      // Verificar si coincide con alguna palabra secreta
+      Object.keys(secretWords).forEach((word) => {
+        if (typedWord.endsWith(word)) {
+          secretWords[word]();
+          typedWord = "";
+        }
+      });
+    }
+  });
+}
+
+function activate8BitMode() {
+  showNotification("🕹️ MODO RETRO 8-BIT ACTIVADO!", "info");
+
+  document.body.style.transition = "all 0.5s ease";
+  document.body.style.imageRendering = "pixelated";
+  document.body.style.filter = "contrast(1.2) saturate(1.5)";
+
+  // Agregar efecto scanlines
+  const scanlines = document.createElement("div");
+  scanlines.id = "scanlines-overlay";
+  scanlines.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 999998;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  `;
+  document.body.appendChild(scanlines);
+
+  setTimeout(() => (scanlines.style.opacity = "0.5"), 100);
+
+  // Desactivar después de 6 segundos
+  setTimeout(() => {
+    document.body.style.imageRendering = "";
+    document.body.style.filter = "";
+    scanlines.style.opacity = "0";
+    setTimeout(() => scanlines.remove(), 500);
+  }, 6000);
+}
+
+function activateSnapEffect() {
+  showNotification("💎 THANOS SNAP ACTIVADO! *chasquido*", "error");
+
+  const elements = document.querySelectorAll(
+    "section > *, .hero-badge, .testimonial-card, .about-stat",
+  );
+  const elementsArray = Array.from(elements);
+
+  // Seleccionar 50% aleatorio
+  const toDisintegrate = elementsArray
+    .sort(() => Math.random() - 0.5)
+    .slice(0, Math.floor(elementsArray.length / 2));
+
+  toDisintegrate.forEach((el, index) => {
+    setTimeout(() => {
+      el.style.transition = "all 1s ease";
+      el.style.opacity = "0";
+      el.style.transform = "scale(0.8) translateY(20px)";
+      el.style.filter = "blur(5px)";
+    }, index * 50);
+  });
+
+  // Restaurar después de 4 segundos
+  setTimeout(() => {
+    toDisintegrate.forEach((el) => {
+      el.style.transition = "all 1s ease";
+      el.style.opacity = "";
+      el.style.transform = "";
+      el.style.filter = "";
+
+      setTimeout(() => {
+        el.style.transition = "";
+      }, 1000);
+    });
+  }, 4000);
+}
+
+// EASTER EGG 4: HORA ESPECÍFICA (3:33 AM)
+function initTimeEasterEgg() {
+  setInterval(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    if (
+      (hours === 3 && minutes === 33) ||
+      (hours === 15 && minutes === 33)
+    ) {
+      showNotification(
+        "⏰ Son las 3:33... Hora mágica detectada 👻",
+        "info",
+      );
+    }
+  }, 60000); // Verificar cada minuto
+}
+
+// EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA
+function initCornerClicks() {
+  const corners = [];
+  const sequence = ["top-left", "top-right", "bottom-right", "bottom-left"];
+  let currentStep = 0;
+
+  document.addEventListener("click", (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const threshold = 50;
+
+    let corner = null;
+
+    if (x < threshold && y < threshold) corner = "top-left";
+    else if (x > w - threshold && y < threshold) corner = "top-right";
+    else if (x > w - threshold && y > h - threshold) corner = "bottom-right";
+    else if (x < threshold && y > h - threshold) corner = "bottom-left";
+
+    if (corner && corner === sequence[currentStep]) {
+      currentStep++;
+
+      if (currentStep === sequence.length) {
+        activateDeveloperConsole();
+        currentStep = 0;
+      }
+    } else if (corner) {
+      currentStep = 0;
+    }
+  });
+}
+
+function activateDeveloperConsole() {
+  showNotification(
+    "💻 DEVELOPER CONSOLE DESBLOQUEADO! Check F12",
+    "success",
+  );
+
+  console.log("%c🎮 SALA GEEK - DEVELOPER MODE", "font-size: 24px; color: #ffd166; font-weight: bold;");
+  console.log("%c¡Felicidades! Has desbloqueado el Developer Console", "font-size: 14px; color: #48bb78;");
+  console.log("%cEstadísticas del sitio:", "font-size: 12px; color: #4299e1; font-weight: bold;");
+  console.table({
+    "Versión": "1.69.0",
+    "Easter Eggs": "9 implementados",
+    "Nivel Geek": "LEGENDARY",
+    "Framework": "Vanilla JS",
+    "Líneas de código": "~2000+",
+  });
+  console.log("%c¿Quieres ver todos los Easter Eggs?", "font-size: 12px; color: #f6ad55;");
+  console.log("showAllEasterEggs()");
+
+  // Función global para mostrar todos los Easter Eggs
+  window.showAllEasterEggs = function () {
+    console.log("%c🎯 LISTA DE EASTER EGGS:", "font-size: 16px; color: #ffd166; font-weight: bold;");
+    console.log("1. Código Konami: ↑↑↓↓←→←→BA");
+    console.log("2. Doble click en el logo");
+    console.log("3. Escribir: 'matrix', 'retro', 'thanos'");
+    console.log("4. Hora mágica: 3:33 AM/PM");
+    console.log("5. Click en esquinas: TL→TR→BR→BL");
+    console.log("6. Shake del mouse (mover rápido)");
+    console.log("7. Ctrl + Shift + G (Geek Mode)");
+    console.log("8. Fechas especiales (Mayo 4, Pi Day)");
+    console.log("9. Scroll al 100% (mensaje secreto)");
+  };
+}
+
+// EASTER EGG 6: SHAKE DEL MOUSE
+function initMouseShake() {
+  let lastX = 0;
+  let lastY = 0;
+  let shakeCount = 0;
+  let shakeTimer = null;
+
+  document.addEventListener("mousemove", (e) => {
+    const deltaX = Math.abs(e.clientX - lastX);
+    const deltaY = Math.abs(e.clientY - lastY);
+
+    if (deltaX > 50 || deltaY > 50) {
+      shakeCount++;
+
+      if (shakeCount > 10) {
+        activateMouseDodge();
+        shakeCount = 0;
+      }
+    }
+
+    if (shakeTimer) clearTimeout(shakeTimer);
+    shakeTimer = setTimeout(() => {
+      shakeCount = 0;
+    }, 500);
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+}
+
+function activateMouseDodge() {
+  showNotification("🏃 Los elementos te esquivan! Mueve el mouse", "info");
+
+  const elements = document.querySelectorAll(".hero-badge, .btn, .testimonial-card");
+
+  elements.forEach((el) => {
+    el.style.transition = "transform 0.2s ease";
+    el.dataset.originalTransform = el.style.transform || "";
+  });
+
+  const mouseMoveHandler = (e) => {
+    elements.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      if (distance < 150) {
+        const angle = Math.atan2(deltaY, deltaX);
+        const force = Math.max(0, 150 - distance) / 3;
+        const offsetX = -Math.cos(angle) * force;
+        const offsetY = -Math.sin(angle) * force;
+
+        el.style.transform = `translate(${offsetX}px, ${offsetY}px) ${el.dataset.originalTransform}`;
+      } else {
+        el.style.transform = el.dataset.originalTransform;
+      }
+    });
+  };
+
+  document.addEventListener("mousemove", mouseMoveHandler);
+
+  setTimeout(() => {
+    document.removeEventListener("mousemove", mouseMoveHandler);
+    elements.forEach((el) => {
+      el.style.transform = el.dataset.originalTransform;
+      delete el.dataset.originalTransform;
+    });
+  }, 5000);
+}
+
+// EASTER EGG 7: COMBO DE TECLADO (Ctrl + Shift + G)
+function initKeyboardCombo() {
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === "G") {
+      e.preventDefault();
+      activateGeekMode();
+    }
+  });
+}
+
+function activateGeekMode() {
+  showNotification("🤓 GEEK MODE ACTIVADO! Terminal Style", "success");
+
+  // Agregar overlay de terminal
+  const terminal = document.createElement("div");
+  terminal.id = "geek-mode-terminal";
+  terminal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    padding: 2rem;
+    z-index: 999999;
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
+
+  const commands = [
+    "$ iniciando sistema...",
+    "$ cargando módulos geek...",
+    "$ [OK] Anime Database",
+    "$ [OK] Gaming News",
+    "$ [OK] Tech Updates",
+    "$ [OK] Pop Culture Feed",
+    "$ ================================",
+    "$ SALA GEEK v1.69.0",
+    "$ Sistema: OPERATIONAL",
+    "$ Nivel Geek: LEGENDARY",
+    "$ Easter Eggs: 9/9 disponibles",
+    "$ ================================",
+    "$ Presiona ESC para salir...",
+  ];
+
+  let output = "";
+  commands.forEach((cmd, index) => {
+    setTimeout(() => {
+      output += cmd + "<br>";
+      terminal.innerHTML = output;
+    }, index * 200);
+  });
+
+  document.body.appendChild(terminal);
+  setTimeout(() => (terminal.style.opacity = "1"), 100);
+
+  const escHandler = (e) => {
+    if (e.key === "Escape") {
+      terminal.style.opacity = "0";
+      setTimeout(() => terminal.remove(), 300);
+      document.removeEventListener("keydown", escHandler);
+    }
+  };
+
+  document.addEventListener("keydown", escHandler);
+}
+
+// EASTER EGG 8: FECHAS ESPECIALES
+function initSpecialDates() {
+  const today = new Date();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+
+  // Mayo 4 (Star Wars Day)
+  if (month === 5 && day === 4) {
+    setTimeout(() => {
+      showNotification("🌟 May the 4th be with you! Happy Star Wars Day!", "info");
+    }, 2000);
+  }
+
+  // Pi Day (14 marzo)
+  if (month === 3 && day === 14) {
+    setTimeout(() => {
+      showNotification("🥧 Happy Pi Day! π = 3.14159265...", "info");
+      rainPiNumbers();
+    }, 2000);
+  }
+
+  // Halloween (31 octubre)
+  if (month === 10 && day === 31) {
+    setTimeout(() => {
+      showNotification("🎃 Happy Halloween! Boo! 👻", "info");
+    }, 2000);
+  }
+}
+
+function rainPiNumbers() {
+  const pi = "31415926535897932384626433832795028841971693993751";
+  const container = document.createElement("div");
+  container.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999997;
+    overflow: hidden;
+  `;
+  document.body.appendChild(container);
+
+  for (let i = 0; i < 30; i++) {
+    setTimeout(() => {
+      const digit = document.createElement("div");
+      digit.textContent = pi[Math.floor(Math.random() * pi.length)];
+      digit.style.cssText = `
+        position: absolute;
+        top: -50px;
+        left: ${Math.random() * 100}%;
+        font-size: ${20 + Math.random() * 30}px;
+        color: #ffd166;
+        font-weight: bold;
+        animation: fall ${3 + Math.random() * 2}s linear;
+        opacity: 0.8;
+      `;
+      container.appendChild(digit);
+
+      setTimeout(() => digit.remove(), 5000);
+    }, i * 100);
+  }
+
+  // Agregar animación de caída
+  if (!document.getElementById("fall-animation")) {
+    const style = document.createElement("style");
+    style.id = "fall-animation";
+    style.textContent = `
+      @keyframes fall {
+        to {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  setTimeout(() => container.remove(), 6000);
+}
+
+// EASTER EGG 9: SCROLL AL 100%
+function initScrollSecret() {
+  let hasTriggered = false;
+
+  window.addEventListener("scroll", () => {
+    if (hasTriggered) return;
+
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const clientHeight = window.innerHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      hasTriggered = true;
+      revealFooterSecret();
+    }
+  });
+}
+
+function revealFooterSecret() {
+  showNotification(
+    "🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...",
+    "success",
+  );
+
+  const footer = document.querySelector(".site-footer");
+  if (footer) {
+    const secret = document.createElement("div");
+    secret.style.cssText = `
+      text-align: center;
+      padding: 1rem;
+      margin-top: 1rem;
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(239, 71, 111, 0.1));
+      border-radius: 8px;
+      border: 2px solid var(--accent-primary);
+      animation: pulse 2s ease-in-out infinite;
+    `;
+    secret.innerHTML = `
+      <p style="margin: 0; color: var(--accent-primary); font-weight: bold;">
+        🏆 ¡FELICIDADES! Llegaste hasta el final
+      </p>
+      <p style="margin: 0.5rem 0 0; color: var(--text-secondary); font-size: 0.9rem;">
+        Eres un verdadero geek. Has desbloqueado TODOS los secretos 🎮
+      </p>
+    `;
+
+    footer.appendChild(secret);
+
+    // Agregar animación pulse
+    if (!document.getElementById("pulse-animation")) {
+      const style = document.createElement("style");
+      style.id = "pulse-animation";
+      style.textContent = `
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.02); opacity: 0.8; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+}
+
+// INICIALIZAR TODOS LOS EASTER EGGS
+function initAllEasterEggs() {
+  initKonamiCode();
+  initLogoEasterEgg();
+  initSecretWords();
+  initTimeEasterEgg();
+  initCornerClicks();
+  initMouseShake();
+  initKeyboardCombo();
+  initSpecialDates();
+  initScrollSecret();
+
+  console.log(
+    "%c🎮 EASTER EGGS ACTIVADOS",
+    "color: #ffd166; font-size: 14px; font-weight: bold;",
+  );
+  console.log(
+    "%c9 secretos esperando ser descubiertos...",
+    "color: #48bb78; font-size: 12px;",
+  );
+}
+
+// Inicializar Easter Eggs después de que todo cargue
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(initAllEasterEggs, 1000);
+});
