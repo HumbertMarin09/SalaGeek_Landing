@@ -1042,22 +1042,28 @@ function showNotification(message, type = "info") {
       break;
   }
 
+  // Detectar móvil para ajustar tamaño
+  const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+  
   // Crear elemento de notificación
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
   notification.style.cssText = `
     position: fixed;
-    top: 120px;
-    right: 20px;
-    padding: 1rem 1.5rem;
+    top: ${isMobile ? '90px' : '120px'};
+    right: ${isMobile ? '10px' : '20px'};
+    left: ${isMobile ? '10px' : 'auto'};
+    padding: ${isMobile ? '0.75rem 1rem' : '1rem 1.5rem'};
     background: ${background};
     color: white;
     border-radius: 8px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    z-index: 10000;
-    max-width: 400px;
+    z-index: 100000;
+    max-width: ${isMobile ? '100%' : '400px'};
     animation: slideInRight 0.3s ease;
     font-weight: 500;
+    font-size: ${isMobile ? '0.875rem' : '1rem'};
+    line-height: 1.4;
   `;
 
   notification.textContent = message;
@@ -3199,6 +3205,20 @@ const easterEggTracker = {
       this.updateUI();
     }
 
+    // Ocultar achievements desktop-only en móvil
+    if (this.isMobile) {
+      const style = document.createElement('style');
+      style.id = 'tracker-mobile-styles';
+      style.textContent = `
+        .achievement.desktop-only {
+          display: none !important;
+        }
+      `;
+      if (!document.getElementById('tracker-mobile-styles')) {
+        document.head.appendChild(style);
+      }
+    }
+
     // Iniciar colapsado por defecto
     const tracker = document.getElementById("easter-egg-tracker");
     if (tracker) {
@@ -3436,23 +3456,26 @@ const easterEggTracker = {
       : "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs! ¡Eres un DIOS GEEK! 🎮";
     showNotification(message, "success");
 
-    // Crear contenedor de confetti fuera del stacking context del header
+    // Crear contenedor de confetti en el viewport ACTUAL (no en top: 0)
     let confettiContainer = document.getElementById('confetti-container');
     if (!confettiContainer) {
       confettiContainer = document.createElement('div');
       confettiContainer.id = 'confetti-container';
-      confettiContainer.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 99999;
-        pointer-events: none;
-        overflow: hidden;
-      `;
       document.body.appendChild(confettiContainer);
     }
+    
+    // Posicionar en viewport actual del usuario
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    confettiContainer.style.cssText = `
+      position: absolute;
+      top: ${scrollY}px;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 99999;
+      pointer-events: none;
+      overflow: hidden;
+    `;
 
     // Confetti effect - más rápido y pronunciado
     for (let i = 0; i < 50; i++) {
@@ -3462,10 +3485,10 @@ const easterEggTracker = {
         confetti.className = "celebration-confetti";
         
         const startX = Math.random() * 100;
-        const duration = 1 + Math.random() * 1.5; // Más rápido (antes 2-4s, ahora 1-2.5s)
-        const fontSize = 25 + Math.random() * 35; // Más grandes
+        const duration = 1 + Math.random() * 1.5;
+        const fontSize = 25 + Math.random() * 35;
         const rotation = Math.random() * 360;
-        const drift = (Math.random() - 0.5) * 3; // Desplazamiento horizontal
+        const drift = (Math.random() - 0.5) * 3;
         
         confetti.style.cssText = `
           position: absolute;
@@ -3478,20 +3501,17 @@ const easterEggTracker = {
         
         confettiContainer.appendChild(confetti);
         
-        // Animar con JavaScript - mucho más rápido
+        // Animar con JavaScript
         let top = -80;
         let currentX = startX;
-        const speed = (window.innerHeight + 100) / (duration * 1000); // pixels por milisegundo
         const startTime = Date.now();
         
         const animate = () => {
           const elapsed = Date.now() - startTime;
           const progress = elapsed / (duration * 1000);
           
-          // Caída rápida con aceleración (gravedad)
+          // Caída rápida con aceleración
           top = -80 + (window.innerHeight + 100) * Math.pow(progress, 1.5);
-          
-          // Desplazamiento horizontal suave
           currentX = startX + (drift * progress);
           
           confetti.style.top = `${top}px`;
@@ -3506,8 +3526,13 @@ const easterEggTracker = {
         };
         
         requestAnimationFrame(animate);
-      }, i * 30); // Más frecuente (antes 50ms, ahora 30ms)
+      }, i * 30);
     }
+    
+    // Limpiar contenedor después de la animación
+    setTimeout(() => {
+      confettiContainer.remove();
+    }, 3000);
   },
 
   showFloatingHint() {
@@ -3575,6 +3600,10 @@ function initMobileEasterEggs() {
     ctaButton.addEventListener("touchstart", (e) => {
       ctaLongPressActivated = false;
       
+      // Feedback visual INMEDIATO al tocar
+      ctaButton.style.transform = "scale(0.95)";
+      ctaButton.style.transition = "transform 0.1s ease";
+      
       ctaLongPressTimer = setTimeout(() => {
         ctaLongPressActivated = true;
         activate8BitMode();
@@ -3589,11 +3618,14 @@ function initMobileEasterEggs() {
           ctaButton.style.transform = "";
           ctaButton.style.boxShadow = "";
         }, 500);
-      }, 800);
+      }, 600); // Reducido de 800ms a 600ms
     }, { passive: false });
     
     ctaButton.addEventListener("touchend", (e) => {
       clearTimeout(ctaLongPressTimer);
+      
+      // Restaurar feedback visual
+      ctaButton.style.transform = "";
       
       // Si se activó el long press, prevenir navegación
       if (ctaLongPressActivated) {
@@ -3628,23 +3660,37 @@ function initMobileEasterEggs() {
   
   if (newsletterInput) {
     newsletterInput.addEventListener("touchstart", (e) => {
+      // Feedback visual INMEDIATO
+      newsletterInput.style.borderColor = "var(--accent-secondary)";
+      newsletterInput.style.transform = "scale(0.98)";
+      newsletterInput.style.transition = "all 0.1s ease";
+      
       newsletterLongPressTimer = setTimeout(() => {
         activateGlitchStats();
         easterEggTracker.unlock("logo");
-        // Feedback visual
+        // Feedback visual de éxito
         newsletterInput.style.borderColor = "var(--accent-primary)";
+        newsletterInput.style.transform = "scale(1.02)";
+        if (navigator.vibrate) navigator.vibrate(200);
         setTimeout(() => {
           newsletterInput.style.borderColor = "";
+          newsletterInput.style.transform = "";
         }, 500);
-      }, 1000); // 1 segundo
+      }, 600); // Reducido de 1000ms a 600ms
     });
     
     newsletterInput.addEventListener("touchend", () => {
       clearTimeout(newsletterLongPressTimer);
+      // Restaurar estilos
+      newsletterInput.style.borderColor = "";
+      newsletterInput.style.transform = "";
     });
     
     newsletterInput.addEventListener("touchmove", () => {
       clearTimeout(newsletterLongPressTimer);
+      // Restaurar estilos
+      newsletterInput.style.borderColor = "";
+      newsletterInput.style.transform = "";
     });
   }
 
@@ -3679,13 +3725,19 @@ function initMobileEasterEggs() {
   if (footerBrand) {
     footerBrand.addEventListener("touchstart", (e) => {
       e.preventDefault();
+      
+      // Feedback visual INMEDIATO
+      footerBrand.style.transform = "scale(0.95)";
+      footerBrand.style.color = "var(--accent-secondary)";
+      footerBrand.style.transition = "all 0.1s ease";
+      
       footerBrandLongPress = setTimeout(() => {
         // Modo ligero: solo CSS sin Matrix pesado
         document.body.style.filter = "hue-rotate(180deg)";
         playSound("coin");
         easterEggTracker.unlock("combo");
         
-        // Feedback visual y haptic
+        // Feedback visual y haptic de éxito
         footerBrand.style.transform = "scale(1.2)";
         footerBrand.style.color = "var(--accent-primary)";
         if (navigator.vibrate) navigator.vibrate(200);
@@ -3695,11 +3747,21 @@ function initMobileEasterEggs() {
           footerBrand.style.transform = "";
           footerBrand.style.color = "";
         }, 3000);
-      }, 1000);
+      }, 600); // Reducido de 1000ms a 600ms
     });
     
     footerBrand.addEventListener("touchend", () => {
       clearTimeout(footerBrandLongPress);
+      // Restaurar estilos
+      footerBrand.style.transform = "";
+      footerBrand.style.color = "";
+    });
+    
+    footerBrand.addEventListener("touchmove", () => {
+      clearTimeout(footerBrandLongPress);
+      // Restaurar estilos
+      footerBrand.style.transform = "";
+      footerBrand.style.color = "";
     });
     
     footerBrand.addEventListener("touchmove", () => {
