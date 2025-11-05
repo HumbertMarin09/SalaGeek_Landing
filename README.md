@@ -151,7 +151,13 @@ Los colores principales se definen en `:root` en `style.css`:
 ### Newsletter Integration
 
 ✅ **Sistema completo integrado con Mailchimp**
+
+## ✨ Características
+
+- Landing page responsiva y optimizada
 - Formulario conectado a Mailchimp API (netlify/functions/)
+- Diseño dark mode con temática geek/gaming
+
 - Email de bienvenida automático configurado
 - Newsletter semanal "Geeky Weekly" programado
 
@@ -170,21 +176,23 @@ Los colores principales se definen en `:root` en `style.css`:
 - **Hosting:** Netlify
 - **CDN:** Global edge network
 
-## � Newsletter
+## 📧 Newsletter
 
 **Geeky Weekly** - Newsletter semanal con lo mejor de la cultura geek
+
 - **Frecuencia:** Viernes 18:00
 - **Plataforma:** Mailchimp
 - **Suscriptores objetivo:** 1000+ en 3 meses
 
-## �📄 Licencia
+## � Licencia
 
 © 2025 Sala Geek. Todos los derechos reservados.
 
 ## 👥 Contacto
 
-- **Email:** contacto@salageek.com
+- **Email:** <contacto@salageek.com>
 - **Ubicación:** Ciudad de México, México
+
 
 ---
 
