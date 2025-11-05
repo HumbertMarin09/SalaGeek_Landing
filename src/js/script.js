@@ -3259,14 +3259,28 @@ const easterEggTracker = {
       const trackerRect = tracker.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       
-      // Calcular espacio disponible en el body (entre header y footer)
-      const headerBottom = headerRect.bottom;
-      const footerTop = footerRect.top;
+      // VALIDACIÓN CRÍTICA: Si el tracker está cubriendo el header en position fixed
+      if (tracker.style.position === "fixed" || !tracker.style.position || tracker.style.position === "") {
+        const headerBottom = headerRect.bottom;
+        
+        // Si el tracker está sobre el header
+        if (trackerRect.top < headerBottom) {
+          // Calcular nuevo bottom para que no cubra el header
+          const overlap = headerBottom - trackerRect.top;
+          const currentBottom = parseInt(getComputedStyle(tracker).bottom) || 20;
+          const newBottom = currentBottom - overlap - 10;
+          
+          // Solo ajustar si es necesario (no valores negativos)
+          if (newBottom < 20) {
+            // Cambiar temporalmente la posición
+            tracker.style.bottom = "20px";
+          }
+        }
+      }
       
       // Si el tracker está a punto de chocar con el footer
-      if (trackerRect.bottom > footerTop && footerTop < viewportHeight) {
-        // Calcular posición para quedar debajo del header y arriba del footer
-        const distanceToFooter = footerTop - trackerRect.bottom;
+      if (trackerRect.bottom > footerRect.top && footerRect.top < viewportHeight) {
+        const distanceToFooter = footerRect.top - trackerRect.bottom;
         
         if (distanceToFooter < 20) {
           // Cambiar a position absolute y posicionarlo justo arriba del footer
