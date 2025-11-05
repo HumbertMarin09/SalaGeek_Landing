@@ -1155,7 +1155,7 @@ function initBackToTop() {
   progressCircle.style.strokeDasharray = circumference;
   progressCircle.style.strokeDashoffset = circumference;
 
-  // Función para actualizar el progreso
+  // Función para actualizar el progreso y posición
   function updateScrollProgress() {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight;
@@ -1172,6 +1172,27 @@ function initBackToTop() {
       backToTopBtn.classList.add("visible");
     } else {
       backToTopBtn.classList.remove("visible");
+    }
+
+    // Ajustar posición del botón para no cubrir el footer
+    const footer = document.querySelector(".site-footer");
+    if (footer) {
+      const footerRect = footer.getBoundingClientRect();
+      
+      // Si el footer está visible en el viewport
+      if (footerRect.top < windowHeight) {
+        const footerVisibleHeight = windowHeight - footerRect.top;
+        
+        // Si colisionaría con el footer
+        if (footerVisibleHeight > 30) { // 30px es el bottom original
+          const newBottom = footerVisibleHeight + 10;
+          backToTopBtn.style.bottom = `${Math.max(30, newBottom)}px`;
+          backToTopBtn.style.transition = "bottom 0.3s ease";
+        }
+      } else {
+        // Footer no visible, posición normal
+        backToTopBtn.style.bottom = "30px";
+      }
     }
   }
 
@@ -3248,11 +3269,13 @@ const easterEggTracker = {
 
     const adjustTrackerPosition = () => {
       const footer = document.querySelector(".site-footer");
+      const header = document.querySelector(".site-header");
       if (!footer) return;
 
       const footerRect = footer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
       const trackerHeight = tracker.offsetHeight;
+      const headerHeight = header ? header.offsetHeight : 80;
       
       // Si el footer está visible en el viewport
       if (footerRect.top < viewportHeight) {
@@ -3260,9 +3283,17 @@ const easterEggTracker = {
         const footerVisibleHeight = viewportHeight - footerRect.top;
         
         // Si el tracker colisionaría con el footer
-        if (footerVisibleHeight > 20) { // 20px es el bottom original
-          // Mover el tracker hacia arriba
-          const newBottom = Math.max(20, footerVisibleHeight + 10);
+        if (footerVisibleHeight > 20) {
+          // Calcular nueva posición sin exceder el header
+          let newBottom = footerVisibleHeight + 10;
+          
+          // Límite superior: no dejar que el tracker quede sobre el header
+          const maxBottom = viewportHeight - trackerHeight - headerHeight - 20;
+          newBottom = Math.min(newBottom, maxBottom);
+          
+          // Límite inferior: mínimo 20px
+          newBottom = Math.max(20, newBottom);
+          
           tracker.style.bottom = `${newBottom}px`;
           tracker.style.transition = "bottom 0.3s ease";
         }
