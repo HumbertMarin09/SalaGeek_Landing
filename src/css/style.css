@@ -4497,16 +4497,18 @@ img.lazy-loaded {
 
   /* Botones táctiles optimizados (mínimo 44px altura) */
   .btn {
-    padding: 1rem 1.8rem;
-    font-size: 1rem;
-    min-height: 48px;
+    padding: 1.2rem 2rem;
+    font-size: 1.1rem;
+    min-height: 52px;
     border-radius: 10px;
+    font-weight: 600;
   }
 
   .btn-large {
-    padding: 1.1rem 2rem;
-    font-size: 1.05rem;
-    min-height: 50px;
+    padding: 1.4rem 2.5rem;
+    font-size: 1.2rem;
+    min-height: 56px;
+    font-weight: 600;
   }
   
   .hero-cta {
