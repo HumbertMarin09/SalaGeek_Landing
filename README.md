@@ -35,6 +35,16 @@ SG_Landing/
 │           ├── cookies.html
 │           ├── privacy.html
 │           └── terms.html
+├── email-templates/        # 📧 Sistema de Newsletter
+│   ├── README.md          # Guía de la carpeta
+│   ├── newsletter-template.html  # Template HTML principal
+│   ├── edicion-X-[tema].md       # Contenido semanal
+│   ├── NEWSLETTER-STRATEGY.md    # Estrategia completa
+│   ├── GUIA-IMPLEMENTACION.md    # Guía Mailchimp
+│   └── welcome-email.html        # Email de bienvenida
+├── netlify/
+│   └── functions/         # Serverless functions (Mailchimp API)
+└── docs/                  # Documentación archivada
 ```
 
 ## 🎨 Secciones de la Landing Page
@@ -140,22 +150,46 @@ Los colores principales se definen en `:root` en `style.css`:
 
 ### Newsletter Integration
 
-El formulario está preparado para integrarse con cualquier servicio de email marketing. Modifica la función `initNewsletterForm()` en `script.js` para conectar con tu API.
+✅ **Sistema completo integrado con Mailchimp**
+- Formulario conectado a Mailchimp API (netlify/functions/)
+- Email de bienvenida automático configurado
+- Newsletter semanal "Geeky Weekly" programado
+
+📧 **Ver carpeta `email-templates/` para gestionar el newsletter**
 
 ## 🔗 Enlaces Importantes
 
-- Facebook: <https://www.facebook.com/SalaGeek19>
-- Instagram: <https://www.instagram.com/sala_geek/>
-- TikTok: <https://www.tiktok.com/@salageek19>
+- **Website:** <https://salageek.com>
+- **Facebook:** <https://www.facebook.com/SalaGeek19>
+- **Instagram:** <https://www.instagram.com/sala_geek/>
+- **TikTok:** <https://www.tiktok.com/@salageek19>
 
-## 📄 Licencia
+## 📊 Performance
+
+- **Lighthouse Score:** 94 (Mobile) / 98 (Desktop)
+- **Hosting:** Netlify
+- **CDN:** Global edge network
+
+## � Newsletter
+
+**Geeky Weekly** - Newsletter semanal con lo mejor de la cultura geek
+- **Frecuencia:** Viernes 18:00
+- **Plataforma:** Mailchimp
+- **Suscriptores objetivo:** 1000+ en 3 meses
+
+## �📄 Licencia
 
 © 2025 Sala Geek. Todos los derechos reservados.
 
 ## 👥 Contacto
 
-- Email: <contacto@salageek.com>
-- Ubicación: Ciudad de México, México
+- **Email:** contacto@salageek.com
+- **Ubicación:** Ciudad de México, México
+
+---
+
+**Última actualización:** Noviembre 4, 2025  
+**Versión:** 1.0 - Production Ready + Newsletter System
 
 ---
 

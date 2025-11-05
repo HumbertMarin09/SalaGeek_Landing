@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala Geek Newsletter</title>
+    <style>
+        /* Reset styles */
+        body, table, td, a { 
+            -webkit-text-size-adjust: 100%; 
+            -ms-text-size-adjust: 100%; 
+        }
+        table, td { 
+            mso-table-lspace: 0pt; 
+            mso-table-rspace: 0pt; 
+        }
+        img { 
+            -ms-interpolation-mode: bicubic; 
+            border: 0; 
+            height: auto; 
+            line-height: 100%; 
+            outline: none; 
+            text-decoration: none; 
+        }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            width: 100% !important; 
+            height: 100% !important;
+        }
+        
+        /* Custom styles */
+        body {
+            background-color: #0F0F1E;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #E5E7EB;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1A1A2E;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6B46C1 0%, #9333EA 100%);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header img {
+            max-width: 220px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .header h1 {
+            color: #FFFFFF;
+            font-size: 24px;
+            margin: 15px 0 5px 0;
+            font-weight: 700;
+        }
+        
+        .header p {
+            color: #E0E7FF;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .content {
+            padding: 30px 20px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+        
+        .intro {
+            font-size: 16px;
+            color: #D1D5DB;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .section-divider {
+            border: 0;
+            border-top: 2px solid #6B46C1;
+            margin: 30px 0;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #00D9FF;
+            margin: 25px 0 15px 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .category-title {
+            font-size: 16px;
+            color: #FFFFFF;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+        
+        .news-item {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid #6B46C1;
+        }
+        
+        .news-item h3 {
+            font-size: 15px;
+            color: #00D9FF;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+        
+        .news-item p {
+            font-size: 14px;
+            color: #D1D5DB;
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        .featured-section {
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+            border: 1px solid #6B46C1;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+        
+        .featured-section h2 {
+            font-size: 22px;
+            color: #00D9FF;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+        }
+        
+        .featured-section p {
+            font-size: 15px;
+            color: #E5E7EB;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        
+        .featured-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6B46C1 0%, #9333EA 100%);
+            color: #FFFFFF !important;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 15px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+            transform: translateY(-2px);
+        }
+        
+        .button-cyan {
+            background: linear-gradient(135deg, #00D9FF 0%, #0891B2 100%);
+        }
+        
+        .button-cyan:hover {
+            background: linear-gradient(135deg, #22D3EE 0%, #06B6D4 100%);
+        }
+        
+        .engagement-box {
+            background-color: #0F0F1E;
+            border: 2px solid #00D9FF;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .engagement-box h3 {
+            font-size: 18px;
+            color: #00D9FF;
+            margin: 0 0 15px 0;
+            font-weight: 700;
+        }
+        
+        .engagement-box p {
+            font-size: 15px;
+            color: #D1D5DB;
+            margin: 0 0 20px 0;
+        }
+        
+        .upcoming-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        
+        .upcoming-list li {
+            font-size: 14px;
+            color: #E5E7EB;
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .upcoming-list li:before {
+            content: "→";
+            color: #00D9FF;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background-color: #0F0F1E;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 2px solid #6B46C1;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            color: #9CA3AF;
+            margin: 10px 0;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            text-decoration: none;
+            color: #00D9FF;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .social-links a:hover {
+            color: #FFFFFF;
+        }
+        
+        .unsubscribe {
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 20px;
+        }
+        
+        .unsubscribe a {
+            color: #9CA3AF;
+            text-decoration: underline;
+        }
+        
+        /* Mobile responsive */
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+            }
+            
+            .content {
+                padding: 20px 15px !important;
+            }
+            
+            .header h1 {
+                font-size: 20px !important;
+            }
+            
+            .section-title {
+                font-size: 18px !important;
+            }
+            
+            .featured-section {
+                padding: 20px !important;
+            }
+            
+            .button {
+                display: block !important;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="container">
+                    
+                    <!-- HEADER -->
+                    <tr>
+                        <td class="header">
+                            <img src="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" alt="Sala Geek Logo" style="max-width: 220px; display: block; margin: 0 auto;">
+                            <h1>🎮 GEEKY WEEKLY #*|ISSUE_NUMBER|*</h1>
+                            <p>*|DATE:F j "de" F "de" Y|* | Tu dosis semanal de cultura geek</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- CONTENT -->
+                    <tr>
+                        <td class="content">
+                            
+                            <!-- GREETING -->
+                            <p class="greeting">👋 ¡Hola, *|FNAME|*!</p>
+                            
+                            <!-- INTRO -->
+                            <p class="intro">
+                                *|INTRO_TEXT|*
+                            </p>
+                            
+                            <!-- SECTION DIVIDER -->
+                            <hr class="section-divider">
+                            
+                            <!-- MAIN NEWS SECTION -->
+                            <h2 class="section-title">🔥 Lo Más Hot de la Semana</h2>
+                            
+                            <!-- MOVIES & SERIES -->
+                            <h3 class="category-title">🎬 PELÍCULAS & SERIES</h3>
+                            
+                            <div class="news-item">
+                                <h3>*|MOVIE_NEWS_1_TITLE|*</h3>
+                                <p>*|MOVIE_NEWS_1_CONTENT|*</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>*|MOVIE_NEWS_2_TITLE|*</h3>
+                                <p>*|MOVIE_NEWS_2_CONTENT|*</p>
+                            </div>
+                            
+                            <!-- GAMING -->
+                            <h3 class="category-title">🎮 GAMING</h3>
+                            
+                            <div class="news-item">
+                                <h3>*|GAMING_NEWS_1_TITLE|*</h3>
+                                <p>*|GAMING_NEWS_1_CONTENT|*</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>*|GAMING_NEWS_2_TITLE|*</h3>
+                                <p>*|GAMING_NEWS_2_CONTENT|*</p>
+                            </div>
+                            
+                            <!-- ANIME & MANGA -->
+                            <h3 class="category-title">🌸 ANIME & MANGA</h3>
+                            
+                            <div class="news-item">
+                                <h3>*|ANIME_NEWS_1_TITLE|*</h3>
+                                <p>*|ANIME_NEWS_1_CONTENT|*</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>*|ANIME_NEWS_2_TITLE|*</h3>
+                                <p>*|ANIME_NEWS_2_CONTENT|*</p>
+                            </div>
+                            
+                            <!-- SECTION DIVIDER -->
+                            <hr class="section-divider">
+                            
+                            <!-- FEATURED SECTION -->
+                            <div class="featured-section">
+                                <h2>⭐ *|FEATURED_TITLE|*</h2>
+                                
+                                <!-- Optional featured image -->
+                                <!-- <img src="*|FEATURED_IMAGE_URL|*" alt="Featured" class="featured-image"> -->
+                                
+                                <p>*|FEATURED_PARAGRAPH_1|*</p>
+                                <p>*|FEATURED_PARAGRAPH_2|*</p>
+                                <p>*|FEATURED_PARAGRAPH_3|*</p>
+                                
+                                <!-- Optional CTA button -->
+                                <!-- <a href="*|FEATURED_LINK|*" class="button">Leer Más</a> -->
+                            </div>
+                            
+                            <!-- SECTION DIVIDER -->
+                            <hr class="section-divider">
+                            
+                            <!-- ENGAGEMENT BOX -->
+                            <div class="engagement-box">
+                                <h3>💬 Pregunta de la Semana</h3>
+                                <p>*|QUESTION_OF_WEEK|*</p>
+                                <a href="https://www.facebook.com/SalaGeek" class="button button-cyan">Responder en Facebook</a>
+                            </div>
+                            
+                            <!-- SECTION DIVIDER -->
+                            <hr class="section-divider">
+                            
+                            <!-- UPCOMING SECTION -->
+                            <h2 class="section-title">📅 Próxima Semana</h2>
+                            
+                            <ul class="upcoming-list">
+                                <li>*|UPCOMING_1|*</li>
+                                <li>*|UPCOMING_2|*</li>
+                                <li>*|UPCOMING_3|*</li>
+                            </ul>
+                            
+                            <!-- CLOSING -->
+                            <p style="margin-top: 30px; font-size: 16px; color: #E5E7EB;">
+                                Nos vemos la próxima semana 🚀<br>
+                                <strong>- El equipo de Sala Geek</strong>
+                            </p>
+                            
+                        </td>
+                    </tr>
+                    
+                    <!-- FOOTER -->
+                    <tr>
+                        <td class="footer">
+                            <p style="font-size: 16px; color: #FFFFFF; margin-bottom: 15px;">
+                                <strong>Síguenos en nuestras redes</strong>
+                            </p>
+                            
+                            <div class="social-links">
+                                <a href="https://www.facebook.com/SalaGeek">📘 Facebook</a>
+                                <a href="https://www.instagram.com/sala_geek/">📸 Instagram</a>
+                                <a href="https://www.tiktok.com/@salageek">🎵 TikTok</a>
+                            </div>
+                            
+                            <p>Visita nuestra web: <a href="https://salageek.com" style="color: #00D9FF; text-decoration: none;">salageek.com</a></p>
+                            
+                            <p class="unsubscribe">
+                                Recibiste este email porque te suscribiste en Sala Geek.<br>
+                                <a href="*|UNSUB|*">Cancelar suscripción</a> | 
+                                <a href="*|UPDATE_PROFILE|*">Actualizar preferencias</a>
+                            </p>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

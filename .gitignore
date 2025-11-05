@@ -1,17 +1,44 @@
-﻿# Archivos temporales
+﻿# ===== SALA GEEK - .gitignore =====
+
+# === Archivos temporales ===
 *.log
 *.tmp
+*.swp
 .DS_Store
 Thumbs.db
 
-# Backups locales (opcional: comentar si quieres versionar backups)
+# === Backups locales ===
 Backup/
 backups/
 backup*/
+*.backup
 
-# Node modules (si usas npm en el futuro)
+# === Node.js ===
 node_modules/
-package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Archivos de distribución
+# === Environment variables ===
+.env
+.env.local
+.env.production
+
+# === Distribución ===
 dist/
+build/
+
+# === IDE / Editores ===
+.vscode/settings.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === Sistema operativo ===
+*.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Temporal newsletter drafts ===
+email-templates/draft-*.md
+email-templates/*.draft.md
