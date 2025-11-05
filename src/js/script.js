@@ -1590,6 +1590,58 @@ window.addEventListener("load", () => {
    🎮 EASTER EGGS - FULL GEEK MODE
    ============================================ */
 
+// 🔊 SISTEMA DE SONIDOS 8-BIT
+const soundLibrary = {
+  powerup: () => playBeep([440, 554, 659, 880], [100, 100, 100, 300]),
+  coin: () => playBeep([988, 1319], [100, 300]),
+  glitch: () => playBeep([200, 150, 100, 200], [50, 50, 50, 100]),
+  snap: () => playBeep([800, 600, 400, 200, 100], [100, 100, 100, 100, 200]),
+  levelup: () => playBeep([523, 659, 784, 1047], [150, 150, 150, 400]),
+  success: () => playBeep([523, 587, 659, 784], [100, 100, 100, 300]),
+  error: () => playBeep([392, 349, 294], [150, 150, 300]),
+};
+
+// Motor de audio usando Web Audio API
+function playBeep(frequencies, durations) {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let startTime = audioContext.currentTime;
+
+    frequencies.forEach((freq, index) => {
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+
+      oscillator.type = "square"; // Onda cuadrada para sonido 8-bit
+      oscillator.frequency.value = freq;
+
+      // Envelope para sonido más natural
+      gainNode.gain.setValueAtTime(0, startTime);
+      gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.01,
+        startTime + durations[index] / 1000
+      );
+
+      oscillator.start(startTime);
+      oscillator.stop(startTime + durations[index] / 1000);
+
+      startTime += durations[index] / 1000;
+    });
+  } catch (error) {
+    console.log("Audio no disponible:", error);
+  }
+}
+
+// Función helper para reproducir sonidos
+function playSound(soundName) {
+  if (soundLibrary[soundName]) {
+    soundLibrary[soundName]();
+  }
+}
+
 // EASTER EGG 1: CÓDIGO KONAMI (↑↑↓↓←→←→BA)
 function initKonamiCode() {
   const konamiCode = [
@@ -1623,12 +1675,13 @@ function initKonamiCode() {
 }
 
 function activateMatrixMode() {
-  showNotification("🎮 CÓDIGO KONAMI ACTIVADO! Matrix Mode ON", "success");
+  playSound("powerup");
+  showNotification("🎮 ¡CÓDIGO KONAMI DESBLOQUEADO! NES Mode Activated", "success");
 
-  // Crear canvas para efecto Matrix
-  const canvas = document.createElement("canvas");
-  canvas.id = "matrix-canvas";
-  canvas.style.cssText = `
+  // Crear overlay con efecto NES retro
+  const overlay = document.createElement("div");
+  overlay.id = "nes-overlay";
+  overlay.style.cssText = `
     position: fixed;
     top: 0;
     left: 0;
@@ -1637,49 +1690,173 @@ function activateMatrixMode() {
     z-index: 999999;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease;
+    background: linear-gradient(
+      0deg,
+      rgba(255, 0, 0, 0.1) 0%,
+      rgba(255, 128, 0, 0.1) 16.66%,
+      rgba(255, 255, 0, 0.1) 33.33%,
+      rgba(0, 255, 0, 0.1) 50%,
+      rgba(0, 128, 255, 0.1) 66.66%,
+      rgba(128, 0, 255, 0.1) 83.33%,
+      rgba(255, 0, 255, 0.1) 100%
+    );
+    animation: rainbowShift 2s linear infinite;
   `;
-  document.body.appendChild(canvas);
+  document.body.appendChild(overlay);
 
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  // Aplicar efectos retro al body
+  const originalBodyStyle = {
+    imageRendering: document.body.style.imageRendering,
+    filter: document.body.style.filter,
+    transform: document.body.style.transform,
+  };
 
-  const chars =
-    "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-  const fontSize = 16;
-  const columns = canvas.width / fontSize;
-  const drops = Array(Math.floor(columns)).fill(1);
+  document.body.style.transition = "all 0.5s ease";
+  document.body.style.imageRendering = "pixelated";
+  document.body.style.filter = "contrast(1.3) saturate(1.5) hue-rotate(5deg)";
 
-  // Fade in
-  setTimeout(() => (canvas.style.opacity = "0.8"), 100);
+  // Crear efecto de scanlines NES
+  const scanlines = document.createElement("div");
+  scanlines.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+    pointer-events: none;
+    z-index: 999998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
+  document.body.appendChild(scanlines);
 
-  let matrixInterval = setInterval(() => {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Crear mensaje estilo NES
+  const nesMessage = document.createElement("div");
+  nesMessage.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000000;
+    background: #000;
+    color: #fff;
+    padding: 2rem 3rem;
+    border: 4px solid #fff;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 1.5rem;
+    text-align: center;
+    box-shadow: 
+      0 0 0 4px #000,
+      0 0 0 8px #fff,
+      0 0 20px rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    animation: blink 0.5s step-end infinite, fadeIn 0.5s ease forwards;
+  `;
+  nesMessage.innerHTML = `
+    <div style="color: #ff6b6b; margin-bottom: 1rem;">★ POWER UP! ★</div>
+    <div style="color: #ffd166; font-size: 1rem;">+1000 POINTS</div>
+    <div style="color: #06ffa5; font-size: 0.8rem; margin-top: 1rem;">KONAMI CODE UNLOCKED</div>
+  `;
+  document.body.appendChild(nesMessage);
 
-    ctx.fillStyle = "#0F0";
-    ctx.font = fontSize + "px monospace";
+  // Crear sprites flotantes estilo NES
+  const sprites = ["★", "♥", "●", "■", "▲", "♦"];
+  const spriteElements = [];
 
-    for (let i = 0; i < drops.length; i++) {
-      const text = chars[Math.floor(Math.random() * chars.length)];
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i]++;
-    }
-  }, 33);
-
-  // Desactivar después de 8 segundos
-  setTimeout(() => {
-    canvas.style.opacity = "0";
+  for (let i = 0; i < 20; i++) {
     setTimeout(() => {
-      clearInterval(matrixInterval);
-      canvas.remove();
+      const sprite = document.createElement("div");
+      const randomSprite = sprites[Math.floor(Math.random() * sprites.length)];
+      const randomColor = ["#ff6b6b", "#ffd166", "#06ffa5", "#4ecdc4", "#a8dadc"][
+        Math.floor(Math.random() * 5)
+      ];
+
+      sprite.style.cssText = `
+        position: fixed;
+        left: ${Math.random() * 100}vw;
+        top: -50px;
+        font-size: ${20 + Math.random() * 30}px;
+        color: ${randomColor};
+        z-index: 999997;
+        pointer-events: none;
+        animation: nesFloat ${3 + Math.random() * 2}s linear;
+        text-shadow: 
+          2px 2px 0px #000,
+          -2px -2px 0px #000,
+          2px -2px 0px #000,
+          -2px 2px 0px #000;
+      `;
+      sprite.textContent = randomSprite;
+      document.body.appendChild(sprite);
+      spriteElements.push(sprite);
+
+      setTimeout(() => sprite.remove(), 5000);
+    }, i * 100);
+  }
+
+  // Fade in effects
+  setTimeout(() => {
+    overlay.style.opacity = "0.3";
+    scanlines.style.opacity = "0.6";
+  }, 100);
+
+  // Agregar estilos de animación
+  if (!document.getElementById("nes-animations")) {
+    const style = document.createElement("style");
+    style.id = "nes-animations";
+    style.textContent = `
+      @keyframes rainbowShift {
+        0% { filter: hue-rotate(0deg); }
+        100% { filter: hue-rotate(360deg); }
+      }
+      @keyframes blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0.8; }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      }
+      @keyframes nesFloat {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Desactivar después de 7 segundos
+  setTimeout(() => {
+    overlay.style.opacity = "0";
+    scanlines.style.opacity = "0";
+    nesMessage.style.animation = "fadeOut 0.5s ease forwards";
+
+    // Restaurar estilos del body
+    document.body.style.imageRendering = originalBodyStyle.imageRendering;
+    document.body.style.filter = originalBodyStyle.filter;
+    document.body.style.transform = originalBodyStyle.transform;
+
+    setTimeout(() => {
+      overlay.remove();
+      scanlines.remove();
+      nesMessage.remove();
+      spriteElements.forEach((s) => s.remove());
     }, 500);
-  }, 8000);
+  }, 7000);
 }
 
 // EASTER EGG 2: DOBLE CLICK EN EL LOGO
@@ -1710,6 +1887,8 @@ function initLogoEasterEgg() {
 function activateGlitchStats() {
   const logo = document.querySelector(".site-logo");
   if (!logo) return;
+
+  playSound("glitch");
 
   // Efecto glitch en el logo
   logo.style.animation = "glitch 0.5s ease";
@@ -1777,6 +1956,7 @@ function initSecretWords() {
 }
 
 function activate8BitMode() {
+  playSound("coin");
   showNotification("🕹️ MODO RETRO 8-BIT ACTIVADO!", "info");
 
   document.body.style.transition = "all 0.5s ease";
@@ -1818,6 +1998,7 @@ function activate8BitMode() {
 }
 
 function activateSnapEffect() {
+  playSound("snap");
   showNotification("💎 THANOS SNAP ACTIVADO! *chasquido*", "error");
 
   const elements = document.querySelectorAll(
@@ -1907,6 +2088,7 @@ function initCornerClicks() {
 }
 
 function activateDeveloperConsole() {
+  playSound("levelup");
   showNotification(
     "💻 DEVELOPER CONSOLE DESBLOQUEADO! Check F12",
     "success",
@@ -1928,7 +2110,7 @@ function activateDeveloperConsole() {
   // Función global para mostrar todos los Easter Eggs
   window.showAllEasterEggs = function () {
     console.log("%c🎯 LISTA DE EASTER EGGS:", "font-size: 16px; color: #ffd166; font-weight: bold;");
-    console.log("1. Código Konami: ↑↑↓↓←→←→BA");
+    console.log("1. Código Konami: ↑↑↓↓←→←→BA (NES Mode)");
     console.log("2. Doble click en el logo");
     console.log("3. Escribir: 'matrix', 'retro', 'thanos'");
     console.log("4. Hora mágica: 3:33 AM/PM");
@@ -2025,6 +2207,7 @@ function initKeyboardCombo() {
 }
 
 function activateGeekMode() {
+  playSound("levelup");
   showNotification("🤓 GEEK MODE ACTIVADO! Terminal Style", "success");
 
   // Agregar overlay de terminal
@@ -2185,6 +2368,7 @@ function initScrollSecret() {
 }
 
 function revealFooterSecret() {
+  playSound("success");
   showNotification(
     "🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...",
     "success",
