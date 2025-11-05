@@ -1174,27 +1174,8 @@ function initBackToTop() {
       backToTopBtn.classList.remove("visible");
     }
 
-    // Ajustar posición del botón para no cubrir el footer
-    const footer = document.querySelector(".site-footer");
-    if (footer) {
-      const footerRect = footer.getBoundingClientRect();
-      const btnRect = backToTopBtn.getBoundingClientRect();
-      
-      // Si el botón está a punto de chocar con el footer
-      if (btnRect.bottom > footerRect.top && footerRect.top < windowHeight) {
-        // Mover el botón ARRIBA del footer con un pequeño margen
-        const overlap = btnRect.bottom - footerRect.top;
-        const currentBottom = parseInt(getComputedStyle(backToTopBtn).bottom) || 30;
-        const newBottom = currentBottom + overlap + 10;
-        
-        backToTopBtn.style.bottom = `${newBottom}px`;
-        backToTopBtn.style.transition = "bottom 0.3s ease";
-      } else if (footerRect.top > windowHeight) {
-        // Footer completamente fuera del viewport, posición normal
-        backToTopBtn.style.bottom = "30px";
-        backToTopBtn.style.transition = "bottom 0.3s ease";
-      }
-    }
+    // Back-to-Top siempre en posición fija (puede flotar sobre el footer)
+    // No necesita ajuste de posición
   }
 
   // Event listeners
@@ -3142,7 +3123,7 @@ function revealFooterSecret() {
       text-align: center;
       padding: 1rem;
       margin-top: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0;
       background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(239, 71, 111, 0.1));
       border-radius: 8px;
       border: 2px solid var(--accent-primary);
@@ -3269,25 +3250,46 @@ const easterEggTracker = {
     if (!tracker) return;
 
     const adjustTrackerPosition = () => {
+      const header = document.querySelector(".site-header");
       const footer = document.querySelector(".site-footer");
-      if (!footer) return;
+      if (!header || !footer) return;
 
+      const headerRect = header.getBoundingClientRect();
       const footerRect = footer.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
       const trackerRect = tracker.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Calcular espacio disponible en el body (entre header y footer)
+      const headerBottom = headerRect.bottom;
+      const footerTop = footerRect.top;
       
       // Si el tracker está a punto de chocar con el footer
-      if (trackerRect.bottom > footerRect.top && footerRect.top < viewportHeight) {
-        // Mover el tracker ARRIBA del footer con un pequeño margen
-        const overlap = trackerRect.bottom - footerRect.top;
-        const currentBottom = parseInt(getComputedStyle(tracker).bottom) || 20;
-        const newBottom = currentBottom + overlap + 10;
+      if (trackerRect.bottom > footerTop && footerTop < viewportHeight) {
+        // Calcular posición para quedar debajo del header y arriba del footer
+        const spaceFromTop = trackerRect.top;
+        const spaceFromBottom = viewportHeight - trackerRect.bottom;
         
-        tracker.style.bottom = `${newBottom}px`;
-        tracker.style.transition = "bottom 0.3s ease";
+        // Si está muy cerca del footer, fijarlo en posición absoluta respecto al footer
+        const distanceToFooter = footerTop - trackerRect.bottom;
+        
+        if (distanceToFooter < 20) {
+          // Cambiar a position absolute y posicionarlo justo arriba del footer
+          tracker.style.position = "absolute";
+          tracker.style.bottom = "auto";
+          
+          // Calcular posición top para quedar arriba del footer
+          const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+          const footerOffsetTop = footer.offsetTop;
+          const newTop = footerOffsetTop - tracker.offsetHeight - 10;
+          
+          tracker.style.top = `${newTop}px`;
+          tracker.style.transition = "none";
+        }
       } else if (footerRect.top > viewportHeight) {
-        // Footer completamente fuera del viewport, posición normal
+        // Footer fuera del viewport, volver a fixed position
+        tracker.style.position = "fixed";
         tracker.style.bottom = "20px";
+        tracker.style.top = "auto";
         tracker.style.transition = "bottom 0.3s ease";
       }
     };
