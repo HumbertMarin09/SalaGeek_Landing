@@ -135,6 +135,7 @@
     <!-- Stylesheets - Cargar normalize inmediatamente, style.css de forma no bloqueante -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
     <link rel="stylesheet" href="/src/css/style.css?v=105" media="print" onload="this.media='all';this.onload=null;" />
+    <link rel="stylesheet" href="/src/css/easter-eggs.css" />
     <noscript><link rel="stylesheet" href="/src/css/style.css?v=105" /></noscript>
     
     <script>
@@ -885,6 +886,92 @@
 
     <!-- Footer inyectado -->
     <div id="footer-placeholder"></div>
+
+    <!-- Easter Egg Achievement System -->
+    <div id="easter-egg-tracker" class="easter-egg-tracker">
+      <div class="tracker-header" id="tracker-toggle">
+        <span class="tracker-icon">🎮</span>
+        <span class="tracker-title">Easter Egg Hunter</span>
+        <span class="tracker-count" id="tracker-count">0/9</span>
+        <span class="tracker-arrow">▼</span>
+      </div>
+      <div class="tracker-content" id="tracker-content">
+        <div class="tracker-progress">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+          </div>
+          <div class="geek-level" id="geek-level">Nivel Geek: Novato</div>
+        </div>
+        <div class="achievements-list">
+          <div class="achievement locked" data-egg="konami">
+            <span class="achievement-icon">🎮</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Konami Master</div>
+              <div class="achievement-hint">Pista: ↑↑↓↓←→←→BA</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="logo">
+            <span class="achievement-icon">✨</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Glitch Hunter</div>
+              <div class="achievement-hint">Pista: Doble click en el título</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="matrix">
+            <span class="achievement-icon">🟢</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Follow the Rabbit</div>
+              <div class="achievement-hint">Pista: Escribe "matrix"</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="retro">
+            <span class="achievement-icon">🕹️</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Retro Gamer</div>
+              <div class="achievement-hint">Pista: Escribe "retro"</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="thanos">
+            <span class="achievement-icon">💎</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Perfectly Balanced</div>
+              <div class="achievement-hint">Pista: Escribe "thanos"</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="corners">
+            <span class="achievement-icon">🔲</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Corner Master</div>
+              <div class="achievement-hint">Pista: Click en las 4 esquinas</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="shake">
+            <span class="achievement-icon">🖱️</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Mouse Shaker</div>
+              <div class="achievement-hint">Pista: Mueve el mouse rápido</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="combo">
+            <span class="achievement-icon">⌨️</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Combo Breaker</div>
+              <div class="achievement-hint">Pista: Ctrl+Shift+G</div>
+            </div>
+          </div>
+          <div class="achievement locked" data-egg="scroll">
+            <span class="achievement-icon">📜</span>
+            <div class="achievement-info">
+              <div class="achievement-name">Bottom Feeder</div>
+              <div class="achievement-hint">Pista: Llega al final</div>
+            </div>
+          </div>
+        </div>
+        <div class="tracker-footer">
+          <button class="reset-btn" id="reset-achievements">🔄 Reset</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Cookie Consent Banner -->
     <div class="cookie-consent">

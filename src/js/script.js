@@ -1671,6 +1671,7 @@ function initKonamiCode() {
 
       if (konamiIndex === konamiCode.length) {
         activateNESMode();
+        easterEggTracker.unlock("konami");
         konamiIndex = 0;
       }
     } else {
@@ -1891,6 +1892,7 @@ function initLogoEasterEgg() {
 
       if (clickCount === 2) {
         activateGlitchStats();
+        easterEggTracker.unlock("logo");
         clickCount = 0;
       }
 
@@ -2008,6 +2010,7 @@ function initSecretWords() {
 function activateMatrixRainMode() {
   playSound("glitch");
   showNotification("🟢 MATRIX MODE: Follow the white rabbit...", "success");
+  easterEggTracker.unlock("matrix");
 
   // Crear canvas para lluvia Matrix
   const canvas = document.createElement("canvas");
@@ -2097,6 +2100,7 @@ function activateMatrixRainMode() {
 function activate8BitMode() {
   playSound("coin");
   showNotification("🕹️ MODO RETRO 8-BIT ACTIVADO!", "info");
+  easterEggTracker.unlock("retro");
 
   document.body.style.transition = "all 0.5s ease";
   document.body.style.imageRendering = "pixelated";
@@ -2139,6 +2143,7 @@ function activate8BitMode() {
 function activateSnapEffect() {
   playSound("snap");
   showNotification("💎 THANOS SNAP ACTIVADO! *chasquido*", "error");
+  easterEggTracker.unlock("thanos");
 
   const elements = document.querySelectorAll(
     "section > *, .hero-badge, .testimonial-card, .about-stat",
@@ -2323,6 +2328,7 @@ function initCornerClicks() {
 
       if (currentStep === sequence.length) {
         activateDeveloperConsole();
+        easterEggTracker.unlock("corners");
         currentStep = 0;
       }
     } else if (corner) {
@@ -2413,6 +2419,7 @@ function initMouseShake() {
 
 function activateMouseDodge() {
   showNotification("🏃 Los elementos te esquivan! Mueve el mouse", "info");
+  easterEggTracker.unlock("shake");
 
   const elements = document.querySelectorAll(".hero-badge, .btn, .testimonial-card");
 
@@ -2468,6 +2475,7 @@ function initKeyboardCombo() {
 function activateGeekMode() {
   playSound("levelup");
   showNotification("🤓 GEEK MODE ACTIVADO! Terminal Style", "success");
+  easterEggTracker.unlock("combo");
 
   // Agregar overlay de terminal
   const terminal = document.createElement("div");
@@ -2955,6 +2963,7 @@ function revealFooterSecret() {
     "🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...",
     "success",
   );
+  easterEggTracker.unlock("scroll");
 
   const footer = document.querySelector(".site-footer");
   if (footer) {
@@ -2994,6 +3003,197 @@ function revealFooterSecret() {
   }
 }
 
+// ============================================
+// SISTEMA DE ACHIEVEMENT TRACKER
+// ============================================
+
+const easterEggTracker = {
+  eggs: {
+    konami: false,
+    logo: false,
+    matrix: false,
+    retro: false,
+    thanos: false,
+    corners: false,
+    shake: false,
+    combo: false,
+    scroll: false,
+  },
+  
+  levels: [
+    { name: "Novato", min: 0, max: 0 },
+    { name: "Explorador", min: 1, max: 2 },
+    { name: "Cazador", min: 3, max: 4 },
+    { name: "Maestro", min: 5, max: 6 },
+    { name: "Leyenda", min: 7, max: 8 },
+    { name: "Dios Geek", min: 9, max: 9 },
+  ],
+
+  init() {
+    // Cargar progreso desde localStorage
+    const saved = localStorage.getItem("easterEggProgress");
+    if (saved) {
+      this.eggs = JSON.parse(saved);
+      this.updateUI();
+    }
+
+    // Toggle tracker
+    const toggle = document.getElementById("tracker-toggle");
+    const tracker = document.getElementById("easter-egg-tracker");
+    
+    if (toggle && tracker) {
+      toggle.addEventListener("click", () => {
+        tracker.classList.toggle("collapsed");
+      });
+    }
+
+    // Reset button
+    const resetBtn = document.getElementById("reset-achievements");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        if (confirm("¿Seguro que quieres resetear todos los logros?")) {
+          this.reset();
+        }
+      });
+    }
+
+    // Mostrar hint flotante
+    setTimeout(() => {
+      if (this.getUnlockedCount() === 0) {
+        this.showFloatingHint();
+      }
+    }, 3000);
+  },
+
+  unlock(eggName) {
+    if (!this.eggs[eggName]) {
+      this.eggs[eggName] = true;
+      this.save();
+      this.updateUI();
+      this.showUnlockAnimation(eggName);
+      playSound("success");
+      
+      // Check si completó todos
+      if (this.getUnlockedCount() === 9) {
+        this.showCompletionCelebration();
+      }
+    }
+  },
+
+  save() {
+    localStorage.setItem("easterEggProgress", JSON.stringify(this.eggs));
+  },
+
+  reset() {
+    Object.keys(this.eggs).forEach(key => {
+      this.eggs[key] = false;
+    });
+    this.save();
+    this.updateUI();
+    showNotification("🔄 Logros reseteados. ¡Vuelve a cazarlos todos!", "info");
+  },
+
+  getUnlockedCount() {
+    return Object.values(this.eggs).filter(Boolean).length;
+  },
+
+  getLevel() {
+    const count = this.getUnlockedCount();
+    return this.levels.find(level => count >= level.min && count <= level.max);
+  },
+
+  updateUI() {
+    const count = this.getUnlockedCount();
+    const countEl = document.getElementById("tracker-count");
+    const progressBar = document.getElementById("progress-bar");
+    const levelEl = document.getElementById("geek-level");
+
+    if (countEl) countEl.textContent = `${count}/9`;
+    if (progressBar) progressBar.style.width = `${(count / 9) * 100}%`;
+    if (levelEl) {
+      const level = this.getLevel();
+      levelEl.textContent = `Nivel Geek: ${level.name}`;
+    }
+
+    // Actualizar achievements
+    Object.keys(this.eggs).forEach(eggName => {
+      const achievement = document.querySelector(`[data-egg="${eggName}"]`);
+      if (achievement) {
+        if (this.eggs[eggName]) {
+          achievement.classList.remove("locked");
+          achievement.classList.add("unlocked");
+        } else {
+          achievement.classList.add("locked");
+          achievement.classList.remove("unlocked");
+        }
+      }
+    });
+  },
+
+  showUnlockAnimation(eggName) {
+    const achievement = document.querySelector(`[data-egg="${eggName}"]`);
+    if (achievement) {
+      achievement.classList.add("unlocked");
+      
+      // Expandir tracker si está colapsado
+      const tracker = document.getElementById("easter-egg-tracker");
+      if (tracker && tracker.classList.contains("collapsed")) {
+        tracker.classList.remove("collapsed");
+      }
+
+      // Scroll al achievement
+      setTimeout(() => {
+        achievement.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    }
+
+    const level = this.getLevel();
+    showNotification(
+      `🎉 ¡Logro desbloqueado! ${this.getUnlockedCount()}/9 - Nivel: ${level.name}`,
+      "success"
+    );
+  },
+
+  showCompletionCelebration() {
+    playSound("levelup");
+    showNotification(
+      "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs! ¡Eres un DIOS GEEK! 🎮",
+      "success"
+    );
+
+    // Confetti effect
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => {
+        const confetti = document.createElement("div");
+        confetti.textContent = ["🎉", "🎊", "⭐", "🏆", "👑"][Math.floor(Math.random() * 5)];
+        confetti.style.cssText = `
+          position: fixed;
+          left: ${Math.random() * 100}vw;
+          top: -50px;
+          font-size: ${20 + Math.random() * 30}px;
+          z-index: 999999;
+          pointer-events: none;
+          animation: fall ${2 + Math.random() * 2}s linear;
+        `;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }, i * 50);
+    }
+  },
+
+  showFloatingHint() {
+    const hint = document.createElement("div");
+    hint.className = "easter-egg-hint";
+    hint.textContent = "🎮 9 secretos ocultos... ¿Puedes encontrarlos todos?";
+    document.body.appendChild(hint);
+
+    setTimeout(() => {
+      hint.style.animation = "fadeOut 0.5s ease";
+      setTimeout(() => hint.remove(), 500);
+    }, 8000);
+  }
+};
+
 // INICIALIZAR TODOS LOS EASTER EGGS
 function initAllEasterEggs() {
   initKonamiCode();
@@ -3005,6 +3205,9 @@ function initAllEasterEggs() {
   initKeyboardCombo();
   initSpecialDates();
   initScrollSecret();
+  
+  // Inicializar tracker
+  easterEggTracker.init();
 
   console.log(
     "%c🎮 EASTER EGGS ACTIVADOS",
