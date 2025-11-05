@@ -1,0 +1,41 @@
+# ==============================================================================
+# Cache Control & Force Refresh
+# ==============================================================================
+
+# Disable ETags
+<IfModule mod_headers.c>
+    Header unset ETag
+    FileETag None
+</IfModule>
+
+# Force browser to revalidate
+<IfModule mod_headers.c>
+    # For HTML files - always revalidate
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    # For JavaScript files - short cache with revalidation
+    <FilesMatch "\.(js)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+
+    # For CSS files - short cache with revalidation
+    <FilesMatch "\.(css)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+
+    # For images - longer cache
+    <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|webp)$">
+        Header set Cache-Control "public, max-age=86400"
+    </FilesMatch>
+</IfModule>
+
+# ==============================================================================
+# Compression (keep existing compression rules)
+# ==============================================================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
