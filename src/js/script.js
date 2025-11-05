@@ -1591,6 +1591,8 @@ window.addEventListener("load", () => {
    ============================================ */
 
 // 🔊 SISTEMA DE SONIDOS 8-BIT
+let isSoundPlaying = false; // Variable global para controlar sonidos simultáneos
+
 const soundLibrary = {
   powerup: () => playBeep([440, 554, 659, 880], [100, 100, 100, 300]),
   coin: () => playBeep([988, 1319], [100, 300]),
@@ -1604,8 +1606,11 @@ const soundLibrary = {
 // Motor de audio usando Web Audio API
 function playBeep(frequencies, durations) {
   try {
+    isSoundPlaying = true; // Marcar que hay un sonido reproduciéndose
+    
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let startTime = audioContext.currentTime;
+    let totalDuration = 0;
 
     frequencies.forEach((freq, index) => {
       const oscillator = audioContext.createOscillator();
@@ -1629,9 +1634,17 @@ function playBeep(frequencies, durations) {
       oscillator.stop(startTime + durations[index] / 1000);
 
       startTime += durations[index] / 1000;
+      totalDuration += durations[index];
     });
+
+    // Resetear flag cuando termine el sonido
+    setTimeout(() => {
+      isSoundPlaying = false;
+    }, totalDuration);
+    
   } catch (error) {
     console.log("Audio no disponible:", error);
+    isSoundPlaying = false;
   }
 }
 
@@ -1687,7 +1700,7 @@ function activateNESMode() {
   playSound("powerup");
   showNotification("🎮 ¡CÓDIGO KONAMI DESBLOQUEADO! NES Mode Activated", "success");
 
-  // Crear overlay con efecto NES retro
+  // Crear overlay con efecto NES retro (más sutil y elegante)
   const overlay = document.createElement("div");
   overlay.id = "nes-overlay";
   overlay.style.cssText = `
@@ -1699,18 +1712,18 @@ function activateNESMode() {
     z-index: 999999;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
     background: linear-gradient(
       0deg,
-      rgba(255, 0, 0, 0.1) 0%,
-      rgba(255, 128, 0, 0.1) 16.66%,
-      rgba(255, 255, 0, 0.1) 33.33%,
-      rgba(0, 255, 0, 0.1) 50%,
-      rgba(0, 128, 255, 0.1) 66.66%,
-      rgba(128, 0, 255, 0.1) 83.33%,
-      rgba(255, 0, 255, 0.1) 100%
+      rgba(255, 0, 0, 0.08) 0%,
+      rgba(255, 128, 0, 0.08) 16.66%,
+      rgba(255, 255, 0, 0.08) 33.33%,
+      rgba(0, 255, 0, 0.08) 50%,
+      rgba(0, 128, 255, 0.08) 66.66%,
+      rgba(128, 0, 255, 0.08) 83.33%,
+      rgba(255, 0, 255, 0.08) 100%
     );
-    animation: rainbowShift 2s linear infinite;
+    animation: rainbowShift 3s linear infinite;
   `;
   document.body.appendChild(overlay);
 
@@ -1723,9 +1736,9 @@ function activateNESMode() {
 
   document.body.style.transition = "all 0.5s ease";
   document.body.style.imageRendering = "pixelated";
-  document.body.style.filter = "contrast(1.3) saturate(1.5) hue-rotate(5deg)";
+  document.body.style.filter = "contrast(1.2) saturate(1.2) hue-rotate(3deg)";
 
-  // Crear efecto de scanlines NES
+  // Crear efecto de scanlines NES (más sutil)
   const scanlines = document.createElement("div");
   scanlines.style.cssText = `
     position: fixed;
@@ -1735,19 +1748,22 @@ function activateNESMode() {
     height: 100%;
     background: repeating-linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.1),
-      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.08),
+      rgba(0, 0, 0, 0.08) 2px,
       transparent 2px,
       transparent 4px
     );
     pointer-events: none;
     z-index: 999998;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
   `;
   document.body.appendChild(scanlines);
 
-  // Crear mensaje estilo NES - aparece donde está el viewport
+  // Detectar móvil para responsive
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  // Crear mensaje estilo NES - aparece donde está el viewport con diseño mejorado
   const nesMessage = document.createElement("div");
   
   // Calcular posición del viewport actual
@@ -1761,32 +1777,35 @@ function activateNESMode() {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000000;
-    background: #000;
+    background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
     color: #fff;
-    padding: 2rem 3rem;
-    border: 4px solid #fff;
+    padding: ${isMobile ? '1.5rem 2rem' : '2.5rem 3.5rem'};
+    border: 3px solid #fff;
+    border-radius: 4px;
     font-family: 'Press Start 2P', 'Courier New', monospace;
-    font-size: 1.5rem;
+    font-size: ${isMobile ? '1rem' : '1.5rem'};
     text-align: center;
     box-shadow: 
-      0 0 0 4px #000,
-      0 0 0 8px #fff,
-      0 0 20px rgba(255, 255, 255, 0.5);
+      0 0 0 6px #000,
+      0 0 0 9px #fff,
+      0 0 30px rgba(6, 255, 165, 0.4),
+      inset 0 0 20px rgba(6, 255, 165, 0.1);
     opacity: 0;
-    animation: blink 0.5s step-end infinite, fadeIn 0.5s ease forwards;
+    animation: blink 0.5s step-end infinite, fadeIn 0.6s ease forwards;
   `;
   nesMessage.innerHTML = `
-    <div style="color: #ff6b6b; margin-bottom: 1rem;">★ POWER UP! ★</div>
-    <div style="color: #ffd166; font-size: 1rem;">+1000 POINTS</div>
-    <div style="color: #06ffa5; font-size: 0.8rem; margin-top: 1rem;">KONAMI CODE UNLOCKED</div>
+    <div style="color: #ff6b6b; margin-bottom: 1rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.5);">★ POWER UP! ★</div>
+    <div style="color: #ffd166; font-size: ${isMobile ? '0.85rem' : '1rem'}; text-shadow: 2px 2px 0 rgba(0,0,0,0.5);">+1000 POINTS</div>
+    <div style="color: #06ffa5; font-size: ${isMobile ? '0.7rem' : '0.8rem'}; margin-top: 1rem; text-shadow: 1px 1px 0 rgba(0,0,0,0.5);">KONAMI CODE UNLOCKED</div>
   `;
   document.body.appendChild(nesMessage);
 
-  // Crear sprites flotantes estilo NES
+  // Crear sprites flotantes estilo NES (menos cantidad, más elegante)
   const sprites = ["★", "♥", "●", "■", "▲", "♦"];
   const spriteElements = [];
+  const spriteCount = isMobile ? 8 : 12;
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < spriteCount; i++) {
     setTimeout(() => {
       const sprite = document.createElement("div");
       const randomSprite = sprites[Math.floor(Math.random() * sprites.length)];
@@ -1798,29 +1817,30 @@ function activateNESMode() {
         position: fixed;
         left: ${Math.random() * 100}vw;
         top: -50px;
-        font-size: ${20 + Math.random() * 30}px;
+        font-size: ${isMobile ? 15 + Math.random() * 20 : 20 + Math.random() * 25}px;
         color: ${randomColor};
         z-index: 999997;
         pointer-events: none;
-        animation: nesFloat ${3 + Math.random() * 2}s linear;
+        animation: nesFloat ${4 + Math.random() * 2}s ease-in-out;
         text-shadow: 
-          2px 2px 0px #000,
-          -2px -2px 0px #000,
-          2px -2px 0px #000,
-          -2px 2px 0px #000;
+          1px 1px 0px rgba(0, 0, 0, 0.8),
+          -1px -1px 0px rgba(0, 0, 0, 0.8),
+          1px -1px 0px rgba(0, 0, 0, 0.8),
+          -1px 1px 0px rgba(0, 0, 0, 0.8);
+        filter: drop-shadow(0 0 8px ${randomColor});
       `;
       sprite.textContent = randomSprite;
       document.body.appendChild(sprite);
       spriteElements.push(sprite);
 
-      setTimeout(() => sprite.remove(), 5000);
-    }, i * 100);
+      setTimeout(() => sprite.remove(), 6000);
+    }, i * 150);
   }
 
-  // Fade in effects
+  // Fade in effects con valores más sutiles y elegantes
   setTimeout(() => {
-    overlay.style.opacity = "0.3";
-    scanlines.style.opacity = "0.6";
+    overlay.style.opacity = "0.15";
+    scanlines.style.opacity = "0.4";
   }, 100);
 
   // Agregar estilos de animación
@@ -1844,6 +1864,9 @@ function activateNESMode() {
         0% {
           transform: translateY(0) rotate(0deg);
           opacity: 1;
+        }
+        50% {
+          opacity: 0.8;
         }
         100% {
           transform: translateY(100vh) rotate(360deg);
@@ -1876,6 +1899,10 @@ function activateNESMode() {
 
 // EASTER EGG 2: DOBLE CLICK EN "SALA GEEK" DEL HERO
 function initLogoEasterEgg() {
+  // Solo en desktop - deshabilitado en móvil
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) return;
+  
   // Esperar a que el hero se cargue
   setTimeout(() => {
     const heroTitle = document.querySelector(".hero-content h1");
@@ -1910,11 +1937,28 @@ function initLogoEasterEgg() {
 function activateGlitchStats() {
   playSound("glitch");
 
+  // Asegurar que los estilos de glitch existen primero
+  if (!document.getElementById("glitch-styles")) {
+    const style = document.createElement("style");
+    style.id = "glitch-styles";
+    style.textContent = `
+      @keyframes glitch {
+        0%, 100% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(2px, -2px); }
+        60% { transform: translate(-2px, -2px); }
+        80% { transform: translate(2px, 2px); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   // Aplicar efecto glitch al título del hero
   const heroTitle = document.querySelector(".hero-content h1");
   if (heroTitle) {
     const originalText = heroTitle.textContent;
     heroTitle.style.animation = "glitch 0.5s ease";
+    heroTitle.style.color = "var(--accent-primary)";
     
     // Glitch en el texto
     let glitchCount = 0;
@@ -1935,6 +1979,7 @@ function activateGlitchStats() {
         clearInterval(glitchInterval);
         heroTitle.textContent = originalText;
         heroTitle.style.animation = "";
+        heroTitle.style.color = "";
       }
     }, 50);
   }
@@ -2968,21 +3013,25 @@ function revealFooterSecret() {
   const footer = document.querySelector(".site-footer");
   if (footer) {
     const secret = document.createElement("div");
+    secret.className = "footer-secret-message";
     secret.style.cssText = `
       text-align: center;
       padding: 1rem;
       margin-top: 1rem;
+      margin-bottom: 6rem;
       background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(239, 71, 111, 0.1));
       border-radius: 8px;
       border: 2px solid var(--accent-primary);
       animation: pulse 2s ease-in-out infinite;
+      z-index: 1;
+      position: relative;
     `;
     secret.innerHTML = `
       <p style="margin: 0; color: var(--accent-primary); font-weight: bold;">
         🏆 ¡FELICIDADES! Llegaste hasta el final
       </p>
       <p style="margin: 0.5rem 0 0; color: var(--text-secondary); font-size: 0.9rem;">
-        Eres un verdadero geek. Has desbloqueado TODOS los secretos 🎮
+        Eres un verdadero geek. Sigue explorando para más secretos 🎮
       </p>
     `;
 
@@ -3020,6 +3069,8 @@ const easterEggTracker = {
     scroll: false,
   },
   
+  isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+  
   levels: [
     { name: "Novato", min: 0, max: 0 },
     { name: "Explorador", min: 1, max: 2 },
@@ -3028,6 +3079,12 @@ const easterEggTracker = {
     { name: "Leyenda", min: 7, max: 8 },
     { name: "Dios Geek", min: 9, max: 9 },
   ],
+  
+  getTotalEggs() {
+    // En móvil: 6 eggs (konami, logo, retro, thanos, combo, scroll)
+    // En desktop: 9 eggs (todos)
+    return this.isMobile ? 6 : 9;
+  },
 
   init() {
     // Cargar progreso desde localStorage
@@ -3037,14 +3094,29 @@ const easterEggTracker = {
       this.updateUI();
     }
 
+    // Iniciar colapsado por defecto
+    const tracker = document.getElementById("easter-egg-tracker");
+    if (tracker) {
+      tracker.classList.add("collapsed");
+    }
+
     // Toggle tracker
     const toggle = document.getElementById("tracker-toggle");
-    const tracker = document.getElementById("easter-egg-tracker");
     
     if (toggle && tracker) {
       toggle.addEventListener("click", () => {
         tracker.classList.toggle("collapsed");
+        
+        // Guardar preferencia del usuario
+        const isCollapsed = tracker.classList.contains("collapsed");
+        localStorage.setItem("trackerCollapsed", isCollapsed);
       });
+    }
+
+    // Restaurar estado del tracker
+    const trackerCollapsed = localStorage.getItem("trackerCollapsed");
+    if (trackerCollapsed === "false" && tracker) {
+      tracker.classList.remove("collapsed");
     }
 
     // Reset button
@@ -3071,12 +3143,16 @@ const easterEggTracker = {
       this.save();
       this.updateUI();
       this.showUnlockAnimation(eggName);
-      playSound("success");
       
-      // Check si completó todos
-      if (this.getUnlockedCount() === 9) {
-        this.showCompletionCelebration();
-      }
+      // Solo reproducir sonido de éxito si no hay otro sonido activo
+      // Esperar un poco para que termine el sonido del Easter Egg
+      setTimeout(() => {
+        if (!isSoundPlaying) {
+          playSound("success");
+        }
+      }, 100);
+      
+      // La celebración se maneja en showUnlockAnimation
     }
   },
 
@@ -3104,12 +3180,13 @@ const easterEggTracker = {
 
   updateUI() {
     const count = this.getUnlockedCount();
+    const total = this.getTotalEggs();
     const countEl = document.getElementById("tracker-count");
     const progressBar = document.getElementById("progress-bar");
     const levelEl = document.getElementById("geek-level");
 
-    if (countEl) countEl.textContent = `${count}/9`;
-    if (progressBar) progressBar.style.width = `${(count / 9) * 100}%`;
+    if (countEl) countEl.textContent = `${count}/${total}`;
+    if (progressBar) progressBar.style.width = `${(count / total) * 100}%`;
     if (levelEl) {
       const level = this.getLevel();
       levelEl.textContent = `Nivel Geek: ${level.name}`;
@@ -3134,50 +3211,118 @@ const easterEggTracker = {
     const achievement = document.querySelector(`[data-egg="${eggName}"]`);
     if (achievement) {
       achievement.classList.add("unlocked");
-      
-      // Expandir tracker si está colapsado
-      const tracker = document.getElementById("easter-egg-tracker");
-      if (tracker && tracker.classList.contains("collapsed")) {
-        tracker.classList.remove("collapsed");
-      }
-
-      // Scroll al achievement
-      setTimeout(() => {
-        achievement.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 300);
     }
 
+    // Animación sutil en el icono del tracker (sin expandir)
+    const trackerIcon = document.querySelector(".tracker-icon");
+    if (trackerIcon) {
+      trackerIcon.style.animation = "none";
+      setTimeout(() => {
+        trackerIcon.style.animation = "iconSpin 0.6s ease";
+      }, 10);
+    }
+
+    // Pulso en el contador
+    const counter = document.getElementById("tracker-count");
+    if (counter) {
+      counter.style.animation = "none";
+      setTimeout(() => {
+        counter.style.animation = "pulseCounter 0.6s ease";
+      }, 10);
+    }
+
+    // Notificación (no invasiva)
     const level = this.getLevel();
+    const total = this.getTotalEggs();
     showNotification(
-      `🎉 ¡Logro desbloqueado! ${this.getUnlockedCount()}/9 - Nivel: ${level.name}`,
+      `🎉 ¡Logro desbloqueado! ${this.getUnlockedCount()}/${total} - Nivel: ${level.name}`,
       "success"
     );
+    
+    // Check si completó todos (según plataforma)
+    if (this.getUnlockedCount() === total) {
+      setTimeout(() => this.showCompletionCelebration(), 500);
+    }
   },
 
   showCompletionCelebration() {
     playSound("levelup");
-    showNotification(
-      "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs! ¡Eres un DIOS GEEK! 🎮",
-      "success"
-    );
+    const message = this.isMobile 
+      ? "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs móviles! ¡Eres un DIOS GEEK! 🎮"
+      : "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs! ¡Eres un DIOS GEEK! 🎮";
+    showNotification(message, "success");
 
-    // Confetti effect
+    // Crear contenedor de confetti fuera del stacking context del header
+    let confettiContainer = document.getElementById('confetti-container');
+    if (!confettiContainer) {
+      confettiContainer = document.createElement('div');
+      confettiContainer.id = 'confetti-container';
+      confettiContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 99999;
+        pointer-events: none;
+        overflow: hidden;
+      `;
+      document.body.appendChild(confettiContainer);
+    }
+
+    // Confetti effect - más rápido y pronunciado
     for (let i = 0; i < 50; i++) {
       setTimeout(() => {
         const confetti = document.createElement("div");
         confetti.textContent = ["🎉", "🎊", "⭐", "🏆", "👑"][Math.floor(Math.random() * 5)];
+        confetti.className = "celebration-confetti";
+        
+        const startX = Math.random() * 100;
+        const duration = 1 + Math.random() * 1.5; // Más rápido (antes 2-4s, ahora 1-2.5s)
+        const fontSize = 25 + Math.random() * 35; // Más grandes
+        const rotation = Math.random() * 360;
+        const drift = (Math.random() - 0.5) * 3; // Desplazamiento horizontal
+        
         confetti.style.cssText = `
-          position: fixed;
-          left: ${Math.random() * 100}vw;
-          top: -50px;
-          font-size: ${20 + Math.random() * 30}px;
-          z-index: 999999;
+          position: absolute;
+          left: ${startX}vw;
+          top: -80px;
+          font-size: ${fontSize}px;
+          transform: rotate(${rotation}deg);
           pointer-events: none;
-          animation: fall ${2 + Math.random() * 2}s linear;
         `;
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 4000);
-      }, i * 50);
+        
+        confettiContainer.appendChild(confetti);
+        
+        // Animar con JavaScript - mucho más rápido
+        let top = -80;
+        let currentX = startX;
+        const speed = (window.innerHeight + 100) / (duration * 1000); // pixels por milisegundo
+        const startTime = Date.now();
+        
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = elapsed / (duration * 1000);
+          
+          // Caída rápida con aceleración (gravedad)
+          top = -80 + (window.innerHeight + 100) * Math.pow(progress, 1.5);
+          
+          // Desplazamiento horizontal suave
+          currentX = startX + (drift * progress);
+          
+          confetti.style.top = `${top}px`;
+          confetti.style.left = `${currentX}vw`;
+          confetti.style.transform = `rotate(${rotation + elapsed * 0.5}deg)`;
+          
+          if (top < window.innerHeight + 50 && elapsed < duration * 1000) {
+            requestAnimationFrame(animate);
+          } else {
+            confetti.remove();
+          }
+        };
+        
+        requestAnimationFrame(animate);
+      }, i * 30); // Más frecuente (antes 50ms, ahora 30ms)
     }
   },
 
@@ -3203,213 +3348,178 @@ function initMobileEasterEggs() {
   
   if (!isMobile) return; // Solo ejecutar en móvil
 
-  console.log("📱 Modo móvil detectado - Easter Eggs táctiles activados");
+  console.log("📱 Modo móvil detectado - Easter Eggs táctiles activados (versión optimizada)");
 
-  // 1. TRIPLE TAP en logo -> Konami alternativo
-  let logoTapCount = 0;
-  let logoTapTimer = null;
+  const hero = document.querySelector(".hero");
+  const mobileHeroTitle = document.querySelector(".hero-content h1");
+
+  // 1. TRIPLE TAP en el TÍTULO "Sala Geek" -> Konami alternativo
+  let titleTapCount = 0;
+  let titleTapTimer = null;
   
-  const logo = document.querySelector(".site-logo");
-  if (logo) {
-    logo.addEventListener("touchend", (e) => {
+  if (mobileHeroTitle) {
+    mobileHeroTitle.addEventListener("touchend", (e) => {
       e.preventDefault();
-      logoTapCount++;
+      titleTapCount++;
       
-      if (logoTapTimer) clearTimeout(logoTapTimer);
+      if (titleTapTimer) clearTimeout(titleTapTimer);
       
-      if (logoTapCount === 3) {
+      if (titleTapCount === 3) {
         activateNESMode();
         easterEggTracker.unlock("konami");
-        logoTapCount = 0;
+        titleTapCount = 0;
       }
       
-      logoTapTimer = setTimeout(() => {
-        logoTapCount = 0;
+      titleTapTimer = setTimeout(() => {
+        titleTapCount = 0;
+      }, 600);
+    });
+  }
+
+  // 2. LONG PRESS en botón CTA "Únete Ahora" -> Modo 8-bit
+  let ctaLongPressTimer = null;
+  let ctaLongPressActivated = false;
+  const ctaButton = document.querySelector(".hero-cta .btn-primary");
+  
+  if (ctaButton) {
+    ctaButton.addEventListener("touchstart", (e) => {
+      ctaLongPressActivated = false;
+      
+      ctaLongPressTimer = setTimeout(() => {
+        ctaLongPressActivated = true;
+        activate8BitMode();
+        easterEggTracker.unlock("retro");
+        
+        // Feedback visual y haptic
+        ctaButton.style.transform = "scale(1.1)";
+        ctaButton.style.boxShadow = "0 0 20px var(--accent-primary)";
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        
+        setTimeout(() => {
+          ctaButton.style.transform = "";
+          ctaButton.style.boxShadow = "";
+        }, 500);
+      }, 800);
+    }, { passive: false });
+    
+    ctaButton.addEventListener("touchend", (e) => {
+      clearTimeout(ctaLongPressTimer);
+      
+      // Si se activó el long press, prevenir navegación
+      if (ctaLongPressActivated) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        ctaLongPressActivated = false;
+        return false;
+      }
+    }, { passive: false });
+    
+    ctaButton.addEventListener("touchmove", (e) => {
+      clearTimeout(ctaLongPressTimer);
+    });
+    
+    // Prevenir click si long press fue activado
+    ctaButton.addEventListener("click", (e) => {
+      if (ctaLongPressActivated) {
+        e.preventDefault();
+        e.stopPropagation();
+        ctaLongPressActivated = false;
+        return false;
+      }
+    });
+  } else {
+    console.log("❌ CTA Button NO encontrado");
+  }
+
+  // 3. LONG PRESS en email input del Newsletter -> Glitch Stats
+  let newsletterLongPressTimer = null;
+  const newsletterInput = document.querySelector(".newsletter-form input[type='email']");
+  
+  if (newsletterInput) {
+    newsletterInput.addEventListener("touchstart", (e) => {
+      newsletterLongPressTimer = setTimeout(() => {
+        activateGlitchStats();
+        easterEggTracker.unlock("logo");
+        // Feedback visual
+        newsletterInput.style.borderColor = "var(--accent-primary)";
+        setTimeout(() => {
+          newsletterInput.style.borderColor = "";
+        }, 500);
+      }, 1000); // 1 segundo
+    });
+    
+    newsletterInput.addEventListener("touchend", () => {
+      clearTimeout(newsletterLongPressTimer);
+    });
+    
+    newsletterInput.addEventListener("touchmove", () => {
+      clearTimeout(newsletterLongPressTimer);
+    });
+  }
+
+  // 4. DOBLE TAP en copyright del footer -> Thanos Snap
+  let copyrightTapCount = 0;
+  let copyrightTapTimer = null;
+  const copyright = document.querySelector(".footer-bottom p");
+  
+  if (copyright) {
+    copyright.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      copyrightTapCount++;
+      
+      if (copyrightTapTimer) clearTimeout(copyrightTapTimer);
+      
+      if (copyrightTapCount === 2) {
+        activateSnapEffect();
+        easterEggTracker.unlock("thanos");
+        copyrightTapCount = 0;
+      }
+      
+      copyrightTapTimer = setTimeout(() => {
+        copyrightTapCount = 0;
       }, 500);
     });
   }
 
-  // 2. SWIPE DOWN rápido en hero -> Matrix
-  let touchStartY = 0;
-  const hero = document.querySelector(".hero");
+  // 5. LONG PRESS en "Sala Geek" del footer -> Combo mode
+  let footerBrandLongPress = null;
+  const footerBrand = document.querySelector(".footer-bottom strong");
   
-  if (hero) {
-    hero.addEventListener("touchstart", (e) => {
-      touchStartY = e.touches[0].clientY;
-    });
-    
-    hero.addEventListener("touchend", (e) => {
-      const touchEndY = e.changedTouches[0].clientY;
-      const swipeDistance = touchEndY - touchStartY;
-      
-      // Swipe down rápido (más de 150px)
-      if (swipeDistance > 150) {
-        activateMatrixRainMode();
-      }
-    });
-  }
-
-  // 3. LONG PRESS en título -> Glitch Stats
-  const heroTitle = document.querySelector(".hero-content h1");
-  let longPressTimer = null;
-  
-  if (heroTitle) {
-    heroTitle.addEventListener("touchstart", () => {
-      longPressTimer = setTimeout(() => {
-        activateGlitchStats();
-        easterEggTracker.unlock("logo");
-      }, 1000); // 1 segundo
-    });
-    
-    heroTitle.addEventListener("touchend", () => {
-      clearTimeout(longPressTimer);
-    });
-    
-    heroTitle.addEventListener("touchmove", () => {
-      clearTimeout(longPressTimer);
-    });
-  }
-
-  // 4. SHAKE DEVICE -> Retro Mode
-  let lastX = 0, lastY = 0, lastZ = 0;
-  let shakeThreshold = 15;
-  
-  if (window.DeviceMotionEvent) {
-    window.addEventListener("devicemotion", (e) => {
-      const acceleration = e.accelerationIncludingGravity;
-      
-      if (!acceleration) return;
-      
-      const deltaX = Math.abs(acceleration.x - lastX);
-      const deltaY = Math.abs(acceleration.y - lastY);
-      const deltaZ = Math.abs(acceleration.z - lastZ);
-      
-      if (deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold) {
-        activate8BitMode();
-        // Evitar múltiples activaciones
-        shakeThreshold = 999;
+  if (footerBrand) {
+    footerBrand.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      footerBrandLongPress = setTimeout(() => {
+        // Modo ligero: solo CSS sin Matrix pesado
+        document.body.style.filter = "hue-rotate(180deg)";
+        playSound("coin");
+        easterEggTracker.unlock("combo");
+        
+        // Feedback visual y haptic
+        footerBrand.style.transform = "scale(1.2)";
+        footerBrand.style.color = "var(--accent-primary)";
+        if (navigator.vibrate) navigator.vibrate(200);
+        
         setTimeout(() => {
-          shakeThreshold = 15;
+          document.body.style.filter = "none";
+          footerBrand.style.transform = "";
+          footerBrand.style.color = "";
         }, 3000);
-      }
-      
-      lastX = acceleration.x;
-      lastY = acceleration.y;
-      lastZ = acceleration.z;
-    });
-  }
-
-  // 5. PINCH (pellizco) en hero -> Thanos Snap
-  let touchDistance = 0;
-  
-  if (hero) {
-    hero.addEventListener("touchstart", (e) => {
-      if (e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        touchDistance = Math.sqrt(dx * dx + dy * dy);
-      }
+      }, 1000);
     });
     
-    hero.addEventListener("touchmove", (e) => {
-      if (e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        const newDistance = Math.sqrt(dx * dx + dy * dy);
-        
-        // Detectar pinch (cierre de dedos)
-        if (touchDistance - newDistance > 50) {
-          activateSnapEffect();
-          touchDistance = 0;
-        }
-      }
+    footerBrand.addEventListener("touchend", () => {
+      clearTimeout(footerBrandLongPress);
     });
-  }
-
-  // 6. TAP en las 4 esquinas (más fácil en móvil)
-  const cornerSequence = [];
-  const cornerTimeout = 5000; // 5 segundos
-  let cornerTimer = null;
-  
-  document.addEventListener("touchend", (e) => {
-    const x = e.changedTouches[0].clientX;
-    const y = e.changedTouches[0].clientY;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const threshold = 80; // Más grande en móvil
     
-    let corner = null;
-    
-    if (x < threshold && y < threshold) corner = "tl";
-    else if (x > w - threshold && y < threshold) corner = "tr";
-    else if (x > w - threshold && y > h - threshold) corner = "br";
-    else if (x < threshold && y > h - threshold) corner = "bl";
-    
-    if (corner) {
-      cornerSequence.push(corner);
-      
-      // Feedback visual móvil
-      const indicator = document.createElement("div");
-      indicator.style.cssText = `
-        position: fixed;
-        ${corner.includes("t") ? "top: 20px" : "bottom: 20px"};
-        ${corner.includes("l") ? "left: 20px" : "right: 20px"};
-        width: 40px;
-        height: 40px;
-        background: #06ffa5;
-        border-radius: 50%;
-        z-index: 10001;
-        animation: pulseCorner 0.5s ease;
-      `;
-      document.body.appendChild(indicator);
-      setTimeout(() => indicator.remove(), 500);
-      
-      // Reset timer
-      if (cornerTimer) clearTimeout(cornerTimer);
-      cornerTimer = setTimeout(() => {
-        cornerSequence.length = 0;
-      }, cornerTimeout);
-      
-      // Check secuencia correcta
-      const correctSequence = ["tl", "tr", "br", "bl"];
-      if (cornerSequence.length === 4) {
-        if (JSON.stringify(cornerSequence) === JSON.stringify(correctSequence)) {
-          activateDeveloperConsole();
-          easterEggTracker.unlock("corners");
-        }
-        cornerSequence.length = 0;
-      }
-    }
-  });
-
-  // 7. TRIPLE TAP en tracker -> Geek Mode
-  let trackerTapCount = 0;
-  let trackerTapTimer = null;
-  
-  const tracker = document.getElementById("easter-egg-tracker");
-  if (tracker) {
-    tracker.addEventListener("touchend", (e) => {
-      if (!e.target.closest(".achievement")) {
-        trackerTapCount++;
-        
-        if (trackerTapTimer) clearTimeout(trackerTapTimer);
-        
-        if (trackerTapCount === 3) {
-          activateGeekMode();
-          easterEggTracker.unlock("combo");
-          trackerTapCount = 0;
-        }
-        
-        trackerTapTimer = setTimeout(() => {
-          trackerTapCount = 0;
-        }, 500);
-      }
+    footerBrand.addEventListener("touchmove", () => {
+      clearTimeout(footerBrandLongPress);
     });
   }
 
   // Notificación de ayuda móvil
   setTimeout(() => {
-    showNotification("📱 Tip móvil: Triple tap en logo, long press en título, shake device!", "info");
+    showNotification("📱 Tip: Explora con taps y long press en botones!", "info");
   }, 5000);
 }
 
