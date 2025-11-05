@@ -1178,20 +1178,21 @@ function initBackToTop() {
     const footer = document.querySelector(".site-footer");
     if (footer) {
       const footerRect = footer.getBoundingClientRect();
+      const btnRect = backToTopBtn.getBoundingClientRect();
       
-      // Si el footer está visible en el viewport
-      if (footerRect.top < windowHeight) {
-        const footerVisibleHeight = windowHeight - footerRect.top;
+      // Si el botón está a punto de chocar con el footer
+      if (btnRect.bottom > footerRect.top && footerRect.top < windowHeight) {
+        // Mover el botón ARRIBA del footer con un pequeño margen
+        const overlap = btnRect.bottom - footerRect.top;
+        const currentBottom = parseInt(getComputedStyle(backToTopBtn).bottom) || 30;
+        const newBottom = currentBottom + overlap + 10;
         
-        // Si colisionaría con el footer
-        if (footerVisibleHeight > 30) { // 30px es el bottom original
-          const newBottom = footerVisibleHeight + 10;
-          backToTopBtn.style.bottom = `${Math.max(30, newBottom)}px`;
-          backToTopBtn.style.transition = "bottom 0.3s ease";
-        }
-      } else {
-        // Footer no visible, posición normal
+        backToTopBtn.style.bottom = `${newBottom}px`;
+        backToTopBtn.style.transition = "bottom 0.3s ease";
+      } else if (footerRect.top > windowHeight) {
+        // Footer completamente fuera del viewport, posición normal
         backToTopBtn.style.bottom = "30px";
+        backToTopBtn.style.transition = "bottom 0.3s ease";
       }
     }
   }
@@ -3141,7 +3142,7 @@ function revealFooterSecret() {
       text-align: center;
       padding: 1rem;
       margin-top: 1rem;
-      margin-bottom: 6rem;
+      margin-bottom: 1.5rem;
       background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(239, 71, 111, 0.1));
       border-radius: 8px;
       border: 2px solid var(--accent-primary);
@@ -3269,37 +3270,25 @@ const easterEggTracker = {
 
     const adjustTrackerPosition = () => {
       const footer = document.querySelector(".site-footer");
-      const header = document.querySelector(".site-header");
       if (!footer) return;
 
       const footerRect = footer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const trackerHeight = tracker.offsetHeight;
-      const headerHeight = header ? header.offsetHeight : 80;
+      const trackerRect = tracker.getBoundingClientRect();
       
-      // Si el footer está visible en el viewport
-      if (footerRect.top < viewportHeight) {
-        // Calcular cuánto del footer está visible
-        const footerVisibleHeight = viewportHeight - footerRect.top;
+      // Si el tracker está a punto de chocar con el footer
+      if (trackerRect.bottom > footerRect.top && footerRect.top < viewportHeight) {
+        // Mover el tracker ARRIBA del footer con un pequeño margen
+        const overlap = trackerRect.bottom - footerRect.top;
+        const currentBottom = parseInt(getComputedStyle(tracker).bottom) || 20;
+        const newBottom = currentBottom + overlap + 10;
         
-        // Si el tracker colisionaría con el footer
-        if (footerVisibleHeight > 20) {
-          // Calcular nueva posición sin exceder el header
-          let newBottom = footerVisibleHeight + 10;
-          
-          // Límite superior: no dejar que el tracker quede sobre el header
-          const maxBottom = viewportHeight - trackerHeight - headerHeight - 20;
-          newBottom = Math.min(newBottom, maxBottom);
-          
-          // Límite inferior: mínimo 20px
-          newBottom = Math.max(20, newBottom);
-          
-          tracker.style.bottom = `${newBottom}px`;
-          tracker.style.transition = "bottom 0.3s ease";
-        }
-      } else {
-        // Footer no visible, posición normal
+        tracker.style.bottom = `${newBottom}px`;
+        tracker.style.transition = "bottom 0.3s ease";
+      } else if (footerRect.top > viewportHeight) {
+        // Footer completamente fuera del viewport, posición normal
         tracker.style.bottom = "20px";
+        tracker.style.transition = "bottom 0.3s ease";
       }
     };
 
