@@ -1,8 +1,56 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.69.0
-   Description: Hero brand aparece después de typewriter animation
-   Last Modified: 2025-11-03
+   Version: 1.72.0
+   Description: Sistema de Easter Eggs completamente funcional
+   Last Modified: 2025-11-05
+   ============================================ 
+   
+   📋 ESTADO ACTUAL DEL PROYECTO:
+   
+   ✅ FUNCIONALIDADES COMPLETAS:
+   - Sistema de Achievement Tracker (localStorage + UI)
+   - 9 Easter Eggs (6 móvil + 3 desktop only)
+   - Sistema de niveles dinámico por plataforma
+   - Tracker auto-hide al llegar al footer
+   - Confetti en viewport actual (no top:0)
+   - Notificaciones responsive (z-index correcto)
+   - Long press optimizado (600ms)
+   - Feedback visual inmediato en todos los touch events
+   
+   🐛 EN DEBUGGING:
+   - Combo Breaker (Easter Egg 5 móvil):
+     * Touch detection: ✅ FUNCIONA
+     * Visual feedback: ✅ FUNCIONA
+     * Effect activation: ❌ NO SE ACTIVA
+     * Causa: Desconocida (requiere testing con DevTools)
+     * Debugging: Console logs extensivos agregados
+   
+   🔧 ÚLTIMA OPTIMIZACIÓN:
+   - Cache buster actualizado a v72
+   - .htaccess agregado para forzar recarga
+   - Headers HTTP optimizados (no-cache en HTML)
+   
+   📱 EASTER EGGS DISPONIBLES:
+   
+   MÓVIL (6 total):
+   1. Konami Code (↑↑↓↓←→←→BA) - Matrix Rain effect
+   2. Long press Newsletter Input (600ms) - Glitch Stats
+   3. Long press CTA Button (600ms) - 8-bit Retro Mode
+   4. Double tap Copyright - Thanos Snap effect
+   5. Long press "Sala Geek" Footer (600ms) - Combo Breaker [EN DEBUG]
+   6. Scroll to bottom - Secret Message reveal
+   
+   DESKTOP ONLY (+3 adicionales = 9 total):
+   7. Click Matrix Rain - Remove effect
+   8. Click 4 corners (↖↗↘↙) - Corner Secret unlock
+   9. Mouse zigzag (rápido) - Shake Unlock
+   
+   🎯 PRÓXIMOS PASOS:
+   1. Usuario prueba con DevTools conectado (chrome://inspect)
+   2. Revisar console logs del Combo Breaker
+   3. Diagnosticar dónde se rompe la cadena de ejecución
+   4. Aplicar fix específico según diagnóstico
+   
    ============================================ */
 
 /* ============================================
@@ -3166,66 +3214,97 @@ function revealFooterSecret() {
 // ============================================
 // SISTEMA DE ACHIEVEMENT TRACKER
 // ============================================
-
+/**
+ * Sistema de seguimiento de Easter Eggs
+ * 
+ * Características:
+ * - Guarda progreso en localStorage
+ * - Sistema de niveles dinámico (móvil: 6 eggs, desktop: 9 eggs)
+ * - Auto-hide cuando el footer es visible
+ * - Animación de confetti al completar todos los eggs
+ * - Responsive: muestra solo eggs disponibles según plataforma
+ * 
+ * Easter Eggs disponibles:
+ * - MÓVIL & DESKTOP: konami, logo, retro, thanos, combo, scroll (6)
+ * - SOLO DESKTOP: matrix, corners, shake (3 adicionales = 9 total)
+ */
 const easterEggTracker = {
+  // Estado de cada Easter Egg (false = bloqueado, true = desbloqueado)
   eggs: {
-    konami: false,
-    logo: false,
-    matrix: false,
-    retro: false,
-    thanos: false,
-    corners: false,
-    shake: false,
-    combo: false,
-    scroll: false,
+    konami: false,     // Código Konami (↑↑↓↓←→←→BA)
+    logo: false,       // Long press en newsletter input (móvil) o hover en logo (desktop)
+    matrix: false,     // Click en Matrix Rain (desktop only)
+    retro: false,      // Long press en CTA button (móvil) o doble click (desktop)
+    thanos: false,     // Triple click en CTA button
+    corners: false,    // Click en las 4 esquinas (desktop only)
+    shake: false,      // Zigzag con el mouse (desktop only)
+    combo: false,      // Long press en "Sala Geek" del footer (móvil) o doble click (desktop)
+    scroll: false,     // Scroll hasta el final de la página
   },
   
+  // Detección de plataforma móvil
   isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
   
+  /**
+   * Retorna el total de Easter Eggs disponibles según la plataforma
+   * @returns {number} 6 para móvil, 9 para desktop
+   */
   getTotalEggs() {
-    // En móvil: 6 eggs (konami, logo, retro, thanos, combo, scroll)
-    // En desktop: 9 eggs (todos)
+    // MÓVIL: 6 eggs (konami, logo, retro, thanos, combo, scroll)
+    // DESKTOP: 9 eggs (todos los anteriores + matrix, corners, shake)
     return this.isMobile ? 6 : 9;
   },
   
+  /**
+   * Calcula el nivel de "Geek" basado en eggs desbloqueados
+   * Sistema de progresión proporcional para mantener misma experiencia en ambas plataformas
+   * @returns {Object} {name: string, min: number, max: number}
+   */
   getLevel() {
     const count = this.getUnlockedCount();
     
-    // Niveles dinámicos según plataforma
+    // Niveles dinámicos según plataforma (progresión % similar)
     if (this.isMobile) {
-      // MÓVIL: 6 Easter Eggs
+      // MÓVIL: 6 Easter Eggs totales
       const levels = [
         { name: "Novato", min: 0, max: 0 },        // 0/6 = 0%
         { name: "Explorador", min: 1, max: 1 },    // 1/6 = 16%
         { name: "Cazador", min: 2, max: 3 },       // 2-3/6 = 33-50%
         { name: "Maestro", min: 4, max: 4 },       // 4/6 = 66%
         { name: "Leyenda", min: 5, max: 5 },       // 5/6 = 83%
-        { name: "Dios Geek", min: 6, max: 6 },     // 6/6 = 100%
+        { name: "Dios Geek", min: 6, max: 6 },     // 6/6 = 100% ✅
       ];
       return levels.find(level => count >= level.min && count <= level.max);
     } else {
-      // DESKTOP: 9 Easter Eggs
+      // DESKTOP: 9 Easter Eggs totales
       const levels = [
         { name: "Novato", min: 0, max: 0 },        // 0/9 = 0%
         { name: "Explorador", min: 1, max: 2 },    // 1-2/9 = 11-22%
         { name: "Cazador", min: 3, max: 4 },       // 3-4/9 = 33-44%
         { name: "Maestro", min: 5, max: 6 },       // 5-6/9 = 55-66%
         { name: "Leyenda", min: 7, max: 8 },       // 7-8/9 = 77-88%
-        { name: "Dios Geek", min: 9, max: 9 },     // 9/9 = 100%
+        { name: "Dios Geek", min: 9, max: 9 },     // 9/9 = 100% ✅
       ];
       return levels.find(level => count >= level.min && count <= level.max);
     }
   },
 
+  /**
+   * Inicializa el Achievement Tracker
+   * - Carga progreso guardado
+   * - Oculta eggs desktop-only en móvil
+   * - Configura toggle y auto-hide
+   * - Registra event listeners
+   */
   init() {
-    // Cargar progreso desde localStorage
+    // Cargar progreso guardado desde localStorage
     const saved = localStorage.getItem("easterEggProgress");
     if (saved) {
       this.eggs = JSON.parse(saved);
-      this.updateUI();
+      this.updateUI(); // Actualizar interfaz con progreso guardado
     }
 
-    // Ocultar achievements desktop-only en móvil
+    // En móvil: inyectar CSS para ocultar achievements desktop-only
     if (this.isMobile) {
       const style = document.createElement('style');
       style.id = 'tracker-mobile-styles';
@@ -3234,18 +3313,19 @@ const easterEggTracker = {
           display: none !important;
         }
       `;
+      // Solo agregar si no existe ya
       if (!document.getElementById('tracker-mobile-styles')) {
         document.head.appendChild(style);
       }
     }
 
-    // Iniciar colapsado por defecto
+    // Iniciar tracker colapsado por defecto
     const tracker = document.getElementById("easter-egg-tracker");
     if (tracker) {
       tracker.classList.add("collapsed");
     }
 
-    // Toggle tracker
+    // Configurar botón de toggle (expandir/colapsar)
     const toggle = document.getElementById("tracker-toggle");
     
     if (toggle && tracker) {
@@ -3447,14 +3527,28 @@ const easterEggTracker = {
     }
   },
 
+  /**
+   * Celebración de completado - Se activa al desbloquear todos los Easter Eggs
+   * 
+   * Efecto especial:
+   * - Lluvia de confetti (100 piezas)
+   * - Posicionado en viewport actual del usuario (no en top:0)
+   * - Auto-cleanup después de 3 segundos
+   * - Mensaje diferente según plataforma (móvil/desktop)
+   * 
+   * Fix aplicado: position absolute + scrollY para que confetti sea visible
+   * donde esté el usuario (antes estaba en top:0 y no se veía si estaba scrolleado)
+   */
   showCompletionCelebration() {
     playSound("levelup");
+    
+    // Mensaje personalizado según plataforma
     const message = this.isMobile 
       ? "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs móviles! ¡Eres un DIOS GEEK! 🎮"
       : "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs! ¡Eres un DIOS GEEK! 🎮";
     showNotification(message, "success");
 
-    // Crear contenedor de confetti en el viewport ACTUAL (no en top: 0)
+    // Crear o reutilizar contenedor de confetti
     let confettiContainer = document.getElementById('confetti-container');
     if (!confettiContainer) {
       confettiContainer = document.createElement('div');
@@ -3462,7 +3556,8 @@ const easterEggTracker = {
       document.body.appendChild(confettiContainer);
     }
     
-    // Posicionar en viewport actual del usuario
+    // IMPORTANTE: Posicionar en viewport ACTUAL del usuario (no en top:0)
+    // Esto asegura que el confetti sea visible donde esté scrolleado
     const scrollY = window.pageYOffset || document.documentElement.scrollTop;
     confettiContainer.style.cssText = `
       position: absolute;
@@ -3716,16 +3811,36 @@ function initMobileEasterEggs() {
     });
   }
 
-  // 5. LONG PRESS en "Sala Geek" del footer -> Combo mode
-  // Esperar a que el footer se cargue (es dinámico)
+  // ============================================
+  // 5. COMBO BREAKER - Long press en "Sala Geek" del footer
+  // ============================================
+  /**
+   * Easter Egg: Combo Breaker (MÓVIL)
+   * 
+   * Acción: Mantener presionado "Sala Geek" en el footer por 600ms
+   * Efecto: Invierte colores de toda la página (modo inverso geek)
+   * 
+   * Debugging:
+   * - Espera 1s para que el footer (partial) se cargue
+   * - Intenta múltiples selectores de respaldo
+   * - Console logs en cada paso para diagnóstico
+   * - Área de toque ampliada (12px padding/margin)
+   * - Feedback visual inmediato (escala, color, borde)
+   * 
+   * ESTADO ACTUAL: En debugging
+   * - Touch detection: ✅ Funcionando
+   * - Visual feedback: ✅ Funcionando
+   * - Effect activation: ❌ No se activa (causa desconocida)
+   * - Logs agregados para diagnóstico remoto
+   */
   setTimeout(() => {
     let footerBrandLongPress = null;
     
-    // Intentar múltiples selectores
+    // PASO 1: Intentar selector directo
     let footerBrand = document.querySelector(".footer-bottom strong");
     
+    // PASO 2: Fallback - buscar por contenido de texto
     if (!footerBrand) {
-      // Selector alternativo: buscar "Sala Geek" en el copyright
       const allStrong = document.querySelectorAll("strong");
       allStrong.forEach(el => {
         if (el.textContent.includes("Sala Geek")) {
@@ -3734,39 +3849,44 @@ function initMobileEasterEggs() {
       });
     }
     
+    // LOG: Confirmar si encontramos el elemento
     console.log("🔍 Footer Brand encontrado:", footerBrand ? "✅ SÍ" : "❌ NO");
     
     if (footerBrand) {
       console.log("✅ Configurando Easter Egg en:", footerBrand.textContent);
       
-      // Hacer el área de toque MÁS grande
+      // Ampliar área de toque para móviles (12px = ~1cm en la mayoría de pantallas)
       footerBrand.style.padding = "12px";
       footerBrand.style.margin = "-12px";
       footerBrand.style.display = "inline-block";
       footerBrand.style.cursor = "pointer";
-      footerBrand.style.border = "2px solid transparent"; // Para debugging
+      footerBrand.style.border = "2px solid transparent"; // Cambiará a azul al tocar (debugging visual)
       
+      /**
+       * Función que activa el efecto Combo Breaker
+       * Separada para mejor debugging y claridad
+       */
       const activateCombo = () => {
         console.log("🎮 COMBO BREAKER ACTIVADO!");
         
-        // EFECTO GEEK MODE - MUY VISIBLE
+        // Sonido y notificación
         playSound("levelup");
         easterEggTracker.unlock("combo");
         showNotification("🤓 ¡COMBO BREAKER! Modo inverso activado", "success");
         
-        // Efecto visual SUPER llamativo
+        // EFECTO VISUAL: Invertir colores + rotación de matiz
         document.body.style.filter = "invert(1) hue-rotate(180deg)";
         document.body.style.transition = "filter 0.5s ease";
         
-        // Feedback en el elemento
+        // Feedback en el elemento mismo
         footerBrand.style.transform = "scale(1.3) rotate(360deg)";
         footerBrand.style.color = "#00ff00";
         footerBrand.style.textShadow = "0 0 20px #00ff00";
         
-        // Haptic feedback
+        // Vibración (si disponible)
         if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
         
-        // Restaurar después de 4 segundos
+        // Restaurar todo después de 4 segundos
         setTimeout(() => {
           document.body.style.filter = "none";
           footerBrand.style.transform = "";
@@ -3775,32 +3895,37 @@ function initMobileEasterEggs() {
         }, 4000);
       };
       
+      // EVENT: Touch Start - Inicia el temporizador de long press
       footerBrand.addEventListener("touchstart", (e) => {
-        console.log("👆 Touch start detectado");
+        console.log("👆 Touch start detectado"); // DEBUG LOG
         
-        // Feedback visual INMEDIATO
-        footerBrand.style.transform = "scale(0.95)";
-        footerBrand.style.color = "var(--accent-primary)"; // Más visible
-        footerBrand.style.border = "2px solid var(--accent-primary)"; // Debug visual
+        // Feedback visual INMEDIATO para que usuario sepa que está tocando correctamente
+        footerBrand.style.transform = "scale(0.95)"; // Pequeña reducción de escala
+        footerBrand.style.color = "var(--accent-primary)"; // Cambio de color
+        footerBrand.style.border = "2px solid var(--accent-primary)"; // Borde azul (debugging visual)
         footerBrand.style.transition = "all 0.1s ease";
         
+        // Iniciar temporizador de 600ms
         footerBrandLongPress = setTimeout(() => {
-          console.log("⏰ Timeout alcanzado - activando combo");
-          activateCombo();
+          console.log("⏰ Timeout alcanzado - activando combo"); // DEBUG LOG
+          activateCombo(); // Activar el efecto
         }, 600);
-      }, { passive: true });
+      }, { passive: true }); // passive: no bloquear scroll
       
+      // EVENT: Touch End - Cancela si suelta antes de 600ms
       footerBrand.addEventListener("touchend", () => {
-        console.log("👆 Touch end detectado");
-        clearTimeout(footerBrandLongPress);
-        // Restaurar estilos
+        console.log("👆 Touch end detectado"); // DEBUG LOG
+        clearTimeout(footerBrandLongPress); // Cancelar temporizador
+        
+        // Restaurar estilos originales
         footerBrand.style.transform = "";
         footerBrand.style.color = "";
         footerBrand.style.border = "2px solid transparent";
       }, { passive: true });
       
+      // EVENT: Touch Move - Cancela si mueve el dedo (no es long press estático)
       footerBrand.addEventListener("touchmove", () => {
-        console.log("👆 Touch move detectado - cancelando");
+        console.log("👆 Touch move detectado - cancelando"); // DEBUG LOG
         clearTimeout(footerBrandLongPress);
         // Restaurar estilos
         footerBrand.style.transform = "";
