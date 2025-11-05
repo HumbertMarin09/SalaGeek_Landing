@@ -2324,8 +2324,12 @@ function activateJumpScare() {
   }, 3000);
 }
 
-// EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA (MEJORADO)
+// EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA (Desktop only)
 function initCornerClicks() {
+  // Solo en desktop
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) return;
+
   const sequence = ["top-left", "top-right", "bottom-right", "bottom-left"];
   let currentStep = 0;
   let lastClickTime = Date.now();
@@ -2335,7 +2339,7 @@ function initCornerClicks() {
     const y = e.clientY;
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const threshold = 100; // Área más grande para que sea más fácil
+    const threshold = 120; // Área generosa para facilitar
 
     let corner = null;
 
@@ -2344,8 +2348,8 @@ function initCornerClicks() {
     else if (x > w - threshold && y > h - threshold) corner = "bottom-right";
     else if (x < threshold && y > h - threshold) corner = "bottom-left";
 
-    // Reset si pasa más de 5 segundos
-    if (Date.now() - lastClickTime > 5000) {
+    // Reset si pasa más de 6 segundos
+    if (Date.now() - lastClickTime > 6000) {
       currentStep = 0;
     }
 
@@ -2353,23 +2357,29 @@ function initCornerClicks() {
       currentStep++;
       lastClickTime = Date.now();
       
-      // Feedback visual en la esquina
+      // Feedback visual mejorado en la esquina
       const indicator = document.createElement("div");
+      const cornerLabels = {
+        "top-left": "↖️",
+        "top-right": "↗️",
+        "bottom-right": "↘️",
+        "bottom-left": "↙️"
+      };
+      
+      indicator.textContent = cornerLabels[corner];
       indicator.style.cssText = `
         position: fixed;
-        ${corner.includes("top") ? "top: 10px" : "bottom: 10px"};
-        ${corner.includes("left") ? "left: 10px" : "right: 10px"};
-        width: 30px;
-        height: 30px;
-        background: #06ffa5;
-        border-radius: 50%;
+        ${corner.includes("top") ? "top: 20px" : "bottom: 20px"};
+        ${corner.includes("left") ? "left: 20px" : "right: 20px"};
+        font-size: 3rem;
         z-index: 10001;
-        animation: pulseCorner 0.3s ease;
+        animation: pulseCorner 0.5s ease;
+        pointer-events: none;
       `;
       document.body.appendChild(indicator);
-      setTimeout(() => indicator.remove(), 300);
+      setTimeout(() => indicator.remove(), 500);
 
-      console.log(`Corner ${currentStep}/${sequence.length} clicked!`);
+      playSound("coin");
 
       if (currentStep === sequence.length) {
         activateDeveloperConsole();
@@ -2377,7 +2387,20 @@ function initCornerClicks() {
         currentStep = 0;
       }
     } else if (corner) {
-      console.log("Wrong corner! Starting over...");
+      // Feedback visual de error
+      const errorIndicator = document.createElement("div");
+      errorIndicator.textContent = "❌";
+      errorIndicator.style.cssText = `
+        position: fixed;
+        ${corner.includes("top") ? "top: 20px" : "bottom: 20px"};
+        ${corner.includes("left") ? "left: 20px" : "right: 20px"};
+        font-size: 2rem;
+        z-index: 10001;
+        animation: pulseCorner 0.3s ease;
+        pointer-events: none;
+      `;
+      document.body.appendChild(errorIndicator);
+      setTimeout(() => errorIndicator.remove(), 300);
       currentStep = 0;
     }
   });
@@ -2400,46 +2423,74 @@ function initCornerClicks() {
 function activateDeveloperConsole() {
   playSound("levelup");
   showNotification(
-    "💻 DEVELOPER CONSOLE DESBLOQUEADO! Check F12",
+    "💻 ¡DEVELOPER CONSOLE DESBLOQUEADO! Revisa F12",
     "success",
   );
+  easterEggTracker.unlock("corners");
 
-  console.log("%c🎮 SALA GEEK - DEVELOPER MODE", "font-size: 24px; color: #ffd166; font-weight: bold;");
-  console.log("%c¡Felicidades! Has desbloqueado el Developer Console", "font-size: 14px; color: #48bb78;");
-  console.log("%cEstadísticas del sitio:", "font-size: 12px; color: #4299e1; font-weight: bold;");
+  console.clear();
+  console.log("%c🎮 SALA GEEK - DEVELOPER MODE", "font-size: 28px; color: #ffd166; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);");
+  console.log("%c════════════════════════════════════════", "color: #ffd166;");
+  console.log("%c¡Felicidades! Has desbloqueado el Developer Console", "font-size: 16px; color: #48bb78; font-weight: bold;");
+  console.log("%c ", "");
+  console.log("%cEstadísticas del sitio:", "font-size: 14px; color: #4299e1; font-weight: bold;");
   console.table({
-    "Versión": "1.69.0",
-    "Easter Eggs": "9 implementados",
-    "Nivel Geek": "LEGENDARY",
-    "Framework": "Vanilla JS",
-    "Líneas de código": "~2000+",
+    "🎯 Versión": "2.0.0",
+    "🎮 Easter Eggs": "9 Desktop + 6 Mobile",
+    "⚡ Nivel Geek": "LEGENDARY",
+    "💻 Framework": "Vanilla JS",
+    "📦 Líneas de código": "~3500+",
+    "🎨 Tema": "Dark/Light Mode"
   });
-  console.log("%c¿Quieres ver todos los Easter Eggs?", "font-size: 12px; color: #f6ad55;");
-  console.log("showAllEasterEggs()");
+  console.log("%c ", "");
+  console.log("%c💡 ¿Quieres ver todos los Easter Eggs?", "font-size: 12px; color: #f6ad55; font-weight: bold;");
+  console.log("%cEjecuta: showAllEasterEggs()", "color: #06ffa5; font-style: italic;");
+  console.log("%c════════════════════════════════════════", "color: #ffd166;");
 
   // Función global para mostrar todos los Easter Eggs
   window.showAllEasterEggs = function () {
-    console.log("%c🎯 LISTA DE EASTER EGGS:", "font-size: 16px; color: #ffd166; font-weight: bold;");
-    console.log("1. Código Konami: ↑↑↓↓←→←→BA (NES Mode)");
-    console.log("2. Doble click en el logo");
-    console.log("3. Escribir: 'matrix', 'retro', 'thanos'");
-    console.log("4. Hora mágica: 3:33 AM/PM");
-    console.log("5. Click en esquinas: TL→TR→BR→BL");
-    console.log("6. Shake del mouse (mover rápido)");
-    console.log("7. Ctrl + Shift + G (Geek Mode)");
-    console.log("8. Fechas especiales (Mayo 4, Pi Day)");
-    console.log("9. Scroll al 100% (mensaje secreto)");
+    console.clear();
+    console.log("%c🎯 LISTA COMPLETA DE EASTER EGGS", "font-size: 20px; color: #ffd166; font-weight: bold;");
+    console.log("%c════════════════════════════════════════", "color: #ffd166;");
+    console.log("%c💻 DESKTOP (9 Easter Eggs):", "font-size: 14px; color: #4ecdc4; font-weight: bold;");
+    console.log("%c1. 🎮 Código Konami: ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA", "color: #fff;");
+    console.log("%c2. ✨ Doble click en 'Sala Geek' del hero", "color: #fff;");
+    console.log("%c3. 🟢 Escribir: 'matrix' (Matrix Rain)", "color: #fff;");
+    console.log("%c4. 🕹️ Escribir: 'retro' (8-Bit Mode)", "color: #fff;");
+    console.log("%c5. 💎 Escribir: 'thanos' (Snap Effect)", "color: #fff;");
+    console.log("%c6. 🔲 Click en esquinas: ↖️↗️↘️↙️", "color: #fff;");
+    console.log("%c7. 🖱️ Shake del mouse (mover rápido)", "color: #fff;");
+    console.log("%c8. ⌨️ Ctrl + Shift + G (Geek Mode)", "color: #fff;");
+    console.log("%c9. 📜 Scroll al 100% (mensaje secreto)", "color: #fff;");
+    console.log("%c ", "");
+    console.log("%c📱 MOBILE (6 Easter Eggs):", "font-size: 14px; color: #ff6b6b; font-weight: bold;");
+    console.log("%c1. 🎮 Triple tap en 'Sala Geek'", "color: #fff;");
+    console.log("%c2. ✨ Long press en email newsletter", "color: #fff;");
+    console.log("%c3. 🕹️ Long press en botón 'Únete Ahora'", "color: #fff;");
+    console.log("%c4. 💎 Double tap en copyright", "color: #fff;");
+    console.log("%c5. ⌨️ Long press en 'Sala Geek' del footer", "color: #fff;");
+    console.log("%c6. 📜 Scroll al 100% (mensaje secreto)", "color: #fff;");
+    console.log("%c════════════════════════════════════════", "color: #ffd166;");
+    console.log("%c🏆 ¡Desbloqueálos todos para ser un DIOS GEEK!", "font-size: 14px; color: #06ffa5; font-weight: bold;");
   };
 }
 
-// EASTER EGG 6: SHAKE DEL MOUSE
+// EASTER EGG 6: SHAKE DEL MOUSE (Desktop only)
 function initMouseShake() {
+  // Solo en desktop
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) return;
+
   let lastX = 0;
   let lastY = 0;
   let shakeCount = 0;
   let shakeTimer = null;
+  let shakeActivated = false;
 
   document.addEventListener("mousemove", (e) => {
+    // No activar si ya se activó
+    if (shakeActivated) return;
+
     const deltaX = Math.abs(e.clientX - lastX);
     const deltaY = Math.abs(e.clientY - lastY);
 
@@ -2449,6 +2500,7 @@ function initMouseShake() {
       if (shakeCount > 10) {
         activateMouseDodge();
         shakeCount = 0;
+        shakeActivated = true;
       }
     }
 
@@ -2463,13 +2515,14 @@ function initMouseShake() {
 }
 
 function activateMouseDodge() {
-  showNotification("🏃 Los elementos te esquivan! Mueve el mouse", "info");
+  playSound("coin");
+  showNotification("🏃 ¡Los elementos te esquivan! Mueve el mouse rápido", "success");
   easterEggTracker.unlock("shake");
 
-  const elements = document.querySelectorAll(".hero-badge, .btn, .testimonial-card");
+  const elements = document.querySelectorAll(".hero-badge, .btn, .testimonial-card, .stat-card");
 
   elements.forEach((el) => {
-    el.style.transition = "transform 0.2s ease";
+    el.style.transition = "transform 0.15s ease-out";
     el.dataset.originalTransform = el.style.transform || "";
   });
 
@@ -2483,13 +2536,13 @@ function activateMouseDodge() {
       const deltaY = e.clientY - centerY;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-      if (distance < 150) {
+      if (distance < 180) {
         const angle = Math.atan2(deltaY, deltaX);
-        const force = Math.max(0, 150 - distance) / 3;
+        const force = Math.max(0, 180 - distance) / 2.5;
         const offsetX = -Math.cos(angle) * force;
         const offsetY = -Math.sin(angle) * force;
 
-        el.style.transform = `translate(${offsetX}px, ${offsetY}px) ${el.dataset.originalTransform}`;
+        el.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(1.05) ${el.dataset.originalTransform}`;
       } else {
         el.style.transform = el.dataset.originalTransform;
       }
@@ -2498,13 +2551,16 @@ function activateMouseDodge() {
 
   document.addEventListener("mousemove", mouseMoveHandler);
 
+  // Desactivar después de 6 segundos
   setTimeout(() => {
     document.removeEventListener("mousemove", mouseMoveHandler);
     elements.forEach((el) => {
       el.style.transform = el.dataset.originalTransform;
+      el.style.transition = "";
       delete el.dataset.originalTransform;
     });
-  }, 5000);
+    showNotification("🎯 Mouse Dodge desactivado", "info");
+  }, 6000);
 }
 
 // EASTER EGG 7: COMBO DE TECLADO (Ctrl + Shift + G)
@@ -2519,10 +2575,10 @@ function initKeyboardCombo() {
 
 function activateGeekMode() {
   playSound("levelup");
-  showNotification("🤓 GEEK MODE ACTIVADO! Terminal Style", "success");
+  showNotification("🤓 ¡GEEK MODE ACTIVADO! Terminal Hacker Style", "success");
   easterEggTracker.unlock("combo");
 
-  // Agregar overlay de terminal
+  // Agregar overlay de terminal mejorado
   const terminal = document.createElement("div");
   terminal.id = "geek-mode-terminal";
   terminal.style.cssText = `
@@ -2531,7 +2587,7 @@ function activateGeekMode() {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    background: linear-gradient(135deg, rgba(0, 20, 0, 0.98) 0%, rgba(0, 0, 0, 0.98) 100%);
     color: #00ff00;
     font-family: 'Courier New', monospace;
     padding: 2rem;
@@ -2539,30 +2595,38 @@ function activateGeekMode() {
     overflow-y: auto;
     opacity: 0;
     transition: opacity 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
   `;
 
   const commands = [
     "$ iniciando sistema...",
-    "$ cargando módulos geek...",
-    "$ [OK] Anime Database",
-    "$ [OK] Gaming News",
-    "$ [OK] Tech Updates",
-    "$ [OK] Pop Culture Feed",
-    "$ ================================",
-    "$ SALA GEEK v1.69.0",
-    "$ Sistema: OPERATIONAL",
-    "$ Nivel Geek: LEGENDARY",
-    "$ Easter Eggs: 9/9 disponibles",
-    "$ ================================",
-    "$ Presiona ESC para salir...",
+    "$ autenticando credenciales geek...",
+    "$ [<span style='color:#00ff00'>OK</span>] Anime Database",
+    "$ [<span style='color:#00ff00'>OK</span>] Gaming News Feed",
+    "$ [<span style='color:#00ff00'>OK</span>] Tech Updates Stream",
+    "$ [<span style='color:#00ff00'>OK</span>] Pop Culture Monitor",
+    "$ [<span style='color:#00ff00'>OK</span>] Easter Egg Tracker",
+    "$ <span style='color:#ffd166'>================================</span>",
+    "$ <span style='color:#06ffa5'>SALA GEEK</span> v2.0.0",
+    "$ Sistema: <span style='color:#00ff00'>OPERATIONAL</span>",
+    "$ Nivel Geek: <span style='color:#ff6b6b'>LEGENDARY</span>",
+    "$ Easter Eggs: <span style='color:#ffd166'>15/15</span> disponibles",
+    "$ Uptime: <span style='color:#4ecdc4'>∞</span> días",
+    "$ <span style='color:#ffd166'>================================</span>",
+    "$ <span style='color:#ff6b6b'>ACCESO COMPLETO OTORGADO</span>",
+    "$ Presiona <span style='color:#ffd166'>ESC</span> para salir...",
   ];
 
-  let output = "";
+  let output = "<div style='margin-bottom: 1rem; border-bottom: 2px solid #00ff00; padding-bottom: 0.5rem;'><span style='color:#ffd166'>┌─[</span><span style='color:#ff6b6b'>root</span><span style='color:#ffd166'>@</span><span style='color:#06ffa5'>sala-geek</span><span style='color:#ffd166'>]</span><br><span style='color:#ffd166'>└──╼ $</span></div>";
+  
   commands.forEach((cmd, index) => {
     setTimeout(() => {
       output += cmd + "<br>";
       terminal.innerHTML = output;
-    }, index * 200);
+      
+      // Scroll automático al final
+      terminal.scrollTop = terminal.scrollHeight;
+    }, index * 150);
   });
 
   document.body.appendChild(terminal);
@@ -3329,7 +3393,13 @@ const easterEggTracker = {
   showFloatingHint() {
     const hint = document.createElement("div");
     hint.className = "easter-egg-hint";
-    hint.textContent = "🎮 9 secretos ocultos... ¿Puedes encontrarlos todos?";
+    
+    // Mensaje dinámico según plataforma
+    const message = this.isMobile 
+      ? "📱 6 secretos móviles ocultos... ¿Puedes encontrarlos todos?"
+      : "🎮 9 secretos ocultos... ¿Puedes encontrarlos todos?";
+    
+    hint.textContent = message;
     document.body.appendChild(hint);
 
     setTimeout(() => {
@@ -3525,30 +3595,48 @@ function initMobileEasterEggs() {
 
 // INICIALIZAR TODOS LOS EASTER EGGS
 function initAllEasterEggs() {
-  initKonamiCode();
-  initLogoEasterEgg();
-  initSecretWords();
-  initTimeEasterEgg();
-  initCornerClicks();
-  initMouseShake();
-  initKeyboardCombo();
-  initSpecialDates();
-  initScrollSecret();
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   
-  // Inicializar versión móvil
-  initMobileEasterEggs();
+  // Easter Eggs universales (Desktop + Mobile)
+  initKonamiCode(); // ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA
+  initSecretWords(); // matrix, retro, thanos
+  initScrollSecret(); // Scroll al 100%
+  initSpecialDates(); // Fechas especiales
   
-  // Inicializar tracker
+  // Easter Eggs solo Desktop
+  if (!isMobile) {
+    initLogoEasterEgg(); // Doble click en logo
+    initTimeEasterEgg(); // Hora 3:33
+    initCornerClicks(); // 4 esquinas
+    initMouseShake(); // Shake mouse
+    initKeyboardCombo(); // Ctrl+Shift+G
+    
+    console.log(
+      "%c🖥️ EASTER EGGS DESKTOP ACTIVADOS",
+      "color: #ffd166; font-size: 14px; font-weight: bold; background: #1a1a2e; padding: 5px 10px; border-radius: 5px;",
+    );
+    console.log(
+      "%c9 secretos esperando ser descubiertos...",
+      "color: #48bb78; font-size: 12px;",
+    );
+  }
+  
+  // Easter Eggs solo Mobile
+  if (isMobile) {
+    initMobileEasterEggs();
+    
+    console.log(
+      "%c📱 EASTER EGGS MOBILE ACTIVADOS",
+      "color: #ff6b6b; font-size: 14px; font-weight: bold; background: #1a1a2e; padding: 5px 10px; border-radius: 5px;",
+    );
+    console.log(
+      "%c6 secretos optimizados para touch...",
+      "color: #48bb78; font-size: 12px;",
+    );
+  }
+  
+  // Inicializar tracker (universal)
   easterEggTracker.init();
-
-  console.log(
-    "%c🎮 EASTER EGGS ACTIVADOS",
-    "color: #ffd166; font-size: 14px; font-weight: bold;",
-  );
-  console.log(
-    "%c9 secretos esperando ser descubiertos...",
-    "color: #48bb78; font-size: 12px;",
-  );
 }
 
 // Inicializar Easter Eggs después de que todo cargue
