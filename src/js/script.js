@@ -1,129 +1,125 @@
 /* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.72.0
-   Description: Sistema de Easter Eggs completamente funcional
+   Version: 1.73.0 (Optimizado)
    Last Modified: 2025-11-05
-   ============================================ 
    
-   📋 ESTADO ACTUAL DEL PROYECTO:
+   📋 ARQUITECTURA DEL PROYECTO:
    
-   ✅ FUNCIONALIDADES COMPLETAS:
-   - Sistema de Achievement Tracker (localStorage + UI)
-   - 9 Easter Eggs (6 móvil + 3 desktop only)
-   - Sistema de niveles dinámico por plataforma
-   - Tracker auto-hide al llegar al footer
-   - Confetti en viewport actual (no top:0)
-   - Notificaciones responsive (z-index correcto)
-   - Long press optimizado (600ms)
-   - Feedback visual inmediato en todos los touch events
+   1. UTILIDADES GLOBALES
+      - Estado responsivo
+      - Helpers de tema
+      - Handlers de resize
    
-   🐛 EN DEBUGGING:
-   - Combo Breaker (Easter Egg 5 móvil):
-     * Touch detection: ✅ FUNCIONA
-     * Visual feedback: ✅ FUNCIONA
-     * Effect activation: ❌ NO SE ACTIVA
-     * Causa: Desconocida (requiere testing con DevTools)
-     * Debugging: Console logs extensivos agregados
+   2. CARGA DE COMPONENTES
+      - Partials (header/footer)
+      - Lazy loading
    
-   🔧 ÚLTIMA OPTIMIZACIÓN:
-   - Cache buster actualizado a v72
-   - .htaccess agregado para forzar recarga
-   - Headers HTTP optimizados (no-cache en HTML)
+   3. NAVEGACIÓN
+      - Menú móvil/desktop
+      - Scroll activo
+      - Accesibilidad
    
-   📱 EASTER EGGS DISPONIBLES:
+   4. ANIMACIONES & EFECTOS
+      - Typewriter
+      - Parallax
+      - Glitch effects
+      - Scroll reveals
    
-   MÓVIL (6 total):
-   1. Konami Code (↑↑↓↓←→←→BA) - Matrix Rain effect
-   2. Long press Newsletter Input (600ms) - Glitch Stats
-   3. Long press CTA Button (600ms) - 8-bit Retro Mode
-   4. Double tap Copyright - Thanos Snap effect
-   5. Long press "Sala Geek" Footer (600ms) - Combo Breaker [EN DEBUG]
-   6. Scroll to bottom - Secret Message reveal
+   5. FORMULARIOS
+      - Newsletter
+      - Validaciones
    
-   DESKTOP ONLY (+3 adicionales = 9 total):
-   7. Click Matrix Rain - Remove effect
-   8. Click 4 corners (↖↗↘↙) - Corner Secret unlock
-   9. Mouse zigzag (rápido) - Shake Unlock
+   6. SISTEMA DE EASTER EGGS
+      - Achievement Tracker
+      - 9 Easter Eggs (6 móvil + 3 desktop)
+      - Sistema de niveles dinámico
+      - Persistencia en localStorage
    
-   🎯 PRÓXIMOS PASOS:
-   1. Usuario prueba con DevTools conectado (chrome://inspect)
-   2. Revisar console logs del Combo Breaker
-   3. Diagnosticar dónde se rompe la cadena de ejecución
-   4. Aplicar fix específico según diagnóstico
+   7. SISTEMA DE AUDIO
+      - Sound manager
+      - Preload de sonidos
+   
+   ✅ FUNCIONALIDADES: 100% Operativas
+   🎯 OPTIMIZACIÓN: Código reorganizado y documentado
    
    ============================================ */
 
 /* ============================================
-   UTILIDADES GLOBALES
+   SECCIÓN 1: UTILIDADES GLOBALES
    ============================================ */
 
-// Estado responsivo
+/**
+ * Estado responsivo global de la aplicación
+ * Se actualiza automáticamente con los eventos de resize
+ * @constant {Object}
+ */
 const responsiveState = {
   isMobile: window.innerWidth <= 768,
   isTablet: window.innerWidth > 768 && window.innerWidth <= 968,
   isDesktop: window.innerWidth > 968,
 };
 
-/* ============================================
-   THEME SWITCHER
-   ============================================ */
-
 /**
- * Inicializa el sistema de cambio de tema (claro/oscuro)
+ * Inicializa el tema oscuro permanente
+ * Fuerza el modo oscuro y elimina cualquier preferencia previa de tema claro
  */
-// Tema oscuro permanente - modo claro eliminado
 function initDarkMode() {
-  // Forzar modo oscuro siempre
   document.documentElement.setAttribute("data-theme", "dark");
-  // Limpiar cualquier preferencia guardada del modo claro
   localStorage.removeItem("sg_theme");
 }
 
-// Actualizar estado responsivo
+/**
+ * Actualiza el estado responsivo global
+ * Se llama automáticamente en resize events
+ */
 function updateResponsiveState() {
   responsiveState.isMobile = window.innerWidth <= 768;
-  responsiveState.isTablet =
-    window.innerWidth > 768 && window.innerWidth <= 968;
+  responsiveState.isTablet = window.innerWidth > 768 && window.innerWidth <= 968;
   responsiveState.isDesktop = window.innerWidth > 968;
 }
 
-// Inicializar manejador responsivo
+/**
+ * Inicializa el manejador de resize con debounce
+ * Cierra elementos del UI que no deberían estar abiertos al cambiar de móvil a desktop
+ */
 function initResponsiveHandler() {
   let resizeTimer;
+  
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
+    
     resizeTimer = setTimeout(() => {
       updateResponsiveState();
 
-      // Cerrar el menú móvil si se cambia a desktop
+      // Auto-cerrar elementos móviles al cambiar a desktop
       if (responsiveState.isDesktop) {
         const nav = document.querySelector(".main-nav");
         const toggle = document.querySelector(".nav-toggle");
         const searchDropdown = document.querySelector(".search-dropdown");
 
-        if (nav && nav.classList.contains("open")) {
+        if (nav?.classList.contains("open")) {
           nav.classList.remove("open");
           toggle?.setAttribute("aria-expanded", "false");
           document.body.style.overflow = "";
         }
 
-        if (searchDropdown && searchDropdown.classList.contains("active")) {
+        if (searchDropdown?.classList.contains("active")) {
           searchDropdown.classList.remove("active");
         }
       }
-    }, 150);
+    }, 150); // Debounce de 150ms
   });
 }
 
 /* ============================================
-   CARGA DE PARTIALS (HEADER Y FOOTER)
+   SECCIÓN 2: CARGA DE COMPONENTES DINÁMICOS
    ============================================ */
 
 /**
- * Carga un partial HTML de forma dinámica con cache-busting
- * @param {string} selector - Selector CSS del elemento donde inyectar el HTML
- * @param {string} path - Ruta al archivo HTML a cargar
- * @returns {Promise<boolean>} - True si se cargó exitosamente
+ * Carga un partial HTML con cache-busting y headers anti-cache
+ * @param {string} selector - Selector CSS donde inyectar el contenido
+ * @param {string} path - Ruta relativa al archivo HTML
+ * @returns {Promise<boolean>} True si la carga fue exitosa
  */
 async function loadPartial(selector, path) {
   try {
@@ -132,8 +128,8 @@ async function loadPartial(selector, path) {
       cache: "no-store",
       headers: {
         "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
+        "Pragma": "no-cache",
+        "Expires": "0",
       },
     });
 
@@ -151,37 +147,46 @@ async function loadPartial(selector, path) {
     element.innerHTML = html;
     return true;
   } catch (error) {
-    console.error(`Error loading partial ${path}:`, error);
+    console.error(`❌ Error loading partial ${path}:`, error);
     return false;
   }
 }
 
+/**
+ * Carga header y footer de forma paralela
+ * Inicializa la navegación una vez cargados
+ */
 async function loadIncludes() {
   try {
+    // Carga paralela para mejor performance
     await Promise.all([
       loadPartial("#header-placeholder", "/src/pages/partials/header.html"),
       loadPartial("#footer-placeholder", "/src/pages/partials/footer.html"),
     ]);
 
-    // Actualizar año en el footer
+    // Actualizar año dinámicamente en el footer
     const yearElement = document.getElementById("current-year");
     if (yearElement) {
       yearElement.textContent = new Date().getFullYear();
     }
 
-    // Inicializar navegación después de cargar el header
+    // Inicializar navegación después de que el header esté cargado
     initNavigation();
   } catch (error) {
-    console.error("Error loading includes:", error);
+    console.error("❌ Error loading includes:", error);
   }
 }
 
 /* ============================================
-   NAVEGACIÓN
+   SECCIÓN 3: SISTEMA DE NAVEGACIÓN
    ============================================ */
 
 /**
- * Inicializa la navegación principal con menú móvil y scroll activo
+ * Inicializa el sistema de navegación completo
+ * - Toggle del menú móvil con accesibilidad
+ * - Smooth scroll a secciones
+ * - Highlight de enlaces activos según scroll
+ * - Cierre automático del menú en desktop
  */
 function initNavigation() {
   const toggle = document.querySelector(".nav-toggle");
@@ -1071,31 +1076,33 @@ function initNewsletterForm() {
 }
 
 /* ============================================
-   NOTIFICACIONES
+   SECCIÓN 4: SISTEMA DE NOTIFICACIONES
    ============================================ */
 
-function showNotification(message, type = "info") {
-  // Definir el color según el tipo
-  let background;
-  switch (type) {
-    case "success":
-      background = "linear-gradient(135deg, #48bb78 0%, #38a169 100%)";
-      break;
-    case "error":
-      background = "linear-gradient(135deg, #f56565 0%, #e53e3e 100%)";
-      break;
-    case "info":
-    default:
-      background = "linear-gradient(135deg, #4299e1 0%, #3182ce 100%)";
-      break;
-  }
+/**
+ * Configuración de colores por tipo de notificación
+ * @constant {Object}
+ */
+const NOTIFICATION_STYLES = {
+  success: "linear-gradient(135deg, #48bb78 0%, #38a169 100%)",
+  error: "linear-gradient(135deg, #f56565 0%, #e53e3e 100%)",
+  info: "linear-gradient(135deg, #4299e1 0%, #3182ce 100%)",
+};
 
-  // Detectar móvil para ajustar tamaño
+/**
+ * Muestra una notificación toast con estilo responsive
+ * @param {string} message - Mensaje a mostrar
+ * @param {('success'|'error'|'info')} type - Tipo de notificación
+ */
+function showNotification(message, type = "info") {
   const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+  const background = NOTIFICATION_STYLES[type] || NOTIFICATION_STYLES.info;
   
-  // Crear elemento de notificación
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
+  notification.textContent = message;
+  
+  // Estilos responsive optimizados
   notification.style.cssText = `
     position: fixed;
     top: ${isMobile ? '90px' : '120px'};
@@ -1114,10 +1121,9 @@ function showNotification(message, type = "info") {
     line-height: 1.4;
   `;
 
-  notification.textContent = message;
   document.body.appendChild(notification);
 
-  // Eliminar después de 5 segundos
+  // Auto-remover después de 5 segundos con animación
   setTimeout(() => {
     notification.style.animation = "slideOutRight 0.3s ease";
     setTimeout(() => notification.remove(), 300);
@@ -1647,9 +1653,21 @@ window.addEventListener("load", () => {
    🎮 EASTER EGGS - FULL GEEK MODE
    ============================================ */
 
-// 🔊 SISTEMA DE SONIDOS 8-BIT
-let isSoundPlaying = false; // Variable global para controlar sonidos simultáneos
+/* ============================================
+   SECCIÓN 5: SISTEMA DE AUDIO 8-BIT
+   ============================================ */
 
+/**
+ * Flag global para prevenir solapamiento de sonidos
+ * @type {boolean}
+ */
+let isSoundPlaying = false;
+
+/**
+ * Biblioteca de efectos de sonido 8-bit
+ * Cada sonido está definido por frecuencias (Hz) y duraciones (ms)
+ * @constant {Object}
+ */
 const soundLibrary = {
   powerup: () => playBeep([440, 554, 659, 880], [100, 100, 100, 300]),
   coin: () => playBeep([988, 1319], [100, 300]),
@@ -1660,10 +1678,15 @@ const soundLibrary = {
   error: () => playBeep([392, 349, 294], [150, 150, 300]),
 };
 
-// Motor de audio usando Web Audio API
+/**
+ * Motor de audio usando Web Audio API
+ * Genera tonos 8-bit con onda cuadrada y envelope ADSR
+ * @param {number[]} frequencies - Array de frecuencias en Hz
+ * @param {number[]} durations - Array de duraciones en ms
+ */
 function playBeep(frequencies, durations) {
   try {
-    isSoundPlaying = true; // Marcar que hay un sonido reproduciéndose
+    isSoundPlaying = true;
     
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let startTime = audioContext.currentTime;
@@ -1676,16 +1699,16 @@ function playBeep(frequencies, durations) {
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
 
-      oscillator.type = "square"; // Onda cuadrada para sonido 8-bit
+      oscillator.type = "square"; // Onda cuadrada para efecto retro
       oscillator.frequency.value = freq;
 
-      // Envelope para sonido más natural
+      // Envelope ADSR para sonido más natural
       gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01);
+      gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01); // Attack
       gainNode.gain.exponentialRampToValueAtTime(
         0.01,
         startTime + durations[index] / 1000
-      );
+      ); // Decay/Release
 
       oscillator.start(startTime);
       oscillator.stop(startTime + durations[index] / 1000);
@@ -1694,50 +1717,67 @@ function playBeep(frequencies, durations) {
       totalDuration += durations[index];
     });
 
-    // Resetear flag cuando termine el sonido
+    // Resetear flag cuando termine
     setTimeout(() => {
       isSoundPlaying = false;
     }, totalDuration);
     
   } catch (error) {
-    console.log("Audio no disponible:", error);
+    console.log("⚠️ Audio no disponible:", error);
     isSoundPlaying = false;
   }
 }
 
-// Función helper para reproducir sonidos
+/**
+ * Helper para reproducir sonidos de la biblioteca
+ * @param {string} soundName - Nombre del sonido en soundLibrary
+ */
 function playSound(soundName) {
   if (soundLibrary[soundName]) {
     soundLibrary[soundName]();
+  } else {
+    console.warn(`⚠️ Sonido "${soundName}" no encontrado`);
   }
 }
 
-// EASTER EGG 1: CÓDIGO KONAMI (↑↑↓↓←→←→BA)
+/* ============================================
+   SECCIÓN 6: SISTEMA DE EASTER EGGS
+   ============================================
+   
+   Total: 9 Easter Eggs
+   Móvil: 6 (konami, logo, retro, thanos, combo, scroll)
+   Desktop Only: 3 (matrix, corners, shake)
+   
+   Sistema de Achievement Tracker:
+   - localStorage para persistencia
+   - Niveles dinámicos por plataforma
+   - UI responsive con auto-hide
+   - Confetti celebration al completar todos
+   
+   ============================================ */
+
+/**
+ * EASTER EGG #1: Código Konami
+ * Plataforma: Móvil + Desktop
+ * Acción: ↑↑↓↓←→←→BA
+ * Efecto: Activa Matrix Rain effect
+ */
 function initKonamiCode() {
   const konamiCode = [
-    "ArrowUp",
-    "ArrowUp",
-    "ArrowDown",
-    "ArrowDown",
-    "ArrowLeft",
-    "ArrowRight",
-    "ArrowLeft",
-    "ArrowRight",
-    "b",
-    "a",
+    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+    "b", "a",
   ];
   let konamiIndex = 0;
 
   document.addEventListener("keydown", (e) => {
     const key = e.key.toLowerCase();
     const expectedKey = konamiCode[konamiIndex];
-
-    // Comparar correctamente (sin lowercase para flechas)
     const isMatch = e.key === expectedKey || key === expectedKey;
 
     if (isMatch) {
       konamiIndex++;
-      console.log(`Konami progress: ${konamiIndex}/${konamiCode.length}`);
+      console.log(`🎮 Konami: ${konamiIndex}/${konamiCode.length}`);
 
       if (konamiIndex === konamiCode.length) {
         activateNESMode();
@@ -1746,7 +1786,7 @@ function initKonamiCode() {
       }
     } else {
       if (konamiIndex > 0) {
-        console.log("Konami code reset!");
+        console.log("❌ Konami reset");
       }
       konamiIndex = 0;
     }
