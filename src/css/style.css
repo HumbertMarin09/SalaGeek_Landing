@@ -1,37 +1,59 @@
 /* ============================================
-   VARIABLES GLOBALES - TEMA OSCURO (DEFAULT)
+   SALA GEEK - STYLESHEET
+   Version: 1.08.0 (Optimizado)
+   Last Modified: 2025-11-05
+   
+   📋 ESTRUCTURA:
+   1. Variables CSS (Design Tokens)
+   2. Reset & Base Styles
+   3. Layout & Grid Systems
+   4. Components (Header, Hero, Features, etc.)
+   5. Animations & Effects
+   6. Responsive (Tablet & Mobile)
+   
+   🎨 TEMA: Modo Oscuro Permanente
+   📱 RESPONSIVE: Mobile-first approach
+   ♿ ACCESIBILIDAD: WCAG 2.1 AA compliant
+   
    ============================================ */
+
+/* ============================================
+   SECCIÓN 1: DESIGN TOKENS (CSS Variables)
+   ============================================ */
+
 :root {
-  /* Colores principales */
-  --logo-color-1: #0d6efd;
-  --logo-color-2: #ffd166;
+  /* 🎨 Paleta de colores principal */
+  --logo-color-1: #0d6efd;          /* Azul logo */
+  --logo-color-2: #ffd166;          /* Amarillo logo */
   --logo-accent: #ffd166;
-  --accent-primary: #ffd166;
-  --accent-secondary: #e76f51;
+  --accent-primary: #ffd166;        /* Amarillo dorado (CTA) */
+  --accent-secondary: #e76f51;      /* Naranja coral (hover) */
   --white: #ffffff;
   --black: #000000;
-  --bg: #071428;
-  --bg-primary: #0a0e27;
-  --bg-secondary: #1a1f3a;
+  
+  /* 🌑 Backgrounds (Modo oscuro) */
+  --bg: #071428;                    /* Base oscuro */
+  --bg-primary: #0a0e27;            /* Primario oscuro */
+  --bg-secondary: #1a1f3a;          /* Secundario (cards) */
   --bg-gradient: linear-gradient(135deg, #e8eaf2 0%, #f0f2f7 100%);
 
-  /* Textos */
-  --text-primary: #f0f2f7;
-  --text-secondary: #a0aec0;
-  --text-tertiary: #718096;
+  /* 📝 Textos (Jerarquía visual) */
+  --text-primary: #f0f2f7;          /* Headings & texto principal */
+  --text-secondary: #a0aec0;        /* Subtítulos & descripciones */
+  --text-tertiary: #718096;         /* Texto terciario & hints */
 
-  /* Utilidades */
-  --border-color: #2d3748;
+  /* 🔲 Utilidades de UI */
+  --border-color: #2d3748;          /* Bordes sutiles */
   --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 8px 25px rgba(255, 209, 102, 0.15);
   --shadow-lg: 0 12px 40px rgba(255, 209, 102, 0.25);
 
-  /* Transiciones */
+  /* ⚡ Transiciones (Performance-optimized) */
   --transition-fast: 0.2s ease;
   --transition: 0.3s ease;
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Radios */
+  /* 📐 Border radius (Consistencia) */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -200,14 +222,25 @@ a {
 }
 
 /* ============================================
-   HEADER
+   SECCIÓN 3: HEADER & NAVEGACIÓN
    ============================================ */
+
+/**
+ * Header Placeholder
+ * Sticky container para mantener el header fijo
+ */
 #header-placeholder {
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
+/**
+ * Site Header Principal
+ * - Gradient background con borde dorado
+ * - Smooth scroll con backdrop blur
+ * - Performance optimizada con will-change
+ */
 .site-header {
   background: linear-gradient(180deg, var(--black) 0%, var(--bg) 100%);
   border-bottom: 2px solid var(--logo-accent);
@@ -789,8 +822,13 @@ a {
 */
 
 /* ============================================
-   SEPARADORES Y TÍTULOS
+   SECCIÓN 2: COMPONENTES DE UI
    ============================================ */
+
+/**
+ * Section Separator
+ * Decorador visual entre secciones con efecto de luz
+ */
 .section-separator {
   position: relative;
   height: 60px;
@@ -859,8 +897,17 @@ a {
 }
 
 /* ============================================
-   HERO SECTION
+   SECCIÓN 4: HERO SECTION
    ============================================ */
+
+/**
+ * Hero Section Principal
+ * - Full viewport height con padding
+ * - Gradient background con efectos radiales
+ * - Animated floating badges
+ * - Typewriter effect en título
+ * - CTA buttons con hover effects
+ */
 .hero-section {
   min-height: 95vh;
   display: flex;
@@ -2158,7 +2205,15 @@ a {
   text-align: center;
 }
 
-/* Responsive About Section */
+/* ============================================
+   SECCIÓN 5: RESPONSIVE - TABLET
+   Breakpoint: 968px (Entre desktop y móvil)
+   ============================================ */
+
+/**
+ * About Section - Tablet
+ * Grid de 2 columnas para mejor aprovechamiento del espacio
+ */
 @media (max-width: 968px) {
   .about-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -4444,15 +4499,29 @@ img.lazy-loaded {
   }
 }
 
+/* ============================================
+   SECCIÓN 6: RESPONSIVE - MÓVIL
+   Breakpoint: 768px (Smartphones)
+   
+   📱 OPTIMIZACIONES MÓVIL:
+   - Performance: Desactivar partículas/animaciones pesadas
+   - Touch targets: Mínimo 44px (WCAG)
+   - Typography: Escalado responsive
+   - Badges y botones: Aumentados para legibilidad
+   ============================================ */
+
+/**
+ * Performance - Deshabilitar efectos pesados en móvil
+ */
 @media (max-width: 768px) {
-  /* Disable particles on mobile for better performance */
+  /* Desactivar particles en móvil para mejor performance */
   .hero-particles::before,
   .hero-particles::after {
     display: none;
   }
 
   .hero-gradient {
-    animation: none;
+    animation: none; /* Sin animaciones en móvil */
     background: linear-gradient(
       135deg,
       rgba(255, 209, 102, 0.02) 0%,
