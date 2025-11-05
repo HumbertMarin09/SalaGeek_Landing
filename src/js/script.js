@@ -3182,19 +3182,39 @@ const easterEggTracker = {
   
   isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
   
-  levels: [
-    { name: "Novato", min: 0, max: 0 },
-    { name: "Explorador", min: 1, max: 2 },
-    { name: "Cazador", min: 3, max: 4 },
-    { name: "Maestro", min: 5, max: 6 },
-    { name: "Leyenda", min: 7, max: 8 },
-    { name: "Dios Geek", min: 9, max: 9 },
-  ],
-  
   getTotalEggs() {
     // En móvil: 6 eggs (konami, logo, retro, thanos, combo, scroll)
     // En desktop: 9 eggs (todos)
     return this.isMobile ? 6 : 9;
+  },
+  
+  getLevel() {
+    const count = this.getUnlockedCount();
+    
+    // Niveles dinámicos según plataforma
+    if (this.isMobile) {
+      // MÓVIL: 6 Easter Eggs
+      const levels = [
+        { name: "Novato", min: 0, max: 0 },        // 0/6 = 0%
+        { name: "Explorador", min: 1, max: 1 },    // 1/6 = 16%
+        { name: "Cazador", min: 2, max: 3 },       // 2-3/6 = 33-50%
+        { name: "Maestro", min: 4, max: 4 },       // 4/6 = 66%
+        { name: "Leyenda", min: 5, max: 5 },       // 5/6 = 83%
+        { name: "Dios Geek", min: 6, max: 6 },     // 6/6 = 100%
+      ];
+      return levels.find(level => count >= level.min && count <= level.max);
+    } else {
+      // DESKTOP: 9 Easter Eggs
+      const levels = [
+        { name: "Novato", min: 0, max: 0 },        // 0/9 = 0%
+        { name: "Explorador", min: 1, max: 2 },    // 1-2/9 = 11-22%
+        { name: "Cazador", min: 3, max: 4 },       // 3-4/9 = 33-44%
+        { name: "Maestro", min: 5, max: 6 },       // 5-6/9 = 55-66%
+        { name: "Leyenda", min: 7, max: 8 },       // 7-8/9 = 77-88%
+        { name: "Dios Geek", min: 9, max: 9 },     // 9/9 = 100%
+      ];
+      return levels.find(level => count >= level.min && count <= level.max);
+    }
   },
 
   init() {
