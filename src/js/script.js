@@ -3301,8 +3301,10 @@ const easterEggTracker = {
     const saved = localStorage.getItem("easterEggProgress");
     if (saved) {
       this.eggs = JSON.parse(saved);
-      this.updateUI(); // Actualizar interfaz con progreso guardado
     }
+    
+    // SIEMPRE actualizar UI al inicio (aunque no haya progreso guardado)
+    this.updateUI();
 
     // En móvil: inyectar CSS para ocultar achievements desktop-only
     if (this.isMobile) {
@@ -3319,10 +3321,28 @@ const easterEggTracker = {
       }
     }
 
-    // Iniciar tracker colapsado por defecto
+    // Configurar estado inicial del tracker según plataforma
     const tracker = document.getElementById("easter-egg-tracker");
+    const trackerCollapsed = localStorage.getItem("trackerCollapsed");
+    
     if (tracker) {
-      tracker.classList.add("collapsed");
+      // Si hay preferencia guardada, respetarla
+      if (trackerCollapsed !== null) {
+        if (trackerCollapsed === "true") {
+          tracker.classList.add("collapsed");
+        } else {
+          tracker.classList.remove("collapsed");
+        }
+      } else {
+        // Sin preferencia guardada: Desktop abierto, Móvil cerrado
+        if (this.isMobile) {
+          tracker.classList.add("collapsed");
+          localStorage.setItem("trackerCollapsed", "true");
+        } else {
+          tracker.classList.remove("collapsed");
+          localStorage.setItem("trackerCollapsed", "false");
+        }
+      }
     }
 
     // Configurar botón de toggle (expandir/colapsar)
@@ -3336,12 +3356,6 @@ const easterEggTracker = {
         const isCollapsed = tracker.classList.contains("collapsed");
         localStorage.setItem("trackerCollapsed", isCollapsed);
       });
-    }
-
-    // Restaurar estado del tracker
-    const trackerCollapsed = localStorage.getItem("trackerCollapsed");
-    if (trackerCollapsed === "false" && tracker) {
-      tracker.classList.remove("collapsed");
     }
 
     // Reset button
@@ -3453,11 +3467,6 @@ const easterEggTracker = {
 
   getUnlockedCount() {
     return Object.values(this.eggs).filter(Boolean).length;
-  },
-
-  getLevel() {
-    const count = this.getUnlockedCount();
-    return this.levels.find(level => count >= level.min && count <= level.max);
   },
 
   updateUI() {
