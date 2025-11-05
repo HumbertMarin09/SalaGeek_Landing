@@ -3194,6 +3194,225 @@ const easterEggTracker = {
   }
 };
 
+// ============================================
+// EASTER EGGS MÓVILES (TOUCH-FRIENDLY)
+// ============================================
+
+function initMobileEasterEggs() {
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  if (!isMobile) return; // Solo ejecutar en móvil
+
+  console.log("📱 Modo móvil detectado - Easter Eggs táctiles activados");
+
+  // 1. TRIPLE TAP en logo -> Konami alternativo
+  let logoTapCount = 0;
+  let logoTapTimer = null;
+  
+  const logo = document.querySelector(".site-logo");
+  if (logo) {
+    logo.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      logoTapCount++;
+      
+      if (logoTapTimer) clearTimeout(logoTapTimer);
+      
+      if (logoTapCount === 3) {
+        activateNESMode();
+        easterEggTracker.unlock("konami");
+        logoTapCount = 0;
+      }
+      
+      logoTapTimer = setTimeout(() => {
+        logoTapCount = 0;
+      }, 500);
+    });
+  }
+
+  // 2. SWIPE DOWN rápido en hero -> Matrix
+  let touchStartY = 0;
+  const hero = document.querySelector(".hero");
+  
+  if (hero) {
+    hero.addEventListener("touchstart", (e) => {
+      touchStartY = e.touches[0].clientY;
+    });
+    
+    hero.addEventListener("touchend", (e) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const swipeDistance = touchEndY - touchStartY;
+      
+      // Swipe down rápido (más de 150px)
+      if (swipeDistance > 150) {
+        activateMatrixRainMode();
+      }
+    });
+  }
+
+  // 3. LONG PRESS en título -> Glitch Stats
+  const heroTitle = document.querySelector(".hero-content h1");
+  let longPressTimer = null;
+  
+  if (heroTitle) {
+    heroTitle.addEventListener("touchstart", () => {
+      longPressTimer = setTimeout(() => {
+        activateGlitchStats();
+        easterEggTracker.unlock("logo");
+      }, 1000); // 1 segundo
+    });
+    
+    heroTitle.addEventListener("touchend", () => {
+      clearTimeout(longPressTimer);
+    });
+    
+    heroTitle.addEventListener("touchmove", () => {
+      clearTimeout(longPressTimer);
+    });
+  }
+
+  // 4. SHAKE DEVICE -> Retro Mode
+  let lastX = 0, lastY = 0, lastZ = 0;
+  let shakeThreshold = 15;
+  
+  if (window.DeviceMotionEvent) {
+    window.addEventListener("devicemotion", (e) => {
+      const acceleration = e.accelerationIncludingGravity;
+      
+      if (!acceleration) return;
+      
+      const deltaX = Math.abs(acceleration.x - lastX);
+      const deltaY = Math.abs(acceleration.y - lastY);
+      const deltaZ = Math.abs(acceleration.z - lastZ);
+      
+      if (deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold) {
+        activate8BitMode();
+        // Evitar múltiples activaciones
+        shakeThreshold = 999;
+        setTimeout(() => {
+          shakeThreshold = 15;
+        }, 3000);
+      }
+      
+      lastX = acceleration.x;
+      lastY = acceleration.y;
+      lastZ = acceleration.z;
+    });
+  }
+
+  // 5. PINCH (pellizco) en hero -> Thanos Snap
+  let touchDistance = 0;
+  
+  if (hero) {
+    hero.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        touchDistance = Math.sqrt(dx * dx + dy * dy);
+      }
+    });
+    
+    hero.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const newDistance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Detectar pinch (cierre de dedos)
+        if (touchDistance - newDistance > 50) {
+          activateSnapEffect();
+          touchDistance = 0;
+        }
+      }
+    });
+  }
+
+  // 6. TAP en las 4 esquinas (más fácil en móvil)
+  const cornerSequence = [];
+  const cornerTimeout = 5000; // 5 segundos
+  let cornerTimer = null;
+  
+  document.addEventListener("touchend", (e) => {
+    const x = e.changedTouches[0].clientX;
+    const y = e.changedTouches[0].clientY;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const threshold = 80; // Más grande en móvil
+    
+    let corner = null;
+    
+    if (x < threshold && y < threshold) corner = "tl";
+    else if (x > w - threshold && y < threshold) corner = "tr";
+    else if (x > w - threshold && y > h - threshold) corner = "br";
+    else if (x < threshold && y > h - threshold) corner = "bl";
+    
+    if (corner) {
+      cornerSequence.push(corner);
+      
+      // Feedback visual móvil
+      const indicator = document.createElement("div");
+      indicator.style.cssText = `
+        position: fixed;
+        ${corner.includes("t") ? "top: 20px" : "bottom: 20px"};
+        ${corner.includes("l") ? "left: 20px" : "right: 20px"};
+        width: 40px;
+        height: 40px;
+        background: #06ffa5;
+        border-radius: 50%;
+        z-index: 10001;
+        animation: pulseCorner 0.5s ease;
+      `;
+      document.body.appendChild(indicator);
+      setTimeout(() => indicator.remove(), 500);
+      
+      // Reset timer
+      if (cornerTimer) clearTimeout(cornerTimer);
+      cornerTimer = setTimeout(() => {
+        cornerSequence.length = 0;
+      }, cornerTimeout);
+      
+      // Check secuencia correcta
+      const correctSequence = ["tl", "tr", "br", "bl"];
+      if (cornerSequence.length === 4) {
+        if (JSON.stringify(cornerSequence) === JSON.stringify(correctSequence)) {
+          activateDeveloperConsole();
+          easterEggTracker.unlock("corners");
+        }
+        cornerSequence.length = 0;
+      }
+    }
+  });
+
+  // 7. TRIPLE TAP en tracker -> Geek Mode
+  let trackerTapCount = 0;
+  let trackerTapTimer = null;
+  
+  const tracker = document.getElementById("easter-egg-tracker");
+  if (tracker) {
+    tracker.addEventListener("touchend", (e) => {
+      if (!e.target.closest(".achievement")) {
+        trackerTapCount++;
+        
+        if (trackerTapTimer) clearTimeout(trackerTapTimer);
+        
+        if (trackerTapCount === 3) {
+          activateGeekMode();
+          easterEggTracker.unlock("combo");
+          trackerTapCount = 0;
+        }
+        
+        trackerTapTimer = setTimeout(() => {
+          trackerTapCount = 0;
+        }, 500);
+      }
+    });
+  }
+
+  // Notificación de ayuda móvil
+  setTimeout(() => {
+    showNotification("📱 Tip móvil: Triple tap en logo, long press en título, shake device!", "info");
+  }, 5000);
+}
+
 // INICIALIZAR TODOS LOS EASTER EGGS
 function initAllEasterEggs() {
   initKonamiCode();
@@ -3205,6 +3424,9 @@ function initAllEasterEggs() {
   initKeyboardCombo();
   initSpecialDates();
   initScrollSecret();
+  
+  // Inicializar versión móvil
+  initMobileEasterEggs();
   
   // Inicializar tracker
   easterEggTracker.init();
