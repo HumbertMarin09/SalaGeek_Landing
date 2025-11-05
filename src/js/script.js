@@ -3701,8 +3701,14 @@ function initMobileEasterEggs() {
   const footerBrand = document.querySelector(".footer-bottom strong");
   
   if (footerBrand) {
+    // Hacer el área de toque más grande
+    footerBrand.style.padding = "8px";
+    footerBrand.style.margin = "-8px";
+    footerBrand.style.display = "inline-block";
+    footerBrand.style.cursor = "pointer";
+    
     footerBrand.addEventListener("touchstart", (e) => {
-      e.preventDefault();
+      // NO prevenir default para no bloquear el touch
       
       // Feedback visual INMEDIATO
       footerBrand.style.transform = "scale(0.95)";
@@ -3718,33 +3724,65 @@ function initMobileEasterEggs() {
         // Feedback visual y haptic de éxito
         footerBrand.style.transform = "scale(1.2)";
         footerBrand.style.color = "var(--accent-primary)";
-        if (navigator.vibrate) navigator.vibrate(200);
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
         
         setTimeout(() => {
           document.body.style.filter = "none";
           footerBrand.style.transform = "";
           footerBrand.style.color = "";
         }, 3000);
-      }, 600); // Reducido de 1000ms a 600ms
-    });
+      }, 600);
+    }, { passive: true });
     
     footerBrand.addEventListener("touchend", () => {
       clearTimeout(footerBrandLongPress);
       // Restaurar estilos
       footerBrand.style.transform = "";
       footerBrand.style.color = "";
-    });
+    }, { passive: true });
     
     footerBrand.addEventListener("touchmove", () => {
       clearTimeout(footerBrandLongPress);
       // Restaurar estilos
       footerBrand.style.transform = "";
       footerBrand.style.color = "";
-    });
+    }, { passive: true });
+  } else {
+    console.log("❌ Footer Brand (strong) NO encontrado - Intentando selector alternativo");
     
-    footerBrand.addEventListener("touchmove", () => {
-      clearTimeout(footerBrandLongPress);
-    });
+    // Selector alternativo: toda la línea de copyright
+    const footerCopyright = document.querySelector(".footer-copyright");
+    if (footerCopyright) {
+      footerCopyright.style.cursor = "pointer";
+      footerCopyright.style.userSelect = "none";
+      
+      footerCopyright.addEventListener("touchstart", (e) => {
+        footerCopyright.style.opacity = "0.7";
+        
+        footerBrandLongPress = setTimeout(() => {
+          document.body.style.filter = "hue-rotate(180deg)";
+          playSound("coin");
+          easterEggTracker.unlock("combo");
+          
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+          
+          setTimeout(() => {
+            document.body.style.filter = "none";
+            footerCopyright.style.opacity = "1";
+          }, 3000);
+        }, 600);
+      }, { passive: true });
+      
+      footerCopyright.addEventListener("touchend", () => {
+        clearTimeout(footerBrandLongPress);
+        footerCopyright.style.opacity = "1";
+      }, { passive: true });
+      
+      footerCopyright.addEventListener("touchmove", () => {
+        clearTimeout(footerBrandLongPress);
+        footerCopyright.style.opacity = "1";
+      }, { passive: true });
+    }
   }
 
   // Notificación de ayuda móvil
