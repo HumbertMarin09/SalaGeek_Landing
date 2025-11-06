@@ -3436,7 +3436,7 @@ const easterEggTracker = {
     
     // Pequeño delay para que sea secuencial después del hero-brand
       setTimeout(() => {
-        console.log("✨ Iniciando animación con Web Animations API");
+        tracker.style.visibility = 'visible';
         
         // Detectar si es mobile (ancho < 480px) para usar animación correcta
         const isMobileView = window.innerWidth <= 480;
