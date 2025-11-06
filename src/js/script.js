@@ -3429,14 +3429,12 @@ const easterEggTracker = {
     const tracker = document.getElementById("easter-egg-tracker");
     console.log("🎯 show() llamado - Tracker encontrado:", !!tracker);
     
-    if (tracker) {
-      console.log("📱 Estado inicial del tracker:", {
-        opacity: window.getComputedStyle(tracker).opacity,
-        transform: window.getComputedStyle(tracker).transform,
-        display: window.getComputedStyle(tracker).display
-      });
-      
-      // Pequeño delay para que sea secuencial después del hero-brand
+    if (!tracker) {
+      console.error("❌ ERROR: No se encontró #easter-egg-tracker");
+      return;
+    }
+    
+    // Pequeño delay para que sea secuencial después del hero-brand
       setTimeout(() => {
         console.log("✨ Iniciando animación con Web Animations API");
         
@@ -3465,10 +3463,18 @@ const easterEggTracker = {
         
         animation.onfinish = () => {
           console.log("✅ Animación completada");
-          // Mantener el estado final
+          // Fijar estado final permanentemente
           tracker.style.opacity = '1';
           tracker.style.transform = 'translate(0, 0)';
         };
+        
+        animation.onerror = (error) => {
+          console.error("❌ Error en animación:", error);
+          // Fallback: mostrar sin animación
+          tracker.style.opacity = '1';
+          tracker.style.transform = 'translate(0, 0)';
+        };
+        
       }, 400); // 400ms después de que aparece "Sala Geek"
     } else {
       console.error("❌ ERROR: No se encontró #easter-egg-tracker");
