@@ -4901,16 +4901,16 @@ img.lazy-loaded {
   }
 
   .hero-badge {
-    padding: 0.9rem 1.4rem;
-    min-width: 140px;
+    padding: 0.7rem 1.1rem;
+    min-width: 110px;
   }
 
   .badge-icon {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
   }
   
   .badge-text {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -4940,17 +4940,17 @@ img.lazy-loaded {
   }
 
   .hero-badge {
-    padding: 1rem 1.5rem;
-    min-width: 145px;
+    padding: 0.75rem 1.2rem;
+    min-width: 115px;
   }
 
   .badge-icon {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
   
   .badge-text {
-    font-size: 1.05rem;
-    letter-spacing: 0.7px;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
   }
 
   /* Features optimizadas para móvil */
