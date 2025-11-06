@@ -106,19 +106,19 @@
     <meta name="msapplication-TileColor" content="#1a1f3a" />
     <meta name="msapplication-TileImage" content="/src/images/SalaGeek_LOGO.webp" />
 
-    <!-- DNS Prefetch para recursos externos -->
+    <!-- DNS Prefetch y Preconnect para recursos externos -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://formspree.io" />
     <link rel="dns-prefetch" href="//www.googletagmanager.com" />
     <link rel="dns-prefetch" href="//formspree.io" />
     <link rel="dns-prefetch" href="//www.facebook.com" />
     <link rel="dns-prefetch" href="//www.instagram.com" />
     <link rel="dns-prefetch" href="//www.tiktok.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
 
     <!-- Preload recursos críticos para mejor performance -->
-    <link rel="preload" href="/src/css/normalize.css" as="style" />
-    <link rel="preload" href="/src/css/style.min.css?v=133" as="style" />
-    <link rel="preload" href="/src/js/script.min.js?v=94" as="script" />
+    <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
+    <link rel="preload" href="/src/css/style.min.css?v=134" as="style" fetchpriority="high" />
+    <link rel="preload" href="/src/js/script.min.js?v=94" as="script" fetchpriority="low" />
 
     <!-- Critical CSS inline para above-the-fold -->
     <style>
@@ -134,9 +134,9 @@
 
     <!-- Stylesheets - Cargar normalize inmediatamente, style.min.css de forma no bloqueante -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-        <link rel="stylesheet" href="/src/css/style.min.css?v=133" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=134" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=133" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=134" /></noscript>
     
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
@@ -239,18 +239,37 @@
       }
     </script>
 
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager (Lazy Load) -->
     <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-WBJXS2PX");
+      // Cargar GTM solo después de que la página esté interactiva
+      function loadGTM() {
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != "dataLayer" ? "&l=" + l : "";
+          j.async = true;
+          j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, "script", "dataLayer", "GTM-WBJXS2PX");
+      }
+      
+      // Cargar GTM después de 3 segundos o en la primera interacción
+      if (document.readyState === 'complete') {
+        setTimeout(loadGTM, 3000);
+      } else {
+        window.addEventListener('load', function() {
+          setTimeout(loadGTM, 3000);
+        });
+      }
+      
+      // Cargar inmediatamente si el usuario interactúa
+      ['mousedown', 'touchstart', 'keydown', 'scroll'].forEach(function(event) {
+        window.addEventListener(event, function() {
+          loadGTM();
+        }, { once: true, passive: true });
+      });
     </script>
     <!-- End Google Tag Manager -->
 
