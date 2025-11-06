@@ -1,6 +1,6 @@
 ﻿/* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.74.0 (Optimizado y Depurado)
+   Version: 1.75.0 (Performance Boost + Cleanup Final)
    Last Modified: 2025-11-06
    
    📋 ARQUITECTURA DEL PROYECTO:
