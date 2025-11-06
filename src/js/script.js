@@ -3347,7 +3347,7 @@ const easterEggTracker = {
    * - Oculta eggs desktop-only en móvil
    * - Configura toggle y auto-hide
    * - Registra event listeners
-   * - Tracker oculto inicialmente, se muestra después del typewriter
+   * - Tracker oculto inicialmente (CSS), se muestra después del typewriter
    */
   init() {
     // Cargar progreso guardado desde localStorage
@@ -3358,14 +3358,6 @@ const easterEggTracker = {
     
     // SIEMPRE actualizar UI al inicio (aunque no haya progreso guardado)
     this.updateUI();
-
-    // Ocultar tracker inicialmente (se mostrará después del typewriter)
-    const tracker = document.getElementById("easter-egg-tracker");
-    if (tracker) {
-      tracker.style.opacity = "0";
-      tracker.style.transform = "translateY(20px)";
-      tracker.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-    }
 
     // En móvil: inyectar CSS para ocultar achievements desktop-only
     if (this.isMobile) {
@@ -3383,6 +3375,8 @@ const easterEggTracker = {
     }
 
     // Configurar estado inicial del tracker: SIEMPRE colapsado al inicio
+    const tracker = document.getElementById("easter-egg-tracker");
+    
     if (tracker) {
       // SIEMPRE inicia colapsado, sin importar la preferencia previa
       tracker.classList.add("collapsed");
