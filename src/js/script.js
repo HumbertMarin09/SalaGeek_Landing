@@ -3429,8 +3429,7 @@ const easterEggTracker = {
     if (tracker) {
       // Pequeño delay para que sea secuencial después del hero-brand
       setTimeout(() => {
-        tracker.style.opacity = "1";
-        tracker.style.transform = "translateY(0)";
+        tracker.classList.add("show-tracker"); // Activa animación slideInRight
       }, 400); // 400ms después de que aparece "Sala Geek"
     }
   },

@@ -19,10 +19,25 @@
   display: flex;
   flex-direction: column;
   
-  /* Oculto inicialmente - se muestra después del typewriter */
+  /* Oculto inicialmente - animación controlada por JavaScript después del typewriter */
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateX(400px);
+}
+
+/* Animación slideInRight - se aplica cuando JavaScript agrega la clase */
+.easter-egg-tracker.show-tracker {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .easter-egg-tracker.collapsed .tracker-content {
