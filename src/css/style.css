@@ -4885,9 +4885,8 @@ img.lazy-loaded {
   /* Reset del TikTok centrado */
   .social-card:nth-child(3) {
     grid-column: auto;
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
+    width: 100%;
+    justify-self: stretch;
   }
 }
 
