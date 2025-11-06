@@ -3476,9 +3476,6 @@ const easterEggTracker = {
         };
         
       }, 400); // 400ms después de que aparece "Sala Geek"
-    } else {
-      console.error("❌ ERROR: No se encontró #easter-egg-tracker");
-    }
   },
   
   /**
