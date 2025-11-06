@@ -303,6 +303,14 @@
     right: 10px;
     bottom: 15px;
     max-height: 80vh;
+    /* Oculto inicialmente en tablet también */
+    opacity: 0;
+    transform: translateX(400px);
+  }
+
+  /* Animación slideInRight para tablet */
+  .easter-egg-tracker.show-tracker {
+    animation: slideInRight 0.5s ease-out forwards;
   }
 
   .tracker-content {
@@ -339,6 +347,25 @@
     right: 10px;
     bottom: 10px;
     max-height: 75vh;
+    /* Oculto inicialmente en mobile - desde abajo para mobile */
+    opacity: 0;
+    transform: translateY(400px);
+  }
+
+  /* Animación slideInUp para mobile (desde abajo) */
+  .easter-egg-tracker.show-tracker {
+    animation: slideInUp 0.5s ease-out forwards;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(400px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .tracker-content {
