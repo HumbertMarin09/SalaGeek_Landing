@@ -3374,13 +3374,22 @@ const easterEggTracker = {
       }
     }
 
-    // Configurar estado inicial del tracker: SIEMPRE colapsado al inicio
+    // Configurar estado inicial del tracker
     const tracker = document.getElementById("easter-egg-tracker");
     
     if (tracker) {
-      // SIEMPRE inicia colapsado, sin importar la preferencia previa
-      tracker.classList.add("collapsed");
-      localStorage.setItem("trackerCollapsed", "true");
+      // En móvil (≤480px), iniciar EXPANDIDO para que sea visible
+      // En desktop, iniciar colapsado para no molestar
+      const isMobileView = window.innerWidth <= 480;
+      
+      if (!isMobileView) {
+        tracker.classList.add("collapsed");
+        localStorage.setItem("trackerCollapsed", "true");
+      } else {
+        // En móvil, dejar expandido por defecto
+        tracker.classList.remove("collapsed");
+        localStorage.setItem("trackerCollapsed", "false");
+      }
     }
 
     // Configurar botón de toggle (expandir/colapsar)
