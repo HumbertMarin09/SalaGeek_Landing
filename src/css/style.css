@@ -4332,12 +4332,11 @@ img.lazy-loaded {
     max-width: 800px;
   }
 
-  /* TikTok card centrado (tercer card) */
+  /* TikTok card centrado (tercer card) - mismo ancho que las demás */
   .social-card:nth-child(3) {
     grid-column: 1 / -1;
-    max-width: 50%;
-    margin-left: auto;
-    margin-right: auto;
+    justify-self: center;
+    width: calc((100% - 1.5rem) / 2);
   }
 }
 
