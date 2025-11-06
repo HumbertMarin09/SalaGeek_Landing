@@ -688,8 +688,8 @@ function initHeroAnimations() {
   // Solución JavaScript universal - Mostrar letra por letra
   const fullText = typewriterElement.textContent;
   const chars = fullText.split("");
-  const duration = 1500; // 1.5 segundos (más rápido y fluido)
-  const charDuration = duration / chars.length; // ~115ms por carácter
+  const duration = 2500; // 2.5 segundos - más elegante y pausado
+  const charDuration = duration / chars.length; // ~190ms por carácter
 
   // Vaciar el elemento inicialmente
   typewriterElement.textContent = "";
@@ -711,20 +711,20 @@ function initHeroAnimations() {
           
           // Mostrar "Sala Geek" con animación después de completar typewriter
           if (heroBrand) {
-            heroBrand.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+            heroBrand.style.transition = "opacity 0.8s ease, transform 0.8s ease";
             heroBrand.style.opacity = "1";
             heroBrand.style.transform = "translateY(0)";
           }
           
           // Mostrar Achievement Tracker después del typewriter
-          // Se ejecuta 400ms después de "Sala Geek" para animación secuencial
+          // Se ejecuta 800ms después de "Sala Geek" para animación secuencial elegante
           if (typeof easterEggTracker !== 'undefined' && easterEggTracker.show) {
             easterEggTracker.show();
           }
-        }, 200);
+        }, 300);
       }
     }, charDuration);
-  }, 500); // Delay inicial
+  }, 800); // Delay inicial más pausado
 
   // Sistema inteligente: Hover rápido = sutil, Hover mantenido = explosión
   const badges = document.querySelectorAll(".hero-badge");
@@ -3434,7 +3434,7 @@ const easterEggTracker = {
       return;
     }
     
-    // Pequeño delay para que sea secuencial después del hero-brand
+    // Delay para que sea secuencial después del hero-brand
       setTimeout(() => {
         tracker.style.visibility = 'visible';
         
@@ -3442,7 +3442,7 @@ const easterEggTracker = {
         const isMobileView = window.innerWidth <= 480;
         console.log("� Ancho de pantalla:", window.innerWidth, "- Es mobile:", isMobileView);
         
-        // Usar Web Animations API para forzar la animación
+        // Usar Web Animations API para animación suave y elegante
         const animation = tracker.animate(
           [
             { 
@@ -3455,8 +3455,8 @@ const easterEggTracker = {
             }
           ],
           {
-            duration: 500,
-            easing: 'ease-out',
+            duration: 800, // Animación más elegante y pausada
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)', // Curva más suave
             fill: 'forwards'
           }
         );
@@ -3475,7 +3475,7 @@ const easterEggTracker = {
           tracker.style.transform = 'translate(0, 0)';
         };
         
-      }, 400); // 400ms después de que aparece "Sala Geek"
+      }, 800); // 800ms después de que aparece "Sala Geek" - más elegante
   },
   
   /**
