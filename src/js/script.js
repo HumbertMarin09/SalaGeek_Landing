@@ -3423,6 +3423,7 @@ const easterEggTracker = {
   /**
    * Muestra el Achievement Tracker con animación
    * Llamado después de que termina el typewriter
+   * Usa Web Animations API para compatibilidad con Android Chrome
    */
   show() {
     const tracker = document.getElementById("easter-egg-tracker");
@@ -3437,17 +3438,37 @@ const easterEggTracker = {
       
       // Pequeño delay para que sea secuencial después del hero-brand
       setTimeout(() => {
-        console.log("✨ Agregando clase show-tracker");
-        tracker.classList.add("show-tracker"); // Activa animación slideInRight
+        console.log("✨ Iniciando animación con Web Animations API");
         
-        // Verificar después de agregar la clase
-        setTimeout(() => {
-          console.log("📊 Estado después de show-tracker:", {
-            hasClass: tracker.classList.contains("show-tracker"),
-            opacity: window.getComputedStyle(tracker).opacity,
-            transform: window.getComputedStyle(tracker).transform
-          });
-        }, 100);
+        // Detectar si es mobile (ancho < 480px) para usar animación correcta
+        const isMobileView = window.innerWidth <= 480;
+        console.log("� Ancho de pantalla:", window.innerWidth, "- Es mobile:", isMobileView);
+        
+        // Usar Web Animations API para forzar la animación
+        const animation = tracker.animate(
+          [
+            { 
+              opacity: 0, 
+              transform: isMobileView ? 'translateY(400px)' : 'translateX(400px)'
+            },
+            { 
+              opacity: 1, 
+              transform: isMobileView ? 'translateY(0)' : 'translateX(0)'
+            }
+          ],
+          {
+            duration: 500,
+            easing: 'ease-out',
+            fill: 'forwards'
+          }
+        );
+        
+        animation.onfinish = () => {
+          console.log("✅ Animación completada");
+          // Mantener el estado final
+          tracker.style.opacity = '1';
+          tracker.style.transform = 'translate(0, 0)';
+        };
       }, 400); // 400ms después de que aparece "Sala Geek"
     } else {
       console.error("❌ ERROR: No se encontró #easter-egg-tracker");
