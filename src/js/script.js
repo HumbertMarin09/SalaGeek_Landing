@@ -688,8 +688,8 @@ function initHeroAnimations() {
   // Solución JavaScript universal - Mostrar letra por letra
   const fullText = typewriterElement.textContent;
   const chars = fullText.split("");
-  const duration = 2500; // 2.5 segundos - más elegante y pausado
-  const charDuration = duration / chars.length; // ~190ms por carácter
+  const duration = 1500; // 1.5 segundos - rápido y fluido
+  const charDuration = duration / chars.length; // ~115ms por carácter
 
   // Vaciar el elemento inicialmente
   typewriterElement.textContent = "";
