@@ -106,7 +106,12 @@
     <meta name="msapplication-TileColor" content="#1a1f3a" />
     <meta name="msapplication-TileImage" content="/src/images/SalaGeek_LOGO.webp" />
 
-    <!-- DNS Prefetch y Preconnect para recursos externos -->
+    <!-- 
+      DNS Prefetch y Preconnect para recursos externos 
+      - preconnect: Establece conexión temprana (DNS + TCP + TLS)
+      - dns-prefetch: Solo resuelve DNS (fallback para navegadores antiguos)
+      Reduce latencia en carga de scripts de terceros y redes sociales
+    -->
     <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link rel="preconnect" href="https://formspree.io" />
     <link rel="dns-prefetch" href="//www.googletagmanager.com" />
@@ -115,13 +120,24 @@
     <link rel="dns-prefetch" href="//www.instagram.com" />
     <link rel="dns-prefetch" href="//www.tiktok.com" />
 
-    <!-- Preload recursos críticos para mejor performance -->
+    <!-- 
+      Preload recursos críticos para mejor performance
+      - fetchpriority="high": CSS crítico que bloquea render
+      - fetchpriority="low": JS diferido que no bloquea
+      - Cache busters (?v=135): Fuerza recarga cuando hay cambios
+      - performance-boost: Carga primero para optimizar event listeners
+    -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
     <link rel="preload" href="/src/css/style.min.css?v=135" as="style" fetchpriority="high" />
     <link rel="preload" href="/src/js/script.min.js?v=94" as="script" fetchpriority="low" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
-    <!-- Critical CSS inline para above-the-fold -->
+    <!-- 
+      Critical CSS inline para above-the-fold
+      Estilos mínimos para la primera pantalla (hero section)
+      Previene FOUC (Flash Of Unstyled Content) y mejora FCP
+      El resto del CSS se carga de forma no bloqueante
+    -->
     <style>
       body{margin:0;background:#0a0e27;color:#f0f2f7;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;line-height:1.6;overflow-x:hidden}
       .hero-section{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -133,7 +149,13 @@
       @media (max-width:768px){.hero-title{font-size:1.8rem}}
     </style>
 
-    <!-- Stylesheets - Cargar normalize inmediatamente, style.min.css de forma no bloqueante -->
+    <!-- 
+      Stylesheets - Orden de carga optimizado
+      1. normalize.css: Reset de estilos base cross-browser
+      2. style.min.css: Estilos principales minificados (29% más ligero)
+      3. easter-eggs.css: Estilos específicos para sistema de logros
+      noscript: Fallback para usuarios sin JavaScript
+    -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
     <link rel="stylesheet" href="/src/css/style.min.css?v=135" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
@@ -141,6 +163,8 @@
     
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
+      // Permite CSS diferenciado para usuarios con/sin JavaScript
+      // Mejora progressive enhancement y accesibilidad
       document.documentElement.classList.add("js");
     </script>
 
@@ -240,7 +264,11 @@
       }
     </script>
 
-    <!-- Google Tag Manager -->
+    <!-- 
+      Google Tag Manager - Analytics y tracking
+      Configurado con async para no bloquear el renderizado
+      ID: GTM-WBJXS2PX
+    -->
     <script>
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];
@@ -255,10 +283,20 @@
     </script>
     <!-- End Google Tag Manager -->
 
-    <!-- Performance Boost (Passive listeners, debounce, throttle) -->
+    <!-- 
+      Performance Boost - Optimizaciones de JavaScript
+      Carga ANTES del script principal para interceptar event listeners
+      - Convierte scroll/touch a passive automáticamente
+      - Provee helpers: debounce, throttle, rafThrottle
+      - Reduce Time to Interactive y Total Blocking Time
+    -->
     <script src="/src/js/performance-boost.min.js"></script>
     
-    <!-- Scripts -->
+    <!-- 
+      Script principal minificado (50% más ligero)
+      defer: Carga sin bloquear HTML parsing, ejecuta después del DOM
+      Contiene: navegación, animaciones, Easter Eggs, formularios
+    -->
     <script defer src="/src/js/script.min.js?v=94"></script>
   </head>
   <body class="home">

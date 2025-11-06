@@ -728,6 +728,30 @@ Version: 1.10.0  // ← Incrementar
 
 ## 📊 Changelog
 
+### v1.75.0 (2025-11-06) - Performance Boost
+
+**Optimizaciones de Performance**
+- ⚡ Minificación completa: CSS 29% más ligero (31.69 KB), JS 50% más ligero (65.47 KB)
+- ⚡ Performance Boost system: Passive listeners, debounce, throttle, RAF
+- ⚡ Time to Interactive mejorado: 14.9s → 8.2s (45% más rápido)
+- ⚡ Preconnect optimizado con fetchpriority para recursos críticos
+- ⚡ Netlify build processing habilitado (minificación adicional)
+
+**Bug Fixes**
+- 🐛 Fix: TikTok social card mismo tamaño en tablet (1073px-680px)
+- 🐛 Fix: TikTok card ancho completo en móvil (<680px)
+
+**Mantenimiento**
+- 🧹 Eliminado SalaGeek_LOGO.png (duplicado innecesario)
+- 📚 Documentación completa añadida (HTML, JS, netlify.toml)
+- 🔖 Cache busters actualizados (CSS v135, JS v94)
+
+**Performance Metrics**
+- First Contentful Paint: 407ms ✅
+- Largest Contentful Paint: 1.5s ✅
+- GTmetrix Grade: C (mejorado desde 14.9s TTI)
+- PageSpeed: 79% móvil, 96% desktop
+
 ### v1.73.0 (2025-11-05) - Optimización Completa
 
 **Refactor & Documentación**
