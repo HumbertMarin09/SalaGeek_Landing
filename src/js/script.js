@@ -1,7 +1,7 @@
-/* ============================================
+﻿/* ============================================
    SALA GEEK - MAIN JAVASCRIPT
-   Version: 1.73.0 (Optimizado)
-   Last Modified: 2025-11-05
+   Version: 1.74.0 (Optimizado y Depurado)
+   Last Modified: 2025-11-06
    
    📋 ARQUITECTURA DEL PROYECTO:
    
@@ -765,7 +765,8 @@ function initHeroAnimations() {
     });
   });
 
-  // Easter egg: Efecto especial al hacer triple click en "Sala Geek"
+  // ❌ DESACTIVADO - Triple click en "Sala Geek" para efecto arcoíris removido
+  /*
   const heroBrandEasterEgg = document.querySelector(".hero-brand");
   if (heroBrandEasterEgg) {
     let clickCount = 0;
@@ -796,6 +797,7 @@ function initHeroAnimations() {
       }, 500);
     });
   }
+  */
 }
 
 /* ============================================
@@ -1723,7 +1725,7 @@ function playBeep(frequencies, durations) {
     }, totalDuration);
     
   } catch (error) {
-    console.log("⚠️ Audio no disponible:", error);
+    // console.log("⚠️ Audio no disponible:", error);
     isSoundPlaying = false;
   }
 }
@@ -1736,7 +1738,7 @@ function playSound(soundName) {
   if (soundLibrary[soundName]) {
     soundLibrary[soundName]();
   } else {
-    console.warn(`⚠️ Sonido "${soundName}" no encontrado`);
+    // console.warn(`⚠️ Sonido "${soundName}" no encontrado`);
   }
 }
 
@@ -1777,7 +1779,7 @@ function initKonamiCode() {
 
     if (isMatch) {
       konamiIndex++;
-      console.log(`🎮 Konami: ${konamiIndex}/${konamiCode.length}`);
+      // console.log(`🎮 Konami: ${konamiIndex}/${konamiCode.length}`);
 
       if (konamiIndex === konamiCode.length) {
         activateNESMode();
@@ -1786,7 +1788,7 @@ function initKonamiCode() {
       }
     } else {
       if (konamiIndex > 0) {
-        console.log("❌ Konami reset");
+        // console.log("❌ Konami reset");
       }
       konamiIndex = 0;
     }
@@ -1996,10 +1998,6 @@ function activateNESMode() {
 
 // EASTER EGG 2: DOBLE CLICK EN "SALA GEEK" DEL HERO
 function initLogoEasterEgg() {
-  // Solo en desktop - deshabilitado en móvil
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) return;
-  
   // Esperar a que el hero se cargue
   setTimeout(() => {
     const heroTitle = document.querySelector(".hero-content h1");
@@ -2009,6 +2007,10 @@ function initLogoEasterEgg() {
     let clickTimer = null;
 
     heroTitle.addEventListener("click", (e) => {
+      // Solo en desktop (> 968px)
+      const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile || window.innerWidth <= 968) return;
+      
       e.preventDefault();
       clickCount++;
 
@@ -2346,7 +2348,7 @@ function initTimeEasterEgg() {
 }
 
 function activateJumpScare() {
-  console.log("🚨 JUMPSCARE ACTIVADO!");
+  // console.log("🚨 JUMPSCARE ACTIVADO!");
   playSound("error");
   
   // Overlay negro que aparece súbitamente
@@ -2423,15 +2425,15 @@ function activateJumpScare() {
 
 // EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA (Desktop only)
 function initCornerClicks() {
-  // Solo en desktop
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) return;
-
   const sequence = ["top-left", "top-right", "bottom-right", "bottom-left"];
   let currentStep = 0;
   let lastClickTime = Date.now();
 
   document.addEventListener("click", (e) => {
+    // Solo en desktop (> 968px)
+    const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobileDevice || window.innerWidth <= 968) return;
+    
     const x = e.clientX;
     const y = e.clientY;
     const w = window.innerWidth;
@@ -2574,10 +2576,6 @@ function activateDeveloperConsole() {
 
 // EASTER EGG 6: SHAKE DEL MOUSE (Desktop only - MEJORADO)
 function initMouseShake() {
-  // Solo en desktop
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) return;
-
   let lastX = 0;
   let lastY = 0;
   let shakeCount = 0;
@@ -2587,6 +2585,10 @@ function initMouseShake() {
   const requiredShakes = 15; // Aumentado para más consistencia
 
   document.addEventListener("mousemove", (e) => {
+    // Solo en desktop (> 968px)
+    const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobileDevice || window.innerWidth <= 968) return;
+    
     // No activar si ya se activó
     if (shakeActivated) return;
 
@@ -2701,6 +2703,10 @@ function activateMouseDodge() {
 // EASTER EGG 7: COMBO DE TECLADO (Ctrl + Shift + G)
 function initKeyboardCombo() {
   document.addEventListener("keydown", (e) => {
+    // Solo en desktop (> 968px)
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile || window.innerWidth <= 968) return;
+    
     if (e.ctrlKey && e.shiftKey && e.key === "G") {
       e.preventDefault();
       activateGeekMode();
@@ -3282,12 +3288,12 @@ const easterEggTracker = {
     scroll: false,     // Scroll hasta el final de la página
   },
   
-  // Detección de plataforma móvil
-  isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+  // Detección de plataforma móvil (dispositivo táctil O pantalla ≤ 968px)
+  isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 968,
   
   /**
    * Retorna el total de Easter Eggs disponibles según la plataforma
-   * @returns {number} 6 para móvil, 9 para desktop
+   * @returns {number} 6 para móvil/tablet, 9 para desktop
    */
   getTotalEggs() {
     // MÓVIL: 6 eggs (konami, logo, retro, thanos, combo, scroll)
@@ -3312,9 +3318,9 @@ const easterEggTracker = {
         { name: "Cazador", min: 2, max: 3 },       // 2-3/6 = 33-50%
         { name: "Maestro", min: 4, max: 4 },       // 4/6 = 66%
         { name: "Leyenda", min: 5, max: 5 },       // 5/6 = 83%
-        { name: "Dios Geek", min: 6, max: 6 },     // 6/6 = 100% ✅
+        { name: "Dios Geek", min: 6, max: Infinity },     // 6+/6 = 100% ✅
       ];
-      return levels.find(level => count >= level.min && count <= level.max);
+      return levels.find(level => count >= level.min && count <= level.max) || levels[0];
     } else {
       // DESKTOP: 9 Easter Eggs totales
       const levels = [
@@ -3323,9 +3329,9 @@ const easterEggTracker = {
         { name: "Cazador", min: 3, max: 4 },       // 3-4/9 = 33-44%
         { name: "Maestro", min: 5, max: 6 },       // 5-6/9 = 55-66%
         { name: "Leyenda", min: 7, max: 8 },       // 7-8/9 = 77-88%
-        { name: "Dios Geek", min: 9, max: 9 },     // 9/9 = 100% ✅
+        { name: "Dios Geek", min: 9, max: Infinity },     // 9+/9 = 100% ✅
       ];
-      return levels.find(level => count >= level.min && count <= level.max);
+      return levels.find(level => count >= level.min && count <= level.max) || levels[0];
     }
   },
 
@@ -3361,28 +3367,13 @@ const easterEggTracker = {
       }
     }
 
-    // Configurar estado inicial del tracker según plataforma
+    // Configurar estado inicial del tracker: SIEMPRE colapsado al inicio
     const tracker = document.getElementById("easter-egg-tracker");
-    const trackerCollapsed = localStorage.getItem("trackerCollapsed");
     
     if (tracker) {
-      // Si hay preferencia guardada, respetarla
-      if (trackerCollapsed !== null) {
-        if (trackerCollapsed === "true") {
-          tracker.classList.add("collapsed");
-        } else {
-          tracker.classList.remove("collapsed");
-        }
-      } else {
-        // Sin preferencia guardada: Desktop abierto, Móvil cerrado
-        if (this.isMobile) {
-          tracker.classList.add("collapsed");
-          localStorage.setItem("trackerCollapsed", "true");
-        } else {
-          tracker.classList.remove("collapsed");
-          localStorage.setItem("trackerCollapsed", "false");
-        }
-      }
+      // SIEMPRE inicia colapsado, sin importar la preferencia previa
+      tracker.classList.add("collapsed");
+      localStorage.setItem("trackerCollapsed", "true");
     }
 
     // Configurar botón de toggle (expandir/colapsar)
@@ -3417,6 +3408,55 @@ const easterEggTracker = {
 
     // Ajustar posición del tracker según scroll para no cubrir el footer
     this.initTrackerPositioning();
+    
+    // Listener de resize para actualizar detección de plataforma dinámicamente
+    this.initResizeListener();
+  },
+  
+  /**
+   * Actualiza la detección de plataforma y el UI cuando cambia el tamaño de ventana
+   */
+  updatePlatformDetection() {
+    const wasMode = this.isMobile;
+    
+    // Re-detectar plataforma
+    this.isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 968;
+    
+    // Si cambió el modo (desktop <-> mobile)
+    if (wasMode !== this.isMobile) {
+      console.log(`📱 Cambio de plataforma detectado: ${this.isMobile ? 'Mobile/Tablet (≤968px)' : 'Desktop (>968px)'}`);
+      
+      // Actualizar estilos CSS para ocultar/mostrar eggs desktop-only
+      const style = document.getElementById('tracker-mobile-styles');
+      if (this.isMobile && !style) {
+        const newStyle = document.createElement('style');
+        newStyle.id = 'tracker-mobile-styles';
+        newStyle.textContent = `
+          .achievement.desktop-only {
+            display: none !important;
+          }
+        `;
+        document.head.appendChild(newStyle);
+      } else if (!this.isMobile && style) {
+        style.remove();
+      }
+      
+      // Actualizar UI con nuevo total de eggs
+      this.updateUI();
+    }
+  },
+  
+  /**
+   * Inicializa listener de resize para detectar cambios de plataforma
+   */
+  initResizeListener() {
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.updatePlatformDetection();
+      }, 250); // Debounce de 250ms
+    });
   },
 
   initTrackerPositioning() {
@@ -3506,7 +3546,17 @@ const easterEggTracker = {
   },
 
   getUnlockedCount() {
-    return Object.values(this.eggs).filter(Boolean).length;
+    // Lista de eggs disponibles según plataforma
+    const mobileEggs = ['konami', 'logo', 'retro', 'thanos', 'combo', 'scroll'];
+    const desktopOnlyEggs = ['matrix', 'corners', 'shake'];
+    
+    // Si es móvil, solo contar los eggs de mobile
+    if (this.isMobile) {
+      return mobileEggs.filter(eggName => this.eggs[eggName]).length;
+    } else {
+      // Si es desktop, contar todos los eggs (mobile + desktop)
+      return Object.values(this.eggs).filter(Boolean).length;
+    }
   },
 
   updateUI() {
@@ -3701,87 +3751,103 @@ const easterEggTracker = {
 // ============================================
 
 function initMobileEasterEggs() {
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
-  if (!isMobile) return; // Solo ejecutar en móvil
-
-  console.log("📱 Modo móvil detectado - Easter Eggs táctiles activados (versión optimizada)");
-
   const hero = document.querySelector(".hero");
   const mobileHeroTitle = document.querySelector(".hero-content h1");
 
-  // 1. TRIPLE TAP en el TÍTULO "Sala Geek" -> Konami alternativo
+  console.log("📱 Inicializando Easter Eggs Mobile...");
+
+  // 1. TRIPLE TAP/CLICK en el TÍTULO "Sala Geek" -> Konami alternativo
   let titleTapCount = 0;
   let titleTapTimer = null;
   
+  const handleTitleTap = (e) => {
+    // Solo funciona en móvil/tablet (≤ 968px)
+    if (window.innerWidth > 968) return;
+    
+    console.log(`Tap/Click en título - width: ${window.innerWidth}, count: ${titleTapCount + 1}`);
+    e.preventDefault();
+    titleTapCount++;
+    
+    if (titleTapTimer) clearTimeout(titleTapTimer);
+    
+    if (titleTapCount === 3) {
+      console.log("✅ Triple tap completado! Activando NES Mode");
+      activateNESMode();
+      easterEggTracker.unlock("konami");
+      titleTapCount = 0;
+    }
+    
+    titleTapTimer = setTimeout(() => {
+      titleTapCount = 0;
+    }, 600);
+  };
+  
   if (mobileHeroTitle) {
-    mobileHeroTitle.addEventListener("touchend", (e) => {
-      e.preventDefault();
-      titleTapCount++;
-      
-      if (titleTapTimer) clearTimeout(titleTapTimer);
-      
-      if (titleTapCount === 3) {
-        activateNESMode();
-        easterEggTracker.unlock("konami");
-        titleTapCount = 0;
-      }
-      
-      titleTapTimer = setTimeout(() => {
-        titleTapCount = 0;
-      }, 600);
-    });
+    // Soporte para touch Y click (para funcionar en responsive mode)
+    mobileHeroTitle.addEventListener("touchend", handleTitleTap);
+    mobileHeroTitle.addEventListener("click", handleTitleTap);
   }
 
-  // 2. LONG PRESS en botón CTA "Únete Ahora" -> Modo 8-bit
+  // 2. LONG PRESS/HOLD en botón CTA "Únete Ahora" -> Modo 8-bit
   let ctaLongPressTimer = null;
   let ctaLongPressActivated = false;
   const ctaButton = document.querySelector(".hero-cta .btn-primary");
   
-  if (ctaButton) {
-    ctaButton.addEventListener("touchstart", (e) => {
+  const handleCtaStart = (e) => {
+    if (window.innerWidth > 968) return;
+    
+    console.log("🔘 Long press iniciado en CTA");
+    ctaLongPressActivated = false;
+    
+    // Feedback visual INMEDIATO
+    ctaButton.style.transform = "scale(0.95)";
+    ctaButton.style.transition = "transform 0.1s ease";
+    
+    ctaLongPressTimer = setTimeout(() => {
+      console.log("✅ Long press completado! Activando 8-bit Mode");
+      ctaLongPressActivated = true;
+      activate8BitMode();
+      easterEggTracker.unlock("retro");
+      
+      // Feedback visual y haptic
+      ctaButton.style.transform = "scale(1.1)";
+      ctaButton.style.boxShadow = "0 0 20px var(--accent-primary)";
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      
+      setTimeout(() => {
+        ctaButton.style.transform = "";
+        ctaButton.style.boxShadow = "";
+      }, 500);
+    }, 600);
+  };
+  
+  const handleCtaEnd = (e) => {
+    clearTimeout(ctaLongPressTimer);
+    ctaButton.style.transform = "";
+    
+    if (ctaLongPressActivated) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
       ctaLongPressActivated = false;
-      
-      // Feedback visual INMEDIATO al tocar
-      ctaButton.style.transform = "scale(0.95)";
-      ctaButton.style.transition = "transform 0.1s ease";
-      
-      ctaLongPressTimer = setTimeout(() => {
-        ctaLongPressActivated = true;
-        activate8BitMode();
-        easterEggTracker.unlock("retro");
-        
-        // Feedback visual y haptic
-        ctaButton.style.transform = "scale(1.1)";
-        ctaButton.style.boxShadow = "0 0 20px var(--accent-primary)";
-        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        
-        setTimeout(() => {
-          ctaButton.style.transform = "";
-          ctaButton.style.boxShadow = "";
-        }, 500);
-      }, 600); // Reducido de 800ms a 600ms
-    }, { passive: false });
+      return false;
+    }
+  };
+  
+  const handleCtaMove = (e) => {
+    clearTimeout(ctaLongPressTimer);
+  };
+  
+  if (ctaButton) {
+    // Soporte para touch
+    ctaButton.addEventListener("touchstart", handleCtaStart, { passive: false });
+    ctaButton.addEventListener("touchend", handleCtaEnd, { passive: false });
+    ctaButton.addEventListener("touchmove", handleCtaMove);
     
-    ctaButton.addEventListener("touchend", (e) => {
-      clearTimeout(ctaLongPressTimer);
-      
-      // Restaurar feedback visual
-      ctaButton.style.transform = "";
-      
-      // Si se activó el long press, prevenir navegación
-      if (ctaLongPressActivated) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        ctaLongPressActivated = false;
-        return false;
-      }
-    }, { passive: false });
-    
-    ctaButton.addEventListener("touchmove", (e) => {
-      clearTimeout(ctaLongPressTimer);
-    });
+    // Soporte para click/hold (responsive mode)
+    ctaButton.addEventListener("mousedown", handleCtaStart);
+    ctaButton.addEventListener("mouseup", handleCtaEnd);
+    ctaButton.addEventListener("mouseleave", handleCtaEnd);
     
     // Prevenir click si long press fue activado
     ctaButton.addEventListener("click", (e) => {
@@ -3800,64 +3866,76 @@ function initMobileEasterEggs() {
   let newsletterLongPressTimer = null;
   const newsletterInput = document.querySelector(".newsletter-form input[type='email']");
   
+  const handleNewsletterStart = (e) => {
+    if (window.innerWidth > 968) return;
+    
+    console.log("📧 Long press iniciado en Newsletter");
+    newsletterInput.style.borderColor = "var(--accent-secondary)";
+    newsletterInput.style.transform = "scale(0.98)";
+    newsletterInput.style.transition = "all 0.1s ease";
+    
+    newsletterLongPressTimer = setTimeout(() => {
+      console.log("✅ Long press completado! Activando Glitch Stats");
+      activateGlitchStats();
+      easterEggTracker.unlock("logo");
+      newsletterInput.style.borderColor = "var(--accent-primary)";
+      newsletterInput.style.transform = "scale(1.02)";
+      if (navigator.vibrate) navigator.vibrate(200);
+      setTimeout(() => {
+        newsletterInput.style.borderColor = "";
+        newsletterInput.style.transform = "";
+      }, 500);
+    }, 600);
+  };
+  
+  const handleNewsletterEnd = () => {
+    clearTimeout(newsletterLongPressTimer);
+    newsletterInput.style.borderColor = "";
+    newsletterInput.style.transform = "";
+  };
+  
   if (newsletterInput) {
-    newsletterInput.addEventListener("touchstart", (e) => {
-      // Feedback visual INMEDIATO
-      newsletterInput.style.borderColor = "var(--accent-secondary)";
-      newsletterInput.style.transform = "scale(0.98)";
-      newsletterInput.style.transition = "all 0.1s ease";
-      
-      newsletterLongPressTimer = setTimeout(() => {
-        activateGlitchStats();
-        easterEggTracker.unlock("logo");
-        // Feedback visual de éxito
-        newsletterInput.style.borderColor = "var(--accent-primary)";
-        newsletterInput.style.transform = "scale(1.02)";
-        if (navigator.vibrate) navigator.vibrate(200);
-        setTimeout(() => {
-          newsletterInput.style.borderColor = "";
-          newsletterInput.style.transform = "";
-        }, 500);
-      }, 600); // Reducido de 1000ms a 600ms
-    });
+    // Soporte para touch
+    newsletterInput.addEventListener("touchstart", handleNewsletterStart);
+    newsletterInput.addEventListener("touchend", handleNewsletterEnd);
+    newsletterInput.addEventListener("touchmove", handleNewsletterEnd);
     
-    newsletterInput.addEventListener("touchend", () => {
-      clearTimeout(newsletterLongPressTimer);
-      // Restaurar estilos
-      newsletterInput.style.borderColor = "";
-      newsletterInput.style.transform = "";
-    });
-    
-    newsletterInput.addEventListener("touchmove", () => {
-      clearTimeout(newsletterLongPressTimer);
-      // Restaurar estilos
-      newsletterInput.style.borderColor = "";
-      newsletterInput.style.transform = "";
-    });
+    // Soporte para mouse (responsive mode)
+    newsletterInput.addEventListener("mousedown", handleNewsletterStart);
+    newsletterInput.addEventListener("mouseup", handleNewsletterEnd);
+    newsletterInput.addEventListener("mouseleave", handleNewsletterEnd);
   }
 
-  // 4. DOBLE TAP en copyright del footer -> Thanos Snap
+  // 4. DOBLE TAP/CLICK en copyright del footer -> Thanos Snap
   let copyrightTapCount = 0;
   let copyrightTapTimer = null;
   const copyright = document.querySelector(".footer-bottom p");
   
+  const handleCopyrightTap = (e) => {
+    if (window.innerWidth > 968) return;
+    
+    console.log(`Tap/Click en copyright - width: ${window.innerWidth}, count: ${copyrightTapCount + 1}`);
+    e.preventDefault();
+    copyrightTapCount++;
+    
+    if (copyrightTapTimer) clearTimeout(copyrightTapTimer);
+    
+    if (copyrightTapCount === 2) {
+      console.log("✅ Doble tap completado! Activando Thanos Snap");
+      activateSnapEffect();
+      easterEggTracker.unlock("thanos");
+      copyrightTapCount = 0;
+    }
+    
+    copyrightTapTimer = setTimeout(() => {
+      copyrightTapCount = 0;
+    }, 500);
+  };
+  
   if (copyright) {
-    copyright.addEventListener("touchend", (e) => {
-      e.preventDefault();
-      copyrightTapCount++;
-      
-      if (copyrightTapTimer) clearTimeout(copyrightTapTimer);
-      
-      if (copyrightTapCount === 2) {
-        activateSnapEffect();
-        easterEggTracker.unlock("thanos");
-        copyrightTapCount = 0;
-      }
-      
-      copyrightTapTimer = setTimeout(() => {
-        copyrightTapCount = 0;
-      }, 500);
-    });
+    // Soporte para touch Y click
+    copyright.addEventListener("touchend", handleCopyrightTap);
+    copyright.addEventListener("click", handleCopyrightTap);
   }
 
   // ============================================
@@ -3944,43 +4022,55 @@ function initMobileEasterEggs() {
         }, 4000);
       };
       
-      // EVENT: Touch Start - Inicia el temporizador de long press
-      footerBrand.addEventListener("touchstart", (e) => {
-        console.log("👆 Touch start detectado"); // DEBUG LOG
+      // HANDLER: Long Press Start (touch o mouse)
+      const handleFooterStart = (e) => {
+        // Solo funciona en móvil/tablet (≤ 968px)
+        if (window.innerWidth > 968) return;
         
-        // Feedback visual INMEDIATO para que usuario sepa que está tocando correctamente
-        footerBrand.style.transform = "scale(0.95)"; // Pequeña reducción de escala
-        footerBrand.style.color = "var(--accent-primary)"; // Cambio de color
-        footerBrand.style.border = "2px solid var(--accent-primary)"; // Borde azul (debugging visual)
+        console.log("👆 Long press iniciado en Footer - width:", window.innerWidth); // DEBUG LOG
+        
+        // Feedback visual INMEDIATO
+        footerBrand.style.transform = "scale(0.95)";
+        footerBrand.style.color = "var(--accent-primary)";
+        footerBrand.style.border = "2px solid var(--accent-primary)";
         footerBrand.style.transition = "all 0.1s ease";
         
         // Iniciar temporizador de 600ms
         footerBrandLongPress = setTimeout(() => {
-          console.log("⏰ Timeout alcanzado - activando combo"); // DEBUG LOG
-          activateCombo(); // Activar el efecto
+          console.log("✅ Long press completado! Activando Combo Breaker"); // DEBUG LOG
+          activateCombo();
         }, 600);
-      }, { passive: true }); // passive: no bloquear scroll
+      };
       
-      // EVENT: Touch End - Cancela si suelta antes de 600ms
-      footerBrand.addEventListener("touchend", () => {
-        console.log("👆 Touch end detectado"); // DEBUG LOG
-        clearTimeout(footerBrandLongPress); // Cancelar temporizador
-        
-        // Restaurar estilos originales
-        footerBrand.style.transform = "";
-        footerBrand.style.color = "";
-        footerBrand.style.border = "2px solid transparent";
-      }, { passive: true });
-      
-      // EVENT: Touch Move - Cancela si mueve el dedo (no es long press estático)
-      footerBrand.addEventListener("touchmove", () => {
-        console.log("👆 Touch move detectado - cancelando"); // DEBUG LOG
+      // HANDLER: Long Press End
+      const handleFooterEnd = () => {
+        console.log("👆 Long press terminado"); // DEBUG LOG
         clearTimeout(footerBrandLongPress);
+        
         // Restaurar estilos
         footerBrand.style.transform = "";
         footerBrand.style.color = "";
         footerBrand.style.border = "2px solid transparent";
-      }, { passive: true });
+      };
+      
+      // HANDLER: Touch/Mouse Move - Cancela
+      const handleFooterMove = () => {
+        console.log("👆 Movimiento detectado - cancelando"); // DEBUG LOG
+        clearTimeout(footerBrandLongPress);
+        footerBrand.style.transform = "";
+        footerBrand.style.color = "";
+        footerBrand.style.border = "2px solid transparent";
+      };
+      
+      // EVENT: Touch events
+      footerBrand.addEventListener("touchstart", handleFooterStart, { passive: true });
+      footerBrand.addEventListener("touchend", handleFooterEnd, { passive: true });
+      footerBrand.addEventListener("touchmove", handleFooterMove, { passive: true });
+      
+      // EVENT: Mouse events (para responsive mode)
+      footerBrand.addEventListener("mousedown", handleFooterStart);
+      footerBrand.addEventListener("mouseup", handleFooterEnd);
+      footerBrand.addEventListener("mouseleave", handleFooterEnd);
     } else {
       console.log("❌ Footer Brand (strong) NO encontrado después de timeout");
       
@@ -4032,47 +4122,45 @@ function initMobileEasterEggs() {
   }, 5000);
 }
 
+// Variable global para verificar el modo actual dinámicamente
+function isMobileMode() {
+  const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return isMobileDevice || window.innerWidth <= 968;
+}
+
 // INICIALIZAR TODOS LOS EASTER EGGS
 function initAllEasterEggs() {
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  // 🚫 NO ejecutar Easter Eggs en páginas legales
+  const isLegalPage = window.location.pathname.includes("/legal/");
+  if (isLegalPage) {
+    console.log("🚫 Easter Eggs desactivados en página legal");
+    return;
+  }
   
-  // Easter Eggs universales (Desktop + Mobile)
+  // Easter Eggs universales (siempre activos)
   initKonamiCode(); // ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA
   initSecretWords(); // matrix, retro, thanos
   initScrollSecret(); // Scroll al 100%
   initSpecialDates(); // Fechas especiales
   
-  // Easter Eggs solo Desktop
-  if (!isMobile) {
-    initLogoEasterEgg(); // Doble click en logo
-    initTimeEasterEgg(); // Hora 3:33
-    initCornerClicks(); // 4 esquinas
-    initMouseShake(); // Shake mouse
-    initKeyboardCombo(); // Ctrl+Shift+G
-    
-    console.log(
-      "%c🖥️ EASTER EGGS DESKTOP ACTIVADOS",
-      "color: #ffd166; font-size: 14px; font-weight: bold; background: #1a1a2e; padding: 5px 10px; border-radius: 5px;",
-    );
-    console.log(
-      "%c9 secretos esperando ser descubiertos...",
-      "color: #48bb78; font-size: 12px;",
-    );
-  }
+  // Inicializar TODOS los eventos (con verificación interna de modo)
+  initLogoEasterEgg(); // ✅ Doble clic en "Sala Geek" para efecto Glitch (desktop)
+  initTimeEasterEgg();
+  initCornerClicks();
+  initMouseShake();
+  initKeyboardCombo();
+  initMobileEasterEggs();
   
-  // Easter Eggs solo Mobile
-  if (isMobile) {
-    initMobileEasterEggs();
-    
-    console.log(
-      "%c📱 EASTER EGGS MOBILE ACTIVADOS",
-      "color: #ff6b6b; font-size: 14px; font-weight: bold; background: #1a1a2e; padding: 5px 10px; border-radius: 5px;",
-    );
-    console.log(
-      "%c6 secretos optimizados para touch...",
-      "color: #48bb78; font-size: 12px;",
-    );
-  }
+  // Actualizar tracker cuando cambia el tamaño
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      easterEggTracker.updatePlatformDetection();
+    }, 250);
+  });
+  
+  // console.log(`🎮 Easter Eggs inicializados - Modo: ${isMobileMode() ? 'Mobile/Tablet (≤968px)' : 'Desktop (>968px)'}`);
   
   // Inicializar tracker (universal)
   easterEggTracker.init();
