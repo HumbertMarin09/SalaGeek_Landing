@@ -19,25 +19,8 @@
   display: flex;
   flex-direction: column;
   
-  /* Oculto inicialmente - animación controlada por JavaScript después del typewriter */
-  opacity: 0;
-  transform: translateX(400px);
-}
-
-/* Animación slideInRight - se aplica cuando JavaScript agrega la clase */
-.easter-egg-tracker.show-tracker {
-  animation: slideInRight 0.5s ease-out forwards;
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(400px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  /* Oculto inicialmente - JavaScript controla visibilidad y animación */
+  visibility: hidden;
 }
 
 .easter-egg-tracker.collapsed .tracker-content {
@@ -303,14 +286,6 @@
     right: 10px;
     bottom: 15px;
     max-height: 80vh;
-    /* Oculto inicialmente en tablet también */
-    opacity: 0 !important;
-    transform: translateX(400px) !important;
-  }
-
-  /* Animación slideInRight para tablet */
-  .easter-egg-tracker.show-tracker {
-    animation: slideInRight 0.5s ease-out forwards !important;
   }
 
   .tracker-content {
@@ -347,25 +322,6 @@
     right: 10px;
     bottom: 10px;
     max-height: 75vh;
-    /* Oculto inicialmente en mobile - desde abajo para mobile */
-    opacity: 0 !important;
-    transform: translateY(400px) !important;
-  }
-
-  /* Animación slideInUp para mobile (desde abajo) */
-  .easter-egg-tracker.show-tracker {
-    animation: slideInUp 0.5s ease-out forwards !important;
-  }
-
-  @keyframes slideInUp {
-    from {
-      opacity: 0;
-      transform: translateY(400px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   .tracker-content {
