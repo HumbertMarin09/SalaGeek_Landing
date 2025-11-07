@@ -3829,7 +3829,7 @@ function initMobileEasterEggs() {
   const hero = document.querySelector(".hero");
   const mobileHeroTitle = document.querySelector(".hero-content h1");
 
-  console.log("📱 Inicializando Easter Eggs Mobile...");
+  // console.log("📱 Inicializando Easter Eggs Mobile...");
 
   // 1. TRIPLE TAP/CLICK en el TÍTULO "Sala Geek" -> Konami alternativo
   let titleTapCount = 0;
@@ -3839,14 +3839,14 @@ function initMobileEasterEggs() {
     // Solo funciona en móvil/tablet (≤ 968px)
     if (window.innerWidth > 968) return;
 
-    console.log(`Tap/Click en título - width: ${window.innerWidth}, count: ${titleTapCount + 1}`);
+    // console.log(`Tap/Click en título - width: ${window.innerWidth}, count: ${titleTapCount + 1}`);
     e.preventDefault();
     titleTapCount++;
 
     if (titleTapTimer) clearTimeout(titleTapTimer);
 
     if (titleTapCount === 3) {
-      console.log("✅ Triple tap completado! Activando NES Mode");
+      // console.log("✅ Triple tap completado! Activando NES Mode");
       activateNESMode();
       easterEggTracker.unlock("konami");
       titleTapCount = 0;
@@ -3871,7 +3871,7 @@ function initMobileEasterEggs() {
   const handleCtaStart = (e) => {
     if (window.innerWidth > 968) return;
 
-    console.log("🔘 Long press iniciado en CTA");
+    // console.log("🔘 Long press iniciado en CTA");
     ctaLongPressActivated = false;
 
     // Feedback visual INMEDIATO
@@ -3879,7 +3879,7 @@ function initMobileEasterEggs() {
     ctaButton.style.transition = "transform 0.1s ease";
 
     ctaLongPressTimer = setTimeout(() => {
-      console.log("✅ Long press completado! Activando 8-bit Mode");
+      // console.log("✅ Long press completado! Activando 8-bit Mode");
       ctaLongPressActivated = true;
       activate8BitMode();
       easterEggTracker.unlock("retro");
@@ -3934,7 +3934,7 @@ function initMobileEasterEggs() {
       }
     });
   } else {
-    console.log("❌ CTA Button NO encontrado");
+    // console.log("❌ CTA Button NO encontrado");
   }
 
   // 3. LONG PRESS en email input del Newsletter -> Glitch Stats
@@ -3944,13 +3944,13 @@ function initMobileEasterEggs() {
   const handleNewsletterStart = (e) => {
     if (window.innerWidth > 968) return;
 
-    console.log("📧 Long press iniciado en Newsletter");
+    // console.log("📧 Long press iniciado en Newsletter");
     newsletterInput.style.borderColor = "var(--accent-secondary)";
     newsletterInput.style.transform = "scale(0.98)";
     newsletterInput.style.transition = "all 0.1s ease";
 
     newsletterLongPressTimer = setTimeout(() => {
-      console.log("✅ Long press completado! Activando Glitch Stats");
+      // console.log("✅ Long press completado! Activando Glitch Stats");
       activateGlitchStats();
       easterEggTracker.unlock("logo");
       newsletterInput.style.borderColor = "var(--accent-primary)";
@@ -3989,9 +3989,9 @@ function initMobileEasterEggs() {
   const handleCopyrightTap = (e) => {
     if (window.innerWidth > 968) return;
 
-    console.log(
-      `Tap/Click en copyright - width: ${window.innerWidth}, count: ${copyrightTapCount + 1}`
-    );
+    // console.log(
+    //   `Tap/Click en copyright - width: ${window.innerWidth}, count: ${copyrightTapCount + 1}`
+    // );
     e.preventDefault();
     copyrightTapCount++;
 
