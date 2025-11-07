@@ -222,9 +222,9 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=150" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=151" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=150" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=151" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
@@ -594,6 +594,11 @@
       <!-- Weekly News Section -->
       <section id="weekly-news" class="weekly-news-section">
         <div class="container">
+          <!-- Badge de actualización semanal -->
+          <div class="news-badge" data-scroll="fade-down">
+            ✨ ACTUALIZADO SEMANALMENTE
+          </div>
+          
           <h2 class="section-title" data-scroll="fade-down">
             🔥 Esta Semana en el Mundo Geek
           </h2>
@@ -602,8 +607,9 @@
           </p>
 
           <div class="news-grid" data-scroll="fade-up" data-scroll-delay="200">
-            <!-- News Card 1 - Gaming -->
-            <article class="news-card">
+            <!-- News Card 1 - Gaming (DESTACADA) -->
+            <article class="news-card featured-news">
+              <div class="featured-badge">⭐ DESTACADA</div>
               <div class="news-category gaming">🎮 GAMING</div>
               <h3 class="news-title">GTA 6 retrasado hasta finales de 2026</h3>
               <p class="news-description">
