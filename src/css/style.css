@@ -5087,6 +5087,27 @@ img.lazy-loaded {
   }
 }
 
+/* Móvil: Banner más compacto para no estorbar */
+@media (max-width: 576px) {
+  .cookie-consent {
+    padding: 1rem;
+  }
+
+  .cookie-inner {
+    gap: 1rem;
+  }
+
+  .cookie-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .cookie-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.875rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
