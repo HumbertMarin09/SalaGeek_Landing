@@ -354,9 +354,6 @@
     -->
     <script src="/src/js/performance-boost.min.js"></script>
 
-    <!-- Google reCAPTCHA v3 -->
-    <script src="https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB"></script>
-
     <!-- 
       Script principal minificado (50% más ligero)
       defer: Carga sin bloquear HTML parsing, ejecuta después del DOM
@@ -364,6 +361,13 @@
     -->
     <!-- Main Script - Deferred for non-blocking load -->
     <script defer src="/src/js/script.min.js?v=109"></script>
+
+    <!-- Google reCAPTCHA v3 - Async para no bloquear carga -->
+    <script
+      src="https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB"
+      async
+      defer
+    ></script>
   </head>
   <body class="home">
     <!-- Google Tag Manager (noscript) -->

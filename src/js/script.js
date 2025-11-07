@@ -1025,15 +1025,26 @@ function initNewsletterForm() {
   const waitForRecaptcha = () => {
     return new Promise((resolve, reject) => {
       let attempts = 0;
-      const maxAttempts = 20; // 10 segundos máximo
+      const maxAttempts = 30; // 15 segundos máximo
 
       const checkRecaptcha = () => {
+        // Verificar si grecaptcha existe y está listo
         if (typeof grecaptcha !== "undefined" && grecaptcha.ready) {
-          grecaptcha.ready(() => resolve());
+          console.log("✅ reCAPTCHA detectado, esperando ready()...");
+          grecaptcha.ready(() => {
+            console.log("✅ reCAPTCHA ready!");
+            resolve();
+          });
         } else if (attempts >= maxAttempts) {
-          reject(new Error("reCAPTCHA no se pudo cargar. Por favor, recarga la página."));
+          console.error("❌ reCAPTCHA no se cargó después de", maxAttempts, "intentos");
+          reject(
+            new Error(
+              "No se pudo cargar el sistema de seguridad. Por favor, recarga la página o desactiva tu bloqueador de anuncios."
+            )
+          );
         } else {
           attempts++;
+          console.log(`⏳ Esperando reCAPTCHA... intento ${attempts}/${maxAttempts}`);
           setTimeout(checkRecaptcha, 500);
         }
       };
