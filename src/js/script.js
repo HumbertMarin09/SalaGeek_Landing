@@ -72,12 +72,13 @@ const responsiveState = {
 
   function displaySignature() {
     // Estilos para la firma
-    const titleStyle = "font-size: 20px; font-weight: bold; color: #ffd166; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);";
+    const titleStyle =
+      "font-size: 20px; font-weight: bold; color: #ffd166; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);";
     const lineStyle = "color: #ffd166;";
     const infoStyle = "font-size: 13px; color: #4ecdc4;";
     const highlightStyle = "font-size: 13px; color: #06ffa5; font-weight: bold;";
     const subtleStyle = "font-size: 12px; color: #a8dadc;";
-    
+
     console.log("%c🎮 SALA GEEK", titleStyle);
     console.log("%c════════════════════════════════════════", lineStyle);
     console.log("%c ", "");
@@ -93,7 +94,10 @@ const responsiveState = {
     console.log("%c   Presiona Ctrl+Shift+G para desbloquear el Developer Console", highlightStyle);
     console.log("%c ", "");
     console.log("%c════════════════════════════════════════", lineStyle);
-    console.log("%cHecho con 💙 por geeks, para geeks", "font-size: 12px; color: #ff6b6b; font-style: italic;");
+    console.log(
+      "%cHecho con 💙 por geeks, para geeks",
+      "font-size: 12px; color: #ff6b6b; font-style: italic;"
+    );
     console.log("%c ", "");
   }
 })();
@@ -4301,7 +4305,7 @@ function initAllEasterEggs() {
 // Inicializar Easter Eggs después de que todo cargue
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(initAllEasterEggs, 1000);
-  
+
   // Inicializar contador de actualización de noticias
   updateNewsTime();
 });
@@ -4315,31 +4319,31 @@ document.addEventListener("DOMContentLoaded", () => {
  * Muestra: "HOY", "AYER", "HACE X DÍAS"
  */
 function updateNewsTime() {
-  const updateTimeElement = document.getElementById('update-time');
+  const updateTimeElement = document.getElementById("update-time");
   if (!updateTimeElement) return;
 
   // Fecha de última actualización (7 de noviembre de 2025)
-  const lastUpdate = new Date('2025-11-07T00:00:00');
+  const lastUpdate = new Date("2025-11-07T00:00:00");
   const now = new Date();
-  
+
   // Calcular diferencia en días
   const diffTime = Math.abs(now - lastUpdate);
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  
-  let timeText = '';
-  
+
+  let timeText = "";
+
   if (diffDays === 0) {
-    timeText = 'HOY';
+    timeText = "HOY";
   } else if (diffDays === 1) {
-    timeText = 'AYER';
+    timeText = "AYER";
   } else if (diffDays <= 7) {
     timeText = `HACE ${diffDays} DÍAS`;
   } else {
-    timeText = 'SEMANALMENTE';
+    timeText = "SEMANALMENTE";
   }
-  
+
   updateTimeElement.textContent = timeText;
-  
+
   // Actualizar cada hora
   setTimeout(updateNewsTime, 3600000);
 }
