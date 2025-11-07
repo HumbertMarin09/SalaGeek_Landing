@@ -3581,14 +3581,12 @@ const easterEggTracker = {
     const tracker = document.getElementById("easter-egg-tracker");
     if (!tracker) return;
 
-    // Agregar transición suave para opacity y transform
-    tracker.style.transition = "opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease";
-
     let isHidden = false; // Estado para evitar múltiples llamadas
+    let animationInProgress = false; // Evitar animaciones simultáneas
 
     const adjustTrackerPosition = () => {
       const footer = document.querySelector(".site-footer");
-      if (!footer) return;
+      if (!footer || animationInProgress) return;
 
       const footerRect = footer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
@@ -3599,31 +3597,65 @@ const easterEggTracker = {
       // Si el footer está entrando al viewport
       if (footerDistanceFromBottom > 0 && !isHidden) {
         isHidden = true;
-        
-        // OCULTAR tracker con fade out y slide
-        const isMobile = window.innerWidth <= 480;
-        tracker.style.opacity = "0";
-        tracker.style.transform = isMobile ? "translateY(100px)" : "translateX(100px)";
-        tracker.style.pointerEvents = "none";
+        animationInProgress = true;
 
-        // Después de la animación, ocultarlo completamente
-        setTimeout(() => {
-          if (isHidden) {
-            tracker.style.visibility = "hidden";
+        // OCULTAR tracker con animación de slide
+        const isMobile = window.innerWidth <= 480;
+        const hideAnimation = tracker.animate(
+          [
+            {
+              opacity: 1,
+              transform: "translate(0, 0)",
+            },
+            {
+              opacity: 0,
+              transform: isMobile ? "translateY(100px)" : "translateX(100px)",
+            },
+          ],
+          {
+            duration: 300,
+            easing: "ease-out",
+            fill: "forwards",
           }
-        }, 300);
+        );
+
+        hideAnimation.onfinish = () => {
+          tracker.style.visibility = "hidden";
+          tracker.style.pointerEvents = "none";
+          animationInProgress = false;
+        };
       } else if (footerDistanceFromBottom <= 0 && isHidden) {
         isHidden = false;
-        
-        // MOSTRAR tracker con fade in y slide desde posición oculta
-        tracker.style.visibility = "visible";
+        animationInProgress = true;
 
-        // Pequeño delay para que la transición se vea desde el estado oculto
-        requestAnimationFrame(() => {
+        // MOSTRAR tracker con animación de slide
+        tracker.style.visibility = "visible";
+        tracker.style.pointerEvents = "auto";
+
+        const isMobile = window.innerWidth <= 480;
+        const showAnimation = tracker.animate(
+          [
+            {
+              opacity: 0,
+              transform: isMobile ? "translateY(100px)" : "translateX(100px)",
+            },
+            {
+              opacity: 1,
+              transform: "translate(0, 0)",
+            },
+          ],
+          {
+            duration: 300,
+            easing: "ease-out",
+            fill: "forwards",
+          }
+        );
+
+        showAnimation.onfinish = () => {
           tracker.style.opacity = "1";
           tracker.style.transform = "translate(0, 0)";
-          tracker.style.pointerEvents = "auto";
-        });
+          animationInProgress = false;
+        };
       }
     };
 
@@ -3636,7 +3668,7 @@ const easterEggTracker = {
     // Ajustar al inicio (después de que el tracker se haya mostrado)
     setTimeout(() => {
       adjustTrackerPosition();
-    }, 1000);
+    }, 1500);
   },
 
   unlock(eggName) {
