@@ -4205,9 +4205,11 @@ function initMobileEasterEggs() {
     }
   }, 1000); // Esperar 1 segundo a que el footer se cargue
 
-  // Notificación de ayuda móvil
+  // Notificación de ayuda móvil - SOLO en dispositivos móviles/tablet
   setTimeout(() => {
-    showNotification("📱 Tip: Explora con taps y long press en botones!", "info");
+    if (window.innerWidth <= 968) {
+      showNotification("📱 Tip: Explora con taps y long press en botones!", "info");
+    }
   }, 5000);
 }
 
