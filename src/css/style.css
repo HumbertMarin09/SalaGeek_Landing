@@ -1,6 +1,6 @@
 /* ============================================
    SALA GEEK - STYLESHEET
-   Version: 1.16.0 (Epic Torch Effect - Maximum Impact Edition)
+   Version: 1.16.1 (Epic Torch - Warm Orange-Yellow Edition)
    Last Modified: 2025-11-07
    
    📋 ESTRUCTURA:
@@ -3212,35 +3212,35 @@ a {
 @keyframes epic-torch-flare {
   0% {
     text-shadow: 
-      0 0 5px #ff0000,
-      0 0 10px #ff0000,
-      0 0 15px #ff3300,
-      0 0 20px #ff6600,
-      0 0 30px #ff9900,
-      0 0 40px #ffcc00,
-      0 0 50px rgba(255, 153, 0, 0.5);
+      0 0 5px #ff8800,
+      0 0 10px #ff9900,
+      0 0 15px #ffaa00,
+      0 0 20px #ffbb00,
+      0 0 30px #ffcc00,
+      0 0 40px #ffdd00,
+      0 0 50px rgba(255, 204, 0, 0.5);
     filter: brightness(1.2) contrast(1.1);
   }
   
   20% {
     text-shadow: 
-      0 0 8px #ff1a00,
-      0 0 15px #ff3300,
-      0 0 25px #ff6600,
-      0 0 35px #ff9900,
-      0 0 50px #ffcc00,
-      0 0 70px #ffdd00,
-      0 0 90px rgba(255, 221, 0, 0.6);
+      0 0 8px #ff7700,
+      0 0 15px #ff9900,
+      0 0 25px #ffbb00,
+      0 0 35px #ffcc00,
+      0 0 50px #ffdd00,
+      0 0 70px #ffee00,
+      0 0 90px rgba(255, 238, 0, 0.6);
     filter: brightness(1.4) contrast(1.2);
   }
   
   40% {
     text-shadow: 
-      0 0 6px #ff0000,
-      0 0 12px #ff2200,
-      0 0 20px #ff5500,
-      0 0 28px #ff8800,
-      0 0 40px #ffbb00,
+      0 0 6px #ff9900,
+      0 0 12px #ffaa00,
+      0 0 20px #ffbb00,
+      0 0 28px #ffcc00,
+      0 0 40px #ffdd00,
       0 0 55px #ffee00,
       0 0 70px rgba(255, 238, 0, 0.5);
     filter: brightness(1.3) contrast(1.15);
@@ -3248,11 +3248,11 @@ a {
   
   60% {
     text-shadow: 
-      0 0 10px #ff0000,
-      0 0 20px #ff4400,
-      0 0 30px #ff7700,
-      0 0 45px #ffaa00,
-      0 0 60px #ffdd00,
+      0 0 10px #ff8800,
+      0 0 20px #ffaa00,
+      0 0 30px #ffcc00,
+      0 0 45px #ffdd00,
+      0 0 60px #ffee00,
       0 0 80px #ffff00,
       0 0 100px rgba(255, 255, 0, 0.7);
     filter: brightness(1.5) contrast(1.25);
@@ -3260,11 +3260,11 @@ a {
   
   80% {
     text-shadow: 
-      0 0 7px #ff1100,
-      0 0 14px #ff3300,
-      0 0 22px #ff6600,
-      0 0 32px #ff9900,
-      0 0 45px #ffcc00,
+      0 0 7px #ff9900,
+      0 0 14px #ffaa00,
+      0 0 22px #ffbb00,
+      0 0 32px #ffcc00,
+      0 0 45px #ffdd00,
       0 0 60px #ffee00,
       0 0 75px rgba(255, 238, 0, 0.6);
     filter: brightness(1.35) contrast(1.18);
@@ -3272,13 +3272,13 @@ a {
   
   100% {
     text-shadow: 
-      0 0 5px #ff0000,
-      0 0 10px #ff0000,
-      0 0 15px #ff3300,
-      0 0 20px #ff6600,
-      0 0 30px #ff9900,
-      0 0 40px #ffcc00,
-      0 0 50px rgba(255, 153, 0, 0.5);
+      0 0 5px #ff8800,
+      0 0 10px #ff9900,
+      0 0 15px #ffaa00,
+      0 0 20px #ffbb00,
+      0 0 30px #ffcc00,
+      0 0 40px #ffdd00,
+      0 0 50px rgba(255, 204, 0, 0.5);
     filter: brightness(1.2) contrast(1.1);
   }
 }
