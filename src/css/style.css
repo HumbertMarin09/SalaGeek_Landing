@@ -1776,7 +1776,6 @@ a {
   animation: gradientFlow 4s ease-in-out infinite;
   position: relative;
   display: inline-block;
-  margin-left: 0.3em; /* Espacio después del typewriter */
 }
 
 @keyframes gradientFlow {
