@@ -3310,6 +3310,7 @@ a {
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
+  border-radius: 50px;
   transition: all 0.3s ease;
 }
 
