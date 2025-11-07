@@ -59,6 +59,45 @@ const responsiveState = {
   isDesktop: window.innerWidth > 968,
 };
 
+// ═══════════════════════════════════════════════════════════════
+// 🎨 FIRMA DE DESARROLLADORES - Console Signature
+// ═══════════════════════════════════════════════════════════════
+(function showDeveloperSignature() {
+  // Esperar a que la página cargue para mostrar la firma
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", displaySignature);
+  } else {
+    displaySignature();
+  }
+
+  function displaySignature() {
+    // Estilos para la firma
+    const titleStyle = "font-size: 20px; font-weight: bold; color: #ffd166; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);";
+    const lineStyle = "color: #ffd166;";
+    const infoStyle = "font-size: 13px; color: #4ecdc4;";
+    const highlightStyle = "font-size: 13px; color: #06ffa5; font-weight: bold;";
+    const subtleStyle = "font-size: 12px; color: #a8dadc;";
+    
+    console.log("%c🎮 SALA GEEK", titleStyle);
+    console.log("%c════════════════════════════════════════", lineStyle);
+    console.log("%c ", "");
+    console.log("%c👨‍💻 Desarrollado por:", infoStyle);
+    console.log("%c   Humberto Marin - Fundador & Lead Developer", highlightStyle);
+    console.log("%c   GitHub Copilot - AI Assistant & Code Architect", highlightStyle);
+    console.log("%c ", "");
+    console.log("%c📦 Versión: 2.0.0 | Noviembre 2025", subtleStyle);
+    console.log("%c⚡ Stack: Vanilla JS + CSS3 + HTML5", subtleStyle);
+    console.log("%c🎯 Easter Eggs: 15 ocultos (9 Desktop + 6 Mobile)", subtleStyle);
+    console.log("%c ", "");
+    console.log("%c💡 ¿Eres desarrollador?", infoStyle);
+    console.log("%c   Presiona Ctrl+Shift+G para desbloquear el Developer Console", highlightStyle);
+    console.log("%c ", "");
+    console.log("%c════════════════════════════════════════", lineStyle);
+    console.log("%cHecho con 💙 por geeks, para geeks", "font-size: 12px; color: #ff6b6b; font-style: italic;");
+    console.log("%c ", "");
+  }
+})();
+
 /**
  * Inicializa el tema oscuro permanente
  * Fuerza el modo oscuro y elimina cualquier preferencia previa de tema claro
