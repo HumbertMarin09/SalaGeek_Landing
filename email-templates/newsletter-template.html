@@ -50,8 +50,8 @@
         }
         
         .header img {
-            max-width: 220px;
-            height: auto;
+            max-width: auto;
+            height: 100px;
             display: block;
             margin: 0 auto;
         }
@@ -270,6 +270,27 @@
             text-decoration: underline;
         }
         
+        .alert-box {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%);
+            border: 2px solid #DC2626;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .alert-box h3 {
+            color: #FCA5A5;
+            font-size: 17px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+        
+        .alert-box p {
+            color: #E5E7EB;
+            font-size: 14px;
+            margin: 0;
+        }
+        
         /* Mobile responsive */
         @media only screen and (max-width: 600px) {
             .container {
@@ -310,8 +331,8 @@
                     <tr>
                         <td class="header">
                             <img src="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" alt="Sala Geek Logo" style="max-width: 220px; display: block; margin: 0 auto;">
-                            <h1>🎮 GEEKY WEEKLY #*|ISSUE_NUMBER|*</h1>
-                            <p>*|DATE:F j "de" F "de" Y|* | Tu dosis semanal de cultura geek</p>
+                            <h1>🎮 GEEKY WEEKLY #[NÚMERO_EDICIÓN]</h1>
+                            <p>[FECHA] de [MES] de [AÑO] | Tu dosis semanal de cultura geek</p>
                         </td>
                     </tr>
                     
@@ -320,12 +341,20 @@
                         <td class="content">
                             
                             <!-- GREETING -->
-                            <p class="greeting">👋 ¡Hola, *|FNAME|*!</p>
+                            <p class="greeting">👋 ¡Hola, Geek!</p>
                             
                             <!-- INTRO -->
                             <p class="intro">
-                                *|INTRO_TEXT|*
+                                [TEXTO_INTRODUCCIÓN: Resumen breve y emocionante de lo que trae esta edición. Menciona las 2-3 noticias más importantes de la semana]
                             </p>
+                            
+                            <!-- ALERT BOX (OPCIONAL - Solo si hay una noticia BOMBA) -->
+                            <!-- 
+                            <div class="alert-box">
+                                <h3>🚨 NOTICIA BOMBA DE LA SEMANA</h3>
+                                <p>[NOTICIA_DESTACADA: Describe la noticia más impactante con detalles]</p>
+                            </div>
+                            -->
                             
                             <!-- SECTION DIVIDER -->
                             <hr class="section-divider">
@@ -333,43 +362,68 @@
                             <!-- MAIN NEWS SECTION -->
                             <h2 class="section-title">🔥 Lo Más Hot de la Semana</h2>
                             
-                            <!-- MOVIES & SERIES -->
-                            <h3 class="category-title">🎬 PELÍCULAS & SERIES</h3>
-                            
-                            <div class="news-item">
-                                <h3>*|MOVIE_NEWS_1_TITLE|*</h3>
-                                <p>*|MOVIE_NEWS_1_CONTENT|*</p>
-                            </div>
-                            
-                            <div class="news-item">
-                                <h3>*|MOVIE_NEWS_2_TITLE|*</h3>
-                                <p>*|MOVIE_NEWS_2_CONTENT|*</p>
-                            </div>
-                            
                             <!-- GAMING -->
-                            <h3 class="category-title">🎮 GAMING</h3>
+                            <h3 class="category-title">� GAMING</h3>
                             
                             <div class="news-item">
-                                <h3>*|GAMING_NEWS_1_TITLE|*</h3>
-                                <p>*|GAMING_NEWS_1_CONTENT|*</p>
+                                <h3>[TÍTULO_NOTICIA_GAMING_1]</h3>
+                                <p>[DESCRIPCIÓN_BREVE: 2-3 líneas máximo explicando la noticia]</p>
                             </div>
                             
                             <div class="news-item">
-                                <h3>*|GAMING_NEWS_2_TITLE|*</h3>
-                                <p>*|GAMING_NEWS_2_CONTENT|*</p>
+                                <h3>[TÍTULO_NOTICIA_GAMING_2]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>[TÍTULO_NOTICIA_GAMING_3]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
+                            </div>
+                            
+                            <!-- Agregar más noticias según necesidad -->
+                            
+                            <!-- MOVIES & SERIES -->
+                            <h3 class="category-title">� PELÍCULAS & SERIES</h3>
+                            
+                            <div class="news-item">
+                                <h3>[TÍTULO_NOTICIA_MOVIES_1]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>[TÍTULO_NOTICIA_MOVIES_2]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>[TÍTULO_NOTICIA_MOVIES_3]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
                             </div>
                             
                             <!-- ANIME & MANGA -->
                             <h3 class="category-title">🌸 ANIME & MANGA</h3>
                             
                             <div class="news-item">
-                                <h3>*|ANIME_NEWS_1_TITLE|*</h3>
-                                <p>*|ANIME_NEWS_1_CONTENT|*</p>
+                                <h3>[TÍTULO_NOTICIA_ANIME_1]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
                             </div>
                             
                             <div class="news-item">
-                                <h3>*|ANIME_NEWS_2_TITLE|*</h3>
-                                <p>*|ANIME_NEWS_2_CONTENT|*</p>
+                                <h3>[TÍTULO_NOTICIA_ANIME_2]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
+                            </div>
+                            
+                            <!-- OTRAS NOTICIAS (OPCIONAL) -->
+                            <h3 class="category-title">🎯 OTRAS NOTICIAS DESTACADAS</h3>
+                            
+                            <div class="news-item">
+                                <h3>[TÍTULO_OTRA_NOTICIA_1]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
+                            </div>
+                            
+                            <div class="news-item">
+                                <h3>[TÍTULO_OTRA_NOTICIA_2]</h3>
+                                <p>[DESCRIPCIÓN_BREVE]</p>
                             </div>
                             
                             <!-- SECTION DIVIDER -->
@@ -377,17 +431,21 @@
                             
                             <!-- FEATURED SECTION -->
                             <div class="featured-section">
-                                <h2>⭐ *|FEATURED_TITLE|*</h2>
+                                <h2>⭐ [TÍTULO_SECCIÓN_DESTACADA]</h2>
                                 
                                 <!-- Optional featured image -->
-                                <!-- <img src="*|FEATURED_IMAGE_URL|*" alt="Featured" class="featured-image"> -->
+                                <!-- <img src="[URL_IMAGEN]" alt="Featured" class="featured-image"> -->
                                 
-                                <p>*|FEATURED_PARAGRAPH_1|*</p>
-                                <p>*|FEATURED_PARAGRAPH_2|*</p>
-                                <p>*|FEATURED_PARAGRAPH_3|*</p>
+                                <p><strong>[SUBTÍTULO_O_PREGUNTA]</strong></p>
+                                
+                                <p>[PÁRRAFO_1: Desarrollo de la historia o curiosidad destacada]</p>
+                                
+                                <p>[PÁRRAFO_2: Continuación con datos interesantes]</p>
+                                
+                                <p>[PÁRRAFO_3: Cierre con conclusión o dato sorprendente]</p>
                                 
                                 <!-- Optional CTA button -->
-                                <!-- <a href="*|FEATURED_LINK|*" class="button">Leer Más</a> -->
+                                <!-- <a href="[LINK]" class="button">Leer Más</a> -->
                             </div>
                             
                             <!-- SECTION DIVIDER -->
@@ -396,7 +454,7 @@
                             <!-- ENGAGEMENT BOX -->
                             <div class="engagement-box">
                                 <h3>💬 Pregunta de la Semana</h3>
-                                <p>*|QUESTION_OF_WEEK|*</p>
+                                <p>[PREGUNTA_INTERACTIVA: Formula una pregunta que genere debate y engagement en redes sociales]</p>
                                 <a href="https://www.facebook.com/SalaGeek" class="button button-cyan">Responder en Facebook</a>
                             </div>
                             
@@ -404,18 +462,22 @@
                             <hr class="section-divider">
                             
                             <!-- UPCOMING SECTION -->
-                            <h2 class="section-title">📅 Próxima Semana</h2>
+                            <h2 class="section-title">📅 La Próxima Semana Trae Más</h2>
                             
                             <ul class="upcoming-list">
-                                <li>*|UPCOMING_1|*</li>
-                                <li>*|UPCOMING_2|*</li>
-                                <li>*|UPCOMING_3|*</li>
+                                <li>🔥 Las noticias más frescas del mundo gaming</li>
+                                <li>🎬 Novedades de películas y series que no puedes perderte</li>
+                                <li>🌸 Todo sobre anime, manga y cultura japonesa</li>
+                                <li>🎯 Reviews, análisis y recomendaciones exclusivas</li>
+                                <li>💬 Más preguntas interactivas y contenido especial para ti</li>
                             </ul>
                             
                             <!-- CLOSING -->
-                            <p style="margin-top: 30px; font-size: 16px; color: #E5E7EB;">
-                                Nos vemos la próxima semana 🚀<br>
-                                <strong>- El equipo de Sala Geek</strong>
+                            <p style="margin-top: 30px; font-size: 16px; color: #E5E7EB; line-height: 1.7;">
+                                Y eso es todo por esta semana, ¡pero qué semana! 🚀<br><br>
+                                Recuerda: la cultura geek nunca duerme, y nosotros tampoco. Sigue conectado para más noticias, reviews, y contenido épico.<br><br>
+                                <strong style="color: #00D9FF;">¡Nos vemos en la próxima edición, Geek!</strong><br>
+                                <strong>- El equipo de Sala Geek</strong> 💙
                             </p>
                             
                         </td>
@@ -435,6 +497,11 @@
                             </div>
                             
                             <p>Visita nuestra web: <a href="https://salageek.com" style="color: #00D9FF; text-decoration: none;">salageek.com</a></p>
+                            
+                            <p style="margin-top: 20px; font-size: 13px; color: #9CA3AF;">
+                                📧 Newsletter creado con 💙 por geeks, para geeks<br>
+                                Hecho por: Humberto Marin & GitHub Copilot
+                            </p>
                             
                             <p class="unsubscribe">
                                 Recibiste este email porque te suscribiste en Sala Geek.<br>
