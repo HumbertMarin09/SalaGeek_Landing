@@ -84,10 +84,10 @@ function updateResponsiveState() {
  */
 function initResponsiveHandler() {
   let resizeTimer;
-  
+
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    
+
     resizeTimer = setTimeout(() => {
       updateResponsiveState();
 
@@ -128,8 +128,8 @@ async function loadPartial(selector, path) {
       cache: "no-store",
       headers: {
         "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
 
@@ -246,8 +246,7 @@ function initNavigation() {
           // Scroll suave al elemento
           const headerOffset = 100; // Altura del header sticky
           const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition =
-            elementPosition + window.pageYOffset - headerOffset;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
           window.scrollTo({
             top: offsetPosition,
@@ -262,11 +261,7 @@ function initNavigation() {
 
   // Cerrar menú al hacer clic fuera
   document.addEventListener("click", (e) => {
-    if (
-      nav.classList.contains("open") &&
-      !nav.contains(e.target) &&
-      !toggle.contains(e.target)
-    ) {
+    if (nav.classList.contains("open") && !nav.contains(e.target) && !toggle.contains(e.target)) {
       nav.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
@@ -286,10 +281,7 @@ function initNavigation() {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.offsetHeight;
 
-        if (
-          scrollPosition >= sectionTop &&
-          scrollPosition < sectionTop + sectionHeight
-        ) {
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
           currentSection = section.id;
         }
       });
@@ -316,7 +308,7 @@ function initNavigation() {
           ticking = true;
         }
       },
-      { passive: true },
+      { passive: true }
     );
 
     // Llamar al cargar la página
@@ -357,10 +349,7 @@ function initSearch() {
 
   // Cerrar al hacer clic fuera
   document.addEventListener("click", (e) => {
-    if (
-      !searchDropdown.contains(e.target) &&
-      !searchToggle.contains(e.target)
-    ) {
+    if (!searchDropdown.contains(e.target) && !searchToggle.contains(e.target)) {
       searchDropdown.classList.remove("active");
     }
   });
@@ -508,7 +497,7 @@ function initLazyLoading() {
       {
         rootMargin: "50px 0px",
         threshold: 0.01,
-      },
+      }
     );
 
     // Observar todas las imágenes con data-src
@@ -532,7 +521,7 @@ function initLazyLoading() {
     },
     {
       rootMargin: "100px 0px",
-    },
+    }
   );
 
   const lazyIframes = document.querySelectorAll("iframe[data-src]");
@@ -596,9 +585,7 @@ function initHeroParallax() {
    ============================================ */
 
 function initStatsCounter() {
-  const statNumbers = document.querySelectorAll(
-    ".about-stat-number[data-count]",
-  );
+  const statNumbers = document.querySelectorAll(".about-stat-number[data-count]");
 
   if (statNumbers.length === 0) return;
 
@@ -708,17 +695,17 @@ function initHeroAnimations() {
         // Remover cursor después de completar
         setTimeout(() => {
           typewriterElement.classList.add("typing-complete");
-          
+
           // Mostrar "Sala Geek" con animación después de completar typewriter
           if (heroBrand) {
             heroBrand.style.transition = "opacity 0.8s ease, transform 0.8s ease";
             heroBrand.style.opacity = "1";
             heroBrand.style.transform = "translateY(0)";
           }
-          
+
           // Mostrar Achievement Tracker después del typewriter
           // Se ejecuta 800ms después de "Sala Geek" para animación secuencial elegante
-          if (typeof easterEggTracker !== 'undefined' && easterEggTracker.show) {
+          if (typeof easterEggTracker !== "undefined" && easterEggTracker.show) {
             easterEggTracker.show();
           }
         }, 300);
@@ -815,9 +802,7 @@ function initTestimonialsCarousel() {
   const cards = document.querySelectorAll(".testimonial-card");
   const prevBtn = document.querySelector(".carousel-prev");
   const nextBtn = document.querySelector(".carousel-next");
-  const indicators = document.querySelectorAll(
-    ".carousel-indicators .indicator",
-  );
+  const indicators = document.querySelectorAll(".carousel-indicators .indicator");
 
   if (!track || cards.length === 0) return;
 
@@ -1007,10 +992,7 @@ function initNewsletterForm() {
     // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      showNewsletterMessage(
-        "Por favor, ingresa un correo electrónico válido",
-        "error",
-      );
+      showNewsletterMessage("Por favor, ingresa un correo electrónico válido", "error");
       return;
     }
 
@@ -1039,8 +1021,9 @@ function initNewsletterForm() {
       if (response.ok && data.success) {
         // Éxito
         showNewsletterMessage(
-          data.message || "¡Gracias por suscribirte! Revisa tu correo para el mensaje de bienvenida.",
-          "success",
+          data.message ||
+            "¡Gracias por suscribirte! Revisa tu correo para el mensaje de bienvenida.",
+          "success"
         );
 
         // Limpiar el formulario
@@ -1056,7 +1039,7 @@ function initNewsletterForm() {
       console.error("Error al suscribir:", error);
       showNewsletterMessage(
         error.message || "Hubo un error al procesar tu suscripción. Por favor, intenta nuevamente.",
-        "error",
+        "error"
       );
     } finally {
       // Restaurar el botón
@@ -1105,27 +1088,27 @@ const NOTIFICATION_STYLES = {
 function showNotification(message, type = "info") {
   const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
   const background = NOTIFICATION_STYLES[type] || NOTIFICATION_STYLES.info;
-  
+
   const notification = document.createElement("div");
   notification.className = `notification notification-${type}`;
   notification.textContent = message;
-  
+
   // Estilos responsive optimizados
   notification.style.cssText = `
     position: fixed;
-    top: ${isMobile ? '90px' : '120px'};
-    right: ${isMobile ? '10px' : '20px'};
-    left: ${isMobile ? '10px' : 'auto'};
-    padding: ${isMobile ? '0.75rem 1rem' : '1rem 1.5rem'};
+    top: ${isMobile ? "90px" : "120px"};
+    right: ${isMobile ? "10px" : "20px"};
+    left: ${isMobile ? "10px" : "auto"};
+    padding: ${isMobile ? "0.75rem 1rem" : "1rem 1.5rem"};
     background: ${background};
     color: white;
     border-radius: 8px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     z-index: 100000;
-    max-width: ${isMobile ? '100%' : '400px'};
+    max-width: ${isMobile ? "100%" : "400px"};
     animation: slideInRight 0.3s ease;
     font-weight: 500;
-    font-size: ${isMobile ? '0.875rem' : '1rem'};
+    font-size: ${isMobile ? "0.875rem" : "1rem"};
     line-height: 1.4;
   `;
 
@@ -1280,8 +1263,7 @@ function initSmoothScroll() {
 
         const headerOffset = 100;
         const elementPosition = target.getBoundingClientRect().top;
-        const offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
         window.scrollTo({
           top: offsetPosition,
@@ -1319,7 +1301,7 @@ function initHeaderScroll() {
 
       lastScroll = currentScroll;
     },
-    { passive: true },
+    { passive: true }
   );
 }
 
@@ -1351,10 +1333,7 @@ function initAdaptiveMenu() {
 
     legalLinks.forEach((link) => {
       const linkPath = new URL(link.href).pathname;
-      if (
-        currentPage.includes(linkPath) &&
-        !link.classList.contains("nav-link-home")
-      ) {
+      if (currentPage.includes(linkPath) && !link.classList.contains("nav-link-home")) {
         link.classList.add("active");
       }
     });
@@ -1471,8 +1450,7 @@ function initLegalTOC() {
       if (targetElement) {
         const headerOffset = 130; // Ajustado para mejor posicionamiento
         const elementPosition = targetElement.getBoundingClientRect().top;
-        const offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
         // Remover active temporalmente durante el scroll
         tocLinks.forEach((l) => l.classList.remove("active"));
@@ -1499,7 +1477,7 @@ function initLegalTOC() {
         ticking = true;
       }
     },
-    { passive: true },
+    { passive: true }
   );
 
   // Actualizar al cargar después de un delay
@@ -1612,7 +1590,7 @@ function initReadingProgress() {
         progressTicking = true;
       }
     },
-    { passive: true },
+    { passive: true }
   );
 
   // Actualizar al cargar
@@ -1695,7 +1673,7 @@ const soundLibrary = {
 function playBeep(frequencies, durations) {
   try {
     isSoundPlaying = true;
-    
+
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let startTime = audioContext.currentTime;
     let totalDuration = 0;
@@ -1713,10 +1691,7 @@ function playBeep(frequencies, durations) {
       // Envelope ADSR para sonido más natural
       gainNode.gain.setValueAtTime(0, startTime);
       gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01); // Attack
-      gainNode.gain.exponentialRampToValueAtTime(
-        0.01,
-        startTime + durations[index] / 1000
-      ); // Decay/Release
+      gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + durations[index] / 1000); // Decay/Release
 
       oscillator.start(startTime);
       oscillator.stop(startTime + durations[index] / 1000);
@@ -1729,7 +1704,6 @@ function playBeep(frequencies, durations) {
     setTimeout(() => {
       isSoundPlaying = false;
     }, totalDuration);
-    
   } catch (error) {
     // console.log("⚠️ Audio no disponible:", error);
     isSoundPlaying = false;
@@ -1772,9 +1746,16 @@ function playSound(soundName) {
  */
 function initKonamiCode() {
   const konamiCode = [
-    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-    "b", "a",
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "b",
+    "a",
   ];
   let konamiIndex = 0;
 
@@ -1866,16 +1847,18 @@ function activateNESMode() {
   document.body.appendChild(scanlines);
 
   // Detectar móvil para responsive
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
 
   // Crear mensaje estilo NES - aparece donde está el viewport con diseño mejorado
   const nesMessage = document.createElement("div");
-  
+
   // Calcular posición del viewport actual
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   const viewportHeight = window.innerHeight;
-  const centerY = scrollTop + (viewportHeight / 2);
-  
+  const centerY = scrollTop + viewportHeight / 2;
+
   nesMessage.style.cssText = `
     position: absolute;
     top: ${centerY}px;
@@ -1884,11 +1867,11 @@ function activateNESMode() {
     z-index: 1000000;
     background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
     color: #fff;
-    padding: ${isMobile ? '1.5rem 2rem' : '2.5rem 3.5rem'};
+    padding: ${isMobile ? "1.5rem 2rem" : "2.5rem 3.5rem"};
     border: 3px solid #fff;
     border-radius: 4px;
     font-family: 'Press Start 2P', 'Courier New', monospace;
-    font-size: ${isMobile ? '1rem' : '1.5rem'};
+    font-size: ${isMobile ? "1rem" : "1.5rem"};
     text-align: center;
     box-shadow: 
       0 0 0 6px #000,
@@ -1900,8 +1883,8 @@ function activateNESMode() {
   `;
   nesMessage.innerHTML = `
     <div style="color: #ff6b6b; margin-bottom: 1rem; text-shadow: 2px 2px 0 rgba(0,0,0,0.5);">★ POWER UP! ★</div>
-    <div style="color: #ffd166; font-size: ${isMobile ? '0.85rem' : '1rem'}; text-shadow: 2px 2px 0 rgba(0,0,0,0.5);">+1000 POINTS</div>
-    <div style="color: #06ffa5; font-size: ${isMobile ? '0.7rem' : '0.8rem'}; margin-top: 1rem; text-shadow: 1px 1px 0 rgba(0,0,0,0.5);">KONAMI CODE UNLOCKED</div>
+    <div style="color: #ffd166; font-size: ${isMobile ? "0.85rem" : "1rem"}; text-shadow: 2px 2px 0 rgba(0,0,0,0.5);">+1000 POINTS</div>
+    <div style="color: #06ffa5; font-size: ${isMobile ? "0.7rem" : "0.8rem"}; margin-top: 1rem; text-shadow: 1px 1px 0 rgba(0,0,0,0.5);">KONAMI CODE UNLOCKED</div>
   `;
   document.body.appendChild(nesMessage);
 
@@ -2014,9 +1997,11 @@ function initLogoEasterEgg() {
 
     heroTitle.addEventListener("click", (e) => {
       // Solo en desktop (> 968px)
-      const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
       if (isMobile || window.innerWidth <= 968) return;
-      
+
       e.preventDefault();
       clickCount++;
 
@@ -2064,7 +2049,7 @@ function activateGlitchStats() {
     const originalText = heroTitle.textContent;
     heroTitle.style.animation = "glitch 0.5s ease";
     heroTitle.style.color = "var(--accent-primary)";
-    
+
     // Glitch en el texto
     let glitchCount = 0;
     const glitchInterval = setInterval(() => {
@@ -2072,9 +2057,7 @@ function activateGlitchStats() {
       const glitched = originalText
         .split("")
         .map((char) =>
-          Math.random() > 0.7
-            ? glitchChars[Math.floor(Math.random() * glitchChars.length)]
-            : char
+          Math.random() > 0.7 ? glitchChars[Math.floor(Math.random() * glitchChars.length)] : char
         )
         .join("");
       heroTitle.textContent = glitched;
@@ -2182,7 +2165,8 @@ function activateMatrixRainMode() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  const chars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01";
+  const chars =
+    "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン01";
   const fontSize = 14;
   const columns = canvas.width / fontSize;
   const drops = Array(Math.floor(columns)).fill(1);
@@ -2296,7 +2280,7 @@ function activateSnapEffect() {
   easterEggTracker.unlock("thanos");
 
   const elements = document.querySelectorAll(
-    "section > *, .hero-badge, .testimonial-card, .about-stat",
+    "section > *, .hero-badge, .testimonial-card, .about-stat"
   );
   const elementsArray = Array.from(elements);
 
@@ -2332,19 +2316,16 @@ function activateSnapEffect() {
 // EASTER EGG 4: HORA ESPECÍFICA (3:33 AM) + JUMPSCARE
 function initTimeEasterEgg() {
   let hasTriggered = false;
-  
+
   setInterval(() => {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
 
-    if (
-      ((hours === 3 && minutes === 33) || (hours === 15 && minutes === 33)) &&
-      !hasTriggered
-    ) {
+    if (((hours === 3 && minutes === 33) || (hours === 15 && minutes === 33)) && !hasTriggered) {
       hasTriggered = true;
       activateJumpScare();
-      
+
       // Reset después de 2 minutos
       setTimeout(() => {
         hasTriggered = false;
@@ -2356,7 +2337,7 @@ function initTimeEasterEgg() {
 function activateJumpScare() {
   // console.log("🚨 JUMPSCARE ACTIVADO!");
   playSound("error");
-  
+
   // Overlay negro que aparece súbitamente
   const overlay = document.createElement("div");
   overlay.style.cssText = `
@@ -2424,7 +2405,7 @@ function activateJumpScare() {
     overlay.style.transition = "opacity 0.5s ease";
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 500);
-    
+
     showNotification("⏰ ¿Te asusté? 😈 Son las 3:33... hora mágica", "error");
   }, 3000);
 }
@@ -2437,9 +2418,11 @@ function initCornerClicks() {
 
   document.addEventListener("click", (e) => {
     // Solo en desktop (> 968px)
-    const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
     if (isMobileDevice || window.innerWidth <= 968) return;
-    
+
     const x = e.clientX;
     const y = e.clientY;
     const w = window.innerWidth;
@@ -2461,16 +2444,16 @@ function initCornerClicks() {
     if (corner && corner === sequence[currentStep]) {
       currentStep++;
       lastClickTime = Date.now();
-      
+
       // Feedback visual mejorado en la esquina
       const indicator = document.createElement("div");
       const cornerLabels = {
         "top-left": "↖️",
         "top-right": "↗️",
         "bottom-right": "↘️",
-        "bottom-left": "↙️"
+        "bottom-left": "↙️",
       };
-      
+
       indicator.textContent = cornerLabels[corner];
       indicator.style.cssText = `
         position: fixed;
@@ -2527,16 +2510,19 @@ function initCornerClicks() {
 
 function activateDeveloperConsole() {
   playSound("levelup");
-  showNotification(
-    "💻 ¡DEVELOPER CONSOLE DESBLOQUEADO! Revisa F12",
-    "success",
-  );
+  showNotification("💻 ¡DEVELOPER CONSOLE DESBLOQUEADO! Revisa F12", "success");
   easterEggTracker.unlock("corners");
 
   console.clear();
-  console.log("%c🎮 SALA GEEK - DEVELOPER MODE", "font-size: 28px; color: #ffd166; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);");
+  console.log(
+    "%c🎮 SALA GEEK - DEVELOPER MODE",
+    "font-size: 28px; color: #ffd166; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);"
+  );
   console.log("%c════════════════════════════════════════", "color: #ffd166;");
-  console.log("%c¡Felicidades! Has desbloqueado el Developer Console", "font-size: 16px; color: #48bb78; font-weight: bold;");
+  console.log(
+    "%c¡Felicidades! Has desbloqueado el Developer Console",
+    "font-size: 16px; color: #48bb78; font-weight: bold;"
+  );
   console.log("%c ", "");
   console.log("%cEstadísticas del sitio:", "font-size: 14px; color: #4299e1; font-weight: bold;");
   console.table({
@@ -2545,19 +2531,28 @@ function activateDeveloperConsole() {
     "⚡ Nivel Geek": "LEGENDARY",
     "💻 Framework": "Vanilla JS",
     "📦 Líneas de código": "~3500+",
-    "🎨 Tema": "Dark/Light Mode"
+    "🎨 Tema": "Dark/Light Mode",
   });
   console.log("%c ", "");
-  console.log("%c💡 ¿Quieres ver todos los Easter Eggs?", "font-size: 12px; color: #f6ad55; font-weight: bold;");
+  console.log(
+    "%c💡 ¿Quieres ver todos los Easter Eggs?",
+    "font-size: 12px; color: #f6ad55; font-weight: bold;"
+  );
   console.log("%cEjecuta: showAllEasterEggs()", "color: #06ffa5; font-style: italic;");
   console.log("%c════════════════════════════════════════", "color: #ffd166;");
 
   // Función global para mostrar todos los Easter Eggs
   window.showAllEasterEggs = function () {
     console.clear();
-    console.log("%c🎯 LISTA COMPLETA DE EASTER EGGS", "font-size: 20px; color: #ffd166; font-weight: bold;");
+    console.log(
+      "%c🎯 LISTA COMPLETA DE EASTER EGGS",
+      "font-size: 20px; color: #ffd166; font-weight: bold;"
+    );
     console.log("%c════════════════════════════════════════", "color: #ffd166;");
-    console.log("%c💻 DESKTOP (9 Easter Eggs):", "font-size: 14px; color: #4ecdc4; font-weight: bold;");
+    console.log(
+      "%c💻 DESKTOP (9 Easter Eggs):",
+      "font-size: 14px; color: #4ecdc4; font-weight: bold;"
+    );
     console.log("%c1. 🎮 Código Konami: ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA", "color: #fff;");
     console.log("%c2. ✨ Doble click en 'Sala Geek' del hero", "color: #fff;");
     console.log("%c3. 🟢 Escribir: 'matrix' (Matrix Rain)", "color: #fff;");
@@ -2568,7 +2563,10 @@ function activateDeveloperConsole() {
     console.log("%c8. ⌨️ Ctrl + Shift + G (Geek Mode)", "color: #fff;");
     console.log("%c9. 📜 Scroll al 100% (mensaje secreto)", "color: #fff;");
     console.log("%c ", "");
-    console.log("%c📱 MOBILE (6 Easter Eggs):", "font-size: 14px; color: #ff6b6b; font-weight: bold;");
+    console.log(
+      "%c📱 MOBILE (6 Easter Eggs):",
+      "font-size: 14px; color: #ff6b6b; font-weight: bold;"
+    );
     console.log("%c1. 🎮 Triple tap en 'Sala Geek'", "color: #fff;");
     console.log("%c2. ✨ Long press en email newsletter", "color: #fff;");
     console.log("%c3. 🕹️ Long press en botón 'Únete Ahora'", "color: #fff;");
@@ -2576,7 +2574,10 @@ function activateDeveloperConsole() {
     console.log("%c5. ⌨️ Long press en 'Sala Geek' del footer", "color: #fff;");
     console.log("%c6. 📜 Scroll al 100% (mensaje secreto)", "color: #fff;");
     console.log("%c════════════════════════════════════════", "color: #ffd166;");
-    console.log("%c🏆 ¡Desbloqueálos todos para ser un DIOS GEEK!", "font-size: 14px; color: #06ffa5; font-weight: bold;");
+    console.log(
+      "%c🏆 ¡Desbloqueálos todos para ser un DIOS GEEK!",
+      "font-size: 14px; color: #06ffa5; font-weight: bold;"
+    );
   };
 }
 
@@ -2592,9 +2593,11 @@ function initMouseShake() {
 
   document.addEventListener("mousemove", (e) => {
     // Solo en desktop (> 968px)
-    const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
     if (isMobileDevice || window.innerWidth <= 968) return;
-    
+
     // No activar si ya se activó
     if (shakeActivated) return;
 
@@ -2611,7 +2614,7 @@ function initMouseShake() {
       movementHistory.push({
         x: currentX,
         y: currentY,
-        time: Date.now()
+        time: Date.now(),
       });
 
       // Mantener solo los últimos 20 movimientos
@@ -2624,7 +2627,7 @@ function initMouseShake() {
         const recent = movementHistory.slice(-3);
         const dir1 = recent[1].x - recent[0].x;
         const dir2 = recent[2].x - recent[1].x;
-        
+
         // Si cambia de dirección (shake/zigzag)
         if ((dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0)) {
           shakeCount++;
@@ -2633,8 +2636,9 @@ function initMouseShake() {
 
       // Activar cuando se detecten suficientes shakes en poco tiempo
       if (shakeCount >= requiredShakes) {
-        const timeRange = movementHistory[movementHistory.length - 1].time - movementHistory[0].time;
-        
+        const timeRange =
+          movementHistory[movementHistory.length - 1].time - movementHistory[0].time;
+
         // Debe ser en menos de 2 segundos
         if (timeRange < 2000) {
           activateMouseDodge();
@@ -2710,9 +2714,11 @@ function activateMouseDodge() {
 function initKeyboardCombo() {
   document.addEventListener("keydown", (e) => {
     // Solo en desktop (> 968px)
-    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
     if (isMobile || window.innerWidth <= 968) return;
-    
+
     if (e.ctrlKey && e.shiftKey && e.key === "G") {
       e.preventDefault();
       activateGeekMode();
@@ -2764,13 +2770,14 @@ function activateGeekMode() {
     "$ Presiona <span style='color:#ffd166'>ESC</span> para salir...",
   ];
 
-  let output = "<div style='margin-bottom: 1rem; border-bottom: 2px solid #00ff00; padding-bottom: 0.5rem;'><span style='color:#ffd166'>┌─[</span><span style='color:#ff6b6b'>root</span><span style='color:#ffd166'>@</span><span style='color:#06ffa5'>sala-geek</span><span style='color:#ffd166'>]</span><br><span style='color:#ffd166'>└──╼ $</span></div>";
-  
+  let output =
+    "<div style='margin-bottom: 1rem; border-bottom: 2px solid #00ff00; padding-bottom: 0.5rem;'><span style='color:#ffd166'>┌─[</span><span style='color:#ff6b6b'>root</span><span style='color:#ffd166'>@</span><span style='color:#06ffa5'>sala-geek</span><span style='color:#ffd166'>]</span><br><span style='color:#ffd166'>└──╼ $</span></div>";
+
   commands.forEach((cmd, index) => {
     setTimeout(() => {
       output += cmd + "<br>";
       terminal.innerHTML = output;
-      
+
       // Scroll automático al final
       terminal.scrollTop = terminal.scrollHeight;
     }, index * 150);
@@ -2843,7 +2850,7 @@ function initSpecialDates() {
 function applyStarWarsTheme() {
   console.log("🌟 Aplicando tema Star Wars");
   playSound("powerup");
-  
+
   // Overlay con estrellas
   const overlay = document.createElement("div");
   overlay.id = "starwars-overlay";
@@ -2860,9 +2867,9 @@ function applyStarWarsTheme() {
     transition: opacity 1s ease;
   `;
   document.body.appendChild(overlay);
-  
-  setTimeout(() => overlay.style.opacity = "0.8", 100);
-  
+
+  setTimeout(() => (overlay.style.opacity = "0.8"), 100);
+
   // Estrellas de fondo
   for (let i = 0; i < 150; i++) {
     setTimeout(() => {
@@ -2884,7 +2891,7 @@ function applyStarWarsTheme() {
       document.body.appendChild(star);
     }, i * 20);
   }
-  
+
   // Texto "May the 4th be with you"
   setTimeout(() => {
     const text = document.createElement("div");
@@ -2903,25 +2910,25 @@ function applyStarWarsTheme() {
     `;
     text.textContent = "May the 4th be with you";
     document.body.appendChild(text);
-    
+
     setTimeout(() => {
       text.style.animation = "fadeOut 1s ease";
       setTimeout(() => text.remove(), 1000);
     }, 4000);
   }, 1000);
-  
+
   // Limpiar después de 12 segundos
   setTimeout(() => {
     overlay.style.opacity = "0";
     const stars = document.querySelectorAll(".starwars-star");
-    stars.forEach(star => star.remove());
+    stars.forEach((star) => star.remove());
     setTimeout(() => overlay.remove(), 1000);
   }, 12000);
 }
 
 function applyMathTheme() {
   console.log("🥧 Aplicando tema matemático");
-  
+
   const overlay = document.createElement("div");
   overlay.style.cssText = `
     position: fixed;
@@ -2936,9 +2943,9 @@ function applyMathTheme() {
     transition: opacity 1s ease;
   `;
   document.body.appendChild(overlay);
-  
-  setTimeout(() => overlay.style.opacity = "1", 100);
-  
+
+  setTimeout(() => (overlay.style.opacity = "1"), 100);
+
   setTimeout(() => {
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 1000);
@@ -2948,7 +2955,7 @@ function applyMathTheme() {
 function applyHalloweenTheme() {
   console.log("🎃 Aplicando tema Halloween");
   playSound("error");
-  
+
   // Agregar animación fall si no existe
   if (!document.getElementById("fall-animation")) {
     const style = document.createElement("style");
@@ -2967,7 +2974,7 @@ function applyHalloweenTheme() {
     `;
     document.head.appendChild(style);
   }
-  
+
   // Overlay oscuro
   const overlay = document.createElement("div");
   overlay.style.cssText = `
@@ -2983,9 +2990,9 @@ function applyHalloweenTheme() {
     transition: opacity 1s ease;
   `;
   document.body.appendChild(overlay);
-  
-  setTimeout(() => overlay.style.opacity = "1", 100);
-  
+
+  setTimeout(() => (overlay.style.opacity = "1"), 100);
+
   // Calabazas flotantes
   for (let i = 0; i < 15; i++) {
     setTimeout(() => {
@@ -3005,7 +3012,7 @@ function applyHalloweenTheme() {
       setTimeout(() => pumpkin.remove(), 8000);
     }, i * 400);
   }
-  
+
   setTimeout(() => {
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 1000);
@@ -3015,7 +3022,7 @@ function applyHalloweenTheme() {
 function applyChristmasTheme() {
   console.log("🎄 Aplicando tema Navidad");
   playSound("success");
-  
+
   // Agregar animación fall si no existe
   if (!document.getElementById("fall-animation")) {
     const style = document.createElement("style");
@@ -3034,7 +3041,7 @@ function applyChristmasTheme() {
     `;
     document.head.appendChild(style);
   }
-  
+
   // Overlay azul navideño
   const overlay = document.createElement("div");
   overlay.style.cssText = `
@@ -3050,14 +3057,16 @@ function applyChristmasTheme() {
     transition: opacity 1s ease;
   `;
   document.body.appendChild(overlay);
-  
-  setTimeout(() => overlay.style.opacity = "1", 100);
-  
+
+  setTimeout(() => (overlay.style.opacity = "1"), 100);
+
   // Nieve cayendo
   for (let i = 0; i < 80; i++) {
     setTimeout(() => {
       const snow = document.createElement("div");
-      snow.textContent = ["❄️", "⛄", "🎄", "🎅"][Math.floor(Math.random() * 10) < 7 ? 0 : Math.floor(Math.random() * 4)];
+      snow.textContent = ["❄️", "⛄", "🎄", "🎅"][
+        Math.floor(Math.random() * 10) < 7 ? 0 : Math.floor(Math.random() * 4)
+      ];
       snow.style.cssText = `
         position: fixed;
         font-size: ${10 + Math.random() * 25}px;
@@ -3073,7 +3082,7 @@ function applyChristmasTheme() {
       setTimeout(() => snow.remove(), 6000);
     }, i * 80);
   }
-  
+
   setTimeout(() => {
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 1000);
@@ -3083,7 +3092,7 @@ function applyChristmasTheme() {
 function applyNewYearTheme() {
   console.log("🎆 Aplicando tema Año Nuevo");
   playSound("success");
-  
+
   // Overlay festivo
   const overlay = document.createElement("div");
   overlay.style.cssText = `
@@ -3099,9 +3108,9 @@ function applyNewYearTheme() {
     transition: opacity 1s ease;
   `;
   document.body.appendChild(overlay);
-  
-  setTimeout(() => overlay.style.opacity = "1", 100);
-  
+
+  setTimeout(() => (overlay.style.opacity = "1"), 100);
+
   // Fuegos artificiales
   for (let i = 0; i < 30; i++) {
     setTimeout(() => {
@@ -3121,7 +3130,7 @@ function applyNewYearTheme() {
       setTimeout(() => firework.remove(), 1500);
     }, i * 250);
   }
-  
+
   // Agregar estilo de explosión
   if (!document.getElementById("explode-animation")) {
     const style = document.createElement("style");
@@ -3135,7 +3144,7 @@ function applyNewYearTheme() {
     `;
     document.head.appendChild(style);
   }
-  
+
   setTimeout(() => {
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 1000);
@@ -3215,10 +3224,7 @@ function initScrollSecret() {
 
 function revealFooterSecret() {
   playSound("success");
-  showNotification(
-    "🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...",
-    "success",
-  );
+  showNotification("🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...", "success");
   easterEggTracker.unlock("scroll");
 
   const footer = document.querySelector(".site-footer");
@@ -3268,14 +3274,14 @@ function revealFooterSecret() {
 // ============================================
 /**
  * Sistema de seguimiento de Easter Eggs
- * 
+ *
  * Características:
  * - Guarda progreso en localStorage
  * - Sistema de niveles dinámico (móvil: 6 eggs, desktop: 9 eggs)
  * - Auto-hide cuando el footer es visible
  * - Animación de confetti al completar todos los eggs
  * - Responsive: muestra solo eggs disponibles según plataforma
- * 
+ *
  * Easter Eggs disponibles:
  * - MÓVIL & DESKTOP: konami, logo, retro, thanos, combo, scroll (6)
  * - SOLO DESKTOP: matrix, corners, shake (3 adicionales = 9 total)
@@ -3283,20 +3289,22 @@ function revealFooterSecret() {
 const easterEggTracker = {
   // Estado de cada Easter Egg (false = bloqueado, true = desbloqueado)
   eggs: {
-    konami: false,     // Código Konami (↑↑↓↓←→←→BA)
-    logo: false,       // Long press en newsletter input (móvil) o hover en logo (desktop)
-    matrix: false,     // Click en Matrix Rain (desktop only)
-    retro: false,      // Long press en CTA button (móvil) o doble click (desktop)
-    thanos: false,     // Triple click en CTA button
-    corners: false,    // Click en las 4 esquinas (desktop only)
-    shake: false,      // Zigzag con el mouse (desktop only)
-    combo: false,      // Long press en "Sala Geek" del footer (móvil) o doble click (desktop)
-    scroll: false,     // Scroll hasta el final de la página
+    konami: false, // Código Konami (↑↑↓↓←→←→BA)
+    logo: false, // Long press en newsletter input (móvil) o hover en logo (desktop)
+    matrix: false, // Click en Matrix Rain (desktop only)
+    retro: false, // Long press en CTA button (móvil) o doble click (desktop)
+    thanos: false, // Triple click en CTA button
+    corners: false, // Click en las 4 esquinas (desktop only)
+    shake: false, // Zigzag con el mouse (desktop only)
+    combo: false, // Long press en "Sala Geek" del footer (móvil) o doble click (desktop)
+    scroll: false, // Scroll hasta el final de la página
   },
-  
+
   // Detección de plataforma móvil (dispositivo táctil O pantalla ≤ 968px)
-  isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 968,
-  
+  isMobile:
+    /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    window.innerWidth <= 968,
+
   /**
    * Retorna el total de Easter Eggs disponibles según la plataforma
    * @returns {number} 6 para móvil/tablet, 9 para desktop
@@ -3306,7 +3314,7 @@ const easterEggTracker = {
     // DESKTOP: 9 eggs (todos los anteriores + matrix, corners, shake)
     return this.isMobile ? 6 : 9;
   },
-  
+
   /**
    * Calcula el nivel de "Geek" basado en eggs desbloqueados
    * Sistema de progresión proporcional para mantener misma experiencia en ambas plataformas
@@ -3314,30 +3322,30 @@ const easterEggTracker = {
    */
   getLevel() {
     const count = this.getUnlockedCount();
-    
+
     // Niveles dinámicos según plataforma (progresión % similar)
     if (this.isMobile) {
       // MÓVIL: 6 Easter Eggs totales
       const levels = [
-        { name: "Novato", min: 0, max: 0 },        // 0/6 = 0%
-        { name: "Explorador", min: 1, max: 1 },    // 1/6 = 16%
-        { name: "Cazador", min: 2, max: 3 },       // 2-3/6 = 33-50%
-        { name: "Maestro", min: 4, max: 4 },       // 4/6 = 66%
-        { name: "Leyenda", min: 5, max: 5 },       // 5/6 = 83%
-        { name: "Dios Geek", min: 6, max: Infinity },     // 6+/6 = 100% ✅
+        { name: "Novato", min: 0, max: 0 }, // 0/6 = 0%
+        { name: "Explorador", min: 1, max: 1 }, // 1/6 = 16%
+        { name: "Cazador", min: 2, max: 3 }, // 2-3/6 = 33-50%
+        { name: "Maestro", min: 4, max: 4 }, // 4/6 = 66%
+        { name: "Leyenda", min: 5, max: 5 }, // 5/6 = 83%
+        { name: "Dios Geek", min: 6, max: Infinity }, // 6+/6 = 100% ✅
       ];
-      return levels.find(level => count >= level.min && count <= level.max) || levels[0];
+      return levels.find((level) => count >= level.min && count <= level.max) || levels[0];
     } else {
       // DESKTOP: 9 Easter Eggs totales
       const levels = [
-        { name: "Novato", min: 0, max: 0 },        // 0/9 = 0%
-        { name: "Explorador", min: 1, max: 2 },    // 1-2/9 = 11-22%
-        { name: "Cazador", min: 3, max: 4 },       // 3-4/9 = 33-44%
-        { name: "Maestro", min: 5, max: 6 },       // 5-6/9 = 55-66%
-        { name: "Leyenda", min: 7, max: 8 },       // 7-8/9 = 77-88%
-        { name: "Dios Geek", min: 9, max: Infinity },     // 9+/9 = 100% ✅
+        { name: "Novato", min: 0, max: 0 }, // 0/9 = 0%
+        { name: "Explorador", min: 1, max: 2 }, // 1-2/9 = 11-22%
+        { name: "Cazador", min: 3, max: 4 }, // 3-4/9 = 33-44%
+        { name: "Maestro", min: 5, max: 6 }, // 5-6/9 = 55-66%
+        { name: "Leyenda", min: 7, max: 8 }, // 7-8/9 = 77-88%
+        { name: "Dios Geek", min: 9, max: Infinity }, // 9+/9 = 100% ✅
       ];
-      return levels.find(level => count >= level.min && count <= level.max) || levels[0];
+      return levels.find((level) => count >= level.min && count <= level.max) || levels[0];
     }
   },
 
@@ -3355,28 +3363,28 @@ const easterEggTracker = {
     if (saved) {
       this.eggs = JSON.parse(saved);
     }
-    
+
     // SIEMPRE actualizar UI al inicio (aunque no haya progreso guardado)
     this.updateUI();
 
     // En móvil: inyectar CSS para ocultar achievements desktop-only
     if (this.isMobile) {
-      const style = document.createElement('style');
-      style.id = 'tracker-mobile-styles';
+      const style = document.createElement("style");
+      style.id = "tracker-mobile-styles";
       style.textContent = `
         .achievement.desktop-only {
           display: none !important;
         }
       `;
       // Solo agregar si no existe ya
-      if (!document.getElementById('tracker-mobile-styles')) {
+      if (!document.getElementById("tracker-mobile-styles")) {
         document.head.appendChild(style);
       }
     }
 
     // Configurar estado inicial del tracker: SIEMPRE colapsado al inicio
     const tracker = document.getElementById("easter-egg-tracker");
-    
+
     if (tracker) {
       // SIEMPRE inicia colapsado, sin importar la preferencia previa
       tracker.classList.add("collapsed");
@@ -3385,11 +3393,11 @@ const easterEggTracker = {
 
     // Configurar botón de toggle (expandir/colapsar)
     const toggle = document.getElementById("tracker-toggle");
-    
+
     if (toggle && tracker) {
       toggle.addEventListener("click", () => {
         tracker.classList.toggle("collapsed");
-        
+
         // Guardar preferencia del usuario
         const isCollapsed = tracker.classList.contains("collapsed");
         localStorage.setItem("trackerCollapsed", isCollapsed);
@@ -3415,11 +3423,11 @@ const easterEggTracker = {
 
     // Ajustar posición del tracker según scroll para no cubrir el footer
     this.initTrackerPositioning();
-    
+
     // Listener de resize para actualizar detección de plataforma dinámicamente
     this.initResizeListener();
   },
-  
+
   /**
    * Muestra el Achievement Tracker con animación
    * Llamado después de que termina el typewriter
@@ -3427,104 +3435,77 @@ const easterEggTracker = {
    */
   show() {
     const tracker = document.getElementById("easter-egg-tracker");
-    console.log("🎯 show() llamado - Tracker encontrado:", !!tracker);
-    
+
     if (!tracker) {
-      console.error("❌ ERROR: No se encontró #easter-egg-tracker");
+      console.error("Easter Egg Tracker: elemento #easter-egg-tracker no encontrado");
       return;
     }
-    
-    // Delay para que sea secuencial después del hero-brand
-      setTimeout(() => {
-        // Debug intenso para Android
-        console.log('DEBUG ANDROID - Iniciando show()');
-        console.log('Window dimensions:', {
-          innerWidth: window.innerWidth,
-          innerHeight: window.innerHeight,
-          outerWidth: window.outerWidth,
-          outerHeight: window.outerHeight,
-          screenWidth: window.screen.width,
-          screenHeight: window.screen.height
-        });
-        console.log('Tracker antes de mostrar:', {
-          display: getComputedStyle(tracker).display,
-          visibility: getComputedStyle(tracker).visibility,
-          opacity: getComputedStyle(tracker).opacity,
-          position: getComputedStyle(tracker).position,
-          bottom: getComputedStyle(tracker).bottom,
-          zIndex: getComputedStyle(tracker).zIndex,
-          width: tracker.offsetWidth,
-          height: tracker.offsetHeight
-        });
-        
-        tracker.style.visibility = 'visible';
-        tracker.style.display = 'block';
-        tracker.style.zIndex = '9999';
-        
-        console.log('Tracker despues de visibility:', {
-          visibility: getComputedStyle(tracker).visibility,
-          display: getComputedStyle(tracker).display,
-          zIndex: getComputedStyle(tracker).zIndex
-        });
-        
-        // Detectar si es mobile (ancho < 480px) para usar animación correcta
-        const isMobileView = window.innerWidth <= 480;
-        console.log("� Ancho de pantalla:", window.innerWidth, "- Es mobile:", isMobileView);
-        
-        // Usar Web Animations API para animación suave y elegante
-        const animation = tracker.animate(
-          [
-            { 
-              opacity: 0, 
-              transform: isMobileView ? 'translateY(400px)' : 'translateX(400px)'
-            },
-            { 
-              opacity: 1, 
-              transform: isMobileView ? 'translateY(0)' : 'translateX(0)'
-            }
-          ],
+
+    // Delay de 800ms para secuencia elegante después del hero-brand
+    setTimeout(() => {
+      // Hacer visible el tracker
+      tracker.style.visibility = "visible";
+      tracker.style.display = "block";
+      tracker.style.zIndex = "9999";
+
+      // Detectar viewport móvil para animación apropiada
+      const isMobileView = window.innerWidth <= 480;
+
+      // Usar Web Animations API para animación suave y elegante
+      const animation = tracker.animate(
+        [
           {
-            duration: 800, // Animación más elegante y pausada
-            easing: 'cubic-bezier(0.4, 0, 0.2, 1)', // Curva más suave
-            fill: 'forwards'
-          }
-        );
-        
-        animation.onfinish = () => {
-          console.log("✅ Animación completada");
-          // Fijar estado final permanentemente
-          tracker.style.opacity = '1';
-          tracker.style.transform = 'translate(0, 0)';
-        };
-        
-        animation.onerror = (error) => {
-          console.error("❌ Error en animación:", error);
-          // Fallback: mostrar sin animación
-          tracker.style.opacity = '1';
-          tracker.style.transform = 'translate(0, 0)';
-        };
-        
-      }, 800); // 800ms después de que aparece "Sala Geek" - más elegante
+            opacity: 0,
+            transform: isMobileView ? "translateY(400px)" : "translateX(400px)",
+          },
+          {
+            opacity: 1,
+            transform: isMobileView ? "translateY(0)" : "translateX(0)",
+          },
+        ],
+        {
+          duration: 800, // Animación más elegante y pausada
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)", // Curva más suave
+          fill: "forwards",
+        }
+      );
+
+      // Al finalizar animación, fijar estado final
+      animation.onfinish = () => {
+        tracker.style.opacity = "1";
+        tracker.style.transform = "translate(0, 0)";
+      };
+
+      // Fallback en caso de error: mostrar sin animación
+      animation.onerror = () => {
+        tracker.style.opacity = "1";
+        tracker.style.transform = "translate(0, 0)";
+      };
+    }, 800);
   },
-  
+
   /**
    * Actualiza la detección de plataforma y el UI cuando cambia el tamaño de ventana
    */
   updatePlatformDetection() {
     const wasMode = this.isMobile;
-    
+
     // Re-detectar plataforma
-    this.isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 968;
-    
+    this.isMobile =
+      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth <= 968;
+
     // Si cambió el modo (desktop <-> mobile)
     if (wasMode !== this.isMobile) {
-      console.log(`📱 Cambio de plataforma detectado: ${this.isMobile ? 'Mobile/Tablet (≤968px)' : 'Desktop (>968px)'}`);
-      
+      console.log(
+        `📱 Cambio de plataforma detectado: ${this.isMobile ? "Mobile/Tablet (≤968px)" : "Desktop (>968px)"}`
+      );
+
       // Actualizar estilos CSS para ocultar/mostrar eggs desktop-only
-      const style = document.getElementById('tracker-mobile-styles');
+      const style = document.getElementById("tracker-mobile-styles");
       if (this.isMobile && !style) {
-        const newStyle = document.createElement('style');
-        newStyle.id = 'tracker-mobile-styles';
+        const newStyle = document.createElement("style");
+        newStyle.id = "tracker-mobile-styles";
         newStyle.textContent = `
           .achievement.desktop-only {
             display: none !important;
@@ -3534,18 +3515,18 @@ const easterEggTracker = {
       } else if (!this.isMobile && style) {
         style.remove();
       }
-      
+
       // Actualizar UI con nuevo total de eggs
       this.updateUI();
     }
   },
-  
+
   /**
    * Inicializa listener de resize para detectar cambios de plataforma
    */
   initResizeListener() {
     let resizeTimer;
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         this.updatePlatformDetection();
@@ -3566,16 +3547,16 @@ const easterEggTracker = {
 
       const footerRect = footer.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      
+
       // Calcular distancia del footer al viewport
       const footerDistanceFromBottom = viewportHeight - footerRect.top;
-      
+
       // Si el footer está entrando al viewport (menos de 200px del borde inferior)
       if (footerDistanceFromBottom > 0) {
         // OCULTAR tracker con fade out
         tracker.style.opacity = "0";
         tracker.style.pointerEvents = "none"; // Deshabilitar interacción
-        
+
         // Después de la animación, ocultarlo completamente
         setTimeout(() => {
           if (tracker.style.opacity === "0") {
@@ -3588,7 +3569,7 @@ const easterEggTracker = {
         tracker.style.position = "fixed";
         tracker.style.bottom = "20px";
         tracker.style.top = "auto";
-        
+
         // Pequeño delay para que la transición se vea
         setTimeout(() => {
           tracker.style.opacity = "1";
@@ -3599,10 +3580,10 @@ const easterEggTracker = {
 
     // Ajustar en scroll
     window.addEventListener("scroll", adjustTrackerPosition);
-    
+
     // Ajustar en resize
     window.addEventListener("resize", adjustTrackerPosition);
-    
+
     // Ajustar al inicio
     adjustTrackerPosition();
   },
@@ -3613,7 +3594,7 @@ const easterEggTracker = {
       this.save();
       this.updateUI();
       this.showUnlockAnimation(eggName);
-      
+
       // Solo reproducir sonido de éxito si no hay otro sonido activo
       // Esperar un poco para que termine el sonido del Easter Egg
       setTimeout(() => {
@@ -3621,7 +3602,7 @@ const easterEggTracker = {
           playSound("success");
         }
       }, 100);
-      
+
       // La celebración se maneja en showUnlockAnimation
     }
   },
@@ -3631,7 +3612,7 @@ const easterEggTracker = {
   },
 
   reset() {
-    Object.keys(this.eggs).forEach(key => {
+    Object.keys(this.eggs).forEach((key) => {
       this.eggs[key] = false;
     });
     this.save();
@@ -3641,12 +3622,12 @@ const easterEggTracker = {
 
   getUnlockedCount() {
     // Lista de eggs disponibles según plataforma
-    const mobileEggs = ['konami', 'logo', 'retro', 'thanos', 'combo', 'scroll'];
-    const desktopOnlyEggs = ['matrix', 'corners', 'shake'];
-    
+    const mobileEggs = ["konami", "logo", "retro", "thanos", "combo", "scroll"];
+    const desktopOnlyEggs = ["matrix", "corners", "shake"];
+
     // Si es móvil, solo contar los eggs de mobile
     if (this.isMobile) {
-      return mobileEggs.filter(eggName => this.eggs[eggName]).length;
+      return mobileEggs.filter((eggName) => this.eggs[eggName]).length;
     } else {
       // Si es desktop, contar todos los eggs (mobile + desktop)
       return Object.values(this.eggs).filter(Boolean).length;
@@ -3668,7 +3649,7 @@ const easterEggTracker = {
     }
 
     // Actualizar achievements
-    Object.keys(this.eggs).forEach(eggName => {
+    Object.keys(this.eggs).forEach((eggName) => {
       const achievement = document.querySelector(`[data-egg="${eggName}"]`);
       if (achievement) {
         if (this.eggs[eggName]) {
@@ -3713,7 +3694,7 @@ const easterEggTracker = {
       `🎉 ¡Logro desbloqueado! ${this.getUnlockedCount()}/${total} - Nivel: ${level.name}`,
       "success"
     );
-    
+
     // Check si completó todos (según plataforma)
     if (this.getUnlockedCount() === total) {
       setTimeout(() => this.showCompletionCelebration(), 500);
@@ -3722,33 +3703,33 @@ const easterEggTracker = {
 
   /**
    * Celebración de completado - Se activa al desbloquear todos los Easter Eggs
-   * 
+   *
    * Efecto especial:
    * - Lluvia de confetti (100 piezas)
    * - Posicionado en viewport actual del usuario (no en top:0)
    * - Auto-cleanup después de 3 segundos
    * - Mensaje diferente según plataforma (móvil/desktop)
-   * 
+   *
    * Fix aplicado: position absolute + scrollY para que confetti sea visible
    * donde esté el usuario (antes estaba en top:0 y no se veía si estaba scrolleado)
    */
   showCompletionCelebration() {
     playSound("levelup");
-    
+
     // Mensaje personalizado según plataforma
-    const message = this.isMobile 
+    const message = this.isMobile
       ? "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs móviles! ¡Eres un DIOS GEEK! 🎮"
       : "🏆 ¡INCREÍBLE! ¡Has encontrado todos los Easter Eggs! ¡Eres un DIOS GEEK! 🎮";
     showNotification(message, "success");
 
     // Crear o reutilizar contenedor de confetti
-    let confettiContainer = document.getElementById('confetti-container');
+    let confettiContainer = document.getElementById("confetti-container");
     if (!confettiContainer) {
-      confettiContainer = document.createElement('div');
-      confettiContainer.id = 'confetti-container';
+      confettiContainer = document.createElement("div");
+      confettiContainer.id = "confetti-container";
       document.body.appendChild(confettiContainer);
     }
-    
+
     // IMPORTANTE: Posicionar en viewport ACTUAL del usuario (no en top:0)
     // Esto asegura que el confetti sea visible donde esté scrolleado
     const scrollY = window.pageYOffset || document.documentElement.scrollTop;
@@ -3769,13 +3750,13 @@ const easterEggTracker = {
         const confetti = document.createElement("div");
         confetti.textContent = ["🎉", "🎊", "⭐", "🏆", "👑"][Math.floor(Math.random() * 5)];
         confetti.className = "celebration-confetti";
-        
+
         const startX = Math.random() * 100;
         const duration = 1 + Math.random() * 1.5;
         const fontSize = 25 + Math.random() * 35;
         const rotation = Math.random() * 360;
         const drift = (Math.random() - 0.5) * 3;
-        
+
         confetti.style.cssText = `
           position: absolute;
           left: ${startX}vw;
@@ -3784,37 +3765,37 @@ const easterEggTracker = {
           transform: rotate(${rotation}deg);
           pointer-events: none;
         `;
-        
+
         confettiContainer.appendChild(confetti);
-        
+
         // Animar con JavaScript
         let top = -80;
         let currentX = startX;
         const startTime = Date.now();
-        
+
         const animate = () => {
           const elapsed = Date.now() - startTime;
           const progress = elapsed / (duration * 1000);
-          
+
           // Caída rápida con aceleración
           top = -80 + (window.innerHeight + 100) * Math.pow(progress, 1.5);
-          currentX = startX + (drift * progress);
-          
+          currentX = startX + drift * progress;
+
           confetti.style.top = `${top}px`;
           confetti.style.left = `${currentX}vw`;
           confetti.style.transform = `rotate(${rotation + elapsed * 0.5}deg)`;
-          
+
           if (top < window.innerHeight + 50 && elapsed < duration * 1000) {
             requestAnimationFrame(animate);
           } else {
             confetti.remove();
           }
         };
-        
+
         requestAnimationFrame(animate);
       }, i * 30);
     }
-    
+
     // Limpiar contenedor después de la animación
     setTimeout(() => {
       confettiContainer.remove();
@@ -3824,12 +3805,12 @@ const easterEggTracker = {
   showFloatingHint() {
     const hint = document.createElement("div");
     hint.className = "easter-egg-hint";
-    
+
     // Mensaje dinámico según plataforma
-    const message = this.isMobile 
+    const message = this.isMobile
       ? "📱 6 secretos móviles ocultos... ¿Puedes encontrarlos todos?"
       : "🎮 9 secretos ocultos... ¿Puedes encontrarlos todos?";
-    
+
     hint.textContent = message;
     document.body.appendChild(hint);
 
@@ -3837,7 +3818,7 @@ const easterEggTracker = {
       hint.style.animation = "fadeOut 0.5s ease";
       setTimeout(() => hint.remove(), 500);
     }, 8000);
-  }
+  },
 };
 
 // ============================================
@@ -3853,29 +3834,29 @@ function initMobileEasterEggs() {
   // 1. TRIPLE TAP/CLICK en el TÍTULO "Sala Geek" -> Konami alternativo
   let titleTapCount = 0;
   let titleTapTimer = null;
-  
+
   const handleTitleTap = (e) => {
     // Solo funciona en móvil/tablet (≤ 968px)
     if (window.innerWidth > 968) return;
-    
+
     console.log(`Tap/Click en título - width: ${window.innerWidth}, count: ${titleTapCount + 1}`);
     e.preventDefault();
     titleTapCount++;
-    
+
     if (titleTapTimer) clearTimeout(titleTapTimer);
-    
+
     if (titleTapCount === 3) {
       console.log("✅ Triple tap completado! Activando NES Mode");
       activateNESMode();
       easterEggTracker.unlock("konami");
       titleTapCount = 0;
     }
-    
+
     titleTapTimer = setTimeout(() => {
       titleTapCount = 0;
     }, 600);
   };
-  
+
   if (mobileHeroTitle) {
     // Soporte para touch Y click (para funcionar en responsive mode)
     mobileHeroTitle.addEventListener("touchend", handleTitleTap);
@@ -3886,39 +3867,39 @@ function initMobileEasterEggs() {
   let ctaLongPressTimer = null;
   let ctaLongPressActivated = false;
   const ctaButton = document.querySelector(".hero-cta .btn-primary");
-  
+
   const handleCtaStart = (e) => {
     if (window.innerWidth > 968) return;
-    
+
     console.log("🔘 Long press iniciado en CTA");
     ctaLongPressActivated = false;
-    
+
     // Feedback visual INMEDIATO
     ctaButton.style.transform = "scale(0.95)";
     ctaButton.style.transition = "transform 0.1s ease";
-    
+
     ctaLongPressTimer = setTimeout(() => {
       console.log("✅ Long press completado! Activando 8-bit Mode");
       ctaLongPressActivated = true;
       activate8BitMode();
       easterEggTracker.unlock("retro");
-      
+
       // Feedback visual y haptic
       ctaButton.style.transform = "scale(1.1)";
       ctaButton.style.boxShadow = "0 0 20px var(--accent-primary)";
       if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-      
+
       setTimeout(() => {
         ctaButton.style.transform = "";
         ctaButton.style.boxShadow = "";
       }, 500);
     }, 600);
   };
-  
+
   const handleCtaEnd = (e) => {
     clearTimeout(ctaLongPressTimer);
     ctaButton.style.transform = "";
-    
+
     if (ctaLongPressActivated) {
       e.preventDefault();
       e.stopPropagation();
@@ -3927,22 +3908,22 @@ function initMobileEasterEggs() {
       return false;
     }
   };
-  
+
   const handleCtaMove = (e) => {
     clearTimeout(ctaLongPressTimer);
   };
-  
+
   if (ctaButton) {
     // Soporte para touch
     ctaButton.addEventListener("touchstart", handleCtaStart, { passive: false });
     ctaButton.addEventListener("touchend", handleCtaEnd, { passive: false });
     ctaButton.addEventListener("touchmove", handleCtaMove);
-    
+
     // Soporte para click/hold (responsive mode)
     ctaButton.addEventListener("mousedown", handleCtaStart);
     ctaButton.addEventListener("mouseup", handleCtaEnd);
     ctaButton.addEventListener("mouseleave", handleCtaEnd);
-    
+
     // Prevenir click si long press fue activado
     ctaButton.addEventListener("click", (e) => {
       if (ctaLongPressActivated) {
@@ -3959,15 +3940,15 @@ function initMobileEasterEggs() {
   // 3. LONG PRESS en email input del Newsletter -> Glitch Stats
   let newsletterLongPressTimer = null;
   const newsletterInput = document.querySelector(".newsletter-form input[type='email']");
-  
+
   const handleNewsletterStart = (e) => {
     if (window.innerWidth > 968) return;
-    
+
     console.log("📧 Long press iniciado en Newsletter");
     newsletterInput.style.borderColor = "var(--accent-secondary)";
     newsletterInput.style.transform = "scale(0.98)";
     newsletterInput.style.transition = "all 0.1s ease";
-    
+
     newsletterLongPressTimer = setTimeout(() => {
       console.log("✅ Long press completado! Activando Glitch Stats");
       activateGlitchStats();
@@ -3981,19 +3962,19 @@ function initMobileEasterEggs() {
       }, 500);
     }, 600);
   };
-  
+
   const handleNewsletterEnd = () => {
     clearTimeout(newsletterLongPressTimer);
     newsletterInput.style.borderColor = "";
     newsletterInput.style.transform = "";
   };
-  
+
   if (newsletterInput) {
     // Soporte para touch
     newsletterInput.addEventListener("touchstart", handleNewsletterStart);
     newsletterInput.addEventListener("touchend", handleNewsletterEnd);
     newsletterInput.addEventListener("touchmove", handleNewsletterEnd);
-    
+
     // Soporte para mouse (responsive mode)
     newsletterInput.addEventListener("mousedown", handleNewsletterStart);
     newsletterInput.addEventListener("mouseup", handleNewsletterEnd);
@@ -4004,28 +3985,30 @@ function initMobileEasterEggs() {
   let copyrightTapCount = 0;
   let copyrightTapTimer = null;
   const copyright = document.querySelector(".footer-bottom p");
-  
+
   const handleCopyrightTap = (e) => {
     if (window.innerWidth > 968) return;
-    
-    console.log(`Tap/Click en copyright - width: ${window.innerWidth}, count: ${copyrightTapCount + 1}`);
+
+    console.log(
+      `Tap/Click en copyright - width: ${window.innerWidth}, count: ${copyrightTapCount + 1}`
+    );
     e.preventDefault();
     copyrightTapCount++;
-    
+
     if (copyrightTapTimer) clearTimeout(copyrightTapTimer);
-    
+
     if (copyrightTapCount === 2) {
       console.log("✅ Doble tap completado! Activando Thanos Snap");
       activateSnapEffect();
       easterEggTracker.unlock("thanos");
       copyrightTapCount = 0;
     }
-    
+
     copyrightTapTimer = setTimeout(() => {
       copyrightTapCount = 0;
     }, 500);
   };
-  
+
   if (copyright) {
     // Soporte para touch Y click
     copyright.addEventListener("touchend", handleCopyrightTap);
@@ -4037,17 +4020,17 @@ function initMobileEasterEggs() {
   // ============================================
   /**
    * Easter Egg: Combo Breaker (MÓVIL)
-   * 
+   *
    * Acción: Mantener presionado "Sala Geek" en el footer por 600ms
    * Efecto: Invierte colores de toda la página (modo inverso geek)
-   * 
+   *
    * Debugging:
    * - Espera 1s para que el footer (partial) se cargue
    * - Intenta múltiples selectores de respaldo
    * - Console logs en cada paso para diagnóstico
    * - Área de toque ampliada (12px padding/margin)
    * - Feedback visual inmediato (escala, color, borde)
-   * 
+   *
    * ESTADO ACTUAL: En debugging
    * - Touch detection: ✅ Funcionando
    * - Visual feedback: ✅ Funcionando
@@ -4056,57 +4039,57 @@ function initMobileEasterEggs() {
    */
   setTimeout(() => {
     let footerBrandLongPress = null;
-    
+
     // PASO 1: Intentar selector directo
     let footerBrand = document.querySelector(".footer-bottom strong");
-    
+
     // PASO 2: Fallback - buscar por contenido de texto
     if (!footerBrand) {
       const allStrong = document.querySelectorAll("strong");
-      allStrong.forEach(el => {
+      allStrong.forEach((el) => {
         if (el.textContent.includes("Sala Geek")) {
           footerBrand = el;
         }
       });
     }
-    
+
     // LOG: Confirmar si encontramos el elemento
     console.log("🔍 Footer Brand encontrado:", footerBrand ? "✅ SÍ" : "❌ NO");
-    
+
     if (footerBrand) {
       console.log("✅ Configurando Easter Egg en:", footerBrand.textContent);
-      
+
       // Ampliar área de toque para móviles (12px = ~1cm en la mayoría de pantallas)
       footerBrand.style.padding = "12px";
       footerBrand.style.margin = "-12px";
       footerBrand.style.display = "inline-block";
       footerBrand.style.cursor = "pointer";
       footerBrand.style.border = "2px solid transparent"; // Cambiará a azul al tocar (debugging visual)
-      
+
       /**
        * Función que activa el efecto Combo Breaker
        * Separada para mejor debugging y claridad
        */
       const activateCombo = () => {
         console.log("🎮 COMBO BREAKER ACTIVADO!");
-        
+
         // Sonido y notificación
         playSound("levelup");
         easterEggTracker.unlock("combo");
         showNotification("🤓 ¡COMBO BREAKER! Modo inverso activado", "success");
-        
+
         // EFECTO VISUAL: Invertir colores + rotación de matiz
         document.body.style.filter = "invert(1) hue-rotate(180deg)";
         document.body.style.transition = "filter 0.5s ease";
-        
+
         // Feedback en el elemento mismo
         footerBrand.style.transform = "scale(1.3) rotate(360deg)";
         footerBrand.style.color = "#00ff00";
         footerBrand.style.textShadow = "0 0 20px #00ff00";
-        
+
         // Vibración (si disponible)
         if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-        
+
         // Restaurar todo después de 4 segundos
         setTimeout(() => {
           document.body.style.filter = "none";
@@ -4115,38 +4098,38 @@ function initMobileEasterEggs() {
           footerBrand.style.textShadow = "";
         }, 4000);
       };
-      
+
       // HANDLER: Long Press Start (touch o mouse)
       const handleFooterStart = (e) => {
         // Solo funciona en móvil/tablet (≤ 968px)
         if (window.innerWidth > 968) return;
-        
+
         console.log("👆 Long press iniciado en Footer - width:", window.innerWidth); // DEBUG LOG
-        
+
         // Feedback visual INMEDIATO
         footerBrand.style.transform = "scale(0.95)";
         footerBrand.style.color = "var(--accent-primary)";
         footerBrand.style.border = "2px solid var(--accent-primary)";
         footerBrand.style.transition = "all 0.1s ease";
-        
+
         // Iniciar temporizador de 600ms
         footerBrandLongPress = setTimeout(() => {
           console.log("✅ Long press completado! Activando Combo Breaker"); // DEBUG LOG
           activateCombo();
         }, 600);
       };
-      
+
       // HANDLER: Long Press End
       const handleFooterEnd = () => {
         console.log("👆 Long press terminado"); // DEBUG LOG
         clearTimeout(footerBrandLongPress);
-        
+
         // Restaurar estilos
         footerBrand.style.transform = "";
         footerBrand.style.color = "";
         footerBrand.style.border = "2px solid transparent";
       };
-      
+
       // HANDLER: Touch/Mouse Move - Cancela
       const handleFooterMove = () => {
         console.log("👆 Movimiento detectado - cancelando"); // DEBUG LOG
@@ -4155,57 +4138,69 @@ function initMobileEasterEggs() {
         footerBrand.style.color = "";
         footerBrand.style.border = "2px solid transparent";
       };
-      
+
       // EVENT: Touch events
       footerBrand.addEventListener("touchstart", handleFooterStart, { passive: true });
       footerBrand.addEventListener("touchend", handleFooterEnd, { passive: true });
       footerBrand.addEventListener("touchmove", handleFooterMove, { passive: true });
-      
+
       // EVENT: Mouse events (para responsive mode)
       footerBrand.addEventListener("mousedown", handleFooterStart);
       footerBrand.addEventListener("mouseup", handleFooterEnd);
       footerBrand.addEventListener("mouseleave", handleFooterEnd);
     } else {
       console.log("❌ Footer Brand (strong) NO encontrado después de timeout");
-      
+
       // Selector alternativo: toda la línea de copyright
       const footerCopyright = document.querySelector(".footer-copyright");
       if (footerCopyright) {
         console.log("✅ Usando selector alternativo: .footer-copyright");
-      footerCopyright.style.cursor = "pointer";
-      footerCopyright.style.userSelect = "none";
-      
-      footerCopyright.addEventListener("touchstart", (e) => {
-        footerCopyright.style.opacity = "0.7";
-        
-        footerBrandLongPress = setTimeout(() => {
-          // EFECTO GEEK MODE - MUY VISIBLE
-          playSound("levelup");
-          easterEggTracker.unlock("combo");
-          showNotification("🤓 ¡GEEK MODE ACTIVADO! Modo inverso activado", "success");
-          
-          // Efecto visual SUPER llamativo
-          document.body.style.filter = "invert(1) hue-rotate(180deg)";
-          document.body.style.transition = "filter 0.5s ease";
-          
-          if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-          
-          setTimeout(() => {
-            document.body.style.filter = "none";
+        footerCopyright.style.cursor = "pointer";
+        footerCopyright.style.userSelect = "none";
+
+        footerCopyright.addEventListener(
+          "touchstart",
+          (e) => {
+            footerCopyright.style.opacity = "0.7";
+
+            footerBrandLongPress = setTimeout(() => {
+              // EFECTO GEEK MODE - MUY VISIBLE
+              playSound("levelup");
+              easterEggTracker.unlock("combo");
+              showNotification("🤓 ¡GEEK MODE ACTIVADO! Modo inverso activado", "success");
+
+              // Efecto visual SUPER llamativo
+              document.body.style.filter = "invert(1) hue-rotate(180deg)";
+              document.body.style.transition = "filter 0.5s ease";
+
+              if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+
+              setTimeout(() => {
+                document.body.style.filter = "none";
+                footerCopyright.style.opacity = "1";
+              }, 4000);
+            }, 600);
+          },
+          { passive: true }
+        );
+
+        footerCopyright.addEventListener(
+          "touchend",
+          () => {
+            clearTimeout(footerBrandLongPress);
             footerCopyright.style.opacity = "1";
-          }, 4000);
-        }, 600);
-      }, { passive: true });
-      
-      footerCopyright.addEventListener("touchend", () => {
-        clearTimeout(footerBrandLongPress);
-        footerCopyright.style.opacity = "1";
-      }, { passive: true });
-      
-      footerCopyright.addEventListener("touchmove", () => {
-        clearTimeout(footerBrandLongPress);
-        footerCopyright.style.opacity = "1";
-      }, { passive: true });
+          },
+          { passive: true }
+        );
+
+        footerCopyright.addEventListener(
+          "touchmove",
+          () => {
+            clearTimeout(footerBrandLongPress);
+            footerCopyright.style.opacity = "1";
+          },
+          { passive: true }
+        );
       }
     }
   }, 1000); // Esperar 1 segundo a que el footer se cargue
@@ -4218,7 +4213,9 @@ function initMobileEasterEggs() {
 
 // Variable global para verificar el modo actual dinámicamente
 function isMobileMode() {
-  const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
   return isMobileDevice || window.innerWidth <= 968;
 }
 
@@ -4230,13 +4227,13 @@ function initAllEasterEggs() {
     console.log("🚫 Easter Eggs desactivados en página legal");
     return;
   }
-  
+
   // Easter Eggs universales (siempre activos)
   initKonamiCode(); // ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA
   initSecretWords(); // matrix, retro, thanos
   initScrollSecret(); // Scroll al 100%
   initSpecialDates(); // Fechas especiales
-  
+
   // Inicializar TODOS los eventos (con verificación interna de modo)
   initLogoEasterEgg(); // ✅ Doble clic en "Sala Geek" para efecto Glitch (desktop)
   initTimeEasterEgg();
@@ -4244,18 +4241,18 @@ function initAllEasterEggs() {
   initMouseShake();
   initKeyboardCombo();
   initMobileEasterEggs();
-  
+
   // Actualizar tracker cuando cambia el tamaño
   let resizeTimer;
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       easterEggTracker.updatePlatformDetection();
     }, 250);
   });
-  
+
   // console.log(`🎮 Easter Eggs inicializados - Modo: ${isMobileMode() ? 'Mobile/Tablet (≤968px)' : 'Desktop (>968px)'}`);
-  
+
   // Inicializar tracker (universal)
   easterEggTracker.init();
 }
