@@ -354,6 +354,9 @@
     -->
     <script src="/src/js/performance-boost.min.js"></script>
 
+    <!-- Google reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB"></script>
+
     <!-- 
       Script principal minificado (50% más ligero)
       defer: Carga sin bloquear HTML parsing, ejecuta después del DOM
@@ -861,7 +864,28 @@
               <p class="message-text"></p>
             </div>
 
-            <p class="newsletter-note">🔒 No spam. Cancela cuando quieras. 100% gratis.</p>
+            <p class="newsletter-note">
+              🔒 No spam. Cancela cuando quieras. 100% gratis.<br />
+              <small style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.5rem; display: block;">
+                Este sitio está protegido por reCAPTCHA y se aplican la
+                <a
+                  href="https://policies.google.com/privacy"
+                  target="_blank"
+                  rel="noopener"
+                  style="color: var(--accent-primary)"
+                  >Política de Privacidad</a
+                >
+                y los
+                <a
+                  href="https://policies.google.com/terms"
+                  target="_blank"
+                  rel="noopener"
+                  style="color: var(--accent-primary)"
+                  >Términos de Servicio</a
+                >
+                de Google.
+              </small>
+            </p>
           </div>
         </div>
       </section>

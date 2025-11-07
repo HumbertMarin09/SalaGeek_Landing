@@ -10,13 +10,44 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { email } = JSON.parse(event.body);
+    const { email, recaptchaToken } = JSON.parse(event.body);
 
     // Validar email
     if (!email || !email.includes('@')) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Email inválido' })
+      };
+    }
+
+    // Validar reCAPTCHA token
+    if (!recaptchaToken) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Token de reCAPTCHA requerido' })
+      };
+    }
+
+    // Verificar reCAPTCHA con Google
+    const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
+    const recaptchaResponse = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `secret=${RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`
+    });
+
+    const recaptchaData = await recaptchaResponse.json();
+
+    // Validar resultado de reCAPTCHA
+    if (!recaptchaData.success || recaptchaData.score < 0.5) {
+      console.error('reCAPTCHA validation failed:', recaptchaData);
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ 
+          error: 'Verificación de seguridad fallida. Por favor, intenta nuevamente.' 
+        })
       };
     }
 
@@ -37,7 +68,10 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({
         email_address: email,
         status: 'subscribed',
-        tags: ['Website']
+        tags: ['Website'],
+        merge_fields: {
+          RECAPTCHA: recaptchaData.score.toFixed(2) // Guardar el score para referencia
+        }
       })
     });
 

@@ -1050,13 +1050,25 @@ function initNewsletterForm() {
     }
 
     try {
+      // Verificar reCAPTCHA v3
+      if (typeof grecaptcha === "undefined") {
+        throw new Error("reCAPTCHA no está cargado. Por favor, recarga la página.");
+      }
+
+      const recaptchaToken = await grecaptcha.execute("6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB", {
+        action: "newsletter_subscribe",
+      });
+
       // Enviar a Netlify Function que conecta con Mailchimp
       const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email,
+          recaptchaToken, // Incluir el token de reCAPTCHA
+        }),
       });
 
       const data = await response.json();
