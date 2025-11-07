@@ -263,7 +263,7 @@
   font-weight: 600;
   color: var(--accent-primary);
   box-shadow: 0 5px 20px rgba(255, 209, 102, 0.4);
-  z-index: 9998;
+  z-index: 10000; /* Por encima del tracker (9999) */
   animation: hintPulse 2s infinite;
   backdrop-filter: blur(10px);
 }
