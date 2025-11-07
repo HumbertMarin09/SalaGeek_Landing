@@ -1846,6 +1846,9 @@ function initKonamiCode() {
   let konamiIndex = 0;
 
   document.addEventListener("keydown", (e) => {
+    // Validar que e.key existe
+    if (!e.key) return;
+    
     const key = e.key.toLowerCase();
     const expectedKey = konamiCode[konamiIndex];
     const isMatch = e.key === expectedKey || key === expectedKey;
@@ -2205,6 +2208,9 @@ function initSecretWords() {
   };
 
   document.addEventListener("keypress", (e) => {
+    // Validar que e.key existe
+    if (!e.key) return;
+    
     // Solo letras
     if (/^[a-z]$/i.test(e.key)) {
       typedWord += e.key.toLowerCase();
