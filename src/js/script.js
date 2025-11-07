@@ -194,7 +194,7 @@ function initNavigation() {
   const menuLinks = document.querySelectorAll(".menu a");
 
   if (!toggle || !nav) {
-    console.warn("Navigation elements not found");
+    // Navigation elements not found - silent return
     return;
   }
 

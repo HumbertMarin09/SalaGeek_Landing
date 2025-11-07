@@ -1,26 +1,16 @@
 # 🎮 Sala Geek - Landing Page# 🎮 Sala Geek - Landing Page
 
-
-
 [![Version](https://img.shields.io/badge/version-1.73.0-blue.svg)](https://github.com/HumbertMarin09/SalaGeek_Landing)[![Version](https://img.shields.io/badge/version-1.73.0-blue.svg)](https://github.com/HumbertMarin09/SalaGeek_Landing)
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 [![Status](https://img.shields.io/badge/status-production-success.svg)](https://salageek.com)[![Status](https://img.shields.io/badge/status-production-success.svg)]()
 
-
-
 Landing page oficial de **Sala Geek**, tu espacio definitivo para mantenerte al día con lo último en películas, series, anime y videojuegos. Incluye sistema completo de Easter Eggs, Achievement Tracker, animaciones avanzadas y diseño responsive optimizado.Landing page oficial de **Sala Geek**, tu espacio definitivo para mantenerte al día con lo último en películas, series, anime y videojuegos. Incluye sistema completo de Easter Eggs, Achievement Tracker, animaciones avanzadas y diseño responsive optimizado.
 
-
-
-------
-
-
+---
 
 ## 📋 Tabla de Contenidos## 📋 Tabla de Contenidos
-
-
 
 - [Características](#-características)- [Características](#-características)
 
@@ -94,7 +84,7 @@ Landing page oficial de **Sala Geek**, tu espacio definitivo para mantenerte al 
 
 ---
 
-```text
+````text
 
 ## 🛠 TecnologíasSG_Landing/
 
@@ -312,15 +302,15 @@ La landing page está completamente optimizada para:
 
    python -m http.server 8000
 
-## 🏆 Achievement Tracker API   
+## 🏆 Achievement Tracker API
 
    # Usando Node.js (http-server)
 
 ### Métodos Públicos   npx http-server -p 8000
 
-   ```
+````
 
-```javascript
+````javascript
 
 // Desbloquear un Easter Egg3. **Visita:**
 
@@ -356,9 +346,9 @@ easterEggTracker.reset();--accent-primary: #FFD166;    /* Amarillo dorado */
 
 ### localStorage Structure--bg-secondary: #1a1f3a;      /* Azul medio */
 
-```
+````
 
-```json
+````json
 
 {### Newsletter Integration
 
@@ -406,7 +396,7 @@ document.addEventListener('easterEggUnlocked', (e) => {- **Instagram:** <https:/
 
 });## 📊 Performance
 
-```
+````
 
 - **Lighthouse Score:** 94 (Mobile) / 98 (Desktop)
 
@@ -422,7 +412,7 @@ document.addEventListener('easterEggUnlocked', (e) => {- **Instagram:** <https:/
 
 **Geeky Weekly** - Newsletter semanal con lo mejor de la cultura geek
 
-```bash
+````bash
 
 # 1. Clonar repositorio- **Frecuencia:** Viernes 18:00
 
@@ -456,7 +446,7 @@ npx http-server -p 8080
 
 # http://localhost:8080
 
-```**Última actualización:** Noviembre 4, 2025  
+```**Última actualización:** Noviembre 4, 2025
 
 **Versión:** 1.0 - Production Ready + Newsletter System
 
@@ -478,7 +468,7 @@ easterEggTracker.getUnlockedCount();
 
 // Reset para volver a probar
 easterEggTracker.reset();
-```
+````
 
 ---
 
@@ -491,17 +481,17 @@ easterEggTracker.reset();
 
 :root {
   /* 🎨 Paleta principal */
-  --accent-primary: #FFD166;        /* Amarillo dorado (CTA) */
-  --accent-secondary: #E76F51;      /* Naranja coral (hover) */
-  
+  --accent-primary: #ffd166; /* Amarillo dorado (CTA) */
+  --accent-secondary: #e76f51; /* Naranja coral (hover) */
+
   /* 🌑 Backgrounds */
-  --bg-primary: #0a0e27;            /* Fondo oscuro */
-  --bg-secondary: #1a1f3a;          /* Tarjetas */
-  
+  --bg-primary: #0a0e27; /* Fondo oscuro */
+  --bg-secondary: #1a1f3a; /* Tarjetas */
+
   /* 📝 Textos */
-  --text-primary: #f0f2f7;          /* Headings */
-  --text-secondary: #b8bfd9;        /* Body */
-  
+  --text-primary: #f0f2f7; /* Headings */
+  --text-secondary: #b8bfd9; /* Body */
+
   /* ⚡ Transiciones */
   --transition: 0.3s ease;
 }
@@ -529,21 +519,21 @@ easterEggTracker.reset();
 // 1. Agregar ID al tracker init
 easterEggs: {
   // ... existentes
-  nuevo: false  // ← Agregar aquí
+  nuevo: false; // ← Agregar aquí
 }
 
 // 2. Crear función de activación
 function activarNuevoEasterEgg() {
-  if (easterEggTracker.isUnlocked('nuevo')) return;
-  
+  if (easterEggTracker.isUnlocked("nuevo")) return;
+
   // Tu efecto aquí
-  console.log('¡Nuevo Easter Egg!');
-  
-  easterEggTracker.unlock('nuevo');
+  console.log("¡Nuevo Easter Egg!");
+
+  easterEggTracker.unlock("nuevo");
 }
 
 // 3. Vincular evento
-document.querySelector('.selector').addEventListener('click', activarNuevoEasterEgg);
+document.querySelector(".selector").addEventListener("click", activarNuevoEasterEgg);
 ```
 
 ---
@@ -622,6 +612,7 @@ git push -u origin gh-pages
 ```
 
 **Features**:
+
 - ✅ HTTPS automático
 - ✅ Serverless functions (Mailchimp API)
 - ✅ Deploy previews en PRs
@@ -650,19 +641,19 @@ vercel --prod
 // Chrome DevTools (F12 > Console)
 
 // 1. Ver estado actual del tracker
-easterEggTracker
+easterEggTracker;
 
 // 2. Ver qué está guardado en localStorage
-localStorage.getItem('easterEggs')
+localStorage.getItem("easterEggs");
 
 // 3. Forzar desbloqueo de Easter Egg específico
-easterEggTracker.unlock('combo')  // Activa Combo Breaker
+easterEggTracker.unlock("combo"); // Activa Combo Breaker
 
 // 4. Ver nivel actual
-easterEggTracker.getLevel()
+easterEggTracker.getLevel();
 
 // 5. Ver progreso
-console.log(easterEggTracker.getUnlockedCount() + '/' + easterEggTracker.totalEggs);
+console.log(easterEggTracker.getUnlockedCount() + "/" + easterEggTracker.totalEggs);
 ```
 
 ### Remote Debugging (Móvil)
@@ -705,14 +696,16 @@ console.log(easterEggTracker.getUnlockedCount() + '/' + easterEggTracker.totalEg
 /* src/js/script.js - Línea 3 */
 Version: 1.74.0  // ← Incrementar
 
-/* src/css/style.css - Línea 3 */  
+/* src/css/style.css - Línea 3 */
 Version: 1.10.0  // ← Incrementar
 ```
 
 ```html
 <!-- index.html - Cache busters -->
-<link rel="stylesheet" href="/src/css/style.css?v=110" />  <!-- Incrementar -->
-<script defer src="/src/js/script.js?v=75"></script>       <!-- Incrementar -->
+<link rel="stylesheet" href="/src/css/style.css?v=110" />
+<!-- Incrementar -->
+<script defer src="/src/js/script.js?v=75"></script>
+<!-- Incrementar -->
 ```
 
 ### Checklist de Actualización
@@ -731,6 +724,7 @@ Version: 1.10.0  // ← Incrementar
 ### v1.75.0 (2025-11-06) - Performance Boost & Final Cleanup ✅
 
 **Optimizaciones de Performance**
+
 - ⚡ Minificación completa: CSS 29% más ligero (31.69 KB), JS 50% más ligero (65.47 KB)
 - ⚡ Performance Boost system: Passive listeners, debounce, throttle, RAF
 - ⚡ Time to Interactive mejorado: 14.9s → 8.2s (45% más rápido)
@@ -738,10 +732,12 @@ Version: 1.10.0  // ← Incrementar
 - ⚡ Netlify build processing habilitado (minificación adicional)
 
 **Bug Fixes**
+
 - 🐛 Fix: TikTok social card mismo tamaño en tablet (1073px-680px)
 - 🐛 Fix: TikTok card ancho completo en móvil (<680px)
 
 **Cleanup & Mantenimiento**
+
 - 🧹 Eliminado SalaGeek_LOGO.png (duplicado innecesario)
 - 🧹 Eliminadas referencias a Formspree (no se usa, newsletter vía Mailchimp)
 - 📚 Documentación completa: HTML, JS, netlify.toml, package.json
@@ -749,6 +745,7 @@ Version: 1.10.0  // ← Incrementar
 - 🔖 Cache busters actualizados: CSS v136, JS v95
 
 **Performance Metrics**
+
 - First Contentful Paint: 407ms ✅
 - Largest Contentful Paint: 1.5s ✅
 - Time to Interactive: 8.2s ✅
@@ -756,6 +753,7 @@ Version: 1.10.0  // ← Incrementar
 - PageSpeed: 79% móvil, 96% desktop
 
 **Estado: PRODUCTION READY** 🚀
+
 - Código limpio y documentado
 - Performance optimizada
 - Sin dependencias innecesarias
@@ -764,32 +762,38 @@ Version: 1.10.0  // ← Incrementar
 ### v1.73.0 (2025-11-05) - Optimización Completa
 
 **Refactor & Documentación**
+
 - ♻️ JavaScript documentado con 6 secciones y JSDoc completo
 - ♻️ CSS documentado con Design Tokens y performance notes
 - 📚 README completo con Easter Eggs, API, deployment guides
 
 **Bug Fixes**
+
 - 🐛 Fix: Tracker init correcto (siempre llama updateUI)
 - 🐛 Fix: Nivel se muestra correctamente (0/6 móvil, 0/9 desktop)
 - 🐛 Fix: Eliminado getLevel() duplicado
 
 **UX Improvements**
+
 - ✨ Botones móvil aumentados (1.1-1.2rem, font-weight 600)
 - ✨ Badges hero móvil aumentadas (icons 1.5rem, text 0.85rem)
 
 **Performance**
+
 - ⚡ Cache busters actualizados (JS v74, CSS v109)
 - ⚡ No functional regressions - Zero breaking changes
 
 ### v1.72.0 (2025-11-05) - Easter Eggs System
 
 **Features**
+
 - 🎮 9 Easter Eggs completos (6 móvil + 3 desktop)
 - 🏆 Achievement Tracker con niveles dinámicos
 - 🎵 Audio system 8-bit con Web Audio API
 - 🎊 Confetti celebration al completar todos
 
 **Mobile Optimizations**
+
 - 📱 Platform-specific tracker (6 eggs móvil, 9 desktop)
 - 📱 Long press 600ms (evita menú sistema)
 - 📱 Tracker collapsed por default en móvil
