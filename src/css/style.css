@@ -3191,7 +3191,10 @@ a {
 
 /* Badge de actualización semanal */
 .news-badge {
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
   background: linear-gradient(135deg, rgba(6, 255, 165, 0.15) 0%, rgba(0, 217, 255, 0.15) 100%);
   border: 2px solid rgba(6, 255, 165, 0.4);
   color: #06ffa5;
@@ -3276,9 +3279,11 @@ a {
 }
 
 .featured-badge {
-  position: absolute;
-  top: -14px;
-  left: 1.5rem;
+  position: relative;
+  display: inline-block;
+  top: 0;
+  left: 0;
+  margin-bottom: 0.75rem;
   background: linear-gradient(135deg, #ffd166 0%, #ffaa33 100%);
   color: #0a0e27;
   font-size: 0.75rem;
@@ -5132,8 +5137,6 @@ img.lazy-loaded {
   .featured-badge {
     font-size: 0.65rem;
     padding: 0.4rem 1rem;
-    top: -12px;
-    left: 1rem;
   }
 
   .news-category {
