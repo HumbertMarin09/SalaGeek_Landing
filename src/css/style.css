@@ -3199,7 +3199,7 @@ a {
   pointer-events: none;
 }
 
-/* Fire Emoji - Efecto de llama minimalista */
+/* Fire Emoji - Efecto de llama con text-shadow */
 .fire-emoji {
   display: inline-block;
   position: relative;
@@ -3209,13 +3209,15 @@ a {
 
 @keyframes fire-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 3px rgba(255, 100, 0, 0.4));
+    text-shadow: 0 0 5px rgba(255, 100, 0, 0.6),
+                 0 0 10px rgba(255, 150, 0, 0.4);
     transform: scale(1);
   }
   50% {
-    filter: drop-shadow(0 0 8px rgba(255, 100, 0, 0.7)) 
-            drop-shadow(0 0 12px rgba(255, 150, 0, 0.4));
-    transform: scale(1.03);
+    text-shadow: 0 0 10px rgba(255, 100, 0, 0.9),
+                 0 0 20px rgba(255, 150, 0, 0.6),
+                 0 0 30px rgba(255, 200, 0, 0.4);
+    transform: scale(1.05);
   }
 }
 
