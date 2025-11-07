@@ -3582,7 +3582,9 @@ const easterEggTracker = {
     if (!tracker) return;
 
     // Agregar transición suave para opacity y transform
-    tracker.style.transition = "opacity 0.3s ease, transform 0.3s ease, bottom 0.3s ease";
+    tracker.style.transition = "opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease";
+
+    let isHidden = false; // Estado para evitar múltiples llamadas
 
     const adjustTrackerPosition = () => {
       const footer = document.querySelector(".site-footer");
@@ -3595,45 +3597,46 @@ const easterEggTracker = {
       const footerDistanceFromBottom = viewportHeight - footerRect.top;
 
       // Si el footer está entrando al viewport
-      if (footerDistanceFromBottom > 0) {
+      if (footerDistanceFromBottom > 0 && !isHidden) {
+        isHidden = true;
+        
         // OCULTAR tracker con fade out y slide
-        tracker.classList.add("tracker-hidden");
+        const isMobile = window.innerWidth <= 480;
         tracker.style.opacity = "0";
-        tracker.style.transform = window.innerWidth <= 480 ? "translateY(100px)" : "translateX(100px)";
-        tracker.style.pointerEvents = "none"; // Deshabilitar interacción
+        tracker.style.transform = isMobile ? "translateY(100px)" : "translateX(100px)";
+        tracker.style.pointerEvents = "none";
 
         // Después de la animación, ocultarlo completamente
         setTimeout(() => {
-          if (tracker.classList.contains("tracker-hidden")) {
+          if (isHidden) {
             tracker.style.visibility = "hidden";
           }
         }, 300);
-      } else {
-        // Footer fuera del viewport - MOSTRAR tracker con fade in
-        tracker.classList.remove("tracker-hidden");
+      } else if (footerDistanceFromBottom <= 0 && isHidden) {
+        isHidden = false;
+        
+        // MOSTRAR tracker con fade in y slide desde posición oculta
         tracker.style.visibility = "visible";
-        tracker.style.display = "block";
-        tracker.style.position = "fixed";
-        tracker.style.bottom = "20px";
-        tracker.style.top = "auto";
 
-        // Pequeño delay para que la transición se vea
-        setTimeout(() => {
+        // Pequeño delay para que la transición se vea desde el estado oculto
+        requestAnimationFrame(() => {
           tracker.style.opacity = "1";
           tracker.style.transform = "translate(0, 0)";
-          tracker.style.pointerEvents = "auto"; // Rehabilitar interacción
-        }, 10);
+          tracker.style.pointerEvents = "auto";
+        });
       }
     };
 
     // Ajustar en scroll
-    window.addEventListener("scroll", adjustTrackerPosition);
+    window.addEventListener("scroll", adjustTrackerPosition, { passive: true });
 
     // Ajustar en resize
     window.addEventListener("resize", adjustTrackerPosition);
 
-    // Ajustar al inicio
-    adjustTrackerPosition();
+    // Ajustar al inicio (después de que el tracker se haya mostrado)
+    setTimeout(() => {
+      adjustTrackerPosition();
+    }, 1000);
   },
 
   unlock(eggName) {
