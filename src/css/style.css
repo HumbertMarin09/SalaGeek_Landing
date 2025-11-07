@@ -1,7 +1,7 @@
 /* ============================================
    SALA GEEK - STYLESHEET
-   Version: 1.11.0 (Performance Boost + Cleanup Final)
-   Last Modified: 2025-11-06
+   Version: 1.12.0 (Weekly News Section Added)
+   Last Modified: 2025-11-07
    
    📋 ESTRUCTURA:
    1. Variables CSS (Design Tokens)
@@ -3164,6 +3164,161 @@ a {
 }
 
 /* ============================================
+   WEEKLY NEWS SECTION
+   ============================================ */
+.weekly-news-section {
+  padding: 6rem 2rem;
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.weekly-news-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(255, 209, 102, 0.03) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+/* News Grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* News Card */
+.news-card {
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.6) 0%, rgba(15, 15, 30, 0.8) 100%);
+  border: 1px solid rgba(255, 209, 102, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.news-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 209, 102, 0.3);
+  box-shadow: 0 12px 40px rgba(255, 209, 102, 0.15);
+}
+
+.news-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* News Category Badge */
+.news-category {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.news-category.gaming {
+  background: rgba(13, 110, 253, 0.15);
+  color: #4dabf7;
+  border: 1px solid rgba(13, 110, 253, 0.3);
+}
+
+.news-category.movies,
+.news-category.series {
+  background: rgba(231, 111, 81, 0.15);
+  color: #ff8b7b;
+  border: 1px solid rgba(231, 111, 81, 0.3);
+}
+
+.news-category.anime {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff6b9d;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+/* News Title */
+.news-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* News Description */
+.news-description {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* News CTA */
+.news-cta {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 209, 102, 0.1);
+}
+
+.news-cta-text {
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.news-cta-btn {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.news-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 209, 102, 0.3);
+}
+
+/* ============================================
    SOCIAL SECTION
    ============================================ */
 .social-section {
@@ -4336,6 +4491,32 @@ img.lazy-loaded {
     gap: 1.3rem;
   }
 
+  /* Weekly News responsive */
+  .weekly-news-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .news-card {
+    padding: 1.25rem;
+  }
+
+  .news-title {
+    font-size: 1rem;
+  }
+
+  .news-description {
+    font-size: 0.875rem;
+  }
+
+  .news-cta-text {
+    font-size: 1rem;
+  }
+
   .social-icon {
     width: 55px;
     height: 55px;
@@ -4859,6 +5040,51 @@ img.lazy-loaded {
   .social-grid {
     gap: 1rem;
   }
+
+  /* Weekly News mobile */
+  .weekly-news-section {
+    padding: 3.5rem 1rem;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .news-card {
+    padding: 1.25rem;
+  }
+
+  .news-category {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .news-title {
+    font-size: 1.0625rem;
+  }
+
+  .news-description {
+    font-size: 0.875rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .news-cta {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  .news-cta-text {
+    font-size: 0.9375rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .news-cta-btn {
+    width: 100%;
+    padding: 1.125rem 2rem;
+    font-size: 0.9375rem;
+  }
+
 
   /* Cards táctiles más grandes */
   .social-card {
