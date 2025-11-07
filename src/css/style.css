@@ -3199,25 +3199,25 @@ a {
   pointer-events: none;
 }
 
-/* Fire Emoji - Efecto de llama con text-shadow */
+/* Fire Emoji - Efecto de llama profesional */
 .fire-emoji {
   display: inline-block;
   position: relative;
   z-index: 2;
-  animation: fire-glow 2s ease-in-out infinite;
+  animation: fire-glow 2.5s ease-in-out infinite;
 }
 
 @keyframes fire-glow {
   0%, 100% {
-    text-shadow: 0 0 5px rgba(255, 100, 0, 0.6),
-                 0 0 10px rgba(255, 150, 0, 0.4);
+    text-shadow: 0 0 3px rgba(255, 100, 0, 0.4),
+                 0 0 6px rgba(255, 150, 0, 0.2);
     transform: scale(1);
   }
   50% {
-    text-shadow: 0 0 10px rgba(255, 100, 0, 0.9),
-                 0 0 20px rgba(255, 150, 0, 0.6),
-                 0 0 30px rgba(255, 200, 0, 0.4);
-    transform: scale(1.05);
+    text-shadow: 0 0 5px rgba(255, 100, 0, 0.6),
+                 0 0 10px rgba(255, 150, 0, 0.3),
+                 0 0 15px rgba(255, 200, 0, 0.2);
+    transform: scale(1.03);
   }
 }
 
