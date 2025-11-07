@@ -3199,7 +3199,8 @@ a {
   font-weight: 700;
   padding: 0.5rem 1.25rem;
   border-radius: 30px;
-  margin-bottom: 1.5rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
   text-transform: uppercase;
   letter-spacing: 1px;
   animation: pulse-badge 2s ease-in-out infinite;
@@ -3218,7 +3219,7 @@ a {
 /* News Grid */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
   max-width: 1200px;
@@ -3276,18 +3277,19 @@ a {
 
 .featured-badge {
   position: absolute;
-  top: -12px;
-  right: 1.5rem;
+  top: -14px;
+  left: 1.5rem;
   background: linear-gradient(135deg, #ffd166 0%, #ffaa33 100%);
   color: #0a0e27;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(255, 209, 102, 0.4);
+  letter-spacing: 0.8px;
+  box-shadow: 0 6px 20px rgba(255, 209, 102, 0.5);
   animation: float-badge 3s ease-in-out infinite;
+  z-index: 10;
 }
 
 @keyframes float-badge {
@@ -5129,9 +5131,9 @@ img.lazy-loaded {
 
   .featured-badge {
     font-size: 0.65rem;
-    padding: 0.35rem 0.85rem;
-    top: -10px;
-    right: 1rem;
+    padding: 0.4rem 1rem;
+    top: -12px;
+    left: 1rem;
   }
 
   .news-category {
