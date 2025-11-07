@@ -74,9 +74,9 @@
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
     
     # Seguridad: Content Security Policy
-    # Permite: scripts propios, GTM; estilos inline necesarios
+    # Permite: scripts propios, GTM, Google reCAPTCHA; estilos inline necesarios
     # Newsletter usa Netlify Functions (no requiere dominio externo)
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-src 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/"
     
     # Performance: Habilitar DNS prefetch
     X-DNS-Prefetch-Control = "on"
