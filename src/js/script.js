@@ -3581,8 +3581,8 @@ const easterEggTracker = {
     const tracker = document.getElementById("easter-egg-tracker");
     if (!tracker) return;
 
-    // Agregar transición suave para opacity
-    tracker.style.transition = "opacity 0.3s ease, bottom 0.3s ease";
+    // Agregar transición suave para opacity y transform
+    tracker.style.transition = "opacity 0.3s ease, transform 0.3s ease, bottom 0.3s ease";
 
     const adjustTrackerPosition = () => {
       const footer = document.querySelector(".site-footer");
@@ -3594,20 +3594,24 @@ const easterEggTracker = {
       // Calcular distancia del footer al viewport
       const footerDistanceFromBottom = viewportHeight - footerRect.top;
 
-      // Si el footer está entrando al viewport (menos de 200px del borde inferior)
+      // Si el footer está entrando al viewport
       if (footerDistanceFromBottom > 0) {
-        // OCULTAR tracker con fade out
+        // OCULTAR tracker con fade out y slide
+        tracker.classList.add("tracker-hidden");
         tracker.style.opacity = "0";
+        tracker.style.transform = window.innerWidth <= 480 ? "translateY(100px)" : "translateX(100px)";
         tracker.style.pointerEvents = "none"; // Deshabilitar interacción
 
         // Después de la animación, ocultarlo completamente
         setTimeout(() => {
-          if (tracker.style.opacity === "0") {
-            tracker.style.display = "none";
+          if (tracker.classList.contains("tracker-hidden")) {
+            tracker.style.visibility = "hidden";
           }
         }, 300);
       } else {
         // Footer fuera del viewport - MOSTRAR tracker con fade in
+        tracker.classList.remove("tracker-hidden");
+        tracker.style.visibility = "visible";
         tracker.style.display = "block";
         tracker.style.position = "fixed";
         tracker.style.bottom = "20px";
@@ -3616,6 +3620,7 @@ const easterEggTracker = {
         // Pequeño delay para que la transición se vea
         setTimeout(() => {
           tracker.style.opacity = "1";
+          tracker.style.transform = "translate(0, 0)";
           tracker.style.pointerEvents = "auto"; // Rehabilitar interacción
         }, 10);
       }
