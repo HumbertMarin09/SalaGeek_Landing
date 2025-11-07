@@ -332,6 +332,14 @@
   .achievement.desktop-only {
     display: none;
   }
+
+  /* Mover hint más arriba en móvil para que no quede debajo del tracker */
+  .easter-egg-hint {
+    bottom: 90px; /* Arriba del tracker colapsado (60px) + margen */
+    font-size: 0.85rem;
+    padding: 12px 20px;
+    max-width: calc(100% - 40px); /* Para que no se salga de la pantalla */
+  }
 }
 
 /* Animación para el contador cuando se desbloquea logro */
