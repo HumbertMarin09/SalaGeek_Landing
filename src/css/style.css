@@ -3199,7 +3199,7 @@ a {
   pointer-events: none;
 }
 
-/* Badge NUEVO rotativo en título */
+/* Badge NUEVO rotativo en título - DESACTIVADO
 .nuevo-badge {
   display: inline-block;
   background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
@@ -3234,6 +3234,7 @@ a {
     box-shadow: 0 0 30px rgba(255, 8, 68, 0.8), 0 0 60px rgba(255, 8, 68, 0.5);
   }
 }
+*/
 
 /* Badge de actualización semanal */
 .news-badge {
@@ -5197,12 +5198,12 @@ img.lazy-loaded {
     padding: 3.5rem 1rem;
   }
 
-  .nuevo-badge {
+  /* .nuevo-badge {
     font-size: 0.4rem;
     padding: 0.2rem 0.5rem;
     margin-left: 0.5rem;
     top: -0.2rem;
-  }
+  } */
 
   .news-badge {
     font-size: 0.65rem;
