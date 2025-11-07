@@ -1,6 +1,6 @@
 /* ============================================
    SALA GEEK - STYLESHEET
-   Version: 1.13.0 (Weekly News Power Update)
+   Version: 1.14.0 (Weekly News POWER Combo - Ultimate Impact Edition)
    Last Modified: 2025-11-07
    
    📋 ESTRUCTURA:
@@ -3164,13 +3164,23 @@ a {
 }
 
 /* ============================================
-   WEEKLY NEWS SECTION
+   WEEKLY NEWS SECTION - POWER EDITION
    ============================================ */
 .weekly-news-section {
   padding: 6rem 2rem;
   background: var(--bg-primary);
   position: relative;
   overflow: hidden;
+  animation: section-pulse 8s ease-in-out infinite;
+}
+
+@keyframes section-pulse {
+  0%, 100% {
+    background-color: var(--bg-primary);
+  }
+  50% {
+    background-color: rgba(10, 14, 39, 0.98);
+  }
 }
 
 .weekly-news-section::before {
@@ -3187,6 +3197,42 @@ a {
     transparent 70%
   );
   pointer-events: none;
+}
+
+/* Badge NUEVO rotativo en título */
+.nuevo-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 900;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 1rem;
+  position: relative;
+  top: -0.3rem;
+  animation: rotate-nuevo 3s ease-in-out infinite, glow-nuevo 2s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(255, 8, 68, 0.6);
+}
+
+@keyframes rotate-nuevo {
+  0%, 100% {
+    transform: rotate(-5deg) scale(1);
+  }
+  50% {
+    transform: rotate(5deg) scale(1.1);
+  }
+}
+
+@keyframes glow-nuevo {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 8, 68, 0.6), 0 0 40px rgba(255, 8, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 8, 68, 0.8), 0 0 60px rgba(255, 8, 68, 0.5);
+  }
 }
 
 /* Badge de actualización semanal */
@@ -3265,11 +3311,43 @@ a {
   transform: scaleX(1);
 }
 
-/* Featured News Card */
+/* Featured News Card con Spotlight */
 .featured-news {
   position: relative;
   background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, rgba(26, 31, 58, 0.6) 100%);
   border: 2px solid rgba(255, 209, 102, 0.3);
+  overflow: hidden;
+}
+
+.featured-news::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 209, 102, 0.3) 0%,
+    transparent 50%
+  );
+  animation: spotlight-rotate 8s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.featured-news > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes spotlight-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
 }
 
 .featured-news:hover {
@@ -5117,6 +5195,13 @@ img.lazy-loaded {
   /* Weekly News mobile */
   .weekly-news-section {
     padding: 3.5rem 1rem;
+  }
+
+  .nuevo-badge {
+    font-size: 0.4rem;
+    padding: 0.2rem 0.5rem;
+    margin-left: 0.5rem;
+    top: -0.2rem;
   }
 
   .news-badge {

@@ -153,8 +153,8 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=153" as="style" />
-    <link rel="preload" href="/src/js/script.min.js?v=108" as="script" />
+    <link rel="preload" href="/src/css/style.min.css?v=154" as="style" />
+    <link rel="preload" href="/src/js/script.min.js?v=109" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
     <!-- 
@@ -222,9 +222,9 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=153" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=154" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=153" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=154" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
@@ -363,7 +363,7 @@
       Contiene: navegación, animaciones, Easter Eggs, formularios
     -->
     <!-- Main Script - Deferred for non-blocking load -->
-    <script defer src="/src/js/script.min.js?v=108"></script>
+    <script defer src="/src/js/script.min.js?v=109"></script>
   </head>
   <body class="home">
     <!-- Google Tag Manager (noscript) -->
@@ -596,11 +596,12 @@
         <div class="container">
           <h2 class="section-title" data-scroll="fade-down">
             🔥 Esta Semana en el Mundo Geek
+            <span class="nuevo-badge">NUEVO</span>
           </h2>
           
-          <!-- Badge de actualización semanal -->
+          <!-- Badge de actualización semanal con contador -->
           <div class="news-badge" data-scroll="fade-down" data-scroll-delay="50">
-            ✨ ACTUALIZADO SEMANALMENTE
+            ✨ ACTUALIZADO <span id="update-time">HOY</span>
           </div>
           
           <p class="section-description" data-scroll="fade-down" data-scroll-delay="100">
@@ -609,7 +610,7 @@
 
           <div class="news-grid" data-scroll="fade-up" data-scroll-delay="200">
             <!-- News Card 1 - Gaming (DESTACADA) -->
-            <article class="news-card featured-news">
+            <article class="news-card featured-news spotlight-card">
               <div class="featured-badge">⭐ DESTACADA</div>
               <div class="news-category gaming">🎮 GAMING</div>
               <h3 class="news-title">GTA 6 retrasado hasta finales de 2026</h3>

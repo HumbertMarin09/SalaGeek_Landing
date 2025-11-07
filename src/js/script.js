@@ -4301,4 +4301,45 @@ function initAllEasterEggs() {
 // Inicializar Easter Eggs después de que todo cargue
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(initAllEasterEggs, 1000);
+  
+  // Inicializar contador de actualización de noticias
+  updateNewsTime();
 });
+
+/* ============================================
+   📰 WEEKLY NEWS - UPDATE TIME COUNTER
+   ============================================ */
+
+/**
+ * Actualiza el badge de tiempo mostrando cuándo se actualizaron las noticias
+ * Muestra: "HOY", "AYER", "HACE X DÍAS"
+ */
+function updateNewsTime() {
+  const updateTimeElement = document.getElementById('update-time');
+  if (!updateTimeElement) return;
+
+  // Fecha de última actualización (7 de noviembre de 2025)
+  const lastUpdate = new Date('2025-11-07T00:00:00');
+  const now = new Date();
+  
+  // Calcular diferencia en días
+  const diffTime = Math.abs(now - lastUpdate);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  let timeText = '';
+  
+  if (diffDays === 0) {
+    timeText = 'HOY';
+  } else if (diffDays === 1) {
+    timeText = 'AYER';
+  } else if (diffDays <= 7) {
+    timeText = `HACE ${diffDays} DÍAS`;
+  } else {
+    timeText = 'SEMANALMENTE';
+  }
+  
+  updateTimeElement.textContent = timeText;
+  
+  // Actualizar cada hora
+  setTimeout(updateNewsTime, 3600000);
+}
