@@ -154,7 +154,7 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style-mobile-fix.min.css?t=1762741013" as="style" />
+    <link rel="preload" href="/src/css/style-mobile-fix.min.css?t=1762741278" as="style" />
     <link rel="preload" href="/src/js/script.min.js?v=109" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
@@ -214,8 +214,8 @@
         }
       }
       
-      /* CRITICAL MOBILE FIX - Android Chrome 400px breakpoint */
-      @media (max-width: 400px) {
+      /* CRITICAL MOBILE FIX - Android Chrome UP TO 768px (tablets + phones) */
+      @media (max-width: 768px) {
         /* TEST MARKER - Si ves un borde rojo, el CSS se está aplicando */
         body {
           border-top: 5px solid red !important;
@@ -232,6 +232,7 @@
           color: #fff !important;
           background: none !important;
           -webkit-background-clip: unset !important;
+          background-clip: unset !important;
           -webkit-text-fill-color: unset !important;
           text-shadow: 0 2px 8px #000, 0 4px 16px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.95) !important;
         }
@@ -268,9 +269,9 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style-mobile-fix.min.css?t=1762741013" />
+    <link rel="stylesheet" href="/src/css/style-mobile-fix.min.css?t=1762741278" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style-mobile-fix.min.css?t=1762741013" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style-mobile-fix.min.css?t=1762741278" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
