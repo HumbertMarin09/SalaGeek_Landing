@@ -5367,7 +5367,7 @@ img.lazy-loaded {
     display: inline-block;
     text-align: left;
     width: auto;
-    margin-right: auto;
+    max-width: fit-content;
   }
 
   .news-category {
@@ -5379,6 +5379,7 @@ img.lazy-loaded {
     display: inline-block;
     text-align: left;
     width: auto;
+    max-width: fit-content;
   }
 
   .news-title {
