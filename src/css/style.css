@@ -5256,6 +5256,158 @@ img.lazy-loaded {
   }
 }
 
+/* ===================================================================
+   MOBILE NEWS OPTIMIZATION - 768px
+   Optimizaciones de noticias para dispositivos móviles (tablets y phones)
+   Incluye texto blanco sólido, overlay oscuro, y posición de imagen 35%
+   =================================================================== */
+@media (max-width: 768px) {
+  /* Weekly News mobile */
+  .weekly-news-section {
+    padding: 3.5rem 1rem;
+  }
+
+  .news-badge {
+    font-size: 0.7rem;
+    padding: 0.5rem 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Featured News optimizada para móvil */
+  .featured-full-width {
+    max-width: 100%;
+    min-height: 240px;
+    padding: 2rem 1.5rem !important;
+    background-size: cover;
+    background-position: 35% center;
+    transition: none;
+  }
+
+  /* Overlay más oscuro en móvil para mejor legibilidad */
+  .featured-full-width .featured-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(7, 10, 20, 0.98) 0%,
+      rgba(7, 10, 20, 0.96) 15%,
+      rgba(7, 10, 20, 0.93) 30%,
+      rgba(10, 14, 39, 0.9) 50%,
+      rgba(10, 14, 39, 0.82) 70%,
+      rgba(26, 31, 58, 0.7) 90%,
+      rgba(26, 31, 58, 0.55) 100%
+    );
+  }
+
+  /* Desactivar hover en móvil */
+  .featured-full-width:hover {
+    background-size: cover;
+  }
+
+  .featured-full-width:hover .featured-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(7, 10, 20, 0.98) 0%,
+      rgba(7, 10, 20, 0.96) 15%,
+      rgba(7, 10, 20, 0.93) 30%,
+      rgba(10, 14, 39, 0.9) 50%,
+      rgba(10, 14, 39, 0.82) 70%,
+      rgba(26, 31, 58, 0.7) 90%,
+      rgba(26, 31, 58, 0.55) 100%
+    );
+  }
+
+  .featured-full-width .featured-badge {
+    font-size: 0.7rem;
+    padding: 0.5rem 1.2rem;
+  }
+
+  .featured-full-width .news-title {
+    font-size: 1.6rem;
+    line-height: 1.25;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: none;
+    background-clip: unset;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    color: #ffffff;
+    filter: none;
+    text-shadow:
+      0 2px 8px rgba(0, 0, 0, 1),
+      0 4px 16px rgba(0, 0, 0, 0.9),
+      0 1px 3px rgba(0, 0, 0, 0.95);
+  }
+
+  .featured-full-width .news-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    text-shadow:
+      0 1px 4px rgba(0, 0, 0, 0.95),
+      0 2px 10px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Noticias secundarias optimizadas */
+  .news-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: auto;
+  }
+
+  .featured-badge {
+    font-size: 0.7rem;
+    padding: 0.5rem 1.2rem;
+    white-space: nowrap;
+    overflow: visible;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .news-category {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.75rem;
+    white-space: nowrap;
+    overflow: visible;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .news-title {
+    font-size: 1.1rem;
+    line-height: 1.35;
+    margin-bottom: 0.6rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    display: block;
+  }
+
+  .news-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    display: block;
+  }
+
+  .news-cta {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  .news-cta-text {
+    font-size: 0.9375rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
 /* Móvil grande: 576px - Texto más grande para móviles */
 @media (max-width: 576px) {
   .btn {
@@ -5477,168 +5629,6 @@ img.lazy-loaded {
 
   .social-grid {
     gap: 1rem;
-  }
-
-  /* Weekly News mobile */
-  .weekly-news-section {
-    padding: 3.5rem 1rem;
-  }
-
-  .news-badge {
-    font-size: 0.7rem;
-    padding: 0.5rem 1.2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .news-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  /* ========================================
-     FEATURED NEWS - MOBILE OPTIMIZATION
-     Optimizaciones para pantallas móviles pequeñas
-     - Texto blanco sólido (no gradiente) para legibilidad
-     - Overlay oscuro reforzado para contraste
-     - Sin efectos hover (mejor experiencia táctil)
-     - Imagen posicionada al 35% para mejor encuadre
-     ======================================== */
-
-  /* Featured News optimizada para móvil */
-  .featured-full-width {
-    max-width: 100%;
-    min-height: 240px;
-    padding: 2rem 1.5rem !important;
-    background-size: cover;
-    background-position: 35% center;
-    transition: none;
-  }
-
-  /* Overlay más oscuro en móvil para mejor legibilidad */
-  .featured-full-width .featured-overlay {
-    background: linear-gradient(
-      to top,
-      rgba(7, 10, 20, 0.98) 0%,
-      rgba(7, 10, 20, 0.96) 15%,
-      rgba(7, 10, 20, 0.93) 30%,
-      rgba(10, 14, 39, 0.9) 50%,
-      rgba(10, 14, 39, 0.82) 70%,
-      rgba(26, 31, 58, 0.7) 90%,
-      rgba(26, 31, 58, 0.55) 100%
-    );
-  }
-
-  /* Desactivar hover en móvil */
-  .featured-full-width:hover {
-    background-size: cover;
-  }
-
-  .featured-full-width:hover .featured-overlay {
-    background: linear-gradient(
-      to top,
-      rgba(7, 10, 20, 0.98) 0%,
-      rgba(7, 10, 20, 0.96) 15%,
-      rgba(7, 10, 20, 0.93) 30%,
-      rgba(10, 14, 39, 0.9) 50%,
-      rgba(10, 14, 39, 0.82) 70%,
-      rgba(26, 31, 58, 0.7) 90%,
-      rgba(26, 31, 58, 0.55) 100%
-    );
-  }
-
-  .featured-full-width .featured-badge {
-    font-size: 0.7rem;
-    padding: 0.5rem 1.2rem;
-  }
-
-  .featured-full-width .news-title {
-    font-size: 1.6rem;
-    line-height: 1.25;
-    margin-top: 0.75rem;
-    margin-bottom: 0.5rem;
-    background: none;
-    background-clip: unset;
-    -webkit-background-clip: unset;
-    -webkit-text-fill-color: unset;
-    color: #ffffff;
-    filter: none;
-    text-shadow:
-      0 2px 8px rgba(0, 0, 0, 1),
-      0 4px 16px rgba(0, 0, 0, 0.9),
-      0 1px 3px rgba(0, 0, 0, 0.95);
-  }
-
-  .featured-full-width .news-description {
-    font-size: 1rem;
-    line-height: 1.6;
-    text-shadow:
-      0 1px 4px rgba(0, 0, 0, 0.95),
-      0 2px 10px rgba(0, 0, 0, 0.9);
-  }
-
-  /* ========================================
-     SECONDARY NEWS CARDS - MOBILE
-     Cards de noticias secundarias optimizadas para móvil
-     - Texto autoajustable sin truncar (white-space: normal)
-     - Badges centrados
-     - Touch-friendly spacing
-     ======================================== */
-
-  /* Noticias secundarias optimizadas */
-  .news-card {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    min-height: auto;
-  }
-
-  .featured-badge {
-    font-size: 0.7rem;
-    padding: 0.5rem 1.2rem;
-    white-space: nowrap;
-    overflow: visible;
-    display: inline-block;
-    text-align: center;
-  }
-
-  .news-category {
-    font-size: 0.85rem;
-    padding: 0.5rem 1rem;
-    margin-bottom: 0.75rem;
-    white-space: nowrap;
-    overflow: visible;
-    display: inline-block;
-    text-align: center;
-  }
-
-  .news-title {
-    font-size: 1.1rem;
-    line-height: 1.35;
-    margin-bottom: 0.6rem;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    display: block;
-  }
-
-  .news-description {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    display: block;
-  }
-
-  .news-cta {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-  }
-
-  .news-cta-text {
-    font-size: 0.9375rem;
-    margin-bottom: 1.25rem;
   }
 
   /* Cards táctiles más grandes */
