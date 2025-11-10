@@ -154,7 +154,7 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=169" as="style" />
+    <link rel="preload" href="/src/css/style-mobile-fix.min.css" as="style" />
     <link rel="preload" href="/src/js/script.min.js?v=109" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
@@ -213,6 +213,45 @@
           font-size: 1.8rem;
         }
       }
+      
+      /* CRITICAL MOBILE FIX - Android Chrome 400px breakpoint */
+      @media (max-width: 400px) {
+        .featured-full-width {
+          background-position: 35% center !important;
+          background-size: cover !important;
+          transition: none !important;
+        }
+        
+        .featured-full-width .news-title {
+          color: #fff !important;
+          background: none !important;
+          -webkit-background-clip: unset !important;
+          -webkit-text-fill-color: unset !important;
+          text-shadow: 0 2px 8px #000, 0 4px 16px rgba(0,0,0,.9), 0 1px 3px rgba(0,0,0,.95) !important;
+        }
+        
+        .featured-overlay {
+          background: linear-gradient(to top, 
+            rgba(7,10,20,.98) 0%, 
+            rgba(7,10,20,.96) 15%, 
+            rgba(7,10,20,.93) 30%, 
+            rgba(10,14,39,.9) 50%, 
+            rgba(10,14,39,.82) 70%, 
+            rgba(26,31,58,.7) 90%, 
+            rgba(26,31,58,.55) 100%) !important;
+        }
+        
+        .news-title, .news-description {
+          white-space: normal !important;
+          overflow: visible !important;
+          text-overflow: clip !important;
+        }
+        
+        .featured-badge, .news-category {
+          text-align: center !important;
+          display: inline-block !important;
+        }
+      }
     </style>
 
     <!-- 
@@ -223,9 +262,9 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=169" />
+    <link rel="stylesheet" href="/src/css/style-mobile-fix.min.css" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=169" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style-mobile-fix.min.css" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
