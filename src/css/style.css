@@ -5257,12 +5257,30 @@ img.lazy-loaded {
 }
 
 /* ===================================================================
-   MOBILE NEWS OPTIMIZATION - 768px
-   Optimizaciones de noticias para dispositivos móviles (tablets y phones)
-   Incluye texto blanco sólido, overlay oscuro, y posición de imagen 35%
+   RESPONSIVE BREAKPOINTS - MOBILE OPTIMIZATIONS
+   Estrategia de breakpoints para noticias y badges:
+   
+   - 968px: Ajustes generales de layout responsive
+   - 768px: Optimización móvil para noticias (tablets y phones grandes)
+           * Texto blanco con sombras para legibilidad
+           * Overlay oscuro en featured news
+           * Posición de imagen al 35% para mejor composición
+           * Badges pequeños y alineados a la izquierda
+   
+   - 500px: Optimización touch para móviles pequeños
+           * Botón newsletter ancho completo
+           * Badges de categoría ancho completo y centrados
+           * Badge "Destacado" mantiene diseño compacto
+           * Texto más grande para mejor legibilidad
+   
+   - 400px: Ajustes finos para pantallas muy pequeñas
+   =================================================================== */
+
+/* ===================================================================
+   TABLET & LARGE PHONES - 768px
    =================================================================== */
 @media (max-width: 768px) {
-  /* Weekly News mobile */
+  /* Sección de noticias semanales */
   .weekly-news-section {
     padding: 3.5rem 1rem;
   }
@@ -5278,17 +5296,17 @@ img.lazy-loaded {
     gap: 1.5rem;
   }
 
-  /* Featured News optimizada para móvil */
+  /* Featured News - Optimización para móvil */
   .featured-full-width {
     max-width: 100%;
     min-height: 240px;
     padding: 2rem 1.5rem !important;
     background-size: cover;
-    background-position: 35% center;
-    transition: none;
+    background-position: 35% center; /* Mejor composición en móvil */
+    transition: none; /* Desactivar transiciones en móvil */
   }
 
-  /* Overlay más oscuro en móvil para mejor legibilidad */
+  /* Overlay oscuro para contraste con texto blanco */
   .featured-full-width .featured-overlay {
     background: linear-gradient(
       to top,
@@ -5302,7 +5320,7 @@ img.lazy-loaded {
     );
   }
 
-  /* Desactivar hover en móvil */
+  /* Mantener overlay consistente sin efectos hover en móvil */
   .featured-full-width:hover {
     background-size: cover;
   }
@@ -5320,21 +5338,23 @@ img.lazy-loaded {
     );
   }
 
+  /* Badge destacado compacto */
   .featured-full-width .featured-badge {
     font-size: 0.7rem;
     padding: 0.5rem 1.2rem;
   }
 
+  /* Título con texto blanco y sombras fuertes para legibilidad */
   .featured-full-width .news-title {
     font-size: 1.6rem;
     line-height: 1.25;
     margin-top: 0.75rem;
     margin-bottom: 0.5rem;
-    background: none;
+    background: none; /* Remover gradiente */
     background-clip: unset;
     -webkit-background-clip: unset;
     -webkit-text-fill-color: unset;
-    color: #ffffff;
+    color: #ffffff; /* Texto blanco sólido */
     filter: none;
     text-shadow:
       0 2px 8px rgba(0, 0, 0, 1),
@@ -5342,6 +5362,7 @@ img.lazy-loaded {
       0 1px 3px rgba(0, 0, 0, 0.95);
   }
 
+  /* Descripción con texto blanco legible */
   .featured-full-width .news-description {
     font-size: 1rem;
     line-height: 1.6;
@@ -5350,7 +5371,7 @@ img.lazy-loaded {
       0 2px 10px rgba(0, 0, 0, 0.9);
   }
 
-  /* Noticias secundarias optimizadas */
+  /* Noticias secundarias en columna única */
   .news-card {
     padding: 1.5rem;
     display: flex;
@@ -5359,6 +5380,7 @@ img.lazy-loaded {
     min-height: auto;
   }
 
+  /* Badges compactos y alineados a la izquierda */
   .featured-badge {
     font-size: 0.7rem;
     padding: 0.5rem 1.2rem;
@@ -5367,7 +5389,7 @@ img.lazy-loaded {
     display: inline-block;
     text-align: left;
     width: auto;
-    max-width: fit-content;
+    max-width: fit-content; /* Evita que el badge tome todo el ancho del contenedor */
   }
 
   .news-category {
@@ -5382,6 +5404,7 @@ img.lazy-loaded {
     max-width: fit-content;
   }
 
+  /* Títulos y descripciones de noticias secundarias */
   .news-title {
     font-size: 1.1rem;
     line-height: 1.35;
@@ -5441,8 +5464,12 @@ img.lazy-loaded {
   }
 }
 
-/* Móvil mediano: 500px - Ajuste para elegancia */
+/* ===================================================================
+   SMALL MOBILE - 500px
+   Optimización para pantallas táctiles pequeñas
+   =================================================================== */
 @media (max-width: 500px) {
+  /* Botones generales */
   .btn {
     font-size: 1.15rem;
     padding: 1.15rem 1.8rem;
@@ -5453,39 +5480,43 @@ img.lazy-loaded {
     padding: 1.2rem 2rem;
   }
 
-  /* Botón del newsletter a ancho completo y texto más grande en móviles pequeños */
+  /* Botón newsletter - Ancho completo con texto grande para mejor legibilidad */
   .news-cta-btn {
     width: 100%;
     padding: 1.25rem 2rem;
-    font-size: 1.0625rem;
+    font-size: 1.0625rem; /* Texto más grande en móvil */
   }
 
-  /* Solo los badges de noticias secundarias en ancho completo, centradas y texto más grande */
+  /* Badge de categoría - Ancho completo y centrado para mejor UX táctil */
   .news-category {
-    font-size: 0.875rem;
+    font-size: 0.875rem; /* Texto más grande para legibilidad */
     padding: 0.6rem 1.4rem;
     text-align: center;
     display: block;
     width: 100% !important;
-    max-width: none !important;
+    max-width: none !important; /* Override de estilos de 768px */
     margin-left: 0;
     margin-right: 0;
   }
 
-  /* Badge "Destacado" siempre pequeño, a la izquierda, pero con texto más grande */
+  /* Badge "Destacado" - Mantiene diseño compacto pero con texto más grande */
   .featured-badge,
   .featured-full-width .featured-badge {
-    font-size: 0.875rem;
+    font-size: 0.875rem; /* Texto más grande para legibilidad */
     padding: 0.6rem 1.4rem;
-    text-align: left;
+    text-align: left; /* Siempre alineado a la izquierda */
     display: inline-block;
-    width: auto !important;
+    width: auto !important; /* Mantiene tamaño compacto */
     max-width: fit-content !important;
   }
 }
 
-/* Móvil pequeño: 400px - Texto más visible pero elegante */
+/* ===================================================================
+   EXTRA SMALL MOBILE - 400px
+   Ajustes finos para pantallas muy pequeñas
+   =================================================================== */
 @media (max-width: 400px) {
+  /* Botones en pantallas muy pequeñas */
   .btn {
     font-size: 1.1rem;
     padding: 1.1rem 1.6rem;
@@ -5496,6 +5527,7 @@ img.lazy-loaded {
     padding: 1.15rem 1.8rem;
   }
 
+  /* Hero badges */
   .hero-badge {
     padding: 0.75rem 1.2rem;
     min-width: 115px;
@@ -5510,12 +5542,12 @@ img.lazy-loaded {
     letter-spacing: 0.5px;
   }
 
-  /* Ajuste fino del hero title para pantallas muy pequeñas */
+  /* Hero title responsive */
   .hero-title {
     font-size: clamp(2.9rem, 6.5vw, 4.6rem);
   }
 
-  /* Features optimizadas para móvil */
+  /* Feature cards optimizadas */
   .feature-card {
     padding: 2.5rem 1.5rem;
     border-radius: 16px;
