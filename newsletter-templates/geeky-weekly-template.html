@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>🔥 Geeky Weekly - Sala Geek</title>
+
+    <!--[if mso]>
+      <style type="text/css">
+        body,
+        table,
+        td {
+          font-family: Arial, sans-serif !important;
+        }
+      </style>
+    <![endif]-->
+
+    <style>
+      /* ============================================
+           RESET & BASE STYLES (Optimizado Mobile-First)
+           ============================================ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #071428;
+      }
+
+      table {
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+        display: block;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      /* ============================================
+           VARIABLES DE COLORES (Sala Geek Branding)
+           ============================================ */
+      .bg-dark {
+        background-color: #071428;
+      }
+      .bg-card {
+        background-color: #1a1f3a;
+      }
+      .color-primary {
+        color: #ffd166;
+      }
+      .color-secondary {
+        color: #e76f51;
+      }
+      .color-text {
+        color: #f0f2f7;
+      }
+      .color-muted {
+        color: #a0aec0;
+      }
+
+      /* ============================================
+           TIPOGRAFÍA (Mobile-First 16px base)
+           ============================================ */
+      h1 {
+        font-size: 28px;
+        line-height: 1.2;
+        font-weight: 700;
+        color: #ffd166;
+        margin: 0 0 12px 0;
+      }
+
+      h2 {
+        font-size: 22px;
+        line-height: 1.3;
+        font-weight: 700;
+        color: #f0f2f7;
+        margin: 0 0 12px 0;
+      }
+
+      h3 {
+        font-size: 18px;
+        line-height: 1.4;
+        font-weight: 600;
+        color: #f0f2f7;
+        margin: 0 0 8px 0;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #a0aec0;
+        margin: 0 0 16px 0;
+      }
+
+      /* ============================================
+           BOTONES (CTA) - Optimizados para Mobile
+           ============================================ */
+      .btn {
+        display: inline-block;
+        padding: 16px 36px;
+        background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+        color: #071428 !important;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 17px;
+        text-align: center;
+        transition: all 0.3s ease;
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(255, 209, 102, 0.4);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        border: 2px solid #ffd166;
+        color: #ffd166 !important;
+        padding: 14px 34px;
+      }
+
+      /* ============================================
+           SECCIONES
+           ============================================ */
+      .section {
+        background-color: #1a1f3a;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        border: 1px solid #2d3748;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: rgba(255, 209, 102, 0.1);
+        color: #ffd166;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+
+      .divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #2d3748, transparent);
+        margin: 24px 0;
+      }
+
+      /* ============================================
+           TOP 5 LIST - Optimizado para Escaneo Rápido
+           ============================================ */
+      .top5-item {
+        padding: 16px 0;
+        border-bottom: 1px solid #2d3748;
+        display: table;
+        width: 100%;
+      }
+
+      .top5-item:last-child {
+        border-bottom: none;
+      }
+
+      .top5-number {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #ffd166, #e76f51);
+        color: #071428;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        font-weight: 700;
+        font-size: 18px;
+        margin-right: 12px;
+        vertical-align: middle;
+        float: left;
+      }
+
+      .top5-content {
+        overflow: hidden;
+        padding-left: 52px;
+      }
+
+      .top5-title {
+        color: #f0f2f7;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 1.4;
+        margin: 0 0 4px 0;
+        text-decoration: none;
+      }
+
+      .top5-link {
+        color: #ffd166;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 4px;
+      }
+
+      .top5-link:hover {
+        text-decoration: underline;
+      }
+
+      /* ============================================
+           SOCIAL PROOF BADGE
+           ============================================ */
+      .social-proof {
+        background: rgba(255, 209, 102, 0.1);
+        border: 1px solid rgba(255, 209, 102, 0.3);
+        border-radius: 20px;
+        padding: 8px 16px;
+        display: inline-block;
+        font-size: 13px;
+        color: #ffd166;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+
+      /* ============================================
+           RESPONSIVE (Mobile-First)
+           ============================================ */
+      @media only screen and (max-width: 600px) {
+        .container {
+          width: 100% !important;
+          padding: 16px !important;
+        }
+
+        h1 {
+          font-size: 26px !important;
+        }
+        h2 {
+          font-size: 20px !important;
+        }
+        h3 {
+          font-size: 17px !important;
+        }
+        p {
+          font-size: 16px !important;
+        }
+
+        .section {
+          padding: 20px 16px !important;
+        }
+
+        .btn {
+          padding: 16px 24px !important;
+          font-size: 16px !important;
+          width: 100% !important;
+          display: block !important;
+        }
+
+        .top5-number {
+          width: 36px !important;
+          height: 36px !important;
+          line-height: 36px !important;
+          font-size: 16px !important;
+        }
+      }
+
+      @media only screen and (min-width: 601px) {
+        h1 {
+          font-size: 32px !important;
+        }
+        h2 {
+          font-size: 24px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body style="margin: 0; padding: 0; background-color: #071428">
+    <!-- Preheader (Preview Text Optimizado) -->
+    <div style="display: none; max-height: 0px; overflow: hidden">
+      ✨ Top 5 novedades gaming + Trailer épico + Easter Egg secreto 🎮 No te lo pierdas
+    </div>
+
+    <!-- Wrapper Principal -->
+    <table
+      role="presentation"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      width="100%"
+      style="background-color: #071428"
+    >
+      <tr>
+        <td align="center" style="padding: 40px 20px">
+          <!-- Container 600px -->
+          <table
+            role="presentation"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            width="600"
+            style="max-width: 600px; background-color: #0a0e27; border-radius: 20px"
+            class="container"
+          >
+            <!-- ============================================
+                         SECCIÓN 1: HEADER COMPACTO + SOCIAL PROOF
+                         ============================================ -->
+            <tr>
+              <td
+                style="
+                  padding: 40px 32px 32px 32px;
+                  text-align: center;
+                  background: linear-gradient(135deg, #0d6efd 0%, #ffd166 100%);
+                  border-radius: 20px 20px 0 0;
+                "
+              >
+                <!-- Logo -->
+                <img
+                  src="https://salageek.com/src/images/SalaGeek_LOGO.png"
+                  alt="Sala Geek"
+                  width="100"
+                  style="margin: 0 auto 16px auto"
+                />
+
+                <h1 style="color: #071428; margin-bottom: 4px; font-size: 32px">🔥 Geeky Weekly</h1>
+                <p style="color: #071428; font-size: 13px; margin-bottom: 12px; font-weight: 600; opacity: 0.9">
+                  *|DATE:l, j \d\e F, Y|*
+                  <!-- Mailchimp merge tag: Viernes, 15 de Noviembre, 2025 -->
+                </p>
+
+                <!-- Social Proof Badge -->
+                <div
+                  style="
+                    background: rgba(7, 20, 40, 0.2);
+                    border-radius: 20px;
+                    padding: 6px 14px;
+                    display: inline-block;
+                    margin-bottom: 20px;
+                  "
+                >
+                  <span style="color: #071428; font-size: 12px; font-weight: 600">
+                    🔥 <span style="font-weight: 700">*|STATS:UNIQUEOPENS|*+</span> geeks leyendo esta semana
+                  </span>
+                </div>
+
+                <!-- CTA Principal -->
+                <a
+                  href="https://salageek.com"
+                  class="btn"
+                  style="
+                    background: #071428;
+                    color: #ffd166 !important;
+                    display: inline-block;
+                    padding: 14px 32px;
+                    text-decoration: none;
+                    border-radius: 12px;
+                    font-weight: 700;
+                    font-size: 16px;
+                  "
+                >
+                  🌐 Ver en SalaGeek.com
+                </a>
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         SECCIÓN 2: TOP 5 HEADLINES (Optimizado para Escaneo)
+                         ============================================ -->
+            <tr>
+              <td style="padding: 32px">
+                <div
+                  class="section"
+                  style="
+                    background-color: #1a1f3a;
+                    border-radius: 16px;
+                    padding: 24px;
+                    margin-bottom: 20px;
+                    border: 1px solid #2d3748;
+                  "
+                >
+                  <span
+                    class="badge"
+                    style="
+                      display: inline-block;
+                      padding: 6px 12px;
+                      background: rgba(255, 209, 102, 0.1);
+                      color: #ffd166;
+                      border-radius: 20px;
+                      font-size: 12px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    🏆 Top 5 de la Semana
+                  </span>
+                  <h2 style="margin-top: 8px; color: #f0f2f7; font-size: 24px">Lo que No Puedes Perderte</h2>
+
+                  <!-- Item 1 -->
+                  <div class="top5-item" style="padding: 16px 0; border-bottom: 1px solid #2d3748">
+                    <span
+                      class="top5-number"
+                      style="
+                        display: block;
+                        width: 40px;
+                        height: 40px;
+                        background: linear-gradient(135deg, #ffd166, #e76f51);
+                        color: #071428;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 40px;
+                        font-weight: 700;
+                        font-size: 18px;
+                        margin-right: 12px;
+                        float: left;
+                      "
+                      >1</span
+                    >
+                    <div class="top5-content" style="overflow: hidden">
+                      <a
+                        href="[URL_NOTICIA_1]"
+                        style="
+                          color: #f0f2f7;
+                          font-weight: 600;
+                          font-size: 16px;
+                          text-decoration: none;
+                          display: block;
+                          line-height: 1.4;
+                        "
+                      >
+                        🎮 [TÍTULO NOTICIA 1 - Máximo 60 caracteres]
+                      </a>
+                      <a
+                        href="[URL_NOTICIA_1]"
+                        class="top5-link"
+                        style="
+                          color: #ffd166;
+                          text-decoration: none;
+                          font-size: 14px;
+                          font-weight: 600;
+                          display: inline-block;
+                          margin-top: 4px;
+                        "
+                      >
+                        Leer más →
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Item 2 -->
+                  <div class="top5-item" style="padding: 16px 0; border-bottom: 1px solid #2d3748">
+                    <span
+                      class="top5-number"
+                      style="
+                        display: block;
+                        width: 40px;
+                        height: 40px;
+                        background: linear-gradient(135deg, #ffd166, #e76f51);
+                        color: #071428;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 40px;
+                        font-weight: 700;
+                        font-size: 18px;
+                        margin-right: 12px;
+                        float: left;
+                      "
+                      >2</span
+                    >
+                    <div class="top5-content" style="overflow: hidden">
+                      <a
+                        href="[URL_NOTICIA_2]"
+                        style="
+                          color: #f0f2f7;
+                          font-weight: 600;
+                          font-size: 16px;
+                          text-decoration: none;
+                          display: block;
+                          line-height: 1.4;
+                        "
+                      >
+                        🎬 [TÍTULO NOTICIA 2 - Máximo 60 caracteres]
+                      </a>
+                      <a
+                        href="[URL_NOTICIA_2]"
+                        class="top5-link"
+                        style="
+                          color: #ffd166;
+                          text-decoration: none;
+                          font-size: 14px;
+                          font-weight: 600;
+                          display: inline-block;
+                          margin-top: 4px;
+                        "
+                      >
+                        Leer más →
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Item 3 -->
+                  <div class="top5-item" style="padding: 16px 0; border-bottom: 1px solid #2d3748">
+                    <span
+                      class="top5-number"
+                      style="
+                        display: block;
+                        width: 40px;
+                        height: 40px;
+                        background: linear-gradient(135deg, #ffd166, #e76f51);
+                        color: #071428;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 40px;
+                        font-weight: 700;
+                        font-size: 18px;
+                        margin-right: 12px;
+                        float: left;
+                      "
+                      >3</span
+                    >
+                    <div class="top5-content" style="overflow: hidden">
+                      <a
+                        href="[URL_NOTICIA_3]"
+                        style="
+                          color: #f0f2f7;
+                          font-weight: 600;
+                          font-size: 16px;
+                          text-decoration: none;
+                          display: block;
+                          line-height: 1.4;
+                        "
+                      >
+                        🕹️ [TÍTULO NOTICIA 3 - Máximo 60 caracteres]
+                      </a>
+                      <a
+                        href="[URL_NOTICIA_3]"
+                        class="top5-link"
+                        style="
+                          color: #ffd166;
+                          text-decoration: none;
+                          font-size: 14px;
+                          font-weight: 600;
+                          display: inline-block;
+                          margin-top: 4px;
+                        "
+                      >
+                        Leer más →
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Item 4 -->
+                  <div class="top5-item" style="padding: 16px 0; border-bottom: 1px solid #2d3748">
+                    <span
+                      class="top5-number"
+                      style="
+                        display: block;
+                        width: 40px;
+                        height: 40px;
+                        background: linear-gradient(135deg, #ffd166, #e76f51);
+                        color: #071428;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 40px;
+                        font-weight: 700;
+                        font-size: 18px;
+                        margin-right: 12px;
+                        float: left;
+                      "
+                      >4</span
+                    >
+                    <div class="top5-content" style="overflow: hidden">
+                      <a
+                        href="[URL_NOTICIA_4]"
+                        style="
+                          color: #f0f2f7;
+                          font-weight: 600;
+                          font-size: 16px;
+                          text-decoration: none;
+                          display: block;
+                          line-height: 1.4;
+                        "
+                      >
+                        🎯 [TÍTULO NOTICIA 4 - Máximo 60 caracteres]
+                      </a>
+                      <a
+                        href="[URL_NOTICIA_4]"
+                        class="top5-link"
+                        style="
+                          color: #ffd166;
+                          text-decoration: none;
+                          font-size: 14px;
+                          font-weight: 600;
+                          display: inline-block;
+                          margin-top: 4px;
+                        "
+                      >
+                        Leer más →
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Item 5 -->
+                  <div class="top5-item" style="padding: 16px 0">
+                    <span
+                      class="top5-number"
+                      style="
+                        display: block;
+                        width: 40px;
+                        height: 40px;
+                        background: linear-gradient(135deg, #ffd166, #e76f51);
+                        color: #071428;
+                        border-radius: 50%;
+                        text-align: center;
+                        line-height: 40px;
+                        font-weight: 700;
+                        font-size: 18px;
+                        margin-right: 12px;
+                        float: left;
+                      "
+                      >5</span
+                    >
+                    <div class="top5-content" style="overflow: hidden">
+                      <a
+                        href="[URL_NOTICIA_5]"
+                        style="
+                          color: #f0f2f7;
+                          font-weight: 600;
+                          font-size: 16px;
+                          text-decoration: none;
+                          display: block;
+                          line-height: 1.4;
+                        "
+                      >
+                        ⚡ [TÍTULO NOTICIA 5 - Máximo 60 caracteres]
+                      </a>
+                      <a
+                        href="[URL_NOTICIA_5]"
+                        class="top5-link"
+                        style="
+                          color: #ffd166;
+                          text-decoration: none;
+                          font-size: 14px;
+                          font-weight: 600;
+                          display: inline-block;
+                          margin-top: 4px;
+                        "
+                      >
+                        Leer más →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         SECCIÓN 3: SPOTLIGHT SEMANAL (Trailer O Lanzamiento)
+                         ============================================ -->
+            <tr>
+              <td style="padding: 0 32px 32px 32px">
+                <div
+                  class="section"
+                  style="
+                    background-color: #1a1f3a;
+                    border-radius: 16px;
+                    padding: 24px;
+                    margin-bottom: 20px;
+                    border: 1px solid #2d3748;
+                  "
+                >
+                  <span
+                    class="badge"
+                    style="
+                      display: inline-block;
+                      padding: 6px 12px;
+                      background: rgba(255, 209, 102, 0.1);
+                      color: #ffd166;
+                      border-radius: 20px;
+                      font-size: 12px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    🎬 Spotlight Semanal
+                  </span>
+                  <h2 style="margin-top: 12px; color: #f0f2f7; font-size: 24px">[TÍTULO DEL CONTENIDO DESTACADO]</h2>
+
+                  <!-- ============================================
+                       IMAGEN SPOTLIGHT (URL Externa Variable)
+                       ============================================
+                       📝 Cada semana cambiar esta URL en Mailchimp:
+                       - Usar Imgur, Cloudinary, o tu hosting
+                       - Tamaño ideal: 1200x675px (16:9)
+                       - Peso máximo: 200KB
+                       - Formatos: JPG (mejor compatibilidad) o WebP
+                       ============================================ -->
+                  <a href="[URL_VIDEO_O_ARTICULO]" style="display: block; position: relative; margin: 20px 0">
+                    <img
+                      src="[URL_IMAGEN_EXTERNA]"
+                      alt="[TÍTULO DEL CONTENIDO - para accesibilidad]"
+                      width="552"
+                      style="
+                        width: 100%;
+                        max-width: 552px;
+                        height: auto;
+                        border-radius: 12px;
+                        display: block;
+                        border: 2px solid #2d3748;
+                      "
+                    />
+                  </a>
+
+                  <!-- Descripción breve del contenido -->
+                  <p style="color: #a0aec0; font-size: 16px; line-height: 1.6; margin: 16px 0">
+                    [DESCRIPCIÓN BREVE del trailer/lanzamiento - 2-3 líneas máximo]
+                  </p>
+
+                  <!-- 
+                                    OPCIÓN B: LANZAMIENTO GAMER
+                                    Información del producto/juego
+                                -->
+                  <!--
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 16px 0;">
+                                    <tr>
+                                        <td style="padding: 12px 0; border-bottom: 1px solid #2d3748;">
+                                            <span style="color: #a0aec0; font-size: 14px;">📅 Fecha:</span>
+                                            <span style="color: #ffd166; font-weight: 600; font-size: 16px; margin-left: 8px;">[FECHA]</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px 0; border-bottom: 1px solid #2d3748;">
+                                            <span style="color: #a0aec0; font-size: 14px;">💰 Precio:</span>
+                                            <span style="color: #ffd166; font-weight: 600; font-size: 16px; margin-left: 8px;">[PRECIO]</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 12px 0;">
+                                            <span style="color: #a0aec0; font-size: 14px;">🛒 Disponible en:</span>
+                                            <br>
+                                            <span style="color: #f0f2f7; font-size: 14px; margin-top: 4px; display: inline-block;">[Plataformas]</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                -->
+
+                  <a
+                    href="[URL_COMPLETO]"
+                    class="btn"
+                    style="
+                      display: inline-block;
+                      margin-top: 16px;
+                      padding: 16px 36px;
+                      background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+                      color: #071428 !important;
+                      text-decoration: none;
+                      border-radius: 12px;
+                      font-weight: 700;
+                      font-size: 17px;
+                      min-height: 44px;
+                    "
+                  >
+                    🔥 Ver Más
+                  </a>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         SECCIÓN 4: EASTER EGG CHALLENGE (Gamificación)
+                         ============================================ -->
+
+            <!-- ============================================
+                         SECCIÓN 4: EASTER EGG CHALLENGE (Gamificación)
+                         ============================================ -->
+            <tr>
+              <td style="padding: 0 32px 32px 32px">
+                <div
+                  class="section"
+                  style="
+                    background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(231, 111, 81, 0.1));
+                    border: 2px dashed #ffd166;
+                    border-radius: 16px;
+                    padding: 24px;
+                  "
+                >
+                  <span
+                    class="badge"
+                    style="
+                      display: inline-block;
+                      padding: 6px 12px;
+                      background: rgba(255, 209, 102, 0.2);
+                      color: #ffd166;
+                      border-radius: 20px;
+                      font-size: 12px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    🎁 Easter Egg Semanal
+                  </span>
+                  <h2 style="margin-top: 12px; color: #f0f2f7; font-size: 24px">🕵️ Desafío del Geek Detective</h2>
+
+                  <!-- Meme o Imagen del Easter Egg (Opcional) -->
+                  <!--
+                                <img src="[URL_MEME_O_PISTA_VISUAL]" alt="Easter Egg Hint" width="100%" style="border-radius: 12px; margin: 16px 0; max-width: 100%;">
+                                <div style="height: 1px; background: linear-gradient(90deg, transparent, #2d3748, transparent); margin: 20px 0;"></div>
+                                -->
+
+                  <!-- Easter Egg del Sitio -->
+                  <div
+                    style="
+                      background: rgba(255, 209, 102, 0.05);
+                      padding: 20px;
+                      border-radius: 12px;
+                      border-left: 4px solid #ffd166;
+                      margin: 16px 0;
+                    "
+                  >
+                    <h3 style="color: #ffd166; margin: 0 0 12px 0; font-size: 18px">🔍 Pista de esta semana:</h3>
+                    <p style="color: #f0f2f7; font-size: 16px; line-height: 1.6; margin: 0">
+                      [DESCRIPCIÓN DEL EASTER EGG]<br /><br />
+                      <strong style="color: #ffd166">Ejemplos:</strong><br />
+                      • "Intenta hacer doble click en el logo de Sala Geek"<br />
+                      • "Mantén presionado el input del newsletter por 3 segundos"<br />
+                      • "Escribe el Código Konami en el sitio: ↑ ↑ ↓ ↓ ← → ← → B A"
+                    </p>
+                  </div>
+
+                  <!-- Contador de Easter Eggs (Opcional - usar Mailchimp merge fields) -->
+                  <div
+                    style="
+                      text-align: center;
+                      margin: 20px 0;
+                      padding: 16px;
+                      background: rgba(13, 110, 253, 0.1);
+                      border-radius: 12px;
+                    "
+                  >
+                    <p style="color: #a0aec0; font-size: 14px; margin: 0 0 8px 0">🏆 Tu progreso este mes:</p>
+                    <p style="color: #ffd166; font-size: 24px; font-weight: 700; margin: 0">
+                      [X] / 4 Easter Eggs encontrados
+                    </p>
+                  </div>
+
+                  <p style="font-size: 15px; margin-top: 16px; text-align: center; color: #a0aec0">
+                    <span style="color: #a0aec0">¿Encontraste el Easter Egg? </span>
+                    <br />
+                    <a
+                      href="https://www.facebook.com/SalaGeek19"
+                      style="
+                        color: #ffd166;
+                        text-decoration: none;
+                        font-weight: 600;
+                        display: inline-block;
+                        margin-top: 8px;
+                      "
+                    >
+                      📸 Compártelo y etiquétanos en Facebook
+                    </a>
+                  </p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         SECCIÓN 5: CTA SOCIAL + COMPARTIR
+                         ============================================ -->
+            <tr>
+              <td style="padding: 0 32px 40px 32px">
+                <div
+                  class="section"
+                  style="
+                    text-align: center;
+                    background: linear-gradient(135deg, #1a1f3a, #2d3748);
+                    border-radius: 16px;
+                    padding: 32px 24px;
+                    border: 1px solid #2d3748;
+                  "
+                >
+                  <h2 style="margin-bottom: 12px; color: #f0f2f7; font-size: 24px">� ¡Conéctate con Nosotros!</h2>
+                  <p style="margin-bottom: 24px; color: #a0aec0; font-size: 15px">
+                    Síguenos en redes para contenido exclusivo, memes y más Easter Eggs
+                  </p>
+
+                  <!-- Social Icons -->
+                  <table
+                    role="presentation"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    align="center"
+                    style="margin: 0 auto 24px auto"
+                  >
+                    <tr>
+                      <!-- Facebook -->
+                      <td style="padding: 0 6px">
+                        <a
+                          href="https://www.facebook.com/SalaGeek19"
+                          style="
+                            display: inline-block;
+                            width: 48px;
+                            height: 48px;
+                            background: linear-gradient(135deg, #ffd166, #e76f51);
+                            border-radius: 50%;
+                            text-align: center;
+                            line-height: 48px;
+                            text-decoration: none;
+                          "
+                        >
+                          <span style="font-size: 24px">📘</span>
+                        </a>
+                      </td>
+
+                      <!-- Instagram -->
+                      <td style="padding: 0 6px">
+                        <a
+                          href="https://www.instagram.com/sala_geek/"
+                          style="
+                            display: inline-block;
+                            width: 48px;
+                            height: 48px;
+                            background: linear-gradient(135deg, #ffd166, #e76f51);
+                            border-radius: 50%;
+                            text-align: center;
+                            line-height: 48px;
+                            text-decoration: none;
+                          "
+                        >
+                          <span style="font-size: 24px">📷</span>
+                        </a>
+                      </td>
+
+                      <!-- TikTok -->
+                      <td style="padding: 0 6px">
+                        <a
+                          href="https://www.tiktok.com/@salageek19"
+                          style="
+                            display: inline-block;
+                            width: 48px;
+                            height: 48px;
+                            background: linear-gradient(135deg, #ffd166, #e76f51);
+                            border-radius: 50%;
+                            text-align: center;
+                            line-height: 48px;
+                            text-decoration: none;
+                          "
+                        >
+                          <span style="font-size: 24px">🎵</span>
+                        </a>
+                      </td>
+
+                      <!-- Twitter/X -->
+                      <td style="padding: 0 6px">
+                        <a
+                          href="https://twitter.com/Sala_Geek"
+                          style="
+                            display: inline-block;
+                            width: 48px;
+                            height: 48px;
+                            background: linear-gradient(135deg, #ffd166, #e76f51);
+                            border-radius: 50%;
+                            text-align: center;
+                            line-height: 48px;
+                            text-decoration: none;
+                          "
+                        >
+                          <span style="font-size: 24px">🐦</span>
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Divider -->
+                  <div
+                    style="
+                      height: 1px;
+                      background: linear-gradient(90deg, transparent, #2d3748, transparent);
+                      margin: 24px 0;
+                    "
+                  ></div>
+
+                  <!-- CTA Botones -->
+                  <a
+                    href="https://salageek.com"
+                    class="btn"
+                    style="
+                      display: inline-block;
+                      margin: 0 8px 16px 8px;
+                      padding: 16px 32px;
+                      background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+                      color: #071428 !important;
+                      text-decoration: none;
+                      border-radius: 12px;
+                      font-weight: 700;
+                      font-size: 16px;
+                    "
+                  >
+                    🌐 Visitar SalaGeek.com
+                  </a>
+
+                  <p style="font-size: 14px; margin-top: 16px; color: #a0aec0">
+                    ¿Te gustó este newsletter?
+                    <a
+                      href="https://www.facebook.com/sharer/sharer.php?u=https://salageek.com"
+                      style="
+                        color: #ffd166;
+                        text-decoration: none;
+                        font-weight: 600;
+                        display: inline-block;
+                        margin-top: 4px;
+                      "
+                    >
+                      Compártelo con tus amigos 🚀
+                    </a>
+                  </p>
+                </div>
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         FOOTER: Información Legal y Unsub
+                         ============================================ -->
+            <tr>
+              <td style="padding: 32px; text-align: center; background-color: #071428; border-radius: 0 0 20px 20px">
+                <p style="font-size: 12px; color: #718096; margin-bottom: 16px">
+                  Recibiste este correo porque te suscribiste a <strong style="color: #ffd166">Geeky Weekly</strong> en
+                  Sala Geek
+                </p>
+
+                <p style="font-size: 12px; color: #718096; margin-bottom: 16px">
+                  <a href="*|UPDATE_PROFILE|*" style="color: #ffd166; text-decoration: none">Actualizar preferencias</a>
+                  ·
+                  <a href="*|UNSUB|*" style="color: #a0aec0; text-decoration: none">Cancelar suscripción</a>
+                </p>
+
+                <p style="font-size: 11px; color: #718096; margin: 0">
+                  © 2025 Sala Geek. Todos los derechos reservados.<br />
+                  <a
+                    href="https://salageek.com/src/pages/legal/privacy.html"
+                    style="color: #a0aec0; text-decoration: none"
+                    >Política de Privacidad</a
+                  >
+                  ·
+                  <a
+                    href="https://salageek.com/src/pages/legal/terms.html"
+                    style="color: #a0aec0; text-decoration: none"
+                    >Términos de Servicio</a
+                  >
+                </p>
+              </td>
+            </tr>
+          </table>
+          <!-- Fin Container 600px -->
+        </td>
+      </tr>
+    </table>
+    <!-- Fin Wrapper Principal -->
+  </body>
+</html>

@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>¿Cómo va tu experiencia en Sala Geek? 💬</title>
+
+    <!--[if mso]>
+      <style type="text/css">
+        body,
+        table,
+        td {
+          font-family: Arial, sans-serif !important;
+        }
+      </style>
+    <![endif]-->
+
+    <style>
+      /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      table,
+      td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        border-collapse: collapse;
+      }
+
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        display: block;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      /* ============================================
+           ESTILOS GENERALES
+           ============================================ */
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #071428;
+      }
+
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #0a0e27;
+        border-radius: 20px;
+      }
+
+      /* ============================================
+           HEADER
+           ============================================ */
+      .header {
+        background: linear-gradient(135deg, #e76f51 0%, #ffd166 100%);
+        padding: 32px 20px;
+        text-align: center;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .logo {
+        max-width: 120px;
+        height: auto;
+        margin: 0 auto;
+      }
+
+      /* ============================================
+           CONTENT
+           ============================================ */
+      .content {
+        padding: 40px 32px;
+        color: #f0f2f7;
+      }
+
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffd166;
+        margin: 0 0 16px 0;
+        text-align: center;
+        line-height: 1.2;
+      }
+
+      .text {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #a0aec0;
+        margin: 0 0 20px 0;
+      }
+
+      .text strong {
+        color: #ffd166;
+        font-weight: 600;
+      }
+
+      /* ============================================
+           COUNTDOWN HERO
+           ============================================ */
+      .countdown-hero {
+        background: linear-gradient(135deg, rgba(231, 111, 81, 0.2), rgba(255, 209, 102, 0.2));
+        border: 2px solid #ffd166;
+        border-radius: 16px;
+        padding: 32px 24px;
+        margin: 32px 0;
+        text-align: center;
+      }
+
+      .countdown-emoji {
+        font-size: 56px;
+        margin-bottom: 16px;
+      }
+
+      .countdown-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffd166;
+        margin: 0 0 8px 0;
+      }
+
+      .countdown-subtitle {
+        font-size: 16px;
+        color: #f0f2f7;
+        margin: 0 0 20px 0;
+      }
+
+      /* ============================================
+           PREVIEW CARDS
+           ============================================ */
+      .preview-section {
+        background-color: #1a1f3a;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 24px 0;
+        border: 1px solid #2d3748;
+      }
+
+      .preview-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: rgba(255, 209, 102, 0.1);
+        color: #ffd166;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+
+      .preview-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #2d3748;
+      }
+
+      .preview-item:last-child {
+        border-bottom: none;
+      }
+
+      .preview-number {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #ffd166, #e76f51);
+        color: #071428;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 32px;
+        font-weight: 700;
+        font-size: 14px;
+        margin-right: 12px;
+        vertical-align: middle;
+      }
+
+      .preview-text {
+        font-size: 15px;
+        color: #f0f2f7;
+        line-height: 1.5;
+        display: inline;
+      }
+
+      /* ============================================
+           TIPS BOX
+           ============================================ */
+      .tips-box {
+        background: linear-gradient(135deg, #1a1f3a, #2d3748);
+        border-radius: 12px;
+        padding: 24px;
+        margin: 24px 0;
+        border-left: 4px solid #ffd166;
+      }
+
+      .tips-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffd166;
+        margin: 0 0 12px 0;
+      }
+
+      .tips-item {
+        font-size: 14px;
+        color: #a0aec0;
+        line-height: 1.6;
+        margin: 8px 0;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .tips-item:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #ffd166;
+        font-weight: 700;
+      }
+
+      /* ============================================
+           CTA BUTTON
+           ============================================ */
+      .cta-container {
+        text-align: center;
+        margin: 32px 0;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+        color: #071428 !important;
+        text-decoration: none;
+        padding: 16px 40px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(255, 209, 102, 0.3);
+        min-height: 44px;
+      }
+
+      /* ============================================
+           FOOTER
+           ============================================ */
+      .footer {
+        padding: 32px 24px;
+        text-align: center;
+        background-color: #071428;
+        border-radius: 0 0 20px 20px;
+      }
+
+      .footer-text {
+        font-size: 13px;
+        color: #a0aec0;
+        margin: 8px 0;
+        line-height: 1.5;
+      }
+
+      .footer-link {
+        color: #ffd166;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      /* ============================================
+           RESPONSIVE
+           ============================================ */
+      @media only screen and (max-width: 600px) {
+        .content {
+          padding: 32px 20px !important;
+        }
+
+        .title {
+          font-size: 24px !important;
+        }
+
+        .countdown-emoji {
+          font-size: 48px !important;
+        }
+
+        .countdown-title {
+          font-size: 20px !important;
+        }
+
+        .cta-button {
+          padding: 16px 32px !important;
+          width: 90% !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body style="margin: 0; padding: 0; background-color: #071428">
+    <!-- Preheader -->
+    <div style="display: none; max-height: 0px; overflow: hidden">
+      💬 Tu opinión es importante - Cuéntanos qué te parece Geeky Weekly y Sala Geek 🎮
+    </div>
+
+    <!-- Wrapper Principal -->
+    <table
+      role="presentation"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      width="100%"
+      style="background-color: #071428"
+    >
+      <tr>
+        <td align="center" style="padding: 40px 20px">
+          <!-- Container 600px -->
+          <table
+            role="presentation"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            width="600"
+            style="max-width: 600px"
+            class="email-container"
+          >
+            <!-- ============================================
+                         HEADER
+                         ============================================ -->
+            <tr>
+              <td
+                class="header"
+                style="
+                  background: linear-gradient(135deg, #e76f51 0%, #ffd166 100%);
+                  padding: 32px 20px;
+                  text-align: center;
+                  border-radius: 20px 20px 0 0;
+                "
+              >
+                <img
+                  src="https://salageek.com/src/images/SalaGeek_LOGO.png"
+                  alt="Sala Geek"
+                  class="logo"
+                  width="120"
+                  style="margin: 0 auto"
+                />
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         CONTENT
+                         ============================================ -->
+            <tr>
+              <td class="content" style="padding: 40px 32px; color: #f0f2f7">
+                <h1
+                  class="title"
+                  style="
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #ffd166;
+                    margin: 0 0 16px 0;
+                    text-align: center;
+                    line-height: 1.2;
+                  "
+                >
+                  💬 ¿Cómo va tu experiencia?
+                </h1>
+
+                <p class="text" style="font-size: 16px; line-height: 1.6; color: #a0aec0; margin: 0 0 20px 0; text-align: center">
+                  ¡Hola *|FNAME|*! Ya llevas una semana con nosotros y queremos saber
+                  <strong style="color: #ffd166; font-weight: 600">qué te parece Geeky Weekly</strong>. 🎮
+                </p>
+
+                <!-- ============================================
+                                 ENGAGEMENT HERO
+                                 ============================================ -->
+                <div
+                  class="countdown-hero"
+                  style="
+                    background: linear-gradient(135deg, rgba(231, 111, 81, 0.2), rgba(255, 209, 102, 0.2));
+                    border: 2px solid #ffd166;
+                    border-radius: 16px;
+                    padding: 32px 24px;
+                    margin: 32px 0;
+                    text-align: center;
+                  "
+                >
+                  <div class="countdown-emoji" style="font-size: 56px; margin-bottom: 16px">⭐</div>
+
+                  <h2 class="countdown-title" style="font-size: 24px; font-weight: 700; color: #ffd166; margin: 0 0 8px 0">
+                    Tu opinión nos importa
+                  </h2>
+
+                  <p class="countdown-subtitle" style="font-size: 16px; color: #f0f2f7; margin: 0 0 20px 0">
+                    Responde este email con tu feedback 💌
+                  </p>
+
+                  <p style="font-size: 14px; color: #a0aec0; margin: 0">
+                    Solo toma <strong style="color: #ffd166">30 segundos</strong>
+                  </p>
+                </div>
+
+                <!-- ============================================
+                                 PREGUNTAS DE FEEDBACK
+                                 ============================================ -->
+                <div
+                  class="preview-section"
+                  style="
+                    background-color: #1a1f3a;
+                    border-radius: 12px;
+                    padding: 24px;
+                    margin: 24px 0;
+                    border: 1px solid #2d3748;
+                  "
+                >
+                  <span
+                    class="preview-badge"
+                    style="
+                      display: inline-block;
+                      padding: 6px 12px;
+                      background: rgba(255, 209, 102, 0.1);
+                      color: #ffd166;
+                      border-radius: 20px;
+                      font-size: 12px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.5px;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    📋 Ayúdanos a Mejorar
+                  </span>
+
+                  <h3 style="font-size: 18px; font-weight: 700; color: #f0f2f7; margin: 0 0 16px 0">
+                    Responde con tu opinión:
+                  </h3>
+
+                  <!-- Pregunta 1 -->
+                  <div class="preview-item" style="padding: 12px 0; border-bottom: 1px solid #2d3748">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="width: 40px; vertical-align: top; padding-right: 12px">
+                          <span
+                            class="preview-number"
+                            style="
+                              display: block;
+                              width: 32px;
+                              height: 32px;
+                              background: linear-gradient(135deg, #ffd166, #e76f51);
+                              color: #071428;
+                              border-radius: 50%;
+                              text-align: center;
+                              line-height: 32px;
+                              font-weight: 700;
+                              font-size: 14px;
+                            "
+                            >1</span
+                          >
+                        </td>
+                        <td style="vertical-align: top">
+                          <span class="preview-text" style="font-size: 15px; color: #f0f2f7; line-height: 1.5; display: block">
+                            ¿Qué te parece el <strong>contenido de Geeky Weekly</strong>?
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <!-- Pregunta 2 -->
+                  <div class="preview-item" style="padding: 12px 0; border-bottom: 1px solid #2d3748">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="width: 40px; vertical-align: top; padding-right: 12px">
+                          <span
+                            class="preview-number"
+                            style="
+                              display: block;
+                              width: 32px;
+                              height: 32px;
+                              background: linear-gradient(135deg, #ffd166, #e76f51);
+                              color: #071428;
+                              border-radius: 50%;
+                              text-align: center;
+                              line-height: 32px;
+                              font-weight: 700;
+                              font-size: 14px;
+                            "
+                            >2</span
+                          >
+                        </td>
+                        <td style="vertical-align: top">
+                          <span class="preview-text" style="font-size: 15px; color: #f0f2f7; line-height: 1.5; display: block">
+                            ¿Encontraste los <strong>Easter Eggs del sitio</strong>?
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <!-- Pregunta 3 -->
+                  <div class="preview-item" style="padding: 12px 0; border-bottom: 1px solid #2d3748">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="width: 40px; vertical-align: top; padding-right: 12px">
+                          <span
+                            class="preview-number"
+                            style="
+                              display: block;
+                              width: 32px;
+                              height: 32px;
+                              background: linear-gradient(135deg, #ffd166, #e76f51);
+                              color: #071428;
+                              border-radius: 50%;
+                              text-align: center;
+                              line-height: 32px;
+                              font-weight: 700;
+                              font-size: 14px;
+                            "
+                            >3</span
+                          >
+                        </td>
+                        <td style="vertical-align: top">
+                          <span class="preview-text" style="font-size: 15px; color: #f0f2f7; line-height: 1.5; display: block">
+                            ¿Qué temas <strong>te gustaría ver más</strong>?
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <!-- Pregunta 4 -->
+                  <div class="preview-item" style="padding: 12px 0">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr>
+                        <td style="width: 40px; vertical-align: top; padding-right: 12px">
+                          <span
+                            class="preview-number"
+                            style="
+                              display: block;
+                              width: 32px;
+                              height: 32px;
+                              background: linear-gradient(135deg, #ffd166, #e76f51);
+                              color: #071428;
+                              border-radius: 50%;
+                              text-align: center;
+                              line-height: 32px;
+                              font-weight: 700;
+                              font-size: 14px;
+                            "
+                            >4</span
+                          >
+                        </td>
+                        <td style="vertical-align: top">
+                          <span class="preview-text" style="font-size: 15px; color: #f0f2f7; line-height: 1.5; display: block">
+                            ¿Algo que podamos <strong>mejorar</strong>?
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <p class="text" style="font-size: 15px; line-height: 1.6; color: #a0aec0; margin: 20px 0; text-align: center">
+                  Simplemente <strong style="color: #ffd166">responde este correo</strong> con tus comentarios.
+                  <br />Leemos cada respuesta personalmente 💛
+                </p>
+
+                <!-- ============================================
+                                 INCENTIVO / BENEFICIO
+                                 ============================================ -->
+                <div
+                  class="tips-box"
+                  style="
+                    background: linear-gradient(135deg, #1a1f3a, #2d3748);
+                    border-radius: 12px;
+                    padding: 24px;
+                    margin: 24px 0;
+                    border-left: 4px solid #ffd166;
+                  "
+                >
+                  <h3 class="tips-title" style="font-size: 18px; font-weight: 700; color: #ffd166; margin: 0 0 12px 0">
+                    🎁 Por cierto...
+                  </h3>
+
+                  <p style="font-size: 14px; color: #a0aec0; line-height: 1.6; margin: 0">
+                    Cada viernes recibas un <strong style="color: #ffd166">Geeky Weekly</strong> nuevo con:<br />
+                    ✨ Top 5 noticias geek<br />
+                    🎬 Spotlight (trailers/lanzamientos)<br />
+                    🎮 Easter Egg Challenge<br />
+                    💎 Contenido exclusivo
+                  </p>
+                </div>
+
+                <!-- ============================================
+                                 CTA
+                                 ============================================ -->
+                <div class="cta-container" style="text-align: center; margin: 32px 0">
+                  <a
+                    href="mailto:contacto@salageek.com?subject=Feedback%20Geeky%20Weekly&body=Hola!%20Quiero%20compartir%20mi%20feedback:%0A%0A1.%20El%20contenido%20me%20parece:%0A%0A2.%20Easter%20Eggs:%0A%0A3.%20Me%20gustaría%20ver%20más%20de:%0A%0A4.%20Sugerencias:"
+                    class="cta-button"
+                    style="
+                      display: inline-block;
+                      background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+                      color: #071428 !important;
+                      text-decoration: none;
+                      padding: 16px 40px;
+                      border-radius: 12px;
+                      font-size: 17px;
+                      font-weight: 700;
+                      min-height: 44px;
+                    "
+                  >
+                    💬 Enviar Mi Feedback
+                  </a>
+                </div>
+
+                <p class="text" style="font-size: 14px; line-height: 1.6; color: #718096; margin: 24px 0 0 0; text-align: center">
+                  También puedes <strong style="color: #ffd166">simplemente responder este email</strong> 📧
+                  <br />Nos encanta saber de ti 💛
+                </p>
+              </td>
+            </tr>
+
+            <!-- ============================================
+                         FOOTER
+                         ============================================ -->
+            <tr>
+              <td style="padding: 24px; text-align: center; background-color: #071428; border-radius: 0 0 20px 20px">
+                <p style="font-size: 12px; color: #718096; margin: 0 0 12px 0">
+                  Recibiste este correo porque te suscribiste a <strong style="color: #ffd166">Geeky Weekly</strong>
+                </p>
+                <p style="font-size: 12px; color: #718096; margin: 0 0 16px 0">
+                  <a href="*|UPDATE_PROFILE|*" style="color: #ffd166; text-decoration: none; font-weight: 600">Actualizar preferencias</a>
+                  ·
+                  <a href="*|UNSUB|*" style="color: #ffd166; text-decoration: none; font-weight: 600">Cancelar suscripción</a>
+                </p>
+                <p style="font-size: 11px; color: #718096; margin: 0">© 2025 Sala Geek. Todos los derechos reservados.</p>
+              </td>
+            </tr>
+          </table>
+          <!-- Fin Container -->
+        </td>
+      </tr>
+    </table>
+    <!-- Fin Wrapper -->
+  </body>
+</html>

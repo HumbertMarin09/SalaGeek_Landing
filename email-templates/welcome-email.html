@@ -1,305 +1,657 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido a Sala Geek</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>¡Bienvenido a Sala Geek! 🎮</title>
+
+    <!--[if mso]>
+      <style type="text/css">
+        body,
+        table,
+        td {
+          font-family: Arial, sans-serif !important;
+        }
+      </style>
+    <![endif]-->
+
     <style>
-        /* Reset básico */
-        body, table, td, a { 
-            -webkit-text-size-adjust: 100%; 
-            -ms-text-size-adjust: 100%; 
-        }
-        table, td { 
-            mso-table-lspace: 0pt; 
-            mso-table-rspace: 0pt; 
-        }
-        img { 
-            -ms-interpolation-mode: bicubic; 
-            border: 0; 
-            height: auto; 
-            line-height: 100%; 
-            outline: none; 
-            text-decoration: none; 
-        }
-        
-        /* Estilos generales */
-        body {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-        
-        /* Container principal */
-        .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-        }
-        
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 20px;
-            text-align: center;
-        }
-        
-        .logo {
-            max-width: 200px;
-            height: auto;
-        }
-        
-        /* Content */
+      /* ============================================
+           RESET & BASE STYLES (Compatibilidad Email)
+           ============================================ */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      table,
+      td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+        border-collapse: collapse;
+      }
+
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        display: block;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      /* ============================================
+           ESTILOS GENERALES (Mobile-First)
+           ============================================ */
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #071428;
+      }
+
+      /* ============================================
+           CONTAINER PRINCIPAL (600px máximo)
+           ============================================ */
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #0a0e27;
+        border-radius: 20px;
+      }
+
+      /* ============================================
+           HEADER (Gradiente Sala Geek)
+           ============================================ */
+      .header {
+        background: linear-gradient(135deg, #0d6efd 0%, #ffd166 100%);
+        padding: 40px 20px;
+        text-align: center;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .logo {
+        max-width: 150px;
+        height: auto;
+        margin: 0 auto;
+      }
+
+      /* ============================================
+           CONTENT SECTION
+           ============================================ */
+      .content {
+        padding: 40px 32px;
+        color: #f0f2f7;
+      }
+
+      .welcome-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffd166;
+        margin: 0 0 20px 0;
+        text-align: center;
+        line-height: 1.2;
+      }
+
+      .welcome-text {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #a0aec0;
+        margin: 0 0 20px 0;
+      }
+
+      .welcome-text strong {
+        color: #ffd166;
+        font-weight: 600;
+      }
+
+      /* ============================================
+           BENEFITS SECTION (Cards con iconos)
+           ============================================ */
+      .benefits {
+        background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(231, 111, 81, 0.05));
+        border-radius: 16px;
+        border: 1px solid rgba(255, 209, 102, 0.2);
+        padding: 28px 24px;
+        margin: 32px 0;
+      }
+
+      .benefit-item {
+        margin-bottom: 20px;
+        display: table;
+        width: 100%;
+      }
+
+      .benefit-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .benefit-icon {
+        font-size: 28px;
+        margin-right: 16px;
+        display: table-cell;
+        vertical-align: top;
+        width: 44px;
+      }
+
+      .benefit-text {
+        font-size: 15px;
+        color: #f0f2f7;
+        line-height: 1.5;
+        margin: 0;
+        display: table-cell;
+        vertical-align: top;
+      }
+
+      .benefit-text strong {
+        color: #ffd166;
+        font-weight: 600;
+      }
+
+      /* ============================================
+           CTA BUTTON (Optimizado para Mobile)
+           ============================================ */
+      .cta-container {
+        text-align: center;
+        margin: 32px 0;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+        color: #071428 !important;
+        text-decoration: none;
+        padding: 16px 40px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(255, 209, 102, 0.3);
+        min-height: 44px;
+        min-width: 44px;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(255, 209, 102, 0.4);
+      }
+
+      /* ============================================
+           SOCIAL SECTION
+           ============================================ */
+      .social {
+        text-align: center;
+        padding: 32px 24px;
+        background: linear-gradient(135deg, #1a1f3a, #2d3748);
+        border-top: 1px solid #2d3748;
+      }
+
+      .social-title {
+        font-size: 20px;
+        color: #f0f2f7;
+        margin: 0 0 24px 0;
+        font-weight: 700;
+      }
+
+      .social-link {
+        display: inline-block;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #ffd166, #e76f51);
+        border-radius: 50%;
+        text-decoration: none;
+        line-height: 48px;
+        font-size: 24px;
+        transition: transform 0.3s;
+      }
+
+      .social-link:hover {
+        transform: scale(1.1);
+      }
+
+      /* ============================================
+           FOOTER (Legal y Unsub)
+           ============================================ */
+      .footer {
+        padding: 32px 24px;
+        text-align: center;
+        background-color: #071428;
+        border-radius: 0 0 20px 20px;
+      }
+
+      .footer-text {
+        font-size: 13px;
+        color: #a0aec0;
+        margin: 8px 0;
+        line-height: 1.5;
+      }
+
+      .footer-link {
+        color: #ffd166;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .footer-link:hover {
+        text-decoration: underline;
+      }
+
+      /* ============================================
+           RESPONSIVE (Mobile Optimization)
+           ============================================ */
+      @media only screen and (max-width: 600px) {
         .content {
-            padding: 40px 30px;
-            color: #333333;
+          padding: 32px 20px !important;
         }
-        
+
         .welcome-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 0 0 20px 0;
-            text-align: center;
+          font-size: 24px !important;
         }
-        
-        .welcome-text {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #555555;
-            margin: 0 0 20px 0;
-        }
-        
-        /* Benefits section */
+
         .benefits {
-            background-color: #f8f9ff;
-            border-radius: 12px;
-            padding: 25px;
-            margin: 30px 0;
+          padding: 24px 20px !important;
         }
-        
-        .benefit-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-        
+
         .benefit-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            flex-shrink: 0;
+          font-size: 24px !important;
+          width: 40px !important;
         }
-        
-        .benefit-text {
-            font-size: 15px;
-            color: #333333;
-            line-height: 1.5;
-            margin: 0;
-        }
-        
-        /* CTA Button */
-        .cta-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
+
         .cta-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          padding: 16px 32px !important;
+          font-size: 16px !important;
+          width: 90% !important;
         }
-        
-        /* Social section */
-        .social {
-            text-align: center;
-            padding: 30px 0;
-            background-color: #f8f9ff;
-        }
-        
-        .social-title {
-            font-size: 18px;
-            color: #333333;
-            margin: 0 0 20px 0;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        
+
         .social-link {
-            display: inline-block;
-            width: 45px;
-            height: 45px;
-            background-color: #667eea;
-            border-radius: 50%;
-            text-decoration: none;
-            line-height: 45px;
-            font-size: 24px;
-            transition: transform 0.3s;
+          width: 44px !important;
+          height: 44px !important;
+          line-height: 44px !important;
+          font-size: 20px !important;
         }
-        
-        /* Footer */
-        .footer {
-            padding: 30px;
-            text-align: center;
-            background-color: #1a1f3a;
-            color: #ffffff;
-        }
-        
-        .footer-text {
-            font-size: 14px;
-            color: #cccccc;
-            margin: 5px 0;
-        }
-        
-        .footer-link {
-            color: #667eea;
-            text-decoration: none;
-        }
-        
-        /* Responsive */
-        @media only screen and (max-width: 600px) {
-            .content {
-                padding: 30px 20px !important;
-            }
-            
-            .welcome-title {
-                font-size: 24px !important;
-            }
-            
-            .benefits {
-                padding: 20px !important;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-    <center>
-        <table role="presentation" class="email-container" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px;">
-            
-            <!-- HEADER -->
+  </head>
+
+  <body style="margin: 0; padding: 0; background-color: #071428">
+    <!-- Preheader (Preview Text) -->
+    <div style="display: none; max-height: 0px; overflow: hidden">
+      🎉 ¡Bienvenido a la comunidad geek más activa! Tu aventura comienza aquí 🎮🎬
+    </div>
+
+    <!-- Wrapper Principal -->
+    <table
+      role="presentation"
+      cellspacing="0"
+      cellpadding="0"
+      border="0"
+      width="100%"
+      style="background-color: #071428"
+    >
+      <tr>
+        <td align="center" style="padding: 40px 20px">
+          <!-- Container 600px -->
+          <table
+            role="presentation"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+            width="600"
+            style="max-width: 600px"
+            class="email-container"
+          >
+            <!-- ============================================
+                         HEADER: Logo + Gradiente
+                         ============================================ -->
+            <!-- ============================================
+                         HEADER: Logo + Gradiente
+                         ============================================ -->
             <tr>
-                <td class="header">
-                    <img src="https://salageek.com/src/images/SalaGeek_LOGO.webp" alt="Sala Geek" class="logo" width="200">
-                </td>
+              <td
+                class="header"
+                style="
+                  background: linear-gradient(135deg, #0d6efd 0%, #ffd166 100%);
+                  padding: 40px 20px;
+                  text-align: center;
+                  border-radius: 20px 20px 0 0;
+                "
+              >
+                <img
+                  src="https://salageek.com/src/images/SalaGeek_LOGO.png"
+                  alt="Sala Geek"
+                  class="logo"
+                  width="150"
+                  style="margin: 0 auto"
+                />
+              </td>
             </tr>
-            
-            <!-- CONTENT -->
+
+            <!-- ============================================
+                         CONTENT: Mensaje de Bienvenida
+                         ============================================ -->
             <tr>
-                <td class="content">
-                    <h1 class="welcome-title">¡Bienvenido a Sala Geek! 🎮🎬</h1>
-                    
-                    <p class="welcome-text">
-                        ¡Hola! Nos emociona tenerte aquí.
-                    </p>
-                    
-                    <p class="welcome-text">
-                        Acabas de unirte a <strong>la comunidad geek más activa de habla hispana</strong>. Desde 2017, conectamos a miles de fans apasionados por el entretenimiento, y ahora tú formas parte de esta gran familia.
-                    </p>
-                    
-                    <!-- BENEFITS -->
-                    <div class="benefits">
-                        <div class="benefit-item">
-                            <div class="benefit-icon">✨</div>
-                            <p class="benefit-text"><strong>Contenido exclusivo</strong> sobre películas, series y anime antes que nadie</p>
-                        </div>
-                        
-                        <div class="benefit-item">
-                            <div class="benefit-icon">🎮</div>
-                            <p class="benefit-text"><strong>Reviews y análisis</strong> de los videojuegos más esperados</p>
-                        </div>
-                        
-                        <div class="benefit-item">
-                            <div class="benefit-icon">📰</div>
-                            <p class="benefit-text"><strong>Noticias frescas</strong> cada semana en tu bandeja de entrada</p>
-                        </div>
-                        
-                        <div class="benefit-item">
-                            <div class="benefit-icon">🎁</div>
-                            <p class="benefit-text"><strong>Ofertas especiales</strong> y promociones exclusivas para suscriptores</p>
-                        </div>
-                    </div>
-                    
-                    <p class="welcome-text">
-                        Mantente atento a tu correo. Muy pronto recibirás nuestro primer newsletter con contenido que no querrás perderte.
-                    </p>
-                    
-                    <!-- CTA -->
-                    <div class="cta-container">
-                        <a href="https://salageek.com" class="cta-button">
-                            Visitar Sala Geek
-                        </a>
-                    </div>
-                    
-                    <p class="welcome-text" style="text-align: center; color: #888; font-size: 14px;">
-                        ¿Alguna pregunta? Responde a este correo, ¡estamos aquí para ayudarte!
-                    </p>
-                </td>
+              <td class="content" style="padding: 40px 32px; color: #f0f2f7">
+                <h1
+                  class="welcome-title"
+                  style="
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #ffd166;
+                    margin: 0 0 20px 0;
+                    text-align: center;
+                    line-height: 1.2;
+                  "
+                >
+                  ¡Bienvenido a Sala Geek! 🎮🎬
+                </h1>
+
+                <p class="welcome-text" style="font-size: 16px; line-height: 1.6; color: #a0aec0; margin: 0 0 20px 0">
+                  ¡Hola! Nos emociona tenerte aquí. 🎉
+                </p>
+
+                <p class="welcome-text" style="font-size: 16px; line-height: 1.6; color: #a0aec0; margin: 0 0 20px 0">
+                  Acabas de unirte a
+                  <strong style="color: #ffd166; font-weight: 600">la comunidad geek más activa de habla hispana</strong
+                  >. Desde 2017, conectamos a miles de fans apasionados por el entretenimiento, y ahora tú formas parte
+                  de esta gran familia.
+                </p>
+
+                <!-- ============================================
+                                 BENEFITS: Qué obtienes al suscribirte
+                                 ============================================ -->
+                <div
+                  class="benefits"
+                  style="
+                    background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(231, 111, 81, 0.05));
+                    border-radius: 16px;
+                    border: 1px solid rgba(255, 209, 102, 0.2);
+                    padding: 28px 24px;
+                    margin: 32px 0;
+                  "
+                >
+                  <!-- Benefit 1: Newsletter Geeky Weekly -->
+                  <table
+                    role="presentation"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    width="100%"
+                    style="margin-bottom: 20px"
+                  >
+                    <tr>
+                      <td style="vertical-align: top; width: 44px; font-size: 28px">✨</td>
+                      <td style="vertical-align: top; padding-left: 16px">
+                        <p style="font-size: 15px; color: #f0f2f7; line-height: 1.5; margin: 0">
+                          <strong style="color: #ffd166; font-weight: 600">Newsletter Geeky Weekly</strong> cada viernes
+                          con las mejores noticias
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Benefit 2: Contenido exclusivo -->
+                  <table
+                    role="presentation"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    width="100%"
+                    style="margin-bottom: 20px"
+                  >
+                    <tr>
+                      <td style="vertical-align: top; width: 44px; font-size: 28px">🎬</td>
+                      <td style="vertical-align: top; padding-left: 16px">
+                        <p style="font-size: 15px; color: #f0f2f7; line-height: 1.5; margin: 0">
+                          <strong style="color: #ffd166; font-weight: 600">Trailers y lanzamientos</strong> de
+                          películas, series y anime antes que nadie
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Benefit 3: Easter Eggs -->
+                  <table
+                    role="presentation"
+                    cellspacing="0"
+                    cellpadding="0"
+                    border="0"
+                    width="100%"
+                    style="margin-bottom: 20px"
+                  >
+                    <tr>
+                      <td style="vertical-align: top; width: 44px; font-size: 28px">🎁</td>
+                      <td style="vertical-align: top; padding-left: 16px">
+                        <p style="font-size: 15px; color: #f0f2f7; line-height: 1.5; margin: 0">
+                          <strong style="color: #ffd166; font-weight: 600">Easter Eggs semanales</strong> y desafíos
+                          exclusivos para la comunidad
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Benefit 4: Top 5 Noticias -->
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tr>
+                      <td style="vertical-align: top; width: 44px; font-size: 28px">🏆</td>
+                      <td style="vertical-align: top; padding-left: 16px">
+                        <p style="font-size: 15px; color: #f0f2f7; line-height: 1.5; margin: 0">
+                          <strong style="color: #ffd166; font-weight: 600">Top 5 noticias semanales</strong> más relevantes del mundo geek
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+
+                <p class="welcome-text" style="font-size: 16px; line-height: 1.6; color: #a0aec0; margin: 0 0 20px 0">
+                  <strong style="color: #ffd166">Tu primer Geeky Weekly llegará este viernes</strong> con contenido que
+                  no querrás perderte. Mantente atento a tu bandeja de entrada. 📬
+                </p>
+
+                <!-- ============================================
+                                 CTA: Visitar el sitio
+                                 ============================================ -->
+                <div class="cta-container" style="text-align: center; margin: 32px 0">
+                  <a
+                    href="https://salageek.com"
+                    class="cta-button"
+                    style="
+                      display: inline-block;
+                      background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+                      color: #071428 !important;
+                      text-decoration: none;
+                      padding: 16px 40px;
+                      border-radius: 12px;
+                      font-size: 17px;
+                      font-weight: 700;
+                      min-height: 44px;
+                    "
+                  >
+                    🌐 Explorar Sala Geek
+                  </a>
+                </div>
+
+                <p class="welcome-text" style="text-align: center; color: #718096; font-size: 14px; margin: 0">
+                  ¿Alguna pregunta? Responde a este correo, ¡estamos aquí para ayudarte! 💬
+                </p>
+              </td>
             </tr>
-            
-            <!-- SOCIAL -->
+
+            <!-- ============================================
+                         SOCIAL: Redes sociales
+                         ============================================ -->
             <tr>
-                <td class="social">
-                    <h3 class="social-title">Síguenos en Redes Sociales</h3>
-                    
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
-                        <tr>
-                            <td style="padding: 0 10px;">
-                                <a href="https://facebook.com/SalaGeek19" class="social-link" style="color: #ffffff;">
-                                    📘
-                                </a>
-                            </td>
-                            <td style="padding: 0 10px;">
-                                <a href="https://instagram.com/sala_geek" class="social-link" style="color: #ffffff;">
-                                    📷
-                                </a>
-                            </td>
-                            <td style="padding: 0 10px;">
-                                <a href="https://x.com/Sala_Geek" class="social-link" style="color: #ffffff;">
-                                    𝕏
-                                </a>
-                            </td>
-                            <td style="padding: 0 10px;">
-                                <a href="https://tiktok.com/@salageek19" class="social-link" style="color: #ffffff;">
-                                    🎵
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+              <td
+                class="social"
+                style="
+                  text-align: center;
+                  padding: 32px 24px;
+                  background: linear-gradient(135deg, #1a1f3a, #2d3748);
+                  border-top: 1px solid #2d3748;
+                "
+              >
+                <h3 class="social-title" style="font-size: 20px; color: #f0f2f7; margin: 0 0 24px 0; font-weight: 700">
+                  🌟 Síguenos en Redes Sociales
+                </h3>
+
+                <!-- Tabla centrada con margin auto -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                  <tr>
+                    <!-- Facebook -->
+                    <td style="padding: 0 8px;">
+                      <a
+                        href="https://www.facebook.com/SalaGeek19"
+                        class="social-link"
+                        style="
+                          display: inline-block;
+                          width: 48px;
+                          height: 48px;
+                          background: linear-gradient(135deg, #ffd166, #e76f51);
+                          border-radius: 50%;
+                          text-decoration: none;
+                          line-height: 48px;
+                          font-size: 24px;
+                        "
+                      >
+                        <span style="color: #071428;">📘</span>
+                      </a>
+                    </td>
+
+                    <!-- Instagram -->
+                    <td style="padding: 0 8px;">
+                      <a
+                        href="https://www.instagram.com/sala_geek/"
+                        class="social-link"
+                        style="
+                          display: inline-block;
+                          width: 48px;
+                          height: 48px;
+                          background: linear-gradient(135deg, #ffd166, #e76f51);
+                          border-radius: 50%;
+                          text-decoration: none;
+                          line-height: 48px;
+                          font-size: 24px;
+                        "
+                      >
+                        <span style="color: #071428;">📷</span>
+                      </a>
+                    </td>
+
+                    <!-- TikTok -->
+                    <td style="padding: 0 8px;">
+                      <a
+                        href="https://www.tiktok.com/@salageek19"
+                        class="social-link"
+                        style="
+                          display: inline-block;
+                          width: 48px;
+                          height: 48px;
+                          background: linear-gradient(135deg, #ffd166, #e76f51);
+                          border-radius: 50%;
+                          text-decoration: none;
+                          line-height: 48px;
+                          font-size: 24px;
+                        "
+                      >
+                        <span style="color: #071428;">🎵</span>
+                      </a>
+                    </td>
+
+                    <!-- Twitter/X -->
+                    <td style="padding: 0 8px;">
+                      <a
+                        href="https://twitter.com/Sala_Geek"
+                        class="social-link"
+                        style="
+                          display: inline-block;
+                          width: 48px;
+                          height: 48px;
+                          background: linear-gradient(135deg, #ffd166, #e76f51);
+                          border-radius: 50%;
+                          text-decoration: none;
+                          line-height: 48px;
+                          font-size: 24px;
+                        "
+                      >
+                        <span style="color: #071428;">𝕏</span>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
             </tr>
-            
-            <!-- FOOTER -->
+
+            <!-- ============================================
+                         FOOTER: Legal, Unsub y Copyright
+                         ============================================ -->
             <tr>
-                <td class="footer">
-                    <p class="footer-text">
-                        © 2024 Sala Geek. Todos los derechos reservados.
-                    </p>
-                    <p class="footer-text">
-                        <a href="https://salageek.com/src/pages/legal/privacy.html" class="footer-link">Política de Privacidad</a> | 
-                        <a href="https://salageek.com/src/pages/legal/terms.html" class="footer-link">Términos de Servicio</a>
-                    </p>
-                    <p class="footer-text">
-                        ¿Ya no quieres recibir estos correos? 
-                        <a href="*|UNSUB|*" class="footer-link">Cancelar suscripción</a>
-                    </p>
-                    <p class="footer-text" style="margin-top: 15px;">
-                        contacto@salageek.com | www.salageek.com
-                    </p>
-                </td>
+              <td
+                class="footer"
+                style="padding: 32px 24px; text-align: center; background-color: #071428; border-radius: 0 0 20px 20px"
+              >
+                <p class="footer-text" style="font-size: 13px; color: #a0aec0; margin: 8px 0; line-height: 1.5">
+                  Recibiste este correo porque te suscribiste a <strong style="color: #ffd166">Geeky Weekly</strong> en
+                  Sala Geek
+                </p>
+
+                <p class="footer-text" style="font-size: 13px; color: #a0aec0; margin: 8px 0; line-height: 1.5">
+                  <a
+                    href="*|UPDATE_PROFILE|*"
+                    class="footer-link"
+                    style="color: #ffd166; text-decoration: none; font-weight: 600"
+                    >Actualizar preferencias</a
+                  >
+                  ·
+                  <a
+                    href="*|UNSUB|*"
+                    class="footer-link"
+                    style="color: #ffd166; text-decoration: none; font-weight: 600"
+                    >Cancelar suscripción</a
+                  >
+                </p>
+
+                <p class="footer-text" style="font-size: 11px; color: #718096; margin: 16px 0 0 0; line-height: 1.5">
+                  © 2025 Sala Geek. Todos los derechos reservados.<br />
+                  <a
+                    href="https://salageek.com/src/pages/legal/privacy.html"
+                    class="footer-link"
+                    style="color: #ffd166; text-decoration: none"
+                    >Política de Privacidad</a
+                  >
+                  ·
+                  <a
+                    href="https://salageek.com/src/pages/legal/terms.html"
+                    class="footer-link"
+                    style="color: #ffd166; text-decoration: none"
+                    >Términos de Servicio</a
+                  >
+                </p>
+
+                <p class="footer-text" style="font-size: 12px; color: #718096; margin-top: 16px; line-height: 1.5">
+                  📧 contacto@salageek.com | 🌐 www.salageek.com
+                </p>
+              </td>
             </tr>
-            
-        </table>
-    </center>
-</body>
+          </table>
+          <!-- Fin Container 600px -->
+        </td>
+      </tr>
+    </table>
+    <!-- Fin Wrapper Principal -->
+  </body>
 </html>

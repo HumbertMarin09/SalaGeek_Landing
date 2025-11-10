@@ -150,7 +150,7 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=165" as="style" />
+    <link rel="preload" href="/src/css/style.min.css?v=167" as="style" />
     <link rel="preload" href="/src/js/script.min.js?v=109" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
@@ -219,9 +219,9 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=165" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=167" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=165" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=167" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
@@ -611,18 +611,26 @@
             Las noticias más candentes del mundo gaming, anime y entretenimiento
           </p>
 
-          <div class="news-grid" data-scroll="fade-up" data-scroll-delay="200">
-            <!-- News Card 1 - Gaming (DESTACADA) -->
-            <article class="news-card featured-news spotlight-card">
+          <!-- NOTICIA DESTACADA (Ancho completo arriba) -->
+          <article
+            class="news-card featured-news spotlight-card featured-full-width"
+            data-scroll="fade-up"
+            data-scroll-delay="200"
+            style="background-image: url(&quot;/src/images/weekly-news/gta6-delay.jpg&quot;)"
+          >
+            <div class="featured-overlay"></div>
+            <div class="featured-content">
               <div class="featured-badge">DESTACADA</div>
-              <div class="news-category gaming">🎮 GAMING</div>
               <h3 class="news-title">GTA 6 retrasado hasta finales de 2026</h3>
               <p class="news-description">
                 Rockstar anuncia segundo retraso buscando "perfección" con calificaciones superiores
                 a 95 en Metacritic.
               </p>
-            </article>
+            </div>
+          </article>
 
+          <!-- GRID DE NOTICIAS SECUNDARIAS (2x2) -->
+          <div class="news-grid" data-scroll="fade-up" data-scroll-delay="300">
             <!-- News Card 2 - Series -->
             <article class="news-card">
               <div class="news-category series">📺 SERIES</div>
@@ -660,16 +668,6 @@
               <p class="news-description">
                 El arco del "Culling Game" finalmente tiene fecha oficial. Los fans se preparan para
                 el arco más brutal.
-              </p>
-            </article>
-
-            <!-- News Card 6 - Gaming -->
-            <article class="news-card">
-              <div class="news-category gaming">🎮 GAMING</div>
-              <h3 class="news-title">Switch 2 sin subida de precios</h3>
-              <p class="news-description">
-                Nintendo confirma que mantendrá precios actuales pese a componentes más caros.
-                Buenas noticias para los gamers.
               </p>
             </article>
           </div>
