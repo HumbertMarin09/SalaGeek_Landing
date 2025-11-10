@@ -5365,17 +5365,20 @@ img.lazy-loaded {
     white-space: nowrap;
     overflow: visible;
     display: inline-block;
-    text-align: center;
+    text-align: left;
+    width: auto;
+    margin-right: auto;
   }
 
   .news-category {
-    font-size: 0.85rem;
-    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
     margin-bottom: 0.75rem;
     white-space: nowrap;
     overflow: visible;
     display: inline-block;
-    text-align: center;
+    text-align: left;
+    width: auto;
   }
 
   .news-title {
@@ -5454,6 +5457,26 @@ img.lazy-loaded {
     width: 100%;
     padding: 1.125rem 2rem;
     font-size: 0.9375rem;
+  }
+
+  /* Badges de noticias en ancho completo y centradas para móviles pequeños */
+  .featured-badge,
+  .news-category {
+    font-size: 0.7rem;
+    padding: 0.5rem 1.2rem;
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .featured-full-width .featured-badge {
+    font-size: 0.7rem;
+    padding: 0.5rem 1.2rem;
+    text-align: center;
+    display: block;
+    width: 100%;
   }
 }
 
