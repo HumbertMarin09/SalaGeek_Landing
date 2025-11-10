@@ -154,7 +154,7 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style-mobile-fix.min.css" as="style" />
+    <link rel="preload" href="/src/css/style-mobile-fix.min.css?t=1762741013" as="style" />
     <link rel="preload" href="/src/js/script.min.js?v=109" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
@@ -216,10 +216,16 @@
       
       /* CRITICAL MOBILE FIX - Android Chrome 400px breakpoint */
       @media (max-width: 400px) {
+        /* TEST MARKER - Si ves un borde rojo, el CSS se está aplicando */
+        body {
+          border-top: 5px solid red !important;
+        }
+        
         .featured-full-width {
           background-position: 35% center !important;
           background-size: cover !important;
           transition: none !important;
+          border: 3px solid lime !important; /* TEST: borde verde temporal */
         }
         
         .featured-full-width .news-title {
@@ -262,9 +268,9 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style-mobile-fix.min.css" />
+    <link rel="stylesheet" href="/src/css/style-mobile-fix.min.css?t=1762741013" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style-mobile-fix.min.css" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style-mobile-fix.min.css?t=1762741013" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
