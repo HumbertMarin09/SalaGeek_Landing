@@ -5467,7 +5467,8 @@ img.lazy-loaded {
     padding: 0.5rem 1.2rem;
     text-align: center;
     display: block;
-    width: 100%;
+    width: 100% !important;
+    max-width: none !important;
     margin-left: 0;
     margin-right: 0;
   }
@@ -5477,7 +5478,8 @@ img.lazy-loaded {
     padding: 0.5rem 1.2rem;
     text-align: center;
     display: block;
-    width: 100%;
+    width: 100% !important;
+    max-width: none !important;
   }
 }
 
