@@ -5296,6 +5296,13 @@ img.lazy-loaded {
     font-size: 1.2rem;
     padding: 1.2rem 2rem;
   }
+
+  /* Botón del newsletter a ancho completo solo en móviles pequeños */
+  .news-cta-btn {
+    width: 100%;
+    padding: 1.125rem 2rem;
+    font-size: 0.9375rem;
+  }
 }
 
 /* Móvil pequeño: 400px - Texto más visible pero elegante */
@@ -5632,12 +5639,6 @@ img.lazy-loaded {
   .news-cta-text {
     font-size: 0.9375rem;
     margin-bottom: 1.25rem;
-  }
-
-  .news-cta-btn {
-    width: 100%;
-    padding: 1.125rem 2rem;
-    font-size: 0.9375rem;
   }
 
   /* Cards táctiles más grandes */
