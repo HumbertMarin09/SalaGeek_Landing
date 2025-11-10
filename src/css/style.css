@@ -5453,17 +5453,17 @@ img.lazy-loaded {
     padding: 1.2rem 2rem;
   }
 
-  /* Botón del newsletter a ancho completo solo en móviles pequeños */
+  /* Botón del newsletter a ancho completo y texto más grande en móviles pequeños */
   .news-cta-btn {
     width: 100%;
-    padding: 1.125rem 2rem;
-    font-size: 0.9375rem;
+    padding: 1.25rem 2rem;
+    font-size: 1.0625rem;
   }
 
-  /* Solo los badges de noticias secundarias en ancho completo y centradas */
+  /* Solo los badges de noticias secundarias en ancho completo, centradas y texto más grande */
   .news-category {
-    font-size: 0.7rem;
-    padding: 0.5rem 1.2rem;
+    font-size: 0.875rem;
+    padding: 0.6rem 1.4rem;
     text-align: center;
     display: block;
     width: 100% !important;
@@ -5472,11 +5472,11 @@ img.lazy-loaded {
     margin-right: 0;
   }
 
-  /* Badge "Destacado" siempre pequeño y a la izquierda */
+  /* Badge "Destacado" siempre pequeño, a la izquierda, pero con texto más grande */
   .featured-badge,
   .featured-full-width .featured-badge {
-    font-size: 0.7rem;
-    padding: 0.5rem 1.2rem;
+    font-size: 0.875rem;
+    padding: 0.6rem 1.4rem;
     text-align: left;
     display: inline-block;
     width: auto !important;
