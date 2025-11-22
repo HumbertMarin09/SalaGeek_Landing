@@ -12,6 +12,7 @@ Backup/
 backups/
 backup*/
 *.backup
+newsletter-templates/*.backup-*.html
 
 # === Node.js ===
 node_modules/
@@ -42,3 +43,9 @@ desktop.ini
 # === Temporal newsletter drafts ===
 email-templates/draft-*.md
 email-templates/*.draft.md
+
+# === Scripts de utilidad temporal ===
+fix-encoding*.ps1
+
+# === CSS experimental ===
+src/css/complete_styles.css
