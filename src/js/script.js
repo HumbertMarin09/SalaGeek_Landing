@@ -1172,6 +1172,9 @@ const NOTIFICATION_STYLES = {
  * @param {('success'|'error'|'info')} type - Tipo de notificación
  */
 function showNotification(message, type = "info") {
+  // Bloquear notificaciones si los Easter Eggs están desactivados
+  if (window.areEasterEggsDisabled?.()) return;
+  
   const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
   const background = NOTIFICATION_STYLES[type] || NOTIFICATION_STYLES.info;
 
@@ -1846,6 +1849,8 @@ function initKonamiCode() {
   let konamiIndex = 0;
 
   document.addEventListener("keydown", (e) => {
+    if (window.areEasterEggsDisabled?.()) return;
+    
     // Validar que e.key existe
     if (!e.key) return;
 
@@ -2085,6 +2090,7 @@ function initLogoEasterEgg() {
     let clickTimer = null;
 
     heroTitle.addEventListener("click", (e) => {
+      if (window.areEasterEggsDisabled?.()) return;
       // Solo en desktop (> 968px)
       const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
@@ -2509,6 +2515,8 @@ function initCornerClicks() {
   let lastClickTime = Date.now();
 
   document.addEventListener("click", (e) => {
+    if (window.areEasterEggsDisabled?.()) return;
+    
     // Solo en desktop (> 968px)
     const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
@@ -3301,6 +3309,7 @@ function initScrollSecret() {
   let hasTriggered = false;
 
   window.addEventListener("scroll", () => {
+    if (window.areEasterEggsDisabled?.()) return;
     if (hasTriggered) return;
 
     const scrollHeight = document.documentElement.scrollHeight;
@@ -3315,6 +3324,8 @@ function initScrollSecret() {
 }
 
 function revealFooterSecret() {
+  if (window.areEasterEggsDisabled?.()) return;
+  
   playSound("success");
   showNotification("🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...", "success");
   easterEggTracker.unlock("scroll");
@@ -3968,6 +3979,8 @@ function initMobileEasterEggs() {
   let titleTapTimer = null;
 
   const handleTitleTap = (e) => {
+    if (window.areEasterEggsDisabled?.()) return;
+    
     // Solo funciona en móvil/tablet (≤ 968px)
     if (window.innerWidth > 968) return;
 
@@ -4119,6 +4132,8 @@ function initMobileEasterEggs() {
   const copyright = document.querySelector(".footer-bottom p");
 
   const handleCopyrightTap = (e) => {
+    if (window.areEasterEggsDisabled?.()) return;
+    
     if (window.innerWidth > 968) return;
 
     // console.log(
@@ -4233,6 +4248,8 @@ function initMobileEasterEggs() {
 
       // HANDLER: Long Press Start (touch o mouse)
       const handleFooterStart = (e) => {
+        if (window.areEasterEggsDisabled?.()) return;
+        
         // Solo funciona en móvil/tablet (≤ 968px)
         if (window.innerWidth > 968) return;
 
@@ -4361,6 +4378,9 @@ function initAllEasterEggs() {
     console.log("🚫 Easter Eggs desactivados en página legal");
     return;
   }
+
+  // Helper para verificar si Easter Eggs están desactivados
+  window.areEasterEggsDisabled = () => document.body.hasAttribute('data-easter-eggs-disabled');
 
   // Easter Eggs universales (siempre activos)
   initKonamiCode(); // ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA
