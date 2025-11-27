@@ -210,7 +210,7 @@ body.upside-down-mode::after {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 400px;
+  bottom: 0;
   background:
     /* Venas ramificadas desde arriba - estilo raíces */
     radial-gradient(ellipse 80px 150px at 20% 0%, rgba(255, 21, 21, 0.4) 0%, transparent 60%),
