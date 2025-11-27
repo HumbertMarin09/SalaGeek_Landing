@@ -236,7 +236,6 @@ body.upside-down-mode::after {
   pointer-events: none;
   z-index: 9997;
   opacity: 0.8;
-  animation: veinsGrow 6s ease-in-out infinite, veinsPulse 3s ease-in-out infinite;
   filter: blur(1px);
 }
 
