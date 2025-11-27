@@ -206,12 +206,11 @@ body.upside-down-mode {
 /* Venas/grietas orgánicas aterradoras con paleta Stranger Things */
 body.upside-down-mode::after {
   content: "";
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: calc(100% - 400px);
-  max-height: 100vh;
+  bottom: 400px;
   background:
     /* Venas ramificadas desde arriba - estilo raíces */
     radial-gradient(ellipse 80px 150px at 20% 0%, rgba(255, 21, 21, 0.4) 0%, transparent 60%),
