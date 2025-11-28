@@ -62,109 +62,6 @@
 }
 
 /* ============================================
-   TRANSICIÓN NATURAL Y SUAVE ENTRE TEMAS
-   ============================================ */
-
-/* Transición suave y natural para todos los elementos */
-.theme-transitioning,
-.theme-transitioning * {
-  transition:
-    background-color 0.4s ease,
-    color 0.4s ease,
-    border-color 0.4s ease,
-    box-shadow 0.4s ease,
-    fill 0.4s ease,
-    stroke 0.4s ease !important;
-}
-
-/* Animación sutil del botón de tema al hacer clic */
-.theme-toggle.switching {
-  animation: themeSwitchRotate 0.5s ease;
-}
-
-@keyframes themeSwitchRotate {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.15) rotate(180deg);
-  }
-  100% {
-    transform: scale(1) rotate(360deg);
-  }
-}
-
-/* ============================================
-   TEMA CLARO - PALETA VIBRANTE
-   ============================================ */
-
-/* Transición suave al cambiar de tema */
-body {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-* {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease,
-    border-color 0.3s ease;
-}
-
-/* Background blanco para tema claro */
-
-/* HERO SECTION - Blanco con acentos naranjas sutiles */
-
-@keyframes gradientShiftLight {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.1) rotate(5deg);
-  }
-}
-
-/* Typewriter en modo claro - borde más oscuro y visible */
-
-@keyframes gradientMove {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes newsletterPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-/* CARDS - Blancas puras con bordes naranjas GRUESOS */
-
-/* INPUTS - Blanco puro con borde naranja */
-
-/* ICONS & EMOJIS - Sombras naranjas VIBRANTES */
-
-/* NEWSLETTER - Gradiente radial naranja igual que otros títulos */
-
-/* SOCIAL CARDS - Shimmer amarillo/naranja */
-
-/* LEGAL PAGES - Más coloridas */
-
-/* ============================================
    RESET Y BASE
    ============================================ */
 *,
@@ -780,31 +677,6 @@ a {
   opacity: 1;
   transform: none;
 }
-
-/* ANIMACIONES ANTIGUAS DESACTIVADAS - Ahora usamos data-scroll
-.js .animate-fade {
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 280ms ease, transform 280ms ease;
-}
-
-.js .animate-slide-down {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 300ms ease, transform 300ms ease;
-}
-
-.js .animate-slide-up {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 300ms ease, transform 300ms ease;
-}
-
-.js .animate-in {
-  opacity: 1;
-  transform: none;
-}
-*/
 
 /* ============================================
    SECCIÓN 2: COMPONENTES DE UI
@@ -3301,43 +3173,6 @@ a {
     transform: scale(1.15) translateY(-5px);
   }
 }
-
-/* Badge NUEVO rotativo en título - DESACTIVADO
-.nuevo-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
-  color: #fff;
-  font-size: 0.5rem;
-  font-weight: 900;
-  padding: 0.25rem 0.6rem;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-left: 1rem;
-  position: relative;
-  top: -0.3rem;
-  animation: rotate-nuevo 3s ease-in-out infinite, glow-nuevo 2s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(255, 8, 68, 0.6);
-}
-
-@keyframes rotate-nuevo {
-  0%, 100% {
-    transform: rotate(-5deg) scale(1);
-  }
-  50% {
-    transform: rotate(5deg) scale(1.1);
-  }
-}
-
-@keyframes glow-nuevo {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 8, 68, 0.6), 0 0 40px rgba(255, 8, 68, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(255, 8, 68, 0.8), 0 0 60px rgba(255, 8, 68, 0.5);
-  }
-}
-*/
 
 /* Badge de actualización semanal */
 .news-badge {
