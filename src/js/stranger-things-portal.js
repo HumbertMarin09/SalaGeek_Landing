@@ -18,6 +18,7 @@
   let isUpsideDown = localStorage.getItem(EVENT_CONFIG.localStorageKey) === "true";
   let thunderAudio = null;
   let waitingForInteraction = false;
+  let lightningInterval = null;
 
   /* ==================== FUNCIONES AUXILIARES ==================== */
 
@@ -403,45 +404,54 @@
     lightning.className = "lightning-effect";
     document.body.appendChild(lightning);
 
-    function triggerFirstLightning() {
+    function triggerLightning() {
       if (!isUpsideDown) return;
 
-      // Posición en Hero (centro-superior)
-      const x = 40 + Math.random() * 20;
-      const y = 20 + Math.random() * 20;
-      const intensity = 0.85;
+      // Posición aleatoria en toda la página
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const intensity = 0.95; // Más intenso
 
       lightning.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(255, 50, 50, ${intensity}), rgba(200, 0, 0, ${
-        intensity * 0.6
-      }) 30%, transparent 60%)`;
+        intensity * 0.7
+      }) 25%, transparent 50%)`;
 
       playThunderSound();
 
-      // Secuencia de flashes contundentes
+      // Secuencia de flashes más marcada y contundente
       lightning.style.opacity = intensity;
-      setTimeout(() => (lightning.style.opacity = 0), 150);
+      setTimeout(() => (lightning.style.opacity = 0), 180);
 
       setTimeout(() => {
-        lightning.style.opacity = intensity * 0.75;
+        lightning.style.opacity = intensity * 0.85;
+        setTimeout(() => (lightning.style.opacity = 0), 150);
+      }, 200);
+
+      setTimeout(() => {
+        lightning.style.opacity = intensity;
         setTimeout(() => (lightning.style.opacity = 0), 120);
-      }, 180);
+      }, 380);
 
       setTimeout(() => {
-        lightning.style.opacity = intensity * 0.9;
-        setTimeout(() => (lightning.style.opacity = 0), 100);
-      }, 330);
-
-      setTimeout(() => {
-        lightning.style.opacity = intensity * 0.5;
+        lightning.style.opacity = intensity * 0.6;
         setTimeout(() => {
-          lightning.style.opacity = intensity * 0.25;
-          setTimeout(() => (lightning.style.opacity = 0), 250);
-        }, 180);
-      }, 480);
+          lightning.style.opacity = intensity * 0.35;
+          setTimeout(() => (lightning.style.opacity = 0), 300);
+        }, 200);
+      }, 530);
     }
 
+    // Primer relámpago
     const delay = isReload ? 500 : 3000;
-    setTimeout(triggerFirstLightning, delay);
+    setTimeout(triggerLightning, delay);
+
+    // Relámpagos recurrentes cada 7 segundos (guiño a la serie)
+    if (lightningInterval) clearInterval(lightningInterval);
+    lightningInterval = setInterval(() => {
+      if (isUpsideDown) {
+        triggerLightning();
+      }
+    }, 7000);
   }
 
   /**
@@ -685,6 +695,7 @@
 
     if (isUpsideDown) {
       // === ENTRAR AL UPSIDE DOWN ===
+      document.documentElement.classList.add("upside-down-active");
       body.classList.add("upside-down-mode");
       if (tooltip) tooltip.textContent = "🏠 Volver al mundo normal";
 
@@ -704,12 +715,19 @@
       );
     } else {
       // === VOLVER AL MUNDO NORMAL ===
+      document.documentElement.classList.remove("upside-down-active");
       body.classList.remove("upside-down-mode");
       if (tooltip) tooltip.textContent = "🌀 Entrar al Upside Down";
 
       playReturnToNormalSound();
       stopThunderSound();
       enableEasterEggs();
+
+      // Limpiar intervalo de relámpagos
+      if (lightningInterval) {
+        clearInterval(lightningInterval);
+        lightningInterval = null;
+      }
 
       // Limpiar efectos
       const particles = document.querySelector(".upside-down-particles");
@@ -734,6 +752,7 @@
 
     // Restaurar estado si ya estaba en Upside Down
     if (isUpsideDown) {
+      document.documentElement.classList.add("upside-down-active");
       document.body.classList.add("upside-down-mode");
       createParticles();
       createLightningEffect(true);
@@ -760,6 +779,7 @@
    */
   function checkEventEnd() {
     if (!isEventActive() && isUpsideDown) {
+      document.documentElement.classList.remove("upside-down-active");
       document.body.classList.remove("upside-down-mode");
       document.body.style.paddingTop = "0";
       localStorage.removeItem(EVENT_CONFIG.localStorageKey);
