@@ -668,9 +668,16 @@
     const demogorgonEmoji = `<span class="demogorgon-emoji">🌸</span>`;
 
     banner.innerHTML = `
-      ${demogorgonEmoji}
-      <strong style="margin: 0 12px;">STRANGER THINGS TEMPORADA 5</strong> ya disponible en Netflix
-      ${demogorgonEmoji}
+      <span class="banner-desktop">
+        ${demogorgonEmoji}
+        <strong style="margin: 0 12px;">STRANGER THINGS TEMPORADA 5</strong> ya disponible en Netflix
+        ${demogorgonEmoji}
+      </span>
+      <span class="banner-mobile">
+        ${demogorgonEmoji}
+        <strong style="margin: 0 8px;">STRANGER THINGS T5</strong>
+        ${demogorgonEmoji}
+      </span>
     `;
 
     document.body.appendChild(banner);

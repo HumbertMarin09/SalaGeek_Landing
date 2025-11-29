@@ -842,7 +842,7 @@ body.upside-down-mode .footer-logo {
   background: linear-gradient(90deg, #1a0000, #0d0000, #1a0000);
   color: #ff3333;
   text-align: center;
-  padding: 12px 20px;
+  padding: 10px 15px;
   font-size: 14px;
   font-weight: 700;
   z-index: 10001;
@@ -851,10 +851,18 @@ body.upside-down-mode .footer-logo {
   border-bottom: 2px solid #8b0000;
   text-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
   letter-spacing: 0.5px;
-  line-height: 1.4;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Mostrar solo versión desktop por defecto */
+.banner-mobile {
+  display: none;
+}
+
+.banner-desktop {
+  display: inline;
 }
 
 body.upside-down-mode .stranger-things-banner {
@@ -1010,9 +1018,17 @@ body.portal-transition {
   }
 
   .stranger-things-banner {
-    font-size: 12px;
-    padding: 10px 15px;
+    font-size: 13px;
+    padding: 9px 12px;
     letter-spacing: 0.3px;
+  }
+
+  .banner-desktop {
+    display: none;
+  }
+
+  .banner-mobile {
+    display: inline;
   }
 
   body.upside-down-mode {
@@ -1043,21 +1059,24 @@ body.portal-transition {
 
   .stranger-things-banner {
     font-size: 13px;
-    padding: 10px 15px;
-    letter-spacing: 0.3px;
-    line-height: 1.5;
+    padding: 9px 10px;
+    letter-spacing: 0.2px;
+  }
+
+  .banner-desktop {
+    display: none;
+  }
+
+  .banner-mobile {
+    display: inline;
   }
 
   body.upside-down-mode {
-    padding-top: 48px;
+    padding-top: 44px;
   }
 
   body.upside-down-mode .upside-down-portal {
     margin-top: 48px;
-  }
-
-  body.upside-down-mode .upside-down-portal {
-    margin-top: 65px;
   }
 
   /* Optimizar performance en móviles pequeños */
