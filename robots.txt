@@ -1,22 +1,94 @@
 # Sala Geek - Robots.txt
 # https://salageek.com/robots.txt
+# Updated: 2025-11-28
 
-# Allow all search engines to crawl the site
+# ==============================================================================
+# SEARCH ENGINE CRAWLERS - Allow all major search engines
+# ==============================================================================
+
+# Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot-Image
+Allow: /src/images/
+
+User-agent: Googlebot-Video
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# Yandex
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2
+
+# Baidu (Chinese search engine)
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+# All other bots
 User-agent: *
 Allow: /
 
-# Disallow admin and sensitive areas (if applicable in the future)
+# ==============================================================================
+# DISALLOW - Block sensitive and admin areas
+# ==============================================================================
+
 Disallow: /admin/
 Disallow: /backup*/
 Disallow: /*.json$
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /.env
+Disallow: /package*.json
 
-# Allow crawling of CSS, JS, and images for better indexing
+# ==============================================================================
+# ALLOW - Explicitly allow important resources for proper indexing
+# ==============================================================================
+
 Allow: /src/css/
 Allow: /src/js/
 Allow: /src/images/
+Allow: /src/pages/
+Allow: /manifest.json
+Allow: /sitemap.xml
+Allow: /*.webp$
+Allow: /*.jpg$
+Allow: /*.png$
+Allow: /*.svg$
+Allow: /*.css$
+Allow: /*.js$
 
-# Sitemap location
+# ==============================================================================
+# SITEMAPS - Help search engines find all pages
+# ==============================================================================
+
 Sitemap: https://salageek.com/sitemap.xml
 
-# Crawl-delay (optional, helps with server load)
+# ==============================================================================
+# CRAWL DELAY - Prevent server overload
+# ==============================================================================
+
 Crawl-delay: 1
+
+# ==============================================================================
+# HOST - Preferred domain (canonical)
+# ==============================================================================
+
+Host: https://salageek.com

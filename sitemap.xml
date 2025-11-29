@@ -8,34 +8,39 @@
   <!-- Homepage / Landing Page -->
   <url>
     <loc>https://salageek.com/</loc>
-    <lastmod>2025-11-09</lastmod>
+    <lastmod>2025-11-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://salageek.com/src/images/SalaGeek_LOGO.png</image:loc>
-      <image:caption>Sala Geek - Logo oficial de la comunidad geek</image:caption>
+      <image:loc>https://salageek.com/src/images/SalaGeek_LOGO.webp</image:loc>
+      <image:caption>Sala Geek - Logo oficial de la comunidad geek hispana</image:caption>
       <image:title>Sala Geek Logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://salageek.com/src/images/SalaGeek_LOGO_social.webp</image:loc>
+      <image:caption>Sala Geek - Comunidad geek con noticias de películas, series, anime y videojuegos</image:caption>
+      <image:title>Sala Geek Social Share</image:title>
     </image:image>
   </url>
 
   <!-- Legal Pages -->
   <url>
     <loc>https://salageek.com/src/pages/legal/privacy.html</loc>
-    <lastmod>2025-11-09</lastmod>
+    <lastmod>2025-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
     <loc>https://salageek.com/src/pages/legal/terms.html</loc>
-    <lastmod>2025-11-09</lastmod>
+    <lastmod>2025-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
     <loc>https://salageek.com/src/pages/legal/cookies.html</loc>
-    <lastmod>2025-11-09</lastmod>
+    <lastmod>2025-11-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
