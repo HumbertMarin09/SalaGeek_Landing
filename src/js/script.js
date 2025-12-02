@@ -155,6 +155,189 @@ function initResponsiveHandler() {
 }
 
 /* ============================================
+   SECCIÓN 1.5: SISTEMA DE LOGO ESTACIONAL
+   ============================================ */
+
+/**
+ * Sistema de logo estacional que cambia automáticamente según la fecha
+ * Logo navideño: Activo desde el 1 de diciembre hasta el 10 de enero
+ * Logo normal: Resto del año
+ */
+function initSeasonalLogo() {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth(); // 0-11 (0 = Enero, 11 = Diciembre)
+  const currentDay = currentDate.getDate();
+
+  // Determinar si estamos en temporada navideña
+  // Diciembre (mes 11) o Enero 1-10 (mes 0, días 1-10)
+  const isChristmasSeason = (currentMonth === 11) || (currentMonth === 0 && currentDay <= 10);
+
+  // Preferir PNG (mejor transparencia) y hacer fallback a ICO si no existe
+  const seasonalCandidates = isChristmasSeason
+    ? ['/src/images/Icono_SG_Navidad.png', '/src/images/Icono_SG_Navidad.ico']
+    : ['/src/images/Icono_SG.png', '/src/images/Icono_SG.ico'];
+
+  chooseAvailableLogo(seasonalCandidates).then((logoPath) => {
+    updateLogoSource(logoPath);
+    updateFooterLogo(seasonalCandidates);
+    updateSeasonalFavicon(isChristmasSeason);
+    console.log(`🎄 Logo estacional: ${isChristmasSeason ? 'Navideño' : 'Normal'} -> ${logoPath}`);
+  });
+}
+
+/**
+ * Elige la primera ruta de imagen disponible (onload) haciendo fallback por orden
+ * @param {string[]} candidates
+ * @returns {Promise<string>} Ruta elegida
+ */
+function chooseAvailableLogo(candidates) {
+  return new Promise((resolve) => {
+    let resolved = false;
+
+    const tryLoad = (index) => {
+      if (index >= candidates.length) {
+        // Último fallback: logo normal ICO
+        resolve('/src/images/Icono_SG.ico');
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        if (!resolved) {
+          resolved = true;
+          resolve(candidates[index]);
+        }
+      };
+      img.onerror = () => tryLoad(index + 1);
+      img.src = candidates[index] + `?v=${Date.now()}`; // evitar cache
+    };
+
+    tryLoad(0);
+  });
+}
+
+/**
+ * Actualiza la fuente del logo en el header
+ * @param {string} logoPath - Ruta del logo a mostrar
+ */
+function updateLogoSource(logoPath) {
+  // Intentar actualizar inmediatamente si el logo ya está en el DOM
+  const logoImg = document.querySelector('.logo img');
+  if (logoImg) {
+    logoImg.src = logoPath;
+  }
+  
+  // También observar cambios en el DOM por si el header se carga después
+  const observer = new MutationObserver((mutations, obs) => {
+    const logo = document.querySelector('.logo img');
+    if (logo) {
+      logo.src = logoPath;
+      obs.disconnect(); // Dejar de observar una vez actualizado
+    }
+  });
+  
+  // Observar cambios en el body
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  
+  // Timeout de seguridad para desconectar el observer después de 5 segundos
+  setTimeout(() => observer.disconnect(), 5000);
+}
+
+/**
+ * Actualiza el logo del footer si existe
+ * @param {string[]} candidates - posibles rutas (PNG/ICO)
+ */
+function updateFooterLogo(candidates) {
+  chooseAvailableLogo(candidates).then((logoPath) => {
+    const applyFooterLogo = () => {
+      const footerImg = document.querySelector('.footer-logo');
+      const footerSource = document.querySelector('.footer-brand picture source');
+      if (footerImg) {
+        // Actualizar <img>
+        footerImg.src = logoPath;
+        // Si existe <source> dentro de <picture>, también actualizar su srcset
+        if (footerSource) {
+          footerSource.srcset = logoPath;
+          footerSource.type = 'image/png';
+        }
+        return true;
+      }
+      return false;
+    };
+
+    // Intento inmediato
+    if (applyFooterLogo()) return;
+
+    // Observar hasta que el footer se inyecte
+    const observer = new MutationObserver((mutations, obs) => {
+      if (applyFooterLogo()) {
+        obs.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(() => observer.disconnect(), 5000);
+  });
+}
+
+/**
+ * Actualiza favicon y apple-touch-icon según temporada
+ * @param {boolean} isChristmasSeason
+ */
+function updateSeasonalFavicon(isChristmasSeason) {
+  const christmasPng = '/src/images/Icono_SG_Navidad.png';
+  const christmasIco = '/src/images/Icono_SG_Navidad.ico';
+  const normalPng = '/src/images/Icono_SG.png';
+  const normalIco = '/src/images/Icono_SG.ico';
+
+  const targetPng = isChristmasSeason ? christmasPng : normalPng;
+  const targetIco = isChristmasSeason ? christmasIco : normalIco;
+
+  // Eliminar existentes para evitar cache duro del navegador y recrear
+  const head = document.head;
+  const existing = document.querySelectorAll("link[rel='icon'], link[rel='shortcut icon'], link[rel='apple-touch-icon']");
+  existing.forEach((el) => el.parentNode.removeChild(el));
+
+  const ts = `?v=${Date.now()}`;
+
+  // Favicon ICO
+  const fav = document.createElement('link');
+  fav.setAttribute('rel', 'icon');
+  fav.setAttribute('type', 'image/x-icon');
+  fav.setAttribute('href', targetIco + ts);
+  head.appendChild(fav);
+
+  // Favicon PNG (algunos navegadores priorizan PNG)
+  const favPng = document.createElement('link');
+  favPng.setAttribute('rel', 'icon');
+  favPng.setAttribute('type', 'image/png');
+  favPng.setAttribute('sizes', '192x192');
+  favPng.setAttribute('href', targetPng + ts);
+  head.appendChild(favPng);
+
+  // Shortcut icon (compatibilidad)
+  const shFav = document.createElement('link');
+  shFav.setAttribute('rel', 'shortcut icon');
+  shFav.setAttribute('type', 'image/x-icon');
+  shFav.setAttribute('href', targetIco + ts);
+  head.appendChild(shFav);
+
+  // Apple touch icon (PNG recomendado)
+  const apple = document.createElement('link');
+  apple.setAttribute('rel', 'apple-touch-icon');
+  apple.setAttribute('sizes', '180x180');
+  apple.setAttribute('href', targetPng + ts);
+  head.appendChild(apple);
+
+  // msapplication tile image meta (Windows)
+  const msTile = document.querySelector("meta[name='msapplication-TileImage']");
+  if (msTile) msTile.setAttribute('content', targetPng);
+}
+
+/* ============================================
    SECCIÓN 2: CARGA DE COMPONENTES DINÁMICOS
    ============================================ */
 
@@ -4417,6 +4600,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializar contador de actualización de noticias
   updateNewsTime();
+  
+  // Inicializar sistema de logo estacional (Navidad)
+  initSeasonalLogo();
 });
 
 /* ============================================
