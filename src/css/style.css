@@ -4118,6 +4118,22 @@ a {
   opacity: 0.9;
 }
 
+.footer-stats {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 209, 102, 0.1);
+  border-left: 3px solid var(--logo-accent);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.footer-stats strong {
+  color: var(--logo-accent);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
 /* Footer Social Links */
 .footer-social {
   display: flex;
@@ -4207,7 +4223,9 @@ a {
 }
 
 /* Footer Legal Section */
-.footer-legal {
+.footer-legal,
+.footer-links,
+.footer-business {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -4221,20 +4239,33 @@ a {
   letter-spacing: 0.5px;
 }
 
-.footer-legal-list {
+.footer-legal-list,
+.footer-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-.footer-legal-list a {
+.footer-legal-list a,
+.footer-list a {
   color: var(--text-secondary);
   font-size: 0.95rem;
   transition: all var(--transition);
   display: inline-block;
   position: relative;
   padding-left: 1.2rem;
+}
+
+.footer-highlight {
+  color: var(--logo-accent) !important;
+  font-weight: 600;
+  font-size: 1.05rem !important;
+}
+
+.footer-highlight:hover {
+  color: #ffc045 !important;
+  text-shadow: 0 0 10px rgba(255, 209, 102, 0.3);
 }
 
 .footer-legal-list a::before {
@@ -4247,7 +4278,8 @@ a {
   transition: all var(--transition);
 }
 
-.footer-legal-list a::after {
+.footer-legal-list a::after,
+.footer-list a::after {
   content: "";
   position: absolute;
   bottom: -2px;
@@ -4258,21 +4290,25 @@ a {
   transition: width var(--transition);
 }
 
-.footer-legal-list a:hover {
+.footer-legal-list a:hover,
+.footer-list a:hover {
   color: var(--logo-accent);
   padding-left: 1.5rem;
 }
 
-.footer-legal-list a:hover::before {
+.footer-legal-list a:hover::before,
+.footer-list a:hover::before {
   opacity: 1;
   transform: translateX(0);
 }
 
-.footer-legal-list a:hover::after {
+.footer-legal-list a:hover::after,
+.footer-list a:hover::after {
   width: calc(100% - 1.5rem);
 }
 
-.footer-legal-list a:focus-visible {
+.footer-legal-list a:focus-visible,
+.footer-list a:focus-visible {
   outline: 2px solid var(--logo-accent);
   outline-offset: 2px;
   border-radius: 2px;
