@@ -4083,8 +4083,8 @@ a {
 /* Main Footer Content */
 .footer-main {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 3rem;
   margin-bottom: 2.5rem;
   padding-bottom: 2.5rem;
   border-bottom: 1px solid rgba(255, 209, 102, 0.15);
@@ -4126,6 +4126,7 @@ a {
   border-radius: 6px;
   font-size: 0.95rem;
   color: var(--text-secondary);
+  max-width: fit-content;
 }
 
 .footer-stats strong {
@@ -4237,6 +4238,19 @@ a {
   color: var(--text-primary);
   margin-bottom: 0.75rem;
   letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.footer-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--logo-accent);
+  border-radius: 2px;
 }
 
 .footer-legal-list,
@@ -4261,11 +4275,26 @@ a {
   color: var(--logo-accent) !important;
   font-weight: 600;
   font-size: 1.05rem !important;
+  padding: 0.5rem 0.75rem;
+  padding-left: 2rem !important;
+  background: rgba(255, 209, 102, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid var(--logo-accent);
+  margin-left: -0.75rem;
+}
+
+.footer-highlight::before {
+  content: "📊";
+  position: absolute;
+  left: 0.5rem;
+  font-size: 1.2rem;
 }
 
 .footer-highlight:hover {
   color: #ffc045 !important;
-  text-shadow: 0 0 10px rgba(255, 209, 102, 0.3);
+  background: rgba(255, 209, 102, 0.15);
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(255, 209, 102, 0.2);
 }
 
 .footer-legal-list a::before {
@@ -4276,6 +4305,24 @@ a {
   opacity: 0;
   transform: translateX(-4px);
   transition: all var(--transition);
+}
+
+.footer-list a::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--logo-accent);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all var(--transition);
+}
+
+.footer-highlight::before {
+  content: "📊";
+  opacity: 1 !important;
+  transform: none !important;
+  left: 0.5rem !important;
+  font-size: 1.2rem;
 }
 
 .footer-legal-list a::after,
@@ -4865,6 +4912,11 @@ img.lazy-loaded {
     line-height: 1.7;
   }
 
+  .footer-stats {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .footer-social {
     justify-content: center;
     gap: 1rem;
@@ -4881,7 +4933,9 @@ img.lazy-loaded {
     height: 22px;
   }
 
-  .footer-legal {
+  .footer-legal,
+  .footer-links,
+  .footer-business {
     text-align: center;
   }
 
@@ -4890,11 +4944,14 @@ img.lazy-loaded {
     margin-bottom: 1rem;
   }
 
-  .footer-legal-list {
+  .footer-legal-list,
+  .footer-list {
     gap: 1rem;
+    align-items: center;
   }
 
-  .footer-legal-list a {
+  .footer-legal-list a,
+  .footer-list a {
     display: inline-flex;
     justify-content: center;
     font-size: 1rem;

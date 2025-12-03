@@ -787,6 +787,14 @@
     gap: 40px;
   }
 
+  .about-text {
+    text-align: center;
+  }
+
+  .about-text p {
+    text-align: left;
+  }
+
   .about-highlights {
     grid-template-columns: 1fr;
   }
@@ -795,6 +803,12 @@
     float: none;
     margin-right: 0;
     margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .key-metrics {
+    justify-content: center;
   }
 
   .stats-grid,
@@ -837,5 +851,31 @@
 
   .demo-grid {
     grid-template-columns: 1fr;
+  }
+
+  .stat-card,
+  .highlight-card,
+  .service-tier,
+  .brand-category,
+  .why-card {
+    text-align: center;
+  }
+
+  .contact-grid {
+    text-align: left;
+  }
+
+  .contact-info,
+  .contact-form {
+    max-width: 100%;
+  }
+
+  .hero-cta {
+    width: 100%;
+  }
+
+  .hero-cta .btn {
+    width: 100%;
+    max-width: none;
   }
 }
