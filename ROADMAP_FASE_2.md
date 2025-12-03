@@ -1,9 +1,11 @@
 # 🚀 SALA GEEK - FASE 2: CONTENT & GROWTH
+
 ## Deploy Target: 12 de Enero 2026
 
 ---
 
 ## 📋 OBJETIVO PRINCIPAL
+
 **Aumentar tráfico orgánico en +500-1000% mediante sistema de contenido SEO-optimizado y estrategias de growth**
 
 ---
@@ -13,6 +15,7 @@
 ### ✅ Tareas Técnicas
 
 #### 1. Estructura de Archivos
+
 ```
 /blog/
   ├── index.html                    # Listado de artículos
@@ -32,6 +35,7 @@
 ```
 
 #### 2. Features a Implementar
+
 - [ ] **Sistema de artículos con SEO avanzado**
   - Meta tags dinámicas por artículo
   - Schema.org Article markup
@@ -60,50 +64,56 @@
   - Minificación HTML
 
 #### 3. Template de Artículo - Estructura SEO
+
 ```html
 <!-- Meta Tags Dinámicos -->
 <title>[Título Artículo] | Sala Geek</title>
-<meta name="description" content="[150-160 caracteres optimizados]">
-<meta name="keywords" content="[8-12 keywords long-tail]">
-<link rel="canonical" href="https://salageek.com/blog/[slug]">
+<meta name="description" content="[150-160 caracteres optimizados]" />
+<meta name="keywords" content="[8-12 keywords long-tail]" />
+<link rel="canonical" href="https://salageek.com/blog/[slug]" />
 
 <!-- Schema.org Article -->
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "[Título]",
-  "description": "[Descripción]",
-  "image": "[URL imagen destacada]",
-  "author": {
-    "@type": "Organization",
-    "name": "Sala Geek"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Sala Geek",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://salageek.com/src/images/SalaGeek_LOGO.webp"
-    }
-  },
-  "datePublished": "[ISO Date]",
-  "dateModified": "[ISO Date]"
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "[Título]",
+    "description": "[Descripción]",
+    "image": "[URL imagen destacada]",
+    "author": {
+      "@type": "Organization",
+      "name": "Sala Geek"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Sala Geek",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://salageek.com/src/images/SalaGeek_LOGO.webp"
+      }
+    },
+    "datePublished": "[ISO Date]",
+    "dateModified": "[ISO Date]"
+  }
 </script>
 
 <!-- Breadcrumbs Schema -->
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://salageek.com/"},
-    {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://salageek.com/blog/"},
-    {"@type": "ListItem", "position": 3, "name": "[Categoría]", "item": "https://salageek.com/blog/categorias/[categoria]"},
-    {"@type": "ListItem", "position": 4, "name": "[Título]"}
-  ]
-}
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://salageek.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://salageek.com/blog/" },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "[Categoría]",
+        "item": "https://salageek.com/blog/categorias/[categoria]"
+      },
+      { "@type": "ListItem", "position": 4, "name": "[Título]" }
+    ]
+  }
 </script>
 ```
 
@@ -114,6 +124,7 @@
 ### 📝 Artículos de Lanzamiento (12 artículos)
 
 #### Películas (3 artículos)
+
 1. **"Stranger Things Temporada 5: Fecha de Estreno, Tráiler y Todo lo que Sabemos"**
    - Keyword: "stranger things temporada 5 fecha de estreno"
    - Long-tail: "cuándo sale stranger things temporada 5"
@@ -130,6 +141,7 @@
    - Target: 1500 palabras
 
 #### Series (3 artículos)
+
 4. **"Mejores Series de Netflix 2026: Top 20 Imperdibles"**
    - Keyword: "mejores series netflix 2026"
    - Long-tail: "series nuevas netflix enero 2026"
@@ -146,6 +158,7 @@
    - Target: 1700 palabras
 
 #### Videojuegos (3 artículos)
+
 7. **"Mejores Juegos PS5 2026: Los 25 Imprescindibles"**
    - Keyword: "mejores juegos ps5 2026"
    - Long-tail: "juegos ps5 que saldrán en 2026"
@@ -162,6 +175,7 @@
    - Target: 2000 palabras
 
 #### Anime (3 artículos)
+
 10. **"Anime Temporada Invierno 2026: Las 15 Series Más Esperadas"**
     - Keyword: "anime temporada invierno 2026"
     - Long-tail: "mejores animes enero 2026"
@@ -178,6 +192,7 @@
     - Target: 1500 palabras
 
 ### 📊 Keywords Research Completo
+
 - [ ] Análisis de volumen de búsqueda
 - [ ] Competitor research (top 10 SERP)
 - [ ] Long-tail keywords (10+ por artículo)
@@ -191,6 +206,7 @@
 ### 🔗 Features Sociales
 
 #### 1. Auto-sharing System
+
 - [ ] **Open Graph mejorado por artículo**
   - Imagen destacada optimizada (1200x630px)
   - Título optimizado para social (60-70 caracteres)
@@ -206,11 +222,13 @@
   - UTM tracking
 
 #### 2. Social Proof
+
 - [ ] Contador de shares (Twitter, Facebook)
 - [ ] "Trending" badge para artículos populares
 - [ ] "Most Read This Week" widget
 
 #### 3. Content Distribution
+
 - [ ] Template para Instagram carousel posts
 - [ ] Template para TikTok scripts
 - [ ] Template para Twitter threads
@@ -223,7 +241,9 @@
 ### 💬 Sistema de Comentarios
 
 #### Opciones de Implementación
+
 **Opción A: Disqus (Recomendado)**
+
 - ✅ Fácil implementación
 - ✅ Moderación automática
 - ✅ Notificaciones email
@@ -231,11 +251,13 @@
 - ❌ Ads en versión gratuita
 
 **Opción B: Facebook Comments**
+
 - ✅ Integración con Facebook
 - ✅ Alcance viral potencial
 - ❌ Requiere cuenta Facebook
 
 **Opción C: Custom Comments (Futuro)**
+
 - ✅ 100% personalizado
 - ✅ Sin dependencias
 - ❌ Requiere backend
@@ -243,6 +265,7 @@
 ### 📧 Newsletter Integration
 
 #### Features
+
 - [ ] **Popup inteligente**
   - Exit-intent trigger
   - Scroll 50% trigger
@@ -276,35 +299,38 @@
 ### 📊 Métricas a Implementar
 
 #### 1. Google Analytics 4 Enhanced
+
 ```javascript
 // Event tracking por artículo
-gtag('event', 'article_read', {
-  'article_title': '[Título]',
-  'article_category': '[Categoría]',
-  'reading_time': '[Minutos]',
-  'scroll_depth': '[%]'
+gtag("event", "article_read", {
+  article_title: "[Título]",
+  article_category: "[Categoría]",
+  reading_time: "[Minutos]",
+  scroll_depth: "[%]",
 });
 
 // Social shares tracking
-gtag('event', 'share', {
-  'method': '[Twitter|Facebook|WhatsApp]',
-  'content_type': 'article',
-  'content_id': '[article-slug]'
+gtag("event", "share", {
+  method: "[Twitter|Facebook|WhatsApp]",
+  content_type: "article",
+  content_id: "[article-slug]",
 });
 
 // Newsletter conversion
-gtag('event', 'newsletter_signup', {
-  'source': '[popup|article_inline|footer]',
-  'article_category': '[Categoría]'
+gtag("event", "newsletter_signup", {
+  source: "[popup|article_inline|footer]",
+  article_category: "[Categoría]",
 });
 ```
 
 #### 2. Heatmaps (Hotjar o similar)
+
 - [ ] Scroll depth por artículo
 - [ ] Click tracking en CTAs
 - [ ] Form abandonment
 
 #### 3. SEO Tracking
+
 - [ ] Google Search Console integration
 - [ ] Keyword ranking monitoring
 - [ ] Backlink tracking
@@ -317,12 +343,14 @@ gtag('event', 'newsletter_signup', {
 ### ⚡ Performance Targets
 
 #### Core Web Vitals Goals
+
 - LCP (Largest Contentful Paint): < 2.5s
 - FID (First Input Delay): < 100ms
 - CLS (Cumulative Layout Shift): < 0.1
 - TTI (Time to Interactive): < 3.5s
 
 #### Optimizations
+
 - [ ] Image optimization pipeline
   - WebP con fallback
   - Responsive images (srcset)
@@ -362,7 +390,9 @@ gtag('event', 'newsletter_signup', {
 ### 🔗 Estrategias de Backlinks
 
 #### 1. Guest Posting (Target: 10 posts)
+
 **Sitios objetivo:**
+
 - VandalOnline.com
 - 3DJuegos.com
 - LevelUp.com
@@ -370,32 +400,39 @@ gtag('event', 'newsletter_signup', {
 - IGN España
 
 **Temas propuestos:**
+
 - "10 Easter Eggs que Nunca Notaste en [Película/Juego]"
 - "La Evolución de [Franquicia] en 10 Años"
 - "Por Qué [Serie] es la Mejor del 2025"
 
 #### 2. Broken Link Building
+
 - [ ] Buscar broken links en sitios geek relevantes
 - [ ] Crear contenido superior de reemplazo
 - [ ] Outreach a webmasters
 
 #### 3. Resource Page Link Building
+
 - [ ] Identificar "best of" pages
 - [ ] Crear contenido digno de ser enlazado
 - [ ] Outreach con pitch personalizado
 
 #### 4. Influencer Collaboration
+
 **Target influencers:**
+
 - YouTubers gaming (50K-500K subs)
 - Streamers Twitch (10K+ viewers)
 - TikTokers geek (100K+ followers)
 
 **Colaboraciones:**
+
 - Artículos co-escritos
 - Entrevistas exclusivas
 - Reviews productos
 
 #### 5. PR & Media Mentions
+
 - [ ] Press releases para contenido único
 - [ ] HARO (Help A Reporter Out) responses
 - [ ] Newsjacking de trending topics
@@ -407,22 +444,26 @@ gtag('event', 'newsletter_signup', {
 ### 💰 Revenue Streams
 
 #### 1. Advertising
+
 - [ ] Google AdSense (artículos)
 - [ ] Ads directos (sidebar, banner)
 - [ ] Native advertising (artículos patrocinados)
 
 #### 2. Affiliate Marketing
+
 - [ ] Amazon Associates (productos geek)
 - [ ] Steam/Epic Games affiliate
 - [ ] Merchandising affiliate
 
 #### 3. Premium Content
+
 - [ ] Suscripción "Geek Pro"
   - Early access a artículos
   - Content exclusivo
   - Ad-free experience
 
 #### 4. Services
+
 - [ ] Consulting para marcas geek
 - [ ] Sponsored reviews
 - [ ] Event coverage
@@ -432,12 +473,14 @@ gtag('event', 'newsletter_signup', {
 ## 📅 TIMELINE DETALLADO
 
 ### **Semana 1 (30 Dic - 5 Ene)**
+
 - ✅ Setup estructura /blog/
 - ✅ Crear template-articulo.html
 - ✅ Implementar Schema Article markup
 - ✅ Sistema de breadcrumbs
 
 ### **Semana 2 (6 Ene - 12 Ene)** 🚀 DEPLOY
+
 - ✅ Finalizar sistema de categorías
 - ✅ Implementar share buttons
 - ✅ Crear 6 primeros artículos
@@ -445,24 +488,28 @@ gtag('event', 'newsletter_signup', {
 - 🚀 **DEPLOY: 12 de Enero 2026**
 
 ### **Semana 3 (13 Ene - 19 Ene)**
+
 - Crear 6 artículos restantes (total 12)
 - Implementar sistema de comentarios
 - Setup analytics avanzado
 - Campaña social media launch
 
 ### **Semana 4 (20 Ene - 26 Ene)**
+
 - Newsletter integration avanzada
 - Lead magnets creation
 - Guest posting outreach (5 sitios)
 - Performance optimization
 
 ### **Mes 2 (Febrero 2026)**
+
 - Publicar 12 artículos nuevos (3/semana)
 - Link building campaign
 - Influencer collaborations (2-3)
 - Analytics review & optimization
 
 ### **Mes 3 (Marzo 2026)**
+
 - Publicar 16 artículos (4/semana)
 - Monetization setup
 - Community features
@@ -473,6 +520,7 @@ gtag('event', 'newsletter_signup', {
 ## 📊 KPIS & SUCCESS METRICS
 
 ### Objetivos Mes 1 (Enero)
+
 - **Artículos publicados**: 12
 - **Tráfico orgánico**: +100% vs baseline
 - **Newsletter signups**: +200 nuevos
@@ -480,6 +528,7 @@ gtag('event', 'newsletter_signup', {
 - **Bounce rate**: < 60%
 
 ### Objetivos Mes 2 (Febrero)
+
 - **Artículos publicados**: 24 total
 - **Tráfico orgánico**: +250% vs baseline
 - **Backlinks conseguidos**: 10+
@@ -487,6 +536,7 @@ gtag('event', 'newsletter_signup', {
 - **Social shares**: 500+ total
 
 ### Objetivos Mes 3 (Marzo)
+
 - **Artículos publicados**: 40 total
 - **Tráfico orgánico**: +500% vs baseline
 - **Newsletter subscribers**: 1000+
@@ -494,6 +544,7 @@ gtag('event', 'newsletter_signup', {
 - **Domain Authority**: +5 puntos
 
 ### Objetivos Mes 6 (Junio)
+
 - **Artículos publicados**: 80+ total
 - **Tráfico orgánico**: +1000% vs baseline 🎯
 - **Newsletter subscribers**: 5000+
@@ -505,6 +556,7 @@ gtag('event', 'newsletter_signup', {
 ## 🛠️ TECH STACK RECOMENDADO
 
 ### Frontend
+
 - ✅ HTML5 semántico (actual)
 - ✅ CSS3 + Variables (actual)
 - ✅ Vanilla JavaScript (actual)
@@ -512,6 +564,7 @@ gtag('event', 'newsletter_signup', {
 - ➕ Syntax highlighter (code blocks)
 
 ### Tools & Services
+
 - ✅ Google Analytics 4 (actual)
 - ✅ Google Search Console (actual)
 - ➕ Disqus (comentarios)
@@ -521,6 +574,7 @@ gtag('event', 'newsletter_signup', {
 - ➕ SEMrush/Ahrefs (keyword research)
 
 ### Automation
+
 - ➕ GitHub Actions (deploy automático)
 - ➕ Image optimization pipeline
 - ➕ Auto-sitemap generation
@@ -531,17 +585,20 @@ gtag('event', 'newsletter_signup', {
 ## 💡 CONTENT STRATEGY POST-LAUNCH
 
 ### Frecuencia de Publicación
+
 - **Semanas 1-4**: 3 artículos/semana (lanzamiento)
 - **Mes 2-3**: 4 artículos/semana (crecimiento)
 - **Mes 4+**: 5 artículos/semana (mantenimiento)
 
 ### Content Mix (Proporción)
+
 - 40% - Noticias y estrenos (evergreen)
 - 30% - Listicles y guías (SEO high-intent)
 - 20% - Análisis y reviews (engagement)
 - 10% - Opinión y teorías (viral potential)
 
 ### Content Calendar Template
+
 ```
 Lunes: Noticia trending (películas/series)
 Martes: Listicle SEO (Top 10, Mejores X)
@@ -555,6 +612,7 @@ Viernes: Guía práctica (How-to, Tips)
 ## 🎨 DESIGN UPDATES
 
 ### Blog Landing Page
+
 - Hero section con últimos 3 artículos
 - Grid de artículos (tarjetas con imagen)
 - Sidebar con:
@@ -564,6 +622,7 @@ Viernes: Guía práctica (How-to, Tips)
   - Tags cloud
 
 ### Article Page Design
+
 - Clean, readable typography
 - Table of Contents sticky
 - Share buttons sticky sidebar
@@ -577,6 +636,7 @@ Viernes: Guía práctica (How-to, Tips)
 ## 🔐 SECURITY & MAINTENANCE
 
 ### Security Updates
+
 - [ ] Rate limiting en formularios
 - [ ] CSRF protection
 - [ ] XSS prevention
@@ -584,6 +644,7 @@ Viernes: Guía práctica (How-to, Tips)
 - [ ] Regular security audits
 
 ### Maintenance Schedule
+
 - **Diario**: Monitoring performance
 - **Semanal**: Backup completo
 - **Mensual**: Security audit
@@ -594,12 +655,14 @@ Viernes: Guía práctica (How-to, Tips)
 ## 📝 NOTES & CONSIDERATIONS
 
 ### Prioridades
+
 1. **Contenido de calidad** > Cantidad
 2. **SEO técnico correcto** > Publicación rápida
 3. **User experience** > Métricas vanidad
 4. **Engagement real** > Tráfico bot
 
 ### Red Flags to Avoid
+
 - ❌ Keyword stuffing
 - ❌ Contenido duplicado
 - ❌ Thin content (< 1000 palabras)
@@ -608,6 +671,7 @@ Viernes: Guía práctica (How-to, Tips)
 - ❌ Clickbait sin sustancia
 
 ### Success Factors
+
 - ✅ Consistencia en publicación
 - ✅ Calidad sobre cantidad
 - ✅ Actualizar artículos old (evergreen)

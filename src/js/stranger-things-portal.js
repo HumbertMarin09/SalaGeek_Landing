@@ -115,8 +115,7 @@
       for (let channel = 0; channel < 2; channel++) {
         const channelData = reverbBuffer.getChannelData(channel);
         for (let i = 0; i < channelData.length; i++) {
-          channelData[i] =
-            (Math.random() * 2 - 1) * Math.exp(-i / (audioContext.sampleRate * 0.8));
+          channelData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioContext.sampleRate * 0.8));
         }
       }
       convolver.buffer = reverbBuffer;
@@ -210,8 +209,7 @@
         b3 = 0.8665 * b3 + white * 0.3104856;
         b4 = 0.55 * b4 + white * 0.5329522;
         b5 = -0.7616 * b5 - white * 0.016898;
-        pinkData[i] =
-          (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+        pinkData[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
         b6 = white * 0.115926;
       }
       const pinkNoiseSource = audioContext.createBufferSource();
@@ -234,8 +232,7 @@
       for (let channel = 0; channel < 2; channel++) {
         const channelData = reverbBuffer.getChannelData(channel);
         for (let i = 0; i < channelData.length; i++) {
-          channelData[i] =
-            (Math.random() * 2 - 1) * Math.exp(-i / (audioContext.sampleRate * 0.2));
+          channelData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioContext.sampleRate * 0.2));
         }
       }
       convolver.buffer = reverbBuffer;
@@ -589,8 +586,8 @@
         </path>
         
         <!-- Partículas más sutiles y menos saturadas -->
-        ${Array.from({length: 18}, (_, i) => {
-          const y = 12 + (i * 4.5);
+        ${Array.from({ length: 18 }, (_, i) => {
+          const y = 12 + i * 4.5;
           const x = 48.5 + Math.random() * 3;
           const size = 0.4 + Math.random() * 0.8;
           const duration = 3 + Math.random() * 2;
@@ -601,15 +598,15 @@
               <animate attributeName="cx" values="${x};${x + (Math.random() - 0.5) * 2};${x}" dur="${duration}s" begin="${delay}s" repeatCount="indefinite"/>
             </circle>
           `;
-        }).join('')}
+        }).join("")}
         
         <!-- Venas más oscuras y sutiles -->
-        ${Array.from({length: 12}, (_, i) => {
-          const y = 18 + (i * 6.5);
+        ${Array.from({ length: 12 }, (_, i) => {
+          const y = 18 + i * 6.5;
           const side = i % 2 === 0 ? 1 : -1;
-          const endX = 50 + (side * (12 + Math.random() * 12));
+          const endX = 50 + side * (12 + Math.random() * 12);
           const endY = y + (Math.random() - 0.5) * 8;
-          const midX = 50 + (side * (4 + Math.random() * 4));
+          const midX = 50 + side * (4 + Math.random() * 4);
           const duration = 3 + Math.random() * 1.5;
           return `
             <path d="M 50 ${y} Q ${midX} ${y + (Math.random() - 0.5) * 4}, ${endX} ${endY}" 
@@ -621,7 +618,7 @@
               <animate attributeName="opacity" values="0.25;0.45;0.25" dur="${duration}s" repeatCount="indefinite"/>
             </path>
           `;
-        }).join('')}
+        }).join("")}
         
         <!-- Núcleo más sutil -->
         <ellipse cx="50" cy="50" rx="2.5" ry="5" fill="#c44a35" opacity="0.7" filter="url(#subtleGlow)">
@@ -634,9 +631,7 @@
     const tooltip = document.createElement("span");
     tooltip.className = "portal-tooltip";
     tooltip.id = "portal-tooltip-text";
-    tooltip.textContent = isUpsideDown
-      ? "🏠 Volver al mundo normal"
-      : "🌀 Entrar al Upside Down";
+    tooltip.textContent = isUpsideDown ? "🏠 Volver al mundo normal" : "🌀 Entrar al Upside Down";
     portal.appendChild(tooltip);
 
     portal.addEventListener("click", toggleUpsideDown);

@@ -95,7 +95,10 @@
       name="twitter:description"
       content="🎮 Noticias, reseñas y análisis de #Películas #Series #Anime #Videojuegos y #Tech. Contenido diario premium en español. ¡Únete a +50K geeks! 🚀 #ComunidadGeek"
     />
-    <meta name="twitter:image" content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" />
+    <meta
+      name="twitter:image"
+      content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp"
+    />
     <meta
       name="twitter:image:alt"
       content="Sala Geek - Comunidad geek hispana con noticias y reseñas"
@@ -147,12 +150,12 @@
       Preload recursos críticos para mejor performance
       - fetchpriority="high": CSS crítico que bloquea render
       - fetchpriority="low": JS diferido que no bloquea
-      - Cache busters (?v=135): Fuerza recarga cuando hay cambios
+      - Cache busters (?v=202): Fuerza recarga cuando hay cambios
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=178" as="style" />
-    <link rel="preload" href="/src/js/script.js?v=111" as="script" />
+    <link rel="preload" href="/src/css/style.min.css?v=202" as="style" />
+    <link rel="preload" href="/src/js/script.js?v=130" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
     <!-- 
@@ -220,10 +223,10 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=178" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
     <link rel="stylesheet" href="/src/css/stranger-things-event.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=178" /></noscript>
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=202" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
@@ -418,7 +421,7 @@
       Contiene: navegación, animaciones, Easter Eggs, formularios
     -->
     <!-- Main Script - Deferred for non-blocking load -->
-    <script defer src="/src/js/script.js?v=111"></script>
+    <script defer src="/src/js/script.js?v=130"></script>
 
     <!-- Stranger Things Event Portal (Nov 26 - Jan 1) -->
     <script defer src="/src/js/stranger-things-portal.js"></script>
@@ -677,14 +680,19 @@
             class="news-card featured-news spotlight-card featured-full-width"
             data-scroll="fade-up"
             data-scroll-delay="200"
-            style="background-image: url('/src/images/weekly-news/stranger-things-season-5.jpg')"
+            style="
+              background-image: url(&quot;/src/images/weekly-news/stranger-things-season-5.jpg&quot;);
+            "
           >
             <div class="featured-overlay"></div>
             <div class="featured-content">
               <div class="featured-badge">DESTACADA</div>
-              <h3 class="news-title">🌀 Stranger Things Temporada 5: Netflix rompe récords con el final de la saga</h3>
+              <h3 class="news-title">
+                🌀 Stranger Things Temporada 5: Netflix rompe récords con el final de la saga
+              </h3>
               <p class="news-description">
-                La temporada final arrasa globalmente. Millones de fans consumen el cierre épico del Upside Down. Celebramos con evento interactivo en SalaGeek hasta el 1 de Enero.
+                La temporada final arrasa globalmente. Millones de fans consumen el cierre épico del
+                Upside Down. Celebramos con evento interactivo en SalaGeek hasta el 1 de Enero.
               </p>
             </div>
           </article>
@@ -694,36 +702,48 @@
             <!-- News Card 2 - Anime -->
             <article class="news-card">
               <div class="news-category anime">⚡ ANIME</div>
-              <h3 class="news-title">My Hero Academia: batalla final de Deku termina con referencia al primer Smash</h3>
+              <h3 class="news-title">
+                My Hero Academia: batalla final de Deku termina con referencia al primer Smash
+              </h3>
               <p class="news-description">
-                El sábado vimos el cierre épico de la batalla entre Deku y AFO. Kohei Horikoshi cierra el círculo narrativo: Deku usa el mismo golpe que lo cambió todo.
+                El sábado vimos el cierre épico de la batalla entre Deku y AFO. Kohei Horikoshi
+                cierra el círculo narrativo: Deku usa el mismo golpe que lo cambió todo.
               </p>
             </article>
 
             <!-- News Card 3 - Comunidad -->
             <article class="news-card">
               <div class="news-category gaming">🎉 COMUNIDAD</div>
-              <h3 class="news-title">¡10K en Facebook y 1K en Instagram! Milestone histórico de SalaGeek</h3>
+              <h3 class="news-title">
+                ¡10K en Facebook y 1K en Instagram! Milestone histórico de SalaGeek
+              </h3>
               <p class="news-description">
-                Este domingo alcanzamos números épicos. Gracias a toda la comunidad geek por acompañarnos en esta aventura. ¡Vamos por más!
+                Este domingo alcanzamos números épicos. Gracias a toda la comunidad geek por
+                acompañarnos en esta aventura. ¡Vamos por más!
               </p>
             </article>
 
             <!-- News Card 4 - Anime -->
             <article class="news-card">
               <div class="news-category anime">📺 ANIME</div>
-              <h3 class="news-title">Record of Ragnarok Temporada 3 confirma fecha de estreno en Netflix</h3>
+              <h3 class="news-title">
+                Record of Ragnarok Temporada 3 confirma fecha de estreno en Netflix
+              </h3>
               <p class="news-description">
-                El anime de fantasía oscura más infravalorado de Netflix regresa en diciembre 2025. La batalla épica entre dioses y humanos continúa.
+                El anime de fantasía oscura más infravalorado de Netflix regresa en diciembre 2025.
+                La batalla épica entre dioses y humanos continúa.
               </p>
             </article>
 
             <!-- News Card 5 - Películas -->
             <article class="news-card">
               <div class="news-category movies">🎬 PELÍCULAS</div>
-              <h3 class="news-title">Zootopia 2 rompe récords con debut de $140M-$150M en Thanksgiving</h3>
+              <h3 class="news-title">
+                Zootopia 2 rompe récords con debut de $140M-$150M en Thanksgiving
+              </h3>
               <p class="news-description">
-                Disney arrasa en taquilla. La secuela logra el mejor estreno en China de película Hollywood desde 2021 y récord histórico de animación.
+                Disney arrasa en taquilla. La secuela logra el mejor estreno en China de película
+                Hollywood desde 2021 y récord histórico de animación.
               </p>
             </article>
           </div>
@@ -1130,23 +1150,6 @@
       </div>
     </div>
 
-    <!-- Cookie Consent Banner -->
-    <div class="cookie-consent">
-      <div class="cookie-inner">
-        <div class="cookie-text">
-          Utilizamos cookies para mejorar tu experiencia en nuestro sitio. Al continuar navegando,
-          aceptas nuestra
-          <a href="/src/pages/legal/cookies.html" class="cookie-link">Política de Cookies</a>
-          y
-          <a href="/src/pages/legal/privacy.html" class="cookie-link">Política de Privacidad</a>.
-        </div>
-        <div class="cookie-actions">
-          <button class="cookie-btn accept">Aceptar</button>
-          <button class="cookie-btn reject">Rechazar</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Back to Top Button con Scroll Progress -->
     <button id="back-to-top" class="back-to-top" aria-label="Volver arriba">
       <svg class="progress-ring" width="50" height="50">
@@ -1183,10 +1186,3 @@
     </button>
   </body>
 </html>
-
-
-
-
-
-
-

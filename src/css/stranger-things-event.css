@@ -23,8 +23,7 @@
   z-index: 1;
   transition: all 0.3s ease;
   overflow: visible;
-  filter: drop-shadow(0 0 25px rgba(215, 50, 34, 0.7)) 
-          drop-shadow(0 0 50px rgba(164, 46, 75, 0.5));
+  filter: drop-shadow(0 0 25px rgba(215, 50, 34, 0.7)) drop-shadow(0 0 50px rgba(164, 46, 75, 0.5));
   animation: portalFadeIn 3s ease-out forwards;
   opacity: 0;
   pointer-events: auto; /* Habilitado para poder hacer click */
@@ -50,8 +49,7 @@
 
 .upside-down-portal:hover {
   transform: translate(-50%, -50%) scale(1.05);
-  filter: drop-shadow(0 0 35px rgba(215, 50, 34, 0.9)) 
-          drop-shadow(0 0 65px rgba(164, 46, 75, 0.7));
+  filter: drop-shadow(0 0 35px rgba(215, 50, 34, 0.9)) drop-shadow(0 0 65px rgba(164, 46, 75, 0.7));
 }
 
 /* Animación de aparición orgánica */
@@ -59,33 +57,29 @@
   0% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.85);
-    filter: drop-shadow(0 0 0px rgba(139, 46, 46, 0)) 
-            drop-shadow(0 0 0px rgba(74, 31, 58, 0)) 
-            blur(8px);
+    filter: drop-shadow(0 0 0px rgba(139, 46, 46, 0)) drop-shadow(0 0 0px rgba(74, 31, 58, 0))
+      blur(8px);
   }
-  
+
   40% {
     opacity: 0.5;
     transform: translate(-50%, -50%) scale(0.95);
-    filter: drop-shadow(0 0 20px rgba(139, 46, 46, 0.5)) 
-            drop-shadow(0 0 35px rgba(74, 31, 58, 0.4)) 
-            blur(3px);
+    filter: drop-shadow(0 0 20px rgba(139, 46, 46, 0.5)) drop-shadow(0 0 35px rgba(74, 31, 58, 0.4))
+      blur(3px);
   }
-  
+
   70% {
     opacity: 0.85;
     transform: translate(-50%, -50%) scale(1.02);
-    filter: drop-shadow(0 0 25px rgba(139, 46, 46, 0.7)) 
-            drop-shadow(0 0 45px rgba(74, 31, 58, 0.5)) 
-            blur(1px);
+    filter: drop-shadow(0 0 25px rgba(139, 46, 46, 0.7)) drop-shadow(0 0 45px rgba(74, 31, 58, 0.5))
+      blur(1px);
   }
-  
+
   100% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
-    filter: drop-shadow(0 0 25px rgba(215, 50, 34, 0.7)) 
-            drop-shadow(0 0 50px rgba(164, 46, 75, 0.5)) 
-            blur(0px);
+    filter: drop-shadow(0 0 25px rgba(215, 50, 34, 0.7))
+      drop-shadow(0 0 50px rgba(164, 46, 75, 0.5)) blur(0px);
   }
 }
 
@@ -102,13 +96,13 @@
 @keyframes portalPulse {
   0%,
   100% {
-    box-shadow: 
+    box-shadow:
       0 0 20px rgba(255, 0, 0, 0.5),
       0 0 40px rgba(139, 0, 0, 0.3),
       inset 0 0 20px rgba(255, 0, 0, 0.2);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 35px rgba(255, 0, 0, 0.8),
       0 0 70px rgba(139, 0, 0, 0.5),
       inset 0 0 30px rgba(255, 0, 0, 0.4);
@@ -137,7 +131,8 @@
 }
 
 @keyframes crackPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.9;
     transform: scale(1);
   }
@@ -205,19 +200,32 @@ body.upside-down-mode::before {
   top: 0;
   bottom: 0;
   width: 100%;
-  background: 
-    linear-gradient(180deg, rgba(30, 7, 7, 0.22) 0%, rgba(30, 25, 60, 0.18) 50%, rgba(30, 7, 7, 0.22) 100%),
+  background:
+    linear-gradient(
+      180deg,
+      rgba(30, 7, 7, 0.22) 0%,
+      rgba(30, 25, 60, 0.18) 50%,
+      rgba(30, 7, 7, 0.22) 100%
+    ),
     radial-gradient(circle at 30% 30%, rgba(255, 21, 21, 0.1), transparent 60%),
     radial-gradient(circle at 70% 70%, rgba(58, 95, 229, 0.08), transparent 60%),
     radial-gradient(ellipse at 50% 50%, rgba(30, 7, 7, 0.15), transparent 70%);
   pointer-events: none;
   z-index: 9998;
-  animation: upsideDownPulse 4s ease-in-out infinite, overlayFlicker 8s ease-in-out infinite;
+  animation:
+    upsideDownPulse 4s ease-in-out infinite,
+    overlayFlicker 8s ease-in-out infinite;
   mix-blend-mode: multiply;
 }
 
 /* Filtro corrupto - Colores oscuros y aterradores (sin brillo excesivo) */
-body.upside-down-mode {
+/* IMPORTANTE: No aplicar filter al body porque rompe position:fixed de los botones UI */
+/* En su lugar, aplicamos el filter a los contenedores de contenido */
+body.upside-down-mode main,
+body.upside-down-mode header,
+body.upside-down-mode footer,
+body.upside-down-mode #header-placeholder,
+body.upside-down-mode #footer-placeholder {
   filter: saturate(0.95) brightness(0.85) contrast(1.08) hue-rotate(8deg);
 }
 
@@ -237,21 +245,24 @@ body.upside-down-mode::after {
     radial-gradient(ellipse 90px 180px at 50% 0%, rgba(255, 21, 21, 0.45) 0%, transparent 65%),
     radial-gradient(ellipse 70px 160px at 65% 0%, rgba(255, 21, 21, 0.35) 0%, transparent 60%),
     radial-gradient(ellipse 85px 190px at 80% 0%, rgba(255, 21, 21, 0.4) 0%, transparent 70%),
-    
     /* Venas desde abajo */
-    radial-gradient(ellipse 75px 140px at 25% 100%, rgba(255, 21, 21, 0.35) 0%, transparent 65%),
+      radial-gradient(ellipse 75px 140px at 25% 100%, rgba(255, 21, 21, 0.35) 0%, transparent 65%),
     radial-gradient(ellipse 95px 170px at 50% 100%, rgba(255, 21, 21, 0.4) 0%, transparent 60%),
     radial-gradient(ellipse 65px 155px at 75% 100%, rgba(255, 21, 21, 0.3) 0%, transparent 70%),
-    
     /* Venas laterales - azul eléctrico siniestro */
-    radial-gradient(ellipse 120px 100px at 0% 30%, rgba(58, 95, 229, 0.25) 0%, transparent 50%),
+      radial-gradient(ellipse 120px 100px at 0% 30%, rgba(58, 95, 229, 0.25) 0%, transparent 50%),
     radial-gradient(ellipse 140px 90px at 0% 70%, rgba(58, 95, 229, 0.2) 0%, transparent 55%),
     radial-gradient(ellipse 110px 95px at 100% 40%, rgba(58, 95, 229, 0.25) 0%, transparent 50%),
     radial-gradient(ellipse 130px 85px at 100% 60%, rgba(58, 95, 229, 0.2) 0%, transparent 55%),
-    
     /* Textura de membrana orgánica */
-    repeating-radial-gradient(circle at 30% 30%, transparent 0px, transparent 50px, rgba(30, 7, 7, 0.15) 50px, rgba(30, 7, 7, 0.15) 52px);
-  
+      repeating-radial-gradient(
+        circle at 30% 30%,
+        transparent 0px,
+        transparent 50px,
+        rgba(30, 7, 7, 0.15) 50px,
+        rgba(30, 7, 7, 0.15) 52px
+      );
+
   pointer-events: none;
   z-index: 9997;
   opacity: 0.8;
@@ -259,7 +270,8 @@ body.upside-down-mode::after {
 }
 
 @keyframes upsideDownPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -268,7 +280,8 @@ body.upside-down-mode::after {
 }
 
 @keyframes overlayFlicker {
-  0%, 100% {
+  0%,
+  100% {
     filter: brightness(1);
   }
   25% {
@@ -280,7 +293,8 @@ body.upside-down-mode::after {
 }
 
 @keyframes veinsGrow {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
     opacity: 0.8;
   }
@@ -291,7 +305,8 @@ body.upside-down-mode::after {
 }
 
 @keyframes veinsPulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: blur(1px) brightness(1);
   }
   50% {
@@ -398,6 +413,7 @@ body.upside-down-mode .hero-title {
    ============================================ */
 
 /* Cards desgastadas y corruptas */
+
 body.upside-down-mode .feature-card,
 body.upside-down-mode .service-card,
 body.upside-down-mode .product-card {
@@ -405,12 +421,14 @@ body.upside-down-mode .product-card {
   filter: contrast(1.15) brightness(0.85);
   border: 1px solid rgba(120, 10, 10, 0.5) !important;
   background: rgba(0, 0, 0, 0.2) !important;
-  box-shadow: 
+  box-shadow:
     0 0 15px rgba(120, 10, 10, 0.3),
     inset 0 0 40px rgba(0, 0, 0, 0.6),
     inset 0 0 80px rgba(30, 7, 7, 0.4),
     0 4px 20px rgba(0, 0, 0, 0.7);
-  animation: cardDistortion 8s ease-in-out infinite, cardFlicker 4s ease-in-out infinite;
+  animation:
+    cardDistortion 8s ease-in-out infinite,
+    cardFlicker 4s ease-in-out infinite;
 }
 
 /* Grietas y desgaste visual en las cards - MÁS VISIBLES */
@@ -420,12 +438,36 @@ body.upside-down-mode .product-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: 
-    linear-gradient(45deg, transparent 28%, rgba(120, 10, 10, 0.4) 30%, rgba(120, 10, 10, 0.6) 31%, transparent 33%),
-    linear-gradient(-45deg, transparent 46%, rgba(80, 20, 20, 0.35) 48%, rgba(80, 20, 20, 0.5) 49%, transparent 51%),
+  background:
+    linear-gradient(
+      45deg,
+      transparent 28%,
+      rgba(120, 10, 10, 0.4) 30%,
+      rgba(120, 10, 10, 0.6) 31%,
+      transparent 33%
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 46%,
+      rgba(80, 20, 20, 0.35) 48%,
+      rgba(80, 20, 20, 0.5) 49%,
+      transparent 51%
+    ),
     linear-gradient(135deg, transparent 60%, rgba(60, 15, 15, 0.3) 62%, transparent 64%),
-    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(30, 7, 7, 0.4) 8px, rgba(30, 7, 7, 0.6) 9px),
-    repeating-linear-gradient(0deg, transparent, transparent 12px, rgba(20, 5, 5, 0.35) 12px, rgba(20, 5, 5, 0.5) 13px);
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba(30, 7, 7, 0.4) 8px,
+      rgba(30, 7, 7, 0.6) 9px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 12px,
+      rgba(20, 5, 5, 0.35) 12px,
+      rgba(20, 5, 5, 0.5) 13px
+    );
   pointer-events: none;
   z-index: 2;
   opacity: 0.85;
@@ -441,13 +483,15 @@ body.upside-down-mode .product-card::after {
   content: "";
   position: absolute;
   inset: -1px;
-  background: linear-gradient(45deg, 
-    rgba(120, 10, 10, 0.6) 0%, 
+  background: linear-gradient(
+    45deg,
+    rgba(120, 10, 10, 0.6) 0%,
     rgba(80, 20, 20, 0.4) 15%,
-    transparent 25%, 
-    transparent 75%, 
+    transparent 25%,
+    transparent 75%,
     rgba(80, 20, 20, 0.4) 85%,
-    rgba(120, 10, 10, 0.6) 100%);
+    rgba(120, 10, 10, 0.6) 100%
+  );
   border-radius: inherit;
   filter: blur(6px) contrast(1.8);
   opacity: 0.3;
@@ -461,11 +505,13 @@ body.upside-down-mode .feature-card:hover,
 body.upside-down-mode .service-card:hover,
 body.upside-down-mode .product-card:hover {
   transform: translateY(-8px) scale(1.02) rotate(0.5deg);
-  box-shadow: 
+  box-shadow:
     0 0 35px rgba(255, 21, 21, 0.4),
     inset 0 0 40px rgba(0, 0, 0, 0.5),
     0 8px 25px rgba(0, 0, 0, 0.7);
-  animation: cardDistortion 8s ease-in-out infinite, cardGlitch 0.3s ease-in-out;
+  animation:
+    cardDistortion 8s ease-in-out infinite,
+    cardGlitch 0.3s ease-in-out;
 }
 
 /* Textos con efecto de interferencia - menos brillante */
@@ -475,7 +521,7 @@ body.upside-down-mode .product-title,
 body.upside-down-mode h1,
 body.upside-down-mode h2,
 body.upside-down-mode h3 {
-  text-shadow: 
+  text-shadow:
     1px 1px 0 rgba(120, 10, 10, 0.4),
     -1px -1px 0 rgba(40, 50, 100, 0.25),
     0 0 8px rgba(80, 5, 5, 0.3);
@@ -494,7 +540,7 @@ body.upside-down-mode .service-icon {
 body.upside-down-mode button,
 body.upside-down-mode .btn,
 body.upside-down-mode a.button {
-  box-shadow: 
+  box-shadow:
     0 0 12px rgba(120, 10, 10, 0.25),
     inset 0 0 10px rgba(0, 0, 0, 0.4);
   animation: buttonPulse 3s ease-in-out infinite;
@@ -503,7 +549,7 @@ body.upside-down-mode a.button {
 body.upside-down-mode button:hover,
 body.upside-down-mode .btn:hover,
 body.upside-down-mode a.button:hover {
-  box-shadow: 
+  box-shadow:
     0 0 18px rgba(120, 10, 10, 0.35),
     inset 0 0 15px rgba(0, 0, 0, 0.5);
   animation: buttonGlitch 0.2s ease-in-out;
@@ -511,7 +557,8 @@ body.upside-down-mode a.button:hover {
 
 /* Animaciones de efectos aterradores */
 @keyframes cardDistortion {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0) scale(1) rotate(0deg) skewX(0deg) skewY(0deg);
   }
   8% {
@@ -550,7 +597,8 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes cardFlicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     filter: contrast(1.2) brightness(0.9) hue-rotate(0deg) saturate(1);
   }
@@ -613,7 +661,8 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes cardGlitch {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(-8px) scale(1.02) rotate(0.5deg);
   }
   25% {
@@ -628,7 +677,8 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes cracksShift {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
     opacity: 0.6;
   }
@@ -639,7 +689,8 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes corrosionPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
   }
   50% {
@@ -648,7 +699,8 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes textFlicker {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   5% {
@@ -660,7 +712,8 @@ body.upside-down-mode a.button:hover {
   15% {
     opacity: 0.95;
   }
-  20%, 80% {
+  20%,
+  80% {
     opacity: 1;
   }
   85% {
@@ -672,7 +725,8 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes imageDistortion {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1) rotate(0deg) skewX(0deg);
     filter: contrast(1.3) brightness(0.85) saturate(0.8) hue-rotate(0deg);
   }
@@ -707,22 +761,24 @@ body.upside-down-mode a.button:hover {
 }
 
 @keyframes buttonPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
-    box-shadow: 
+    box-shadow:
       0 0 12px rgba(120, 10, 10, 0.25),
       inset 0 0 10px rgba(0, 0, 0, 0.4);
   }
   50% {
     transform: scale(1.01);
-    box-shadow: 
+    box-shadow:
       0 0 15px rgba(120, 10, 10, 0.3),
       inset 0 0 12px rgba(0, 0, 0, 0.45);
   }
 }
 
 @keyframes buttonGlitch {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0);
   }
   25% {
@@ -920,31 +976,20 @@ body.upside-down-mode #easter-egg-tracker {
   font-size: 20px;
   vertical-align: middle;
   animation: demogorgonBreathe 2s ease-in-out infinite;
-  filter: 
-    brightness(0.25) 
-    saturate(8) 
-    hue-rotate(340deg) 
-    contrast(2.5)
+  filter: brightness(0.25) saturate(8) hue-rotate(340deg) contrast(2.5)
     drop-shadow(0 0 8px rgba(200, 0, 0, 0.9));
 }
 
 @keyframes demogorgonBreathe {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
-    filter: 
-      brightness(0.25) 
-      saturate(8) 
-      hue-rotate(340deg) 
-      contrast(2.5)
+    filter: brightness(0.25) saturate(8) hue-rotate(340deg) contrast(2.5)
       drop-shadow(0 0 8px rgba(200, 0, 0, 0.9));
   }
   50% {
     transform: scale(1.15);
-    filter: 
-      brightness(0.3) 
-      saturate(9) 
-      hue-rotate(340deg) 
-      contrast(2.8)
+    filter: brightness(0.3) saturate(9) hue-rotate(340deg) contrast(2.8)
       drop-shadow(0 0 12px rgba(220, 20, 20, 1));
   }
 }
@@ -1095,13 +1140,13 @@ body.portal-transition {
 
   /* Reducir sombras para performance */
   .upside-down-portal {
-    filter: drop-shadow(0 0 15px rgba(215, 50, 34, 0.6)) 
-            drop-shadow(0 0 30px rgba(164, 46, 75, 0.4));
+    filter: drop-shadow(0 0 15px rgba(215, 50, 34, 0.6))
+      drop-shadow(0 0 30px rgba(164, 46, 75, 0.4));
   }
 
   .upside-down-portal:hover {
-    filter: drop-shadow(0 0 20px rgba(215, 50, 34, 0.7)) 
-            drop-shadow(0 0 40px rgba(164, 46, 75, 0.5));
+    filter: drop-shadow(0 0 20px rgba(215, 50, 34, 0.7))
+      drop-shadow(0 0 40px rgba(164, 46, 75, 0.5));
   }
 }
 

@@ -28,7 +28,10 @@
       name="twitter:description"
       content="Conecta tu marca con +20K geeks apasionados. Descubre nuestras opciones de publicidad."
     />
-    <meta name="twitter:image" content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp" />
+    <meta
+      name="twitter:image"
+      content="https://salageek.com/src/images/SalaGeek_LOGO_social.webp"
+    />
 
     <!-- Favicon -->
     <link rel="icon" type="image/webp" sizes="512x512" href="/src/images/SalaGeek_LOGO.webp" />
@@ -37,11 +40,11 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=178" />
-    <link rel="stylesheet" href="/src/css/media-kit.css" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
+    <link rel="stylesheet" href="/src/css/media-kit.css?v=25" />
 
     <!-- Scripts -->
-    <script defer src="/src/js/script.js?v=111"></script>
+    <script defer src="/src/js/script.min.js?v=130"></script>
   </head>
   <body class="media-kit-page">
     <!-- Header inyectado -->
@@ -61,8 +64,9 @@
             />
             <h1 class="media-kit-title">Media Kit</h1>
             <p class="media-kit-subtitle">
-              Conecta tu marca con más de 20,000 geeks apasionados por películas, series, anime,
-              videojuegos y tecnología
+              Conecta tu marca con más de <strong>20,000 geeks</strong> apasionados por películas,
+              series, anime, videojuegos y tecnología.
+              <span style="color: #06ffa5">Alcanza a la audiencia que realmente importa.</span>
             </p>
             <div class="hero-cta">
               <a href="#contact" class="btn btn-primary">Solicitar Cotización</a>
@@ -87,7 +91,7 @@
       </section>
 
       <!-- About Section -->
-      <section class="media-kit-section about-section">
+      <section id="about" class="media-kit-section about-section">
         <div class="container">
           <h2 class="section-title">Sobre Sala Geek</h2>
           <div class="about-grid">
@@ -98,12 +102,13 @@
               </div>
               <p>
                 <strong>Sala Geek</strong> es la comunidad geek de habla hispana más activa y
-                comprometida. Desde <strong>2017</strong>, conectamos a miles de fans apasionados del entretenimiento
-                geek con contenido de calidad, noticias actualizadas y un espacio donde la cultura
-                geek cobra vida.
+                comprometida. Desde <strong>2017</strong>, conectamos a miles de fans apasionados
+                del entretenimiento geek con contenido de calidad, noticias actualizadas y un
+                espacio donde la cultura geek cobra vida.
               </p>
               <p>
-                Nuestro contenido abarca <strong>películas, series, anime, videojuegos, cómics y tecnología</strong>,
+                Nuestro contenido abarca
+                <strong>películas, series, anime, videojuegos, cómics y tecnología</strong>,
                 ofreciendo a las marcas una conexión auténtica con una audiencia altamente
                 comprometida y receptiva.
               </p>
@@ -126,12 +131,18 @@
               <div class="highlight-card">
                 <div class="highlight-icon">🎯</div>
                 <h3>Audiencia Definida</h3>
-                <p>Geeks apasionados de 18-35 años con alto poder adquisitivo y genuino interés en tecnología</p>
+                <p>
+                  Geeks apasionados de 18-35 años con alto poder adquisitivo y genuino interés en
+                  tecnología
+                </p>
               </div>
               <div class="highlight-card">
                 <div class="highlight-icon">📈</div>
                 <h3>Alto Engagement</h3>
-                <p>Tasa de interacción superior al promedio con comentarios, shares y menciones orgánicas</p>
+                <p>
+                  Tasa de interacción superior al promedio con comentarios, shares y menciones
+                  orgánicas
+                </p>
               </div>
               <div class="highlight-card">
                 <div class="highlight-icon">💎</div>
@@ -149,7 +160,8 @@
       </section>
 
       <!-- Stats Section -->
-      <section class="media-kit-section stats-section">
+      <!-- Stats Section -->
+      <section id="stats" class="media-kit-section stats-section">
         <div class="container">
           <h2 class="section-title">Nuestro Alcance</h2>
           <div class="stats-grid">
@@ -189,8 +201,8 @@
                 </svg>
               </div>
               <div class="stat-number">10K</div>
-              <div class="stat-label">Visualizaciones Promedio</div>
-              <div class="stat-detail">Por publicación en redes</div>
+              <div class="stat-label">Visualizaciones Mensuales</div>
+              <div class="stat-detail">Promedio entre publicaciones</div>
             </div>
 
             <div class="stat-card">
@@ -202,12 +214,12 @@
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
                   <path
-                    d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                    d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
                   ></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
                 </svg>
               </div>
               <div class="stat-number">10.7K</div>
@@ -224,10 +236,10 @@
                   fill="none"
                   stroke="currentColor"
                   stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
                 </svg>
               </div>
               <div class="stat-number">6.5K</div>
@@ -282,7 +294,7 @@
       </section>
 
       <!-- Services Section -->
-      <section class="media-kit-section services-section">
+      <section id="services" class="media-kit-section services-section">
         <div class="container">
           <h2 class="section-title">Servicios de Publicidad</h2>
           <p class="section-description">
@@ -541,8 +553,8 @@
         <div class="container">
           <h2 class="section-title">¿Listo para Colaborar?</h2>
           <p class="section-description">
-            Contáctanos para recibir una cotización personalizada y descubre cómo podemos ayudar a tu
-            marca a conectar con nuestra comunidad geek
+            Contáctanos para recibir una cotización personalizada y descubre cómo podemos ayudar a
+            tu marca a conectar con nuestra comunidad geek
           </p>
 
           <div class="contact-grid">
@@ -564,25 +576,7 @@
                 </svg>
                 <div>
                   <strong>Email:</strong>
-                  <a href="mailto:publicidad@salageek.com">publicidad@salageek.com</a>
-                </div>
-              </div>
-
-              <div class="contact-item">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
-                </svg>
-                <div>
-                  <strong>WhatsApp Business:</strong>
-                  <span>Disponible en el PDF</span>
+                  <a href="mailto:contacto@salageek.com">contacto@salageek.com</a>
                 </div>
               </div>
 
@@ -697,7 +691,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="phone">Teléfono / WhatsApp</label>
+                  <label for="phone">Teléfono</label>
                   <input type="tel" id="phone" name="phone" placeholder="+52 123 456 7890" />
                 </div>
 
@@ -737,7 +731,8 @@
       </section>
 
       <!-- Why Us Section -->
-      <section class="media-kit-section why-section">
+      <!-- Why Section -->
+      <section id="why" class="media-kit-section why-section">
         <div class="container">
           <h2 class="section-title">¿Por Qué Elegir Sala Geek?</h2>
           <div class="why-grid">
@@ -761,8 +756,8 @@
               <div class="why-icon">🤝</div>
               <h3>Autenticidad</h3>
               <p>
-                Solo trabajamos con marcas y productos que amamos. Tu producto llegará a una audiencia
-                receptiva y genuinamente interesada.
+                Solo trabajamos con marcas y productos que amamos. Tu producto llegará a una
+                audiencia receptiva y genuinamente interesada.
               </p>
             </div>
             <div class="why-card">

@@ -170,18 +170,17 @@ function initSeasonalLogo() {
 
   // Determinar si estamos en temporada navideña
   // Diciembre (mes 11) o Enero 1-10 (mes 0, días 1-10)
-  const isChristmasSeason = (currentMonth === 11) || (currentMonth === 0 && currentDay <= 10);
+  const isChristmasSeason = currentMonth === 11 || (currentMonth === 0 && currentDay <= 10);
 
   // Preferir PNG (mejor transparencia) y hacer fallback a ICO si no existe
   const seasonalCandidates = isChristmasSeason
-    ? ['/src/images/Icono_SG_Navidad.png', '/src/images/Icono_SG_Navidad.ico']
-    : ['/src/images/Icono_SG.png', '/src/images/Icono_SG.ico'];
+    ? ["/src/images/Icono_SG_Navidad.png"]
+    : ["/src/images/Icono_SG.png", "/src/images/Icono_SG.ico"];
 
   chooseAvailableLogo(seasonalCandidates).then((logoPath) => {
     updateLogoSource(logoPath);
     updateFooterLogo(seasonalCandidates);
     updateSeasonalFavicon(isChristmasSeason);
-    console.log(`🎄 Logo estacional: ${isChristmasSeason ? 'Navideño' : 'Normal'} -> ${logoPath}`);
   });
 }
 
@@ -197,7 +196,7 @@ function chooseAvailableLogo(candidates) {
     const tryLoad = (index) => {
       if (index >= candidates.length) {
         // Último fallback: logo normal ICO
-        resolve('/src/images/Icono_SG.ico');
+        resolve("/src/images/Icono_SG.ico");
         return;
       }
 
@@ -222,26 +221,26 @@ function chooseAvailableLogo(candidates) {
  */
 function updateLogoSource(logoPath) {
   // Intentar actualizar inmediatamente si el logo ya está en el DOM
-  const logoImg = document.querySelector('.logo img');
+  const logoImg = document.querySelector(".logo img");
   if (logoImg) {
     logoImg.src = logoPath;
   }
-  
+
   // También observar cambios en el DOM por si el header se carga después
   const observer = new MutationObserver((mutations, obs) => {
-    const logo = document.querySelector('.logo img');
+    const logo = document.querySelector(".logo img");
     if (logo) {
       logo.src = logoPath;
       obs.disconnect(); // Dejar de observar una vez actualizado
     }
   });
-  
+
   // Observar cambios en el body
   observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
   });
-  
+
   // Timeout de seguridad para desconectar el observer después de 5 segundos
   setTimeout(() => observer.disconnect(), 5000);
 }
@@ -253,15 +252,15 @@ function updateLogoSource(logoPath) {
 function updateFooterLogo(candidates) {
   chooseAvailableLogo(candidates).then((logoPath) => {
     const applyFooterLogo = () => {
-      const footerImg = document.querySelector('.footer-logo');
-      const footerSource = document.querySelector('.footer-brand picture source');
+      const footerImg = document.querySelector(".footer-logo");
+      const footerSource = document.querySelector(".footer-brand picture source");
       if (footerImg) {
         // Actualizar <img>
         footerImg.src = logoPath;
         // Si existe <source> dentro de <picture>, también actualizar su srcset
         if (footerSource) {
           footerSource.srcset = logoPath;
-          footerSource.type = 'image/png';
+          footerSource.type = "image/png";
         }
         return true;
       }
@@ -288,53 +287,54 @@ function updateFooterLogo(candidates) {
  * @param {boolean} isChristmasSeason
  */
 function updateSeasonalFavicon(isChristmasSeason) {
-  const christmasPng = '/src/images/Icono_SG_Navidad.png';
-  const christmasIco = '/src/images/Icono_SG_Navidad.ico';
-  const normalPng = '/src/images/Icono_SG.png';
-  const normalIco = '/src/images/Icono_SG.ico';
+  const christmasPng = "/src/images/Icono_SG_Navidad.png";
+  const normalPng = "/src/images/Icono_SG.png";
+  const normalIco = "/src/images/Icono_SG.ico";
 
   const targetPng = isChristmasSeason ? christmasPng : normalPng;
-  const targetIco = isChristmasSeason ? christmasIco : normalIco;
+  const targetIco = isChristmasSeason ? christmasPng : normalIco; // Usar PNG navideño en lugar de ICO
 
   // Eliminar existentes para evitar cache duro del navegador y recrear
   const head = document.head;
-  const existing = document.querySelectorAll("link[rel='icon'], link[rel='shortcut icon'], link[rel='apple-touch-icon']");
+  const existing = document.querySelectorAll(
+    "link[rel='icon'], link[rel='shortcut icon'], link[rel='apple-touch-icon']"
+  );
   existing.forEach((el) => el.parentNode.removeChild(el));
 
   const ts = `?v=${Date.now()}`;
 
-  // Favicon ICO
-  const fav = document.createElement('link');
-  fav.setAttribute('rel', 'icon');
-  fav.setAttribute('type', 'image/x-icon');
-  fav.setAttribute('href', targetIco + ts);
+  // Favicon ICO/PNG
+  const fav = document.createElement("link");
+  fav.setAttribute("rel", "icon");
+  fav.setAttribute("type", isChristmasSeason ? "image/png" : "image/x-icon");
+  fav.setAttribute("href", targetIco + ts);
   head.appendChild(fav);
 
   // Favicon PNG (algunos navegadores priorizan PNG)
-  const favPng = document.createElement('link');
-  favPng.setAttribute('rel', 'icon');
-  favPng.setAttribute('type', 'image/png');
-  favPng.setAttribute('sizes', '192x192');
-  favPng.setAttribute('href', targetPng + ts);
+  const favPng = document.createElement("link");
+  favPng.setAttribute("rel", "icon");
+  favPng.setAttribute("type", "image/png");
+  favPng.setAttribute("sizes", "192x192");
+  favPng.setAttribute("href", targetPng + ts);
   head.appendChild(favPng);
 
   // Shortcut icon (compatibilidad)
-  const shFav = document.createElement('link');
-  shFav.setAttribute('rel', 'shortcut icon');
-  shFav.setAttribute('type', 'image/x-icon');
-  shFav.setAttribute('href', targetIco + ts);
+  const shFav = document.createElement("link");
+  shFav.setAttribute("rel", "shortcut icon");
+  shFav.setAttribute("type", "image/x-icon");
+  shFav.setAttribute("href", targetIco + ts);
   head.appendChild(shFav);
 
   // Apple touch icon (PNG recomendado)
-  const apple = document.createElement('link');
-  apple.setAttribute('rel', 'apple-touch-icon');
-  apple.setAttribute('sizes', '180x180');
-  apple.setAttribute('href', targetPng + ts);
+  const apple = document.createElement("link");
+  apple.setAttribute("rel", "apple-touch-icon");
+  apple.setAttribute("sizes", "180x180");
+  apple.setAttribute("href", targetPng + ts);
   head.appendChild(apple);
 
   // msapplication tile image meta (Windows)
   const msTile = document.querySelector("meta[name='msapplication-TileImage']");
-  if (msTile) msTile.setAttribute('content', targetPng);
+  if (msTile) msTile.setAttribute("content", targetPng);
 }
 
 /* ============================================
@@ -1357,7 +1357,7 @@ const NOTIFICATION_STYLES = {
 function showNotification(message, type = "info") {
   // Bloquear notificaciones si los Easter Eggs están desactivados
   if (window.areEasterEggsDisabled?.()) return;
-  
+
   const isMobile = /Android|iPhone|iPad|iPod/.test(navigator.userAgent);
   const background = NOTIFICATION_STYLES[type] || NOTIFICATION_STYLES.info;
 
@@ -1490,20 +1490,42 @@ function initBackToTop() {
 
     progressCircle.style.strokeDashoffset = offset;
 
-    // Mostrar/ocultar botón
+    // Detectar modo Upside Down
+    const isUpsideDown = document.body.classList.contains("upside-down-mode");
+
+    // Mostrar/ocultar botón (lógica del Index sin cambios)
     if (scrollTop > 300) {
       backToTopBtn.classList.add("visible");
     } else {
       backToTopBtn.classList.remove("visible");
     }
 
-    // Back-to-Top siempre en posición fija (puede flotar sobre el footer)
-    // No necesita ajuste de posición
+    // Solo agregamos rotación visual en modo Upside Down
+    if (isUpsideDown && backToTopBtn.classList.contains("visible")) {
+      // Combinar la transformación visible del CSS con la rotación
+      backToTopBtn.style.transform = "translateY(0) rotate(180deg)";
+    } else if (isUpsideDown && !backToTopBtn.classList.contains("visible")) {
+      // Combinar la transformación oculta del CSS con la rotación
+      backToTopBtn.style.transform = "translateY(20px) rotate(180deg)";
+    } else {
+      // Modo normal: limpiar transform inline para que use el CSS
+      backToTopBtn.style.transform = "";
+    }
   }
 
   // Event listeners
   window.addEventListener("scroll", updateScrollProgress);
   window.addEventListener("resize", updateScrollProgress);
+
+  // Observer para detectar cambios en modo Upside Down
+  const observer = new MutationObserver(() => {
+    updateScrollProgress();
+  });
+
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 
   // Click para volver arriba
   backToTopBtn.addEventListener("click", () => {
@@ -1587,17 +1609,27 @@ function initHeaderScroll() {
 function initAdaptiveMenu() {
   const menuLanding = document.querySelector(".menu-landing");
   const menuLegal = document.querySelector(".menu-legal");
+  const menuMediaKit = document.querySelector(".menu-mediakit");
 
-  if (!menuLanding || !menuLegal) {
+  if (!menuLanding || !menuLegal || !menuMediaKit) {
     return;
   }
 
-  // Detectar si estamos en una página legal
+  // Detectar tipo de página por body class y ruta
+  const isMediaKitPage = document.body.classList.contains("media-kit-page") || 
+                         window.location.pathname.includes("media-kit.html");
   const isLegalPage = window.location.pathname.includes("/legal/");
 
-  if (isLegalPage) {
+  if (isMediaKitPage) {
+    // Mostrar menú Media Kit
+    menuLanding.style.display = "none";
+    menuLegal.style.display = "none";
+    menuMediaKit.style.display = "flex";
+  } else if (isLegalPage) {
+    // Mostrar menú Legal
     menuLanding.style.display = "none";
     menuLegal.style.display = "flex";
+    menuMediaKit.style.display = "none";
 
     // Marcar el link activo según la página actual
     const currentPage = window.location.pathname;
@@ -1610,8 +1642,10 @@ function initAdaptiveMenu() {
       }
     });
   } else {
+    // Mostrar menú Landing
     menuLanding.style.display = "flex";
     menuLegal.style.display = "none";
+    menuMediaKit.style.display = "none";
   }
 }
 
@@ -1880,7 +1914,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar componentes
   loadIncludes().then(() => {
     // Después de cargar el header, configurar el menú apropiado
-    initAdaptiveMenu();
+    // Pequeño delay para asegurar que el DOM esté listo
+    setTimeout(() => {
+      initAdaptiveMenu();
+    }, 50);
   });
 
   // Inicializar funcionalidades
@@ -1987,6 +2024,11 @@ function playBeep(frequencies, durations) {
  * @param {string} soundName - Nombre del sonido en soundLibrary
  */
 function playSound(soundName) {
+  // 🚫 No reproducir sonidos si Easter Eggs están desactivados
+  if (window.areEasterEggsDisabled?.()) {
+    return;
+  }
+
   if (soundLibrary[soundName]) {
     soundLibrary[soundName]();
   } else {
@@ -2017,6 +2059,9 @@ function playSound(soundName) {
  * Efecto: Activa Matrix Rain effect
  */
 function initKonamiCode() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   const konamiCode = [
     "ArrowUp",
     "ArrowUp",
@@ -2033,7 +2078,7 @@ function initKonamiCode() {
 
   document.addEventListener("keydown", (e) => {
     if (window.areEasterEggsDisabled?.()) return;
-    
+
     // Validar que e.key existe
     if (!e.key) return;
 
@@ -2264,6 +2309,9 @@ function activateNESMode() {
 
 // EASTER EGG 2: DOBLE CLICK EN "SALA GEEK" DEL HERO
 function initLogoEasterEgg() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   // Esperar a que el hero se cargue
   setTimeout(() => {
     const heroTitle = document.querySelector(".hero-content h1");
@@ -2389,6 +2437,9 @@ function activateGlitchStats() {
 
 // EASTER EGG 3: PALABRAS SECRETAS (matrix, retro, thanos)
 function initSecretWords() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   let typedWord = "";
   const secretWords = {
     matrix: activateMatrixRainMode,
@@ -2397,6 +2448,9 @@ function initSecretWords() {
   };
 
   document.addEventListener("keypress", (e) => {
+    // No activar en modo Upside Down
+    if (window.areEasterEggsDisabled && window.areEasterEggsDisabled()) return;
+    
     // Validar que e.key existe
     if (!e.key) return;
 
@@ -2596,6 +2650,9 @@ function activateSnapEffect() {
 
 // EASTER EGG 4: HORA ESPECÍFICA (3:33 AM) + JUMPSCARE
 function initTimeEasterEgg() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   let hasTriggered = false;
 
   setInterval(() => {
@@ -2693,13 +2750,16 @@ function activateJumpScare() {
 
 // EASTER EGG 5: CLICK EN ESQUINAS EN SECUENCIA (Desktop only)
 function initCornerClicks() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   const sequence = ["top-left", "top-right", "bottom-right", "bottom-left"];
   let currentStep = 0;
   let lastClickTime = Date.now();
 
   document.addEventListener("click", (e) => {
     if (window.areEasterEggsDisabled?.()) return;
-    
+
     // Solo en desktop (> 968px)
     const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
@@ -2866,6 +2926,9 @@ function activateDeveloperConsole() {
 
 // EASTER EGG 6: SHAKE DEL MOUSE (Desktop only - MEJORADO)
 function initMouseShake() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   let lastX = 0;
   let lastY = 0;
   let shakeCount = 0;
@@ -2995,6 +3058,9 @@ function activateMouseDodge() {
 
 // EASTER EGG 7: COMBO DE TECLADO (Ctrl + Shift + G)
 function initKeyboardCombo() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   document.addEventListener("keydown", (e) => {
     // Solo en desktop (> 968px)
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -3489,6 +3555,9 @@ function rainPiNumbers() {
 
 // EASTER EGG 9: SCROLL AL 100%
 function initScrollSecret() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   let hasTriggered = false;
 
   window.addEventListener("scroll", () => {
@@ -3508,7 +3577,7 @@ function initScrollSecret() {
 
 function revealFooterSecret() {
   if (window.areEasterEggsDisabled?.()) return;
-  
+
   playSound("success");
   showNotification("🎉 ¡MENSAJE SECRETO DESBLOQUEADO! Mira el footer...", "success");
   easterEggTracker.unlock("scroll");
@@ -4152,6 +4221,9 @@ const easterEggTracker = {
 // ============================================
 
 function initMobileEasterEggs() {
+  // Solo funciona en el index (home)
+  if (!document.body.classList.contains("home")) return;
+
   const hero = document.querySelector(".hero");
   const mobileHeroTitle = document.querySelector(".hero-content h1");
 
@@ -4163,7 +4235,7 @@ function initMobileEasterEggs() {
 
   const handleTitleTap = (e) => {
     if (window.areEasterEggsDisabled?.()) return;
-    
+
     // Solo funciona en móvil/tablet (≤ 968px)
     if (window.innerWidth > 968) return;
 
@@ -4316,7 +4388,7 @@ function initMobileEasterEggs() {
 
   const handleCopyrightTap = (e) => {
     if (window.areEasterEggsDisabled?.()) return;
-    
+
     if (window.innerWidth > 968) return;
 
     // console.log(
@@ -4432,7 +4504,7 @@ function initMobileEasterEggs() {
       // HANDLER: Long Press Start (touch o mouse)
       const handleFooterStart = (e) => {
         if (window.areEasterEggsDisabled?.()) return;
-        
+
         // Solo funciona en móvil/tablet (≤ 968px)
         if (window.innerWidth > 968) return;
 
@@ -4555,17 +4627,29 @@ function isMobileMode() {
 
 // INICIALIZAR TODOS LOS EASTER EGGS
 function initAllEasterEggs() {
-  // 🚫 NO ejecutar Easter Eggs en páginas legales
+  // 🚫 NO ejecutar Easter Eggs en:
+  // - Páginas legales (privacy, terms, cookies)
+  // - Media Kit
+  // - Modo Upside Down activo
   const isLegalPage = window.location.pathname.includes("/legal/");
-  if (isLegalPage) {
-    console.log("🚫 Easter Eggs desactivados en página legal");
+  const isMediaKitPage = window.location.pathname.includes("/media-kit");
+  const isUpsideDown = document.body.classList.contains("upside-down");
+
+  if (isLegalPage || isMediaKitPage || isUpsideDown) {
+    console.log(
+      `🚫 Easter Eggs desactivados en: ${isLegalPage ? "página legal" : isMediaKitPage ? "Media Kit" : "modo Upside Down"}`
+    );
+    document.body.setAttribute("data-easter-eggs-disabled", "true");
     return;
   }
 
   // Helper para verificar si Easter Eggs están desactivados
-  window.areEasterEggsDisabled = () => document.body.hasAttribute('data-easter-eggs-disabled');
+  window.areEasterEggsDisabled = () => {
+    const isUpsideDownActive = document.body.classList.contains("upside-down");
+    return document.body.hasAttribute("data-easter-eggs-disabled") || isUpsideDownActive;
+  };
 
-  // Easter Eggs universales (siempre activos)
+  // Easter Eggs universales (siempre activos en index.html)
   initKonamiCode(); // ⬆️⬆️⬇️⬇️⬅️➡️⬅️➡️BA
   initSecretWords(); // matrix, retro, thanos
   initScrollSecret(); // Scroll al 100%
@@ -4600,7 +4684,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializar contador de actualización de noticias
   updateNewsTime();
-  
+
   // Inicializar sistema de logo estacional (Navidad)
   initSeasonalLogo();
 });
