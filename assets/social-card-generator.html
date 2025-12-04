@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Card Generator - Sala Geek</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .instructions {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 300px;
+      z-index: 1000;
+      display: none; /* Oculto para captura limpia */
+    }
+
+    .instructions h3 {
+      color: #06ffa5;
+      margin-bottom: 10px;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      line-height: 1.8;
+    }
+
+    .instructions code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* Social Card - Exact dimensions 1200x630px */
+    .social-card {
+      width: 1200px;
+      height: 630px;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+    }
+
+    /* Background effects */
+    .social-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(6, 255, 165, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(255, 209, 102, 0.06) 0%, transparent 40%);
+      animation: gradientRotate 15s ease infinite;
+    }
+
+    @keyframes gradientRotate {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+    }
+
+    /* Grid pattern overlay */
+    .social-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(6, 255, 165, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 255, 165, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.3;
+    }
+
+    /* Content container */
+    .card-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px;
+    }
+
+    /* Logo */
+    .card-logo {
+      width: 180px;
+      height: 180px;
+      margin-bottom: 35px;
+      filter: drop-shadow(0 8px 30px rgba(6, 255, 165, 0.3));
+      border-radius: 20px;
+    }
+
+    /* Title */
+    .card-title {
+      font-size: 84px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #06ffa5 0%, #5eced2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 25px;
+      letter-spacing: 3px;
+      text-shadow: none;
+      filter: drop-shadow(0 4px 20px rgba(6, 255, 165, 0.4));
+    }
+
+    /* Subtitle */
+    .card-subtitle {
+      font-size: 28px;
+      color: #ccd6f6;
+      font-weight: 400;
+      line-height: 1.6;
+      max-width: 800px;
+      opacity: 0.95;
+    }
+
+    /* Accent line */
+    .card-accent {
+      width: 150px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #06ffa5, transparent);
+      margin: 25px auto;
+      box-shadow: 0 0 15px rgba(6, 255, 165, 0.5);
+    }
+
+    /* Tags container */
+    .card-tags {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card-tag {
+      padding: 8px 20px;
+      background: rgba(6, 255, 165, 0.1);
+      border: 1.5px solid rgba(6, 255, 165, 0.3);
+      border-radius: 25px;
+      color: #06ffa5;
+      font-size: 16px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+    }
+
+    /* URL Badge */
+    .card-url-badge {
+      position: absolute;
+      bottom: 35px;
+      right: 40px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, rgba(6, 255, 165, 0.15) 0%, rgba(94, 206, 210, 0.15) 100%);
+      border: 2px solid #06ffa5;
+      border-radius: 30px;
+      color: #06ffa5;
+      font-size: 22px;
+      font-weight: 700;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 4px 25px rgba(6, 255, 165, 0.3);
+      letter-spacing: 1px;
+    }
+
+    /* Year badge */
+    .card-year {
+      position: absolute;
+      top: 35px;
+      left: 40px;
+      padding: 10px 24px;
+      background: rgba(255, 209, 102, 0.15);
+      border: 2px solid rgba(255, 209, 102, 0.4);
+      border-radius: 25px;
+      color: #ffd166;
+      font-size: 18px;
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body>
+  <div class="instructions">
+    <h3>📸 Instrucciones</h3>
+    <ol>
+      <li>Presiona <code>F11</code> para pantalla completa</li>
+      <li>Usa la herramienta de recorte de Windows (<code>Win + Shift + S</code>)</li>
+      <li>Captura SOLO la tarjeta (1200x630px)</li>
+      <li>Guarda como: <code>social-card.webp</code></li>
+      <li>Coloca en: <code>/src/images/</code></li>
+    </ol>
+  </div>
+
+  <div class="social-card">
+    <!-- Year badge -->
+    <div class="card-year">2025</div>
+    
+    <!-- URL badge -->
+    <div class="card-url-badge">salageek.com</div>
+    
+    <!-- Content -->
+    <div class="card-content">
+      <img 
+        src="../src/images/SalaGeek_LOGO.webp" 
+        alt="Sala Geek Logo" 
+        class="card-logo"
+      />
+      <h1 class="card-title">SALA GEEK</h1>
+      <div class="card-accent"></div>
+      <p class="card-subtitle">
+        Tu fuente de entretenimiento geek definitiva
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">🎮 Gaming</span>
+        <span class="card-tag">🎬 Movies</span>
+        <span class="card-tag">📺 Series</span>
+        <span class="card-tag">💻 Tech</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
