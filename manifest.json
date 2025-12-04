@@ -29,9 +29,9 @@
   ],
   "screenshots": [
     {
-      "src": "/src/images/social-card.webp",
+      "src": "/src/images/social-card.png",
       "sizes": "1200x630",
-      "type": "image/webp",
+      "type": "image/png",
       "form_factor": "wide",
       "label": "Sala Geek - Comunidad Geek Hispana"
     }
