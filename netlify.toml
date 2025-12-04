@@ -118,6 +118,32 @@
     Cache-Control = "public, max-age=0, must-revalidate"
 
 # ============================================
+# Pretty URLs - Redirects para URLs limpias
+# ============================================
+
+# Media Kit
+[[redirects]]
+  from = "/media-kit"
+  to = "/src/pages/media-kit.html"
+  status = 200
+
+# Páginas Legales
+[[redirects]]
+  from = "/privacidad"
+  to = "/src/pages/legal/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/terminos"
+  to = "/src/pages/legal/terms.html"
+  status = 200
+
+[[redirects]]
+  from = "/cookies"
+  to = "/src/pages/legal/cookies.html"
+  status = 200
+
+# ============================================
 # Página 404 personalizada
 # Debe ir al FINAL para no interferir con otros redirects
 # ============================================
