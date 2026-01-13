@@ -2177,8 +2177,8 @@ function initLegalTOC() {
 
   // Funcionalidad de collapse para móvil
   if (tocTitle && toc) {
-    // Iniciar colapsado en móvil
-    if (window.innerWidth <= 992) {
+    // Iniciar colapsado en móvil y tablet
+    if (window.innerWidth <= 1024) {
       toc.classList.add("collapsed");
     }
 
@@ -2192,7 +2192,7 @@ function initLegalTOC() {
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        if (window.innerWidth > 992) {
+        if (window.innerWidth > 1024) {
           toc.classList.remove("collapsed");
         } else if (!toc.classList.contains("collapsed")) {
           toc.classList.add("collapsed");

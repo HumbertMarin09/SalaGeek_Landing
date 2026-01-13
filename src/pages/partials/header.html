@@ -120,7 +120,7 @@
       <!-- Legal Menu (Páginas Legales) -->
       <ul class="menu menu-legal" role="menubar" style="display: none">
         <li role="none">
-          <a href="/privacidad" class="nav-link" role="menuitem">
+          <a href="/src/pages/legal/privacy.html" class="nav-link" role="menuitem">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
               <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -129,7 +129,7 @@
           </a>
         </li>
         <li role="none">
-          <a href="/terminos" class="nav-link" role="menuitem">
+          <a href="/src/pages/legal/terms.html" class="nav-link" role="menuitem">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
               <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
@@ -138,13 +138,25 @@
           </a>
         </li>
         <li role="none">
-          <a href="/cookies" class="nav-link" role="menuitem">
+          <a href="/src/pages/legal/cookies.html" class="nav-link" role="menuitem">
             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
               <circle cx="12" cy="12" r="10"></circle>
-              <path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z"></path>
-              <path d="M12 6v6l4 2"></path>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"></circle>
+              <circle cx="15" cy="10" r="1" fill="currentColor"></circle>
+              <circle cx="10" cy="14" r="1.5" fill="currentColor"></circle>
+              <circle cx="16" cy="15" r="1" fill="currentColor"></circle>
             </svg>
             <span class="nav-text">Cookies</span>
+          </a>
+        </li>
+        <!-- Noticias link in mobile menu with special styling -->
+        <li role="none" class="nav-noticias-item mobile-only-nav">
+          <a href="/index.html#news" class="nav-link nav-link-noticias" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+            </svg>
+            <span class="nav-text">Noticias</span>
+            <span class="nav-badge">🔥</span>
           </a>
         </li>
       </ul>
