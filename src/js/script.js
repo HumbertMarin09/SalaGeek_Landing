@@ -55,8 +55,8 @@
  */
 const responsiveState = {
   isMobile: window.innerWidth <= 768,
-  isTablet: window.innerWidth > 768 && window.innerWidth <= 968,
-  isDesktop: window.innerWidth > 968,
+  isTablet: window.innerWidth > 768 && window.innerWidth <= 1024,
+  isDesktop: window.innerWidth > 1024,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -117,8 +117,8 @@ function initDarkMode() {
  */
 function updateResponsiveState() {
   responsiveState.isMobile = window.innerWidth <= 768;
-  responsiveState.isTablet = window.innerWidth > 768 && window.innerWidth <= 968;
-  responsiveState.isDesktop = window.innerWidth > 968;
+  responsiveState.isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+  responsiveState.isDesktop = window.innerWidth > 1024;
 }
 
 /**
@@ -172,10 +172,10 @@ function initSeasonalLogo() {
   // Diciembre (mes 11) o Enero 1-10 (mes 0, días 1-10)
   const isChristmasSeason = currentMonth === 11 || (currentMonth === 0 && currentDay <= 10);
 
-  // Preferir PNG (mejor transparencia) y hacer fallback a ICO si no existe
+  // Usar solo .ico que es el que existe
   const seasonalCandidates = isChristmasSeason
-    ? ["/src/images/Icono_SG_Navidad.png"]
-    : ["/src/images/Icono_SG.png", "/src/images/Icono_SG.ico"];
+    ? ["/src/images/Icono_SG_Navidad.ico", "/src/images/Icono_SG.ico"]
+    : ["/src/images/Icono_SG.ico"];
 
   chooseAvailableLogo(seasonalCandidates).then((logoPath) => {
     updateLogoSource(logoPath);
@@ -287,12 +287,10 @@ function updateFooterLogo(candidates) {
  * @param {boolean} isChristmasSeason
  */
 function updateSeasonalFavicon(isChristmasSeason) {
-  const christmasPng = "/src/images/Icono_SG_Navidad.png";
-  const normalPng = "/src/images/Icono_SG.png";
+  const christmasIco = "/src/images/Icono_SG_Navidad.ico";
   const normalIco = "/src/images/Icono_SG.ico";
 
-  const targetPng = isChristmasSeason ? christmasPng : normalPng;
-  const targetIco = isChristmasSeason ? christmasPng : normalIco; // Usar PNG navideño en lugar de ICO
+  const targetIco = isChristmasSeason ? christmasIco : normalIco;
 
   // Eliminar existentes para evitar cache duro del navegador y recrear
   const head = document.head;
@@ -303,20 +301,12 @@ function updateSeasonalFavicon(isChristmasSeason) {
 
   const ts = `?v=${Date.now()}`;
 
-  // Favicon ICO/PNG
+  // Favicon ICO
   const fav = document.createElement("link");
   fav.setAttribute("rel", "icon");
-  fav.setAttribute("type", isChristmasSeason ? "image/png" : "image/x-icon");
+  fav.setAttribute("type", "image/x-icon");
   fav.setAttribute("href", targetIco + ts);
   head.appendChild(fav);
-
-  // Favicon PNG (algunos navegadores priorizan PNG)
-  const favPng = document.createElement("link");
-  favPng.setAttribute("rel", "icon");
-  favPng.setAttribute("type", "image/png");
-  favPng.setAttribute("sizes", "192x192");
-  favPng.setAttribute("href", targetPng + ts);
-  head.appendChild(favPng);
 
   // Shortcut icon (compatibilidad)
   const shFav = document.createElement("link");
@@ -325,16 +315,12 @@ function updateSeasonalFavicon(isChristmasSeason) {
   shFav.setAttribute("href", targetIco + ts);
   head.appendChild(shFav);
 
-  // Apple touch icon (PNG recomendado)
+  // Apple touch icon (usar ICO también)
   const apple = document.createElement("link");
   apple.setAttribute("rel", "apple-touch-icon");
   apple.setAttribute("sizes", "180x180");
-  apple.setAttribute("href", targetPng + ts);
+  apple.setAttribute("href", targetIco + ts);
   head.appendChild(apple);
-
-  // msapplication tile image meta (Windows)
-  const msTile = document.querySelector("meta[name='msapplication-TileImage']");
-  if (msTile) msTile.setAttribute("content", targetPng);
 }
 
 /* ============================================
@@ -396,8 +382,13 @@ async function loadIncludes() {
       yearElement.textContent = new Date().getFullYear();
     }
 
-    // Inicializar navegación después de que el header esté cargado
+    // Inicializar navegación y búsqueda después de que el header esté cargado
     initNavigation();
+    
+    // Pequeño delay para asegurar que el DOM esté completamente renderizado
+    setTimeout(() => {
+      initSearch();
+    }, 100);
   } catch (error) {
     console.error("❌ Error loading includes:", error);
   }
@@ -551,74 +542,171 @@ function initNavigation() {
 }
 
 /* ============================================
-   BUSCADOR
+   SISTEMA DE BÚSQUEDA - Simplificado
    ============================================ */
 
 function initSearch() {
-  const searchToggle = document.querySelector(".search-toggle");
-  const searchDropdown = document.querySelector(".search-dropdown");
-  const searchInput = document.querySelector(".search-input");
-  const searchSubmit = document.querySelector(".search-submit");
+  // Esperar a que el DOM esté listo
+  const init = () => {
+    const searchToggle = document.querySelector(".search-toggle");
+    const modal = document.getElementById("searchModal");
+    const backdrop = document.getElementById("searchBackdrop");
+    const closeBtn = document.getElementById("searchClose");
+    const input = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("searchClear");
+    const resultsContainer = document.getElementById("searchResults");
 
-  if (!searchToggle || !searchDropdown || !searchInput) return;
-
-  // Toggle del dropdown de búsqueda
-  searchToggle.addEventListener("click", (e) => {
-    e.stopPropagation();
-    searchDropdown.classList.toggle("active");
-
-    if (searchDropdown.classList.contains("active")) {
-      // Enfocar el input cuando se abre
-      setTimeout(() => searchInput.focus(), 100);
+    // Si no existen los elementos, reintentar
+    if (!searchToggle || !modal || !input) {
+      setTimeout(init, 150);
+      return;
     }
-  });
 
-  // Cerrar al hacer clic fuera
-  document.addEventListener("click", (e) => {
-    if (!searchDropdown.contains(e.target) && !searchToggle.contains(e.target)) {
-      searchDropdown.classList.remove("active");
+    console.log("✅ Búsqueda inicializada");
+
+    // Base de datos de artículos
+    const articles = [
+      { title: "Stranger Things Temporada 5", url: "/blog/articulos/stranger-things-temporada-5-detalles.html", category: "Series" },
+      { title: "Demon Slayer Temporada 4", url: "/blog/articulos/demon-slayer-temporada-4-fecha.html", category: "Anime" },
+      { title: "GTA 6 - Fecha y Gameplay", url: "/blog/articulos/gta-6-fecha-gameplay.html", category: "Videojuegos" },
+      { title: "The Last of Us Part 3", url: "/blog/articulos/the-last-of-us-part-3-anuncio.html", category: "Videojuegos" },
+      { title: "One Piece Temporada 2", url: "/blog/articulos/one-piece-temporada-2-netflix.html", category: "Series" },
+      { title: "Marvel Plan 2026-2027", url: "/blog/articulos/marvel-plan-2026-2027.html", category: "Películas" },
+      { title: "Apple Vision Pro 2", url: "/blog/articulos/apple-vision-pro-2-anuncio.html", category: "Tecnología" },
+      { title: "Supergirl DCU Trailer", url: "/blog/articulos/supergirl-dcu-trailer-2026.html", category: "Películas" }
+    ];
+
+    // Abrir modal
+    const openModal = () => {
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => input.focus(), 100);
+    };
+
+    // Cerrar modal
+    const closeModal = () => {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+      input.value = "";
+      clearBtn.classList.remove("visible");
+      resultsContainer.innerHTML = "";
+    };
+
+    // Buscar artículos
+    const search = (query) => {
+      const q = query.toLowerCase().trim();
+      if (!q) {
+        resultsContainer.innerHTML = "";
+        return;
+      }
+
+      const results = articles.filter(a => 
+        a.title.toLowerCase().includes(q) || 
+        a.category.toLowerCase().includes(q)
+      );
+
+      if (results.length === 0) {
+        resultsContainer.innerHTML = '<p class="search-no-results">No se encontraron resultados</p>';
+        return;
+      }
+
+      resultsContainer.innerHTML = results.map(r => `
+        <a href="${r.url}" class="search-result-item">
+          <div class="search-result-title">${r.title}</div>
+          <div class="search-result-category">${r.category}</div>
+        </a>
+      `).join("");
+    };
+
+    // Event: Abrir
+    searchToggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openModal();
+    });
+
+    // Event: Cerrar con botón X
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeModal();
+      });
     }
-  });
 
-  // Manejar el submit de búsqueda
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const query = searchInput.value.trim();
+    // Event: Cerrar con backdrop (solo si el clic fue directamente en el backdrop)
+    if (backdrop) {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) {
+          closeModal();
+        }
+      });
+    }
 
-    if (query) {
-      // Por ahora solo mostramos una notificación
-      // Aquí puedes integrar con tu sistema de búsqueda real
-      showNotification(`Buscando: "${query}"`, "info");
+    // Event: Cerrar al hacer clic en el modal padre (fuera del contenido)
+    modal.addEventListener("click", (e) => {
+      // Solo cerrar si el clic fue directamente en el modal (no en sus hijos)
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
 
-      // Cerrar el dropdown
-      searchDropdown.classList.remove("active");
+    // Event: Evitar que clics en el contenido cierren el modal
+    const modalContent = modal.querySelector(".search-modal-content");
+    if (modalContent) {
+      modalContent.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+    }
 
-      // Limpiar el input
-      searchInput.value = "";
+    // Event: Cerrar con ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
 
-      // En un caso real, aquí harías la búsqueda o redirigirías a una página de resultados
-      // window.location.href = `/search?q=${encodeURIComponent(query)}`;
+    // Event: Input de búsqueda
+    input.addEventListener("input", (e) => {
+      e.stopPropagation();
+      const value = e.target.value;
+      clearBtn.classList.toggle("visible", value.length > 0);
+      search(value);
+    });
+
+    // Event: Evitar que clics en el input cierren el modal
+    input.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    // Event: Mantener foco en el input
+    input.addEventListener("mousedown", (e) => {
+      e.stopPropagation();
+    });
+
+    // Event: Enter para ir al primer resultado
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const firstResult = resultsContainer.querySelector(".search-result-item");
+        if (firstResult) {
+          window.location.href = firstResult.href;
+        }
+      }
+    });
+
+    // Event: Limpiar input
+    if (clearBtn) {
+      clearBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        input.value = "";
+        clearBtn.classList.remove("visible");
+        resultsContainer.innerHTML = "";
+        input.focus();
+      });
     }
   };
 
-  // Submit al hacer clic en el botón
-  if (searchSubmit) {
-    searchSubmit.addEventListener("click", handleSearch);
-  }
-
-  // Submit con Enter
-  searchInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      handleSearch(e);
-    }
-  });
-
-  // Cerrar con Escape
-  searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      searchDropdown.classList.remove("active");
-    }
-  });
+  init();
 }
 
 /* ============================================
@@ -817,27 +905,33 @@ function initStatsCounter() {
 
   let hasAnimated = false;
 
-  // Función de easing para animación suave (easeOutCubic)
-  // Desacelera suavemente sin freno evidente - Usado en Material Design
-  const easeOutCubic = (t) => {
-    return 1 - Math.pow(1 - t, 3);
+  // Función de easing más fluida (easeOutExpo)
+  // Desacelera de forma exponencial - muy suave al final
+  const easeOutExpo = (t) => {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
   };
 
   // Función para animar un contador individual
   const animateCounter = (element) => {
     const target = parseInt(element.getAttribute("data-count"));
     const suffix = element.getAttribute("data-suffix") || "";
-    const duration = 2500; // 2.5 segundos (timing óptimo)
+    const duration = 2000; // 2 segundos
     const startTime = performance.now();
+    let lastValue = -1;
 
     const updateCounter = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-      const currentValue = Math.floor(easedProgress * target);
+      const easedProgress = easeOutExpo(progress);
+      
+      // Usar interpolación más precisa
+      const currentValue = Math.round(easedProgress * target);
 
-      // Actualizar el texto
-      element.textContent = currentValue + suffix;
+      // Solo actualizar DOM si el valor cambió (optimización)
+      if (currentValue !== lastValue) {
+        element.textContent = currentValue + suffix;
+        lastValue = currentValue;
+      }
 
       // Continuar animación si no ha terminado
       if (progress < 1) {
@@ -853,7 +947,7 @@ function initStatsCounter() {
 
   // Intersection Observer para activar cuando sea visible
   const observerOptions = {
-    threshold: 0.3, // Activar cuando 30% sea visible
+    threshold: 0.3,
     rootMargin: "0px",
   };
 
@@ -862,14 +956,13 @@ function initStatsCounter() {
       if (entry.isIntersecting && !hasAnimated) {
         hasAnimated = true;
 
-        // Animar cada contador con un pequeño delay
+        // Animar cada contador con delay escalonado
         statNumbers.forEach((stat, index) => {
           setTimeout(() => {
             animateCounter(stat);
-          }, index * 150); // 150ms de delay entre cada uno (más escalonado)
+          }, index * 100); // 100ms entre cada uno
         });
 
-        // Dejar de observar después de animar
         observer.disconnect();
       }
     });
@@ -1017,6 +1110,314 @@ function initHeroAnimations() {
     });
   }
   */
+}
+
+/* ============================================
+   NEWS HUB ANIMATIONS - Epic Entrance
+   ============================================ */
+
+function initNewsHubAnimations() {
+  const newsHub = document.querySelector(".news-hub-section");
+  const latestNews = document.querySelector(".latest-news-section");
+  const newsCta = document.querySelector(".news-cta-section");
+  
+  if (!newsHub) return;
+
+  // Force initial hidden state
+  newsHub.classList.remove("in-view");
+  if (latestNews) latestNews.classList.remove("in-view");
+  if (newsCta) newsCta.classList.remove("in-view");
+
+  // Observer options
+  const observerOptions = {
+    root: null,
+    rootMargin: "-50px 0px",
+    threshold: 0.15
+  };
+
+  // Create observer for News Hub header section
+  const newsHubObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        requestAnimationFrame(() => {
+          entry.target.classList.add("in-view");
+        });
+        newsHubObserver.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Create observer for Latest News section
+  const latestNewsObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        requestAnimationFrame(() => {
+          entry.target.classList.add("in-view");
+        });
+        latestNewsObserver.unobserve(entry.target);
+      }
+    });
+  }, { ...observerOptions, threshold: 0.1 });
+
+  // Create observer for CTA section
+  const ctaObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        requestAnimationFrame(() => {
+          entry.target.classList.add("in-view");
+        });
+        ctaObserver.unobserve(entry.target);
+      }
+    });
+  }, { ...observerOptions, threshold: 0.2 });
+
+  // Start observing all sections
+  newsHubObserver.observe(newsHub);
+  if (latestNews) latestNewsObserver.observe(latestNews);
+  if (newsCta) ctaObserver.observe(newsCta);
+
+  // Check initial visibility for elements already in viewport
+  setTimeout(() => {
+    const checkAndTrigger = (element, observer) => {
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      const isVisible = rect.top < window.innerHeight - 100 && rect.bottom > 0;
+      if (isVisible && !element.classList.contains("in-view")) {
+        element.classList.add("in-view");
+        observer.unobserve(element);
+      }
+    };
+
+    checkAndTrigger(newsHub, newsHubObserver);
+    checkAndTrigger(latestNews, latestNewsObserver);
+    checkAndTrigger(newsCta, ctaObserver);
+  }, 200);
+}
+
+/* ============================================
+   FEATURED NEWS CAROUSEL
+   ============================================ */
+
+function initFeaturedNewsCarousel() {
+  const track = document.querySelector(".featured-carousel-track");
+  const slides = document.querySelectorAll(".featured-slide");
+  const prevBtn = document.querySelector(".featured-prev");
+  const nextBtn = document.querySelector(".featured-next");
+  const dots = document.querySelectorAll(".featured-dot");
+  const indicators = document.querySelector(".featured-indicators");
+
+  if (!track || slides.length === 0) return;
+
+  let currentIndex = 0;
+  let autoplayInterval = null;
+  let autoplayTimeout = null;
+  let isAnimating = false;
+  let isPaused = false;
+  
+  const AUTOPLAY_DELAY = 8000; // Tiempo entre slides automáticos
+  const PAUSE_AFTER_INTERACTION = 12000; // Pausa más larga después de interacción del usuario
+
+  // Initialize first slide
+  slides[0].classList.add("active");
+  dots[0]?.classList.add("active");
+
+  // Restart progress animation on active dot
+  function restartDotProgress(dotIndex) {
+    dots.forEach(dot => dot.classList.remove("active"));
+    const activeDot = dots[dotIndex];
+    if (activeDot) {
+      // Force animation restart
+      activeDot.style.animation = 'none';
+      activeDot.offsetHeight; // Trigger reflow
+      activeDot.style.animation = '';
+      activeDot.classList.add("active");
+    }
+  }
+
+  function updateSlide(direction = 'next') {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    const currentSlide = slides[currentIndex];
+    
+    // Calculate next index based on direction
+    let nextIndex;
+    if (direction === 'next') {
+      nextIndex = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+    } else if (direction === 'prev') {
+      nextIndex = currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
+    } else {
+      nextIndex = direction; // Direct index
+    }
+
+    if (nextIndex === currentIndex) {
+      isAnimating = false;
+      return;
+    }
+
+    const nextSlide = slides[nextIndex];
+
+    // Update dots with progress restart
+    restartDotProgress(nextIndex);
+
+    // Animate out current slide
+    currentSlide.style.animation = 'carouselFadeOut 0.4s ease-out forwards';
+    
+    // Wait for fade out, then switch
+    setTimeout(() => {
+      currentSlide.classList.remove("active");
+      currentSlide.style.animation = '';
+      
+      // Show next slide with animation
+      nextSlide.classList.add("active");
+      nextSlide.style.animation = 'carouselFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards';
+      
+      currentIndex = nextIndex;
+      
+      // Clear animation after it completes
+      setTimeout(() => {
+        nextSlide.style.animation = '';
+        isAnimating = false;
+      }, 600);
+    }, 350);
+  }
+
+  function setPausedState(paused) {
+    isPaused = paused;
+    if (indicators) {
+      if (paused) {
+        indicators.classList.add("paused");
+      } else {
+        indicators.classList.remove("paused");
+        // Restart the current dot's animation when resuming
+        restartDotProgress(currentIndex);
+      }
+    }
+  }
+
+  function goToPrev() {
+    if (isAnimating) return;
+    updateSlide('prev');
+    pauseAndResumeAutoplay();
+  }
+
+  function goToNext() {
+    if (isAnimating) return;
+    updateSlide('next');
+    pauseAndResumeAutoplay();
+  }
+
+  function goToSlide(index) {
+    if (index === currentIndex || isAnimating) return;
+    updateSlide(index);
+    pauseAndResumeAutoplay();
+  }
+
+  function startAutoplay() {
+    if (isPaused) return;
+    stopAutoplay();
+    autoplayInterval = setInterval(() => {
+      if (!isAnimating && !isPaused) {
+        updateSlide('next');
+      }
+    }, AUTOPLAY_DELAY);
+  }
+
+  function stopAutoplay() {
+    if (autoplayInterval) {
+      clearInterval(autoplayInterval);
+      autoplayInterval = null;
+    }
+    if (autoplayTimeout) {
+      clearTimeout(autoplayTimeout);
+      autoplayTimeout = null;
+    }
+  }
+
+  // Pausa el autoplay por un tiempo más largo después de interacción del usuario
+  function pauseAndResumeAutoplay() {
+    stopAutoplay();
+    setPausedState(true);
+    
+    autoplayTimeout = setTimeout(() => {
+      setPausedState(false);
+      startAutoplay();
+    }, PAUSE_AFTER_INTERACTION);
+  }
+
+  // Event listeners
+  if (prevBtn) prevBtn.addEventListener("click", goToPrev);
+  if (nextBtn) nextBtn.addEventListener("click", goToNext);
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => goToSlide(index));
+  });
+
+  // Touch support
+  let touchStartX = 0;
+
+  track.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    stopAutoplay();
+    setPausedState(true);
+  }, { passive: true });
+
+  track.addEventListener("touchend", (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > 50 && !isAnimating) {
+      if (diff > 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    } else {
+      // Si no hubo swipe, reanudar autoplay después de pausa
+      pauseAndResumeAutoplay();
+    }
+  }, { passive: true });
+
+  // Pause on hover
+  const carouselWrapper = document.querySelector(".carousel-wrapper");
+  if (carouselWrapper) {
+    carouselWrapper.addEventListener("mouseenter", () => {
+      stopAutoplay();
+      setPausedState(true);
+    });
+    carouselWrapper.addEventListener("mouseleave", () => {
+      setPausedState(false);
+      startAutoplay();
+    });
+  }
+
+  // Keyboard navigation
+  document.addEventListener("keydown", (e) => {
+    const newsSection = document.querySelector(".news-hub-section");
+    if (!newsSection) return;
+    
+    const rect = newsSection.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+    
+    if (isVisible && !isAnimating) {
+      if (e.key === "ArrowLeft") goToPrev();
+      if (e.key === "ArrowRight") goToNext();
+    }
+  });
+
+  // Pause when tab is not visible (performance optimization)
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stopAutoplay();
+      isPaused = true;
+    } else {
+      isPaused = false;
+      startAutoplay();
+    }
+  });
+
+  // Start autoplay
+  startAutoplay();
 }
 
 /* ============================================
@@ -1336,6 +1737,85 @@ function initNewsletterForm() {
 }
 
 /* ============================================
+   NEWS CTA SUBSCRIBE FORM
+   ============================================ */
+
+function initNewsSubscribeForm() {
+  const form = document.getElementById("news-subscribe-form");
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const emailInput = form.querySelector('input[type="email"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const btnText = submitBtn.querySelector("span");
+    const email = emailInput.value.trim();
+
+    if (!email) return;
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showNotification("Por favor, ingresa un correo electrónico válido", "error");
+      return;
+    }
+
+    // Estado de carga
+    const originalText = btnText.textContent;
+    submitBtn.disabled = true;
+    btnText.textContent = "Enviando...";
+
+    try {
+      // Esperar a que reCAPTCHA esté listo
+      if (typeof grecaptcha !== "undefined") {
+        await new Promise((resolve) => grecaptcha.ready(resolve));
+        
+        const recaptchaToken = await grecaptcha.execute("6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB", {
+          action: "newsletter_subscribe",
+        });
+
+        const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, recaptchaToken }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Éxito
+          form.classList.add("success");
+          btnText.textContent = "¡Suscrito!";
+          emailInput.value = "";
+          showNotification("¡Gracias por suscribirte! Revisa tu correo.", "success");
+          localStorage.setItem("newsletter_subscribed", "true");
+          
+          // Restaurar después de 3s
+          setTimeout(() => {
+            form.classList.remove("success");
+            btnText.textContent = originalText;
+            submitBtn.disabled = false;
+          }, 3000);
+          return;
+        } else {
+          throw new Error(data.error || "Error al procesar la suscripción");
+        }
+      } else {
+        throw new Error("Sistema de seguridad no disponible");
+      }
+    } catch (error) {
+      console.error("Error al suscribir:", error);
+      showNotification(error.message || "Error al suscribir. Intenta de nuevo.", "error");
+    }
+
+    // Restaurar botón
+    btnText.textContent = originalText;
+    submitBtn.disabled = false;
+  });
+}
+
+/* ============================================
    SECCIÓN 4: SISTEMA DE NOTIFICACIONES
    ============================================ */
 
@@ -1592,6 +2072,11 @@ function initHeaderScroll() {
         headerPlaceholder.classList.remove("scrolled");
         header.classList.remove("scrolled");
       }
+
+      // Actualizar barra de progreso de scroll
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollProgress = (currentScroll / windowHeight) * 100;
+      header.style.setProperty('--scroll-progress', `${scrollProgress}%`);
 
       lastScroll = currentScroll;
     },
@@ -1927,13 +2412,17 @@ document.addEventListener("DOMContentLoaded", () => {
   initStatsCounter();
   initScrollAnimations();
   initLazyLoading();
+  initNewsHubAnimations();
+  initFeaturedNewsCarousel();
   initTestimonialsCarousel();
   initNewsletterForm();
+  initNewsSubscribeForm();
   initCookieConsent();
   initSmoothScroll();
   initBackToTop();
-  initSearch();
   initHeaderScroll();
+
+  // initSearch() se llama en loadIncludes() después de cargar el header
 
   // Inicializar páginas legales si estamos en una
   initLegalPages();
@@ -2322,11 +2811,11 @@ function initLogoEasterEgg() {
 
     heroTitle.addEventListener("click", (e) => {
       if (window.areEasterEggsDisabled?.()) return;
-      // Solo en desktop (> 968px)
+      // Solo en desktop (> 1024px)
       const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
       );
-      if (isMobile || window.innerWidth <= 968) return;
+      if (isMobile || window.innerWidth <= 1024) return;
 
       e.preventDefault();
       clickCount++;
@@ -2760,11 +3249,11 @@ function initCornerClicks() {
   document.addEventListener("click", (e) => {
     if (window.areEasterEggsDisabled?.()) return;
 
-    // Solo en desktop (> 968px)
+    // Solo en desktop (> 1024px)
     const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
-    if (isMobileDevice || window.innerWidth <= 968) return;
+    if (isMobileDevice || window.innerWidth <= 1024) return;
 
     const x = e.clientX;
     const y = e.clientY;
@@ -2938,11 +3427,11 @@ function initMouseShake() {
   const requiredShakes = 15; // Aumentado para más consistencia
 
   document.addEventListener("mousemove", (e) => {
-    // Solo en desktop (> 968px)
+    // Solo en desktop (> 1024px)
     const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
-    if (isMobileDevice || window.innerWidth <= 968) return;
+    if (isMobileDevice || window.innerWidth <= 1024) return;
 
     // No activar si ya se activó
     if (shakeActivated) return;
@@ -3062,11 +3551,11 @@ function initKeyboardCombo() {
   if (!document.body.classList.contains("home")) return;
 
   document.addEventListener("keydown", (e) => {
-    // Solo en desktop (> 968px)
+    // Solo en desktop (> 1024px)
     const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     );
-    if (isMobile || window.innerWidth <= 968) return;
+    if (isMobile || window.innerWidth <= 1024) return;
 
     if (e.ctrlKey && e.shiftKey && e.key === "G") {
       e.preventDefault();
@@ -3655,10 +4144,10 @@ const easterEggTracker = {
     scroll: false, // Scroll hasta el final de la página
   },
 
-  // Detección de plataforma móvil (dispositivo táctil O pantalla ≤ 968px)
+  // Detección de plataforma móvil (dispositivo táctil O pantalla ≤ 1024px)
   isMobile:
     /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-    window.innerWidth <= 968,
+    window.innerWidth <= 1024,
 
   /**
    * Retorna el total de Easter Eggs disponibles según la plataforma
@@ -3848,12 +4337,12 @@ const easterEggTracker = {
     // Re-detectar plataforma
     this.isMobile =
       /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-      window.innerWidth <= 968;
+      window.innerWidth <= 1024;
 
     // Si cambió el modo (desktop <-> mobile)
     if (wasMode !== this.isMobile) {
       console.log(
-        `📱 Cambio de plataforma detectado: ${this.isMobile ? "Mobile/Tablet (≤968px)" : "Desktop (>968px)"}`
+        `📱 Cambio de plataforma detectado: ${this.isMobile ? "Mobile/Tablet (≤1024px)" : "Desktop (>1024px)"}`
       );
 
       // Actualizar estilos CSS para ocultar/mostrar eggs desktop-only
@@ -4036,7 +4525,15 @@ const easterEggTracker = {
     const progressBar = document.getElementById("progress-bar");
     const levelEl = document.getElementById("geek-level");
 
-    if (countEl) countEl.textContent = `${count}/${total}`;
+    // Actualizar contador (ahora tiene SVG + span)
+    if (countEl) {
+      const countSpan = countEl.querySelector("span");
+      if (countSpan) {
+        countSpan.textContent = `${count}/${total}`;
+      } else {
+        countEl.textContent = `${count}/${total}`;
+      }
+    }
     if (progressBar) progressBar.style.width = `${(count / total) * 100}%`;
     if (levelEl) {
       const level = this.getLevel();
@@ -4236,8 +4733,8 @@ function initMobileEasterEggs() {
   const handleTitleTap = (e) => {
     if (window.areEasterEggsDisabled?.()) return;
 
-    // Solo funciona en móvil/tablet (≤ 968px)
-    if (window.innerWidth > 968) return;
+    // Solo funciona en móvil/tablet (≤ 1024px)
+    if (window.innerWidth > 1024) return;
 
     // console.log(`Tap/Click en título - width: ${window.innerWidth}, count: ${titleTapCount + 1}`);
     e.preventDefault();
@@ -4269,7 +4766,7 @@ function initMobileEasterEggs() {
   const ctaButton = document.querySelector(".hero-cta .btn-primary");
 
   const handleCtaStart = (e) => {
-    if (window.innerWidth > 968) return;
+    if (window.innerWidth > 1024) return;
 
     // console.log("🔘 Long press iniciado en CTA");
     ctaLongPressActivated = false;
@@ -4342,7 +4839,7 @@ function initMobileEasterEggs() {
   const newsletterInput = document.querySelector(".newsletter-form input[type='email']");
 
   const handleNewsletterStart = (e) => {
-    if (window.innerWidth > 968) return;
+    if (window.innerWidth > 1024) return;
 
     // console.log("📧 Long press iniciado en Newsletter");
     newsletterInput.style.borderColor = "var(--accent-secondary)";
@@ -4389,7 +4886,7 @@ function initMobileEasterEggs() {
   const handleCopyrightTap = (e) => {
     if (window.areEasterEggsDisabled?.()) return;
 
-    if (window.innerWidth > 968) return;
+    if (window.innerWidth > 1024) return;
 
     // console.log(
     //   `Tap/Click en copyright - width: ${window.innerWidth}, count: ${copyrightTapCount + 1}`
@@ -4505,8 +5002,8 @@ function initMobileEasterEggs() {
       const handleFooterStart = (e) => {
         if (window.areEasterEggsDisabled?.()) return;
 
-        // Solo funciona en móvil/tablet (≤ 968px)
-        if (window.innerWidth > 968) return;
+        // Solo funciona en móvil/tablet (≤ 1024px)
+        if (window.innerWidth > 1024) return;
 
         console.log("👆 Long press iniciado en Footer - width:", window.innerWidth); // DEBUG LOG
 
@@ -4611,7 +5108,7 @@ function initMobileEasterEggs() {
 
   // Notificación de ayuda móvil - SOLO en dispositivos móviles/tablet
   setTimeout(() => {
-    if (window.innerWidth <= 968) {
+    if (window.innerWidth <= 1024) {
       showNotification("📱 Tip: Explora con taps y long press en botones!", "info");
     }
   }, 5000);
@@ -4622,7 +5119,7 @@ function isMobileMode() {
   const isMobileDevice = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
     navigator.userAgent
   );
-  return isMobileDevice || window.innerWidth <= 968;
+  return isMobileDevice || window.innerWidth <= 1024;
 }
 
 // INICIALIZAR TODOS LOS EASTER EGGS
@@ -4672,7 +5169,7 @@ function initAllEasterEggs() {
     }, 250);
   });
 
-  // console.log(`🎮 Easter Eggs inicializados - Modo: ${isMobileMode() ? 'Mobile/Tablet (≤968px)' : 'Desktop (>968px)'}`);
+  // console.log(`🎮 Easter Eggs inicializados - Modo: ${isMobileMode() ? 'Mobile/Tablet (≤1024px)' : 'Desktop (>1024px)'}`);
 
   // Inicializar tracker (universal)
   easterEggTracker.init();

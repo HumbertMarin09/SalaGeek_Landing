@@ -11,15 +11,54 @@
       />
     </a>
 
-    <!-- Mobile Menu Toggle -->
-    <button
-      class="nav-toggle"
-      aria-label="Abrir menú de navegación"
-      aria-expanded="false"
-      aria-controls="main-nav"
-    >
-      <span class="hamburger" aria-hidden="true"></span>
-    </button>
+    <!-- Search Modal - Simplificado -->
+    <div class="search-modal" id="searchModal">
+      <div class="search-modal-backdrop" id="searchBackdrop"></div>
+      <div class="search-modal-content">
+        <button type="button" class="search-modal-close" id="searchClose">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        
+        <h2 class="search-modal-title">Buscar en Sala Geek</h2>
+        <p class="search-modal-subtitle">Encuentra noticias, reseñas y artículos</p>
+        
+        <div class="search-input-box">
+          <svg class="search-input-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            class="search-input-field" 
+            id="searchInput"
+            placeholder="Escribe para buscar..." 
+            autocomplete="off"
+          />
+          <button type="button" class="search-clear-btn" id="searchClear">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="search-categories-section">
+          <span class="search-categories-label">Categorías:</span>
+          <div class="search-categories-grid">
+            <a href="/blog/categorias/peliculas.html" class="search-category-btn">Películas</a>
+            <a href="/blog/categorias/series.html" class="search-category-btn">Series</a>
+            <a href="/blog/categorias/anime.html" class="search-category-btn">Anime</a>
+            <a href="/blog/categorias/videojuegos.html" class="search-category-btn">Videojuegos</a>
+            <a href="/blog/categorias/tecnologia.html" class="search-category-btn">Tecnología</a>
+          </div>
+        </div>
+
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
 
     <!-- Main Navigation -->
     <nav
@@ -37,26 +76,43 @@
       <ul class="menu menu-landing" role="menubar">
         <li role="none">
           <a href="#about" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">ℹ️</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
             <span class="nav-text">Acerca de</span>
           </a>
         </li>
         <li role="none">
           <a href="#services" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">✨</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
             <span class="nav-text">Servicios</span>
           </a>
         </li>
         <li role="none">
-          <a href="#weekly-news" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">📰</span>
-            <span class="nav-text">Noticias</span>
+          <a href="#social" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span class="nav-text">Redes</span>
           </a>
         </li>
-        <li role="none">
-          <a href="#newsletter" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">📧</span>
-            <span class="nav-text">Suscríbete</span>
+        <!-- Noticias link in mobile menu -->
+        <li role="none" class="nav-noticias-item">
+          <a href="/blog/" class="nav-link nav-link-noticias" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+            </svg>
+            <span class="nav-text">Noticias</span>
+            <span class="nav-badge">🔥</span>
           </a>
         </li>
       </ul>
@@ -64,32 +120,30 @@
       <!-- Legal Menu (Páginas Legales) -->
       <ul class="menu menu-legal" role="menubar" style="display: none">
         <li role="none">
-          <a
-            href="/privacidad"
-            class="nav-link"
-            role="menuitem"
-          >
-            <span class="nav-icon" aria-hidden="true">🔒</span>
+          <a href="/privacidad" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
             <span class="nav-text">Privacidad</span>
           </a>
         </li>
         <li role="none">
-          <a
-            href="/terminos"
-            class="nav-link"
-            role="menuitem"
-          >
-            <span class="nav-icon" aria-hidden="true">📄</span>
+          <a href="/terminos" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
             <span class="nav-text">Términos</span>
           </a>
         </li>
         <li role="none">
-          <a
-            href="/cookies"
-            class="nav-link"
-            role="menuitem"
-          >
-            <span class="nav-icon" aria-hidden="true">🍪</span>
+          <a href="/cookies" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 2a10 10 0 0 0 0 20 10 10 0 0 0 0-20z"></path>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
             <span class="nav-text">Cookies</span>
           </a>
         </li>
@@ -99,107 +153,86 @@
       <ul class="menu menu-mediakit" role="menubar" style="display: none">
         <li role="none">
           <a href="#about" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">ℹ️</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
             <span class="nav-text">Sobre Nosotros</span>
           </a>
         </li>
         <li role="none">
           <a href="#stats" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">📊</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M3 3v18h18"></path>
+              <path d="m19 9-5 5-4-4-3 3"></path>
+            </svg>
             <span class="nav-text">Estadísticas</span>
           </a>
         </li>
         <li role="none">
           <a href="#services" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">✨</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5"></path>
+              <path d="M2 12l10 5 10-5"></path>
+            </svg>
             <span class="nav-text">Servicios</span>
           </a>
         </li>
         <li role="none">
           <a href="#why" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">💡</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+              <path d="M9 18h6"></path>
+              <path d="M10 22h4"></path>
+            </svg>
             <span class="nav-text">¿Por qué?</span>
           </a>
         </li>
         <li role="none">
           <a href="#contact" class="nav-link" role="menuitem">
-            <span class="nav-icon" aria-hidden="true">📧</span>
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
             <span class="nav-text">Contacto</span>
           </a>
         </li>
       </ul>
-
-      <!-- Social Links -->
-      <div class="nav-social" role="group" aria-label="Redes sociales">
-        <!-- Facebook -->
-        <a
-          href="https://www.facebook.com/SalaGeek19"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="nav-social-link facebook"
-          aria-label="Visítanos en Facebook (abre en nueva pestaña)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            width="20"
-            height="20"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
-            />
-          </svg>
-        </a>
-
-        <!-- Instagram -->
-        <a
-          href="https://www.instagram.com/sala_geek/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="nav-social-link instagram"
-          aria-label="Síguenos en Instagram (abre en nueva pestaña)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            width="20"
-            height="20"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-            />
-          </svg>
-        </a>
-
-        <!-- TikTok -->
-        <a
-          href="https://www.tiktok.com/@salageek19"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="nav-social-link tiktok"
-          aria-label="Encuéntranos en TikTok (abre en nueva pestaña)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            width="20"
-            height="20"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
-            />
-          </svg>
-        </a>
-      </div>
     </nav>
+
+    <!-- Header Actions - Buttons at the end -->
+    <div class="header-actions">
+      <!-- Blog/Noticias Button -->
+      <a href="/blog/" class="blog-button" aria-label="Ir al Blog de Noticias">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+        </svg>
+        <span>Noticias</span>
+        <span class="blog-badge">🔥</span>
+      </a>
+
+      <!-- Divider Line -->
+      <div class="header-divider" aria-hidden="true"></div>
+
+      <!-- Search Toggle Button -->
+      <button class="search-toggle" aria-label="Abrir búsqueda" id="searchToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+
+      <!-- Mobile Menu Toggle - Right side -->
+      <button
+        class="nav-toggle"
+        aria-label="Abrir menú de navegación"
+        aria-expanded="false"
+        aria-controls="main-nav"
+      >
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
 </header>

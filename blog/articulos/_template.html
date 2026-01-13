@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="es">
+  <!--
+  ═══════════════════════════════════════════════════════════════════════════
+   📝 SALA GEEK - TEMPLATE DE ARTÍCULO
+  ═══════════════════════════════════════════════════════════════════════════
+   
+   INSTRUCCIONES PARA CREAR UN NUEVO ARTÍCULO:
+   
+   1. Duplicar este archivo en /blog/articulos/
+   2. Renombrar con slug SEO-friendly: titulo-del-articulo.html
+   3. Reemplazar todos los [PLACEHOLDER] con contenido real
+   4. Actualizar meta tags, Schema.org y Open Graph
+   5. Agregar imágenes optimizadas en WebP
+   6. Verificar breadcrumbs y categoría
+   
+   CHECKLIST SEO:
+   ✅ Title: 50-60 caracteres, keyword al inicio
+   ✅ Meta Description: 150-160 caracteres con CTA
+   ✅ URL: Corta, keyword incluida
+   ✅ H1: Único, keyword incluida
+   ✅ H2-H6: Estructura jerárquica
+   ✅ Imágenes: Alt text descriptivo
+   ✅ Internal Links: 3-5 artículos relacionados
+   ✅ External Links: 2-3 fuentes autorizadas
+   ✅ Word Count: Mínimo 1500 palabras
+   
+  ═══════════════════════════════════════════════════════════════════════════
+  -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- SEO Meta Tags -->
+    <title>[TÍTULO DEL ARTÍCULO] | Sala Geek</title>
+    <meta 
+      name="description" 
+      content="[META DESCRIPCIÓN DE 150-160 CARACTERES CON KEYWORD Y CTA. Incluir emoji al inicio para destacar en SERP.]" 
+    />
+    <meta 
+      name="keywords" 
+      content="[keyword principal], [keyword secundaria], [long-tail 1], [long-tail 2], [LSI keywords]" 
+    />
+    <meta name="author" content="Sala Geek" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://salageek.com/blog/articulos/[SLUG].html" />
+    
+    <!-- Fechas para SEO -->
+    <meta name="article:published_time" content="[YYYY-MM-DDTHH:MM:SS+00:00]" />
+    <meta name="article:modified_time" content="[YYYY-MM-DDTHH:MM:SS+00:00]" />
+    <meta name="article:section" content="[CATEGORÍA]" />
+    <meta name="article:tag" content="[TAG1], [TAG2], [TAG3]" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://salageek.com/blog/articulos/[SLUG].html" />
+    <meta property="og:title" content="[TÍTULO OPTIMIZADO PARA SOCIAL - 60-70 CARACTERES]" />
+    <meta 
+      property="og:description" 
+      content="[DESCRIPCIÓN PARA SOCIAL CON HOOK - 200 CARACTERES CON EMOJIS]" 
+    />
+    <meta property="og:image" content="https://salageek.com/src/images/blog/[IMAGEN-1200x630].webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="[ALT TEXT DESCRIPTIVO]" />
+    <meta property="og:site_name" content="Sala Geek" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="article:author" content="https://salageek.com" />
+    <meta property="article:published_time" content="[YYYY-MM-DDTHH:MM:SS+00:00]" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Sala_Geek" />
+    <meta name="twitter:creator" content="@Sala_Geek" />
+    <meta name="twitter:title" content="[TÍTULO PARA TWITTER - 60 CARACTERES]" />
+    <meta 
+      name="twitter:description" 
+      content="[DESCRIPCIÓN CON HASHTAGS - 200 CARACTERES]" 
+    />
+    <meta name="twitter:image" content="https://salageek.com/src/images/blog/[IMAGEN].webp" />
+    <meta name="twitter:image:alt" content="[ALT TEXT]" />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/src/images/SalaGeek_LOGO.webp" />
+    <meta name="theme-color" content="#1a1f3a" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Preconnect para recursos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/src/css/normalize.css" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
+    <link rel="stylesheet" href="/src/css/blog.css" />
+
+    <!-- Schema.org Article -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "[TÍTULO DEL ARTÍCULO]",
+        "description": "[META DESCRIPCIÓN]",
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://salageek.com/src/images/blog/[IMAGEN].webp",
+          "width": 1200,
+          "height": 630
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "Sala Geek",
+          "url": "https://salageek.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://salageek.com/src/images/SalaGeek_LOGO.webp"
+          }
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Sala Geek",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://salageek.com/src/images/SalaGeek_LOGO.webp",
+            "width": 512,
+            "height": 512
+          }
+        },
+        "datePublished": "[YYYY-MM-DDTHH:MM:SS+00:00]",
+        "dateModified": "[YYYY-MM-DDTHH:MM:SS+00:00]",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://salageek.com/blog/articulos/[SLUG].html"
+        },
+        "articleSection": "[CATEGORÍA]",
+        "keywords": "[keyword1], [keyword2], [keyword3]",
+        "wordCount": "[NÚMERO DE PALABRAS]",
+        "inLanguage": "es"
+      }
+    </script>
+
+    <!-- Schema.org Breadcrumbs -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Inicio",
+            "item": "https://salageek.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://salageek.com/blog/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "[CATEGORÍA]",
+            "item": "https://salageek.com/blog/categorias/[categoria].html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": "[TÍTULO CORTO]",
+            "item": "https://salageek.com/blog/articulos/[SLUG].html"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Schema.org FAQPage (si aplica) -->
+    <!--
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "[PREGUNTA 1]",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "[RESPUESTA 1]"
+            }
+          }
+        ]
+      }
+    </script>
+    -->
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="site-header" role="banner">
+      <div class="container">
+        <a href="/index.html" class="logo" aria-label="Sala Geek - Ir al inicio">
+          <img
+            src="/src/images/Icono_SG.ico"
+            alt="Sala Geek"
+            width="80"
+            height="80"
+            loading="eager"
+          />
+        </a>
+
+        <button
+          class="nav-toggle"
+          aria-label="Abrir menú de navegación"
+          aria-expanded="false"
+          aria-controls="main-nav"
+        >
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+
+        <nav id="main-nav" class="main-nav" role="navigation" aria-label="Navegación principal">
+          <button class="nav-close" aria-label="Cerrar menú de navegación">
+            <span aria-hidden="true">✕</span>
+          </button>
+
+          <ul class="menu menu-blog" role="menubar">
+            <li role="none">
+              <a href="/index.html" class="nav-link" role="menuitem">
+                <span class="nav-icon" aria-hidden="true">🏠</span>
+                <span class="nav-text">Inicio</span>
+              </a>
+            </li>
+            <li role="none">
+              <a href="/blog/" class="nav-link" role="menuitem">
+                <span class="nav-icon" aria-hidden="true">📰</span>
+                <span class="nav-text">Blog</span>
+              </a>
+            </li>
+            <li role="none">
+              <a href="/blog/categorias/peliculas.html" class="nav-link" role="menuitem">
+                <span class="nav-icon" aria-hidden="true">🎬</span>
+                <span class="nav-text">Películas</span>
+              </a>
+            </li>
+            <li role="none">
+              <a href="/blog/categorias/series.html" class="nav-link" role="menuitem">
+                <span class="nav-icon" aria-hidden="true">📺</span>
+                <span class="nav-text">Series</span>
+              </a>
+            </li>
+            <li role="none">
+              <a href="/blog/categorias/anime.html" class="nav-link" role="menuitem">
+                <span class="nav-icon" aria-hidden="true">🎌</span>
+                <span class="nav-text">Anime</span>
+              </a>
+            </li>
+            <li role="none">
+              <a href="/blog/categorias/videojuegos.html" class="nav-link" role="menuitem">
+                <span class="nav-icon" aria-hidden="true">🎮</span>
+                <span class="nav-text">Videojuegos</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <div class="container">
+          <ol class="breadcrumb-list">
+            <li class="breadcrumb-item">
+              <a href="/index.html">Inicio</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/blog/">Blog</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/blog/categorias/[categoria].html">[CATEGORÍA]</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">[TÍTULO CORTO]</li>
+          </ol>
+        </div>
+      </nav>
+
+      <!-- Article -->
+      <article class="article-single" itemscope itemtype="https://schema.org/Article">
+        <!-- Article Header -->
+        <header class="article-header">
+          <div class="container">
+            <div class="article-category-tag">
+              <a href="/blog/categorias/[categoria].html" class="category-link">[CATEGORÍA]</a>
+            </div>
+            
+            <h1 class="article-title" itemprop="headline">
+              [TÍTULO DEL ARTÍCULO - H1 ÚNICO CON KEYWORD]
+            </h1>
+            
+            <p class="article-subtitle" itemprop="description">
+              [SUBTÍTULO O LEAD - 1-2 ORACIONES QUE RESUMEN EL ARTÍCULO]
+            </p>
+
+            <!-- Article Meta -->
+            <div class="article-meta-full">
+              <div class="meta-author" itemprop="author" itemscope itemtype="https://schema.org/Organization">
+                <img 
+                  src="/src/images/SalaGeek_LOGO.webp" 
+                  alt="Sala Geek" 
+                  width="40" 
+                  height="40"
+                  loading="eager"
+                />
+                <div class="author-info">
+                  <span class="author-name" itemprop="name">Sala Geek</span>
+                  <span class="author-role">Redacción</span>
+                </div>
+              </div>
+              
+              <div class="meta-details">
+                <span class="meta-date">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
+                  </svg>
+                  <time datetime="[YYYY-MM-DD]" itemprop="datePublished">[FECHA PUBLICACIÓN]</time>
+                </span>
+                <span class="meta-updated">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                  </svg>
+                  Actualizado: <time datetime="[YYYY-MM-DD]" itemprop="dateModified">[FECHA ACTUALIZACIÓN]</time>
+                </span>
+                <span class="meta-reading">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                  </svg>
+                  <span id="reading-time">[X]</span> min de lectura
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Image -->
+        <figure class="article-featured-image">
+          <div class="container">
+            <picture>
+              <source 
+                srcset="/src/images/blog/[IMAGEN-1200].webp" 
+                type="image/webp"
+                media="(min-width: 768px)"
+              />
+              <source 
+                srcset="/src/images/blog/[IMAGEN-800].webp" 
+                type="image/webp"
+              />
+              <img
+                src="/src/images/blog/[IMAGEN].webp"
+                alt="[ALT TEXT DESCRIPTIVO CON KEYWORD]"
+                width="1200"
+                height="630"
+                loading="eager"
+                itemprop="image"
+              />
+            </picture>
+            <figcaption>[CAPTION DE LA IMAGEN - CRÉDITOS SI APLICA]</figcaption>
+          </div>
+        </figure>
+
+        <!-- Article Content -->
+        <div class="article-body">
+          <div class="container article-container">
+            <!-- Table of Contents -->
+            <aside class="table-of-contents" id="toc">
+              <h2 class="toc-title">📋 Contenido</h2>
+              <nav class="toc-nav" aria-label="Tabla de contenido">
+                <ol class="toc-list">
+                  <li><a href="#seccion-1">[Sección 1]</a></li>
+                  <li><a href="#seccion-2">[Sección 2]</a></li>
+                  <li><a href="#seccion-3">[Sección 3]</a></li>
+                  <li><a href="#seccion-4">[Sección 4]</a></li>
+                  <li><a href="#conclusion">Conclusión</a></li>
+                </ol>
+              </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="article-content" itemprop="articleBody">
+              <!-- Introducción (sin H2, es el lead) -->
+              <p class="lead">
+                [PÁRRAFO INTRODUCTORIO ENGANCHANTE - 2-3 ORACIONES QUE CAPTEN LA ATENCIÓN 
+                Y MENCIONEN LA KEYWORD PRINCIPAL DE FORMA NATURAL]
+              </p>
+
+              <p>
+                [CONTEXTO ADICIONAL - ESTABLECE POR QUÉ ESTE TEMA ES IMPORTANTE AHORA.
+                INCLUYE DATOS O ESTADÍSTICAS SI ES POSIBLE]
+              </p>
+
+              <!-- Sección 1 -->
+              <section id="seccion-1">
+                <h2>[TÍTULO SECCIÓN 1 - CON KEYWORD SECUNDARIA]</h2>
+                
+                <p>
+                  [CONTENIDO DE LA SECCIÓN. USA PÁRRAFOS CORTOS DE 2-4 ORACIONES.
+                  INCLUYE DATOS, CITAS O REFERENCIAS CUANDO SEA POSIBLE]
+                </p>
+
+                <h3>[SUBSECCIÓN SI ES NECESARIO]</h3>
+                
+                <p>
+                  [MÁS CONTENIDO...]
+                </p>
+
+                <!-- Imagen dentro del contenido -->
+                <figure class="article-figure">
+                  <img
+                    src="/src/images/blog/[IMAGEN-SECCION].webp"
+                    alt="[ALT TEXT DESCRIPTIVO]"
+                    width="800"
+                    height="450"
+                    loading="lazy"
+                  />
+                  <figcaption>[CAPTION DE LA IMAGEN]</figcaption>
+                </figure>
+
+                <p>
+                  [CONTINUAR CON EL CONTENIDO...]
+                </p>
+              </section>
+
+              <!-- Sección 2 -->
+              <section id="seccion-2">
+                <h2>[TÍTULO SECCIÓN 2]</h2>
+                
+                <p>
+                  [CONTENIDO...]
+                </p>
+
+                <!-- Lista si aplica -->
+                <ul>
+                  <li><strong>[Punto 1]:</strong> [Descripción]</li>
+                  <li><strong>[Punto 2]:</strong> [Descripción]</li>
+                  <li><strong>[Punto 3]:</strong> [Descripción]</li>
+                </ul>
+
+                <p>
+                  [MÁS CONTENIDO...]
+                </p>
+              </section>
+
+              <!-- Sección 3 -->
+              <section id="seccion-3">
+                <h2>[TÍTULO SECCIÓN 3]</h2>
+                
+                <p>
+                  [CONTENIDO...]
+                </p>
+
+                <!-- Blockquote para citas -->
+                <blockquote class="article-quote">
+                  <p>"[CITA RELEVANTE O DECLARACIÓN IMPORTANTE]"</p>
+                  <cite>— [FUENTE DE LA CITA]</cite>
+                </blockquote>
+
+                <p>
+                  [CONTINUAR...]
+                </p>
+              </section>
+
+              <!-- Sección 4 -->
+              <section id="seccion-4">
+                <h2>[TÍTULO SECCIÓN 4]</h2>
+                
+                <p>
+                  [CONTENIDO...]
+                </p>
+
+                <!-- Video embed si aplica -->
+                <div class="video-embed">
+                  <iframe
+                    src="https://www.youtube.com/embed/[VIDEO_ID]"
+                    title="[TÍTULO DEL VIDEO]"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
+
+                <p>
+                  [MÁS CONTENIDO...]
+                </p>
+              </section>
+
+              <!-- Conclusión -->
+              <section id="conclusion">
+                <h2>Conclusión</h2>
+                
+                <p>
+                  [RESUMEN DE LOS PUNTOS PRINCIPALES DEL ARTÍCULO.
+                  REFUERZA LA KEYWORD PRINCIPAL DE FORMA NATURAL]
+                </p>
+
+                <p>
+                  [LLAMADA A LA ACCIÓN - INVITA A COMENTAR, COMPARTIR O LEER ARTÍCULOS RELACIONADOS]
+                </p>
+              </section>
+
+              <!-- FAQ Section (opcional pero bueno para SEO) -->
+              <section id="faq" class="faq-section">
+                <h2>Preguntas Frecuentes</h2>
+                
+                <div class="faq-item">
+                  <h3>[PREGUNTA 1 - LONG-TAIL KEYWORD]</h3>
+                  <p>[RESPUESTA CONCISA Y ÚTIL]</p>
+                </div>
+                
+                <div class="faq-item">
+                  <h3>[PREGUNTA 2]</h3>
+                  <p>[RESPUESTA]</p>
+                </div>
+                
+                <div class="faq-item">
+                  <h3>[PREGUNTA 3]</h3>
+                  <p>[RESPUESTA]</p>
+                </div>
+              </section>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="article-sidebar">
+              <!-- Share Buttons -->
+              <div class="share-buttons">
+                <h3 class="sidebar-title">Compartir</h3>
+                <div class="share-icons">
+                  <a 
+                    href="https://twitter.com/intent/tweet?url=https://salageek.com/blog/articulos/[SLUG].html&text=[TÍTULO]&via=Sala_Geek" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="share-btn twitter"
+                    aria-label="Compartir en Twitter"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                  </a>
+                  <a 
+                    href="https://www.facebook.com/sharer/sharer.php?u=https://salageek.com/blog/articulos/[SLUG].html" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="share-btn facebook"
+                    aria-label="Compartir en Facebook"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <a 
+                    href="https://api.whatsapp.com/send?text=[TÍTULO]%20https://salageek.com/blog/articulos/[SLUG].html" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="share-btn whatsapp"
+                    aria-label="Compartir en WhatsApp"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                  </a>
+                  <button 
+                    class="share-btn copy-link"
+                    aria-label="Copiar enlace"
+                    data-url="https://salageek.com/blog/articulos/[SLUG].html"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Newsletter Mini -->
+              <div class="sidebar-newsletter">
+                <h3 class="sidebar-title">📧 Newsletter</h3>
+                <p>Recibe las mejores noticias geek cada semana</p>
+                <a href="/index.html#newsletter" class="btn btn-primary btn-sm">
+                  Suscribirme
+                </a>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- Article Footer -->
+        <footer class="article-footer">
+          <div class="container">
+            <!-- Tags -->
+            <div class="article-tags">
+              <span class="tags-label">Etiquetas:</span>
+              <a href="/blog/tags/[tag1].html" class="tag">[Tag 1]</a>
+              <a href="/blog/tags/[tag2].html" class="tag">[Tag 2]</a>
+              <a href="/blog/tags/[tag3].html" class="tag">[Tag 3]</a>
+            </div>
+
+            <!-- Author Box -->
+            <div class="author-box">
+              <img 
+                src="/src/images/SalaGeek_LOGO.webp" 
+                alt="Sala Geek" 
+                width="80" 
+                height="80"
+                loading="lazy"
+              />
+              <div class="author-box-content">
+                <h3>Sala Geek</h3>
+                <p>
+                  Somos la comunidad geek de habla hispana más grande. Cubrimos películas, series, 
+                  anime, videojuegos y tecnología con pasión desde 2017.
+                </p>
+                <div class="author-social">
+                  <a href="https://twitter.com/Sala_Geek" target="_blank" rel="noopener">Twitter</a>
+                  <a href="https://instagram.com/sala_geek" target="_blank" rel="noopener">Instagram</a>
+                  <a href="https://tiktok.com/@salageek19" target="_blank" rel="noopener">TikTok</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </article>
+
+      <!-- Related Articles -->
+      <section class="related-articles">
+        <div class="container">
+          <h2 class="section-title">Artículos Relacionados</h2>
+          
+          <div class="related-grid">
+            <!-- Related 1 -->
+            <article class="article-card">
+              <a href="/blog/articulos/[SLUG-RELACIONADO-1].html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="/src/images/blog/[IMAGEN-1].webp"
+                    alt="[ALT TEXT]"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">[CATEGORÍA]</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">[TÍTULO ARTÍCULO RELACIONADO 1]</h3>
+                  <div class="article-meta">
+                    <span class="meta-date">[FECHA]</span>
+                    <span class="meta-reading">[X] min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Related 2 -->
+            <article class="article-card">
+              <a href="/blog/articulos/[SLUG-RELACIONADO-2].html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="/src/images/blog/[IMAGEN-2].webp"
+                    alt="[ALT TEXT]"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">[CATEGORÍA]</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">[TÍTULO ARTÍCULO RELACIONADO 2]</h3>
+                  <div class="article-meta">
+                    <span class="meta-date">[FECHA]</span>
+                    <span class="meta-reading">[X] min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Related 3 -->
+            <article class="article-card">
+              <a href="/blog/articulos/[SLUG-RELACIONADO-3].html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="/src/images/blog/[IMAGEN-3].webp"
+                    alt="[ALT TEXT]"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">[CATEGORÍA]</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">[TÍTULO ARTÍCULO RELACIONADO 3]</h3>
+                  <div class="article-meta">
+                    <span class="meta-date">[FECHA]</span>
+                    <span class="meta-reading">[X] min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Newsletter CTA -->
+      <section class="newsletter-cta">
+        <div class="container">
+          <div class="newsletter-box">
+            <div class="newsletter-content">
+              <h2>📧 ¿Te gustó este artículo?</h2>
+              <p>Suscríbete y recibe más contenido como este directamente en tu email.</p>
+            </div>
+            <a href="/index.html#newsletter" class="btn btn-primary">
+              Suscribirme Gratis
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-container">
+        <div class="footer-main">
+          <div class="footer-brand">
+            <img
+              src="/src/images/SalaGeek_LOGO.webp"
+              alt="Sala Geek Logo"
+              class="footer-logo"
+              width="60"
+              height="60"
+              loading="lazy"
+            />
+            <p class="footer-tagline">Tu espacio geek definitivo</p>
+            <div class="footer-social">
+              <a href="https://www.facebook.com/SalaGeek19" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/sala_geek/" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="https://x.com/Sala_Geek" target="_blank" rel="noopener" aria-label="X (Twitter)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://www.tiktok.com/@salageek19" target="_blank" rel="noopener" aria-label="TikTok">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <nav class="footer-links" aria-label="Enlaces rápidos">
+            <h3 class="footer-heading">Categorías</h3>
+            <ul class="footer-list">
+              <li><a href="/blog/categorias/peliculas.html">Películas</a></li>
+              <li><a href="/blog/categorias/series.html">Series</a></li>
+              <li><a href="/blog/categorias/anime.html">Anime</a></li>
+              <li><a href="/blog/categorias/videojuegos.html">Videojuegos</a></li>
+            </ul>
+          </nav>
+
+          <nav class="footer-links" aria-label="Legal">
+            <h3 class="footer-heading">Legal</h3>
+            <ul class="footer-list">
+              <li><a href="/src/pages/legal/privacy.html">Privacidad</a></li>
+              <li><a href="/src/pages/legal/terms.html">Términos</a></li>
+              <li><a href="/src/pages/legal/cookies.html">Cookies</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2017-2026 Sala Geek. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/src/js/script.min.js?v=130" defer></script>
+    <script>
+      // Calculate reading time
+      document.addEventListener('DOMContentLoaded', function() {
+        const article = document.querySelector('.article-content');
+        if (article) {
+          const text = article.textContent;
+          const wordCount = text.trim().split(/\s+/).length;
+          const readingTime = Math.ceil(wordCount / 200); // 200 words per minute
+          const readingTimeEl = document.getElementById('reading-time');
+          if (readingTimeEl) {
+            readingTimeEl.textContent = readingTime;
+          }
+        }
+
+        // Copy link functionality
+        const copyBtn = document.querySelector('.copy-link');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', function() {
+            const url = this.dataset.url;
+            navigator.clipboard.writeText(url).then(() => {
+              this.classList.add('copied');
+              setTimeout(() => this.classList.remove('copied'), 2000);
+            });
+          });
+        }
+      });
+    </script>
+
+    <!-- Cookie Consent Banner -->
+    <div class="cookie-consent" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
+      <div class="cookie-inner">
+        <div class="cookie-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="8" cy="9" r="1.5" fill="currentColor"/>
+            <circle cx="15" cy="8" r="1" fill="currentColor"/>
+            <circle cx="10" cy="14" r="1.5" fill="currentColor"/>
+            <circle cx="16" cy="13" r="1" fill="currentColor"/>
+            <circle cx="13" cy="17" r="1" fill="currentColor"/>
+            <circle cx="6" cy="13" r="0.75" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="cookie-content">
+          <p id="cookie-title" class="cookie-title">Usamos cookies</p>
+          <p id="cookie-desc" class="cookie-text">
+            Utilizamos cookies para mejorar tu experiencia en nuestro sitio. Al continuar navegando, aceptas nuestra 
+            <a href="/src/pages/legal/cookies.html" class="cookie-link">Política de Cookies</a>.
+          </p>
+        </div>
+        <div class="cookie-actions">
+          <button class="cookie-btn reject">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Rechazar
+          </button>
+          <button class="cookie-btn accept">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -10,7 +10,7 @@ Este Media Kit presenta las oportunidades de colaboración publicitaria de Sala 
 - Página HTML completa con diseño responsive
 - 8 secciones principales:
   - 🎯 Hero con logo y CTA principal
-  - 📊 Estadísticas de alcance (20K+ seguidores)
+  - 📊 Estadísticas de alcance (23K+ seguidores)
   - 🎨 Servicios de publicidad (4 tiers)
   - 🎮 Marcas ideales (6 categorías)
   - ✨ Por qué elegir Sala Geek
@@ -103,7 +103,7 @@ Sigue las instrucciones en: `/assets/INSTRUCCIONES-PDF.md`
 
 ## 📧 Contacto Publicitario
 
-- **Email**: publicidad@salageek.com
+- **Email**: contacto@salageek.com
 - **Web**: https://salageek.com
 - **Facebook**: @SalaGeek19
 - **Instagram**: @sala_geek
@@ -114,7 +114,7 @@ Sigue las instrucciones en: `/assets/INSTRUCCIONES-PDF.md`
 
 Este Media Kit se actualiza anualmente. Versión actual: **Diciembre 2025**
 
-Para solicitar estadísticas actualizadas o propuestas personalizadas, contacta a: publicidad@salageek.com
+Para solicitar estadísticas actualizadas o propuestas personalizadas, contacta a: contacto@salageek.com
 
 ## ✨ Características Técnicas
 
