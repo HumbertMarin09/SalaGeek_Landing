@@ -12,7 +12,7 @@
    - 480px: Mobile optimizado
    - 375px: Mobile pequeño
    
-   Versión: 29
+   Versión: 33
    Última actualización: 13 Enero 2026
    Optimización: Header shimmer animation fix definitivo
    ============================================ */
@@ -279,15 +279,7 @@
     height 0.6s;
 }
 
-.hero-cta .btn:hover::before {
-  width: 300px;
-  height: 300px;
-}
-
-.hero-cta .btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(255, 209, 102, 0.3);
-}
+/* Hover desactivado en touch - se activa solo en desktop con mouse */
 
 /* Sections */
 .media-kit-section {
@@ -428,12 +420,6 @@
   }
 }
 
-.metric-badge:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255, 209, 102, 0.4);
-  box-shadow: 0 5px 20px rgba(255, 209, 102, 0.2);
-}
-
 .metric-value {
   display: block;
   font-size: 2rem;
@@ -476,24 +462,6 @@
   opacity: 0;
   transition: opacity 0.4s ease;
   pointer-events: none;
-}
-
-.highlight-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(255, 209, 102, 0.5);
-  box-shadow: 
-    0 20px 50px rgba(255, 209, 102, 0.2),
-    0 0 30px rgba(255, 209, 102, 0.1);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.highlight-card:hover::after {
-  opacity: 1;
-}
-
-.highlight-card:hover .highlight-icon {
-  transform: scale(1.15) rotate(-5deg);
-  filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.6));
 }
 
 .highlight-icon {
@@ -563,11 +531,6 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-}
-
-.stat-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .stat-icon {
@@ -653,25 +616,6 @@
     transparent
   );
   transition: left 0.6s ease;
-}
-
-.demo-item:hover {
-  transform: translateY(-8px) scale(1.03);
-  border-color: rgba(255, 209, 102, 0.4);
-  box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(255, 209, 102, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
-}
-
-.demo-item:hover::after {
-  left: 100%;
-}
-
-.demo-item:hover .demo-icon {
-  transform: scale(1.15) rotate(5deg);
-  filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.6));
 }
 
 .demo-icon {
@@ -828,11 +772,6 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-}
-
-.service-tier:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
 .service-tier.featured {
@@ -994,26 +933,6 @@
   pointer-events: none;
 }
 
-.brand-category:hover {
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 
-    0 25px 70px rgba(0, 0, 0, 0.45),
-    0 0 40px rgba(255, 209, 102, 0.15);
-}
-
-.brand-category:hover::before {
-  background: linear-gradient(135deg, rgba(255, 209, 102, 0.3), rgba(231, 111, 81, 0.2));
-}
-
-.brand-category:hover .category-icon {
-  transform: scale(1.2) translateY(-5px);
-  filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.7));
-}
-
-.brand-category:hover .category-icon svg {
-  stroke: var(--accent-primary);
-}
-
 .category-icon {
   font-size: 3rem;
   margin-bottom: 20px;
@@ -1095,10 +1014,6 @@
   transition: color 0.3s ease;
 }
 
-.contact-item a:hover {
-  color: var(--accent-primary);
-}
-
 .contact-item span {
   color: #a8b2d1;
 }
@@ -1129,12 +1044,6 @@
   justify-content: center;
   color: var(--accent-primary);
   transition: all 0.3s ease;
-}
-
-.social-icons a:hover {
-  background: rgba(255, 209, 102, 0.1);
-  border-color: var(--accent-primary);
-  transform: translateY(-3px);
 }
 
 .download-cta {
@@ -1267,26 +1176,6 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
-}
-
-.why-card:hover {
-  transform: translateY(-12px) scale(1.03);
-  box-shadow: 
-    0 25px 70px rgba(0, 0, 0, 0.45),
-    0 0 40px rgba(255, 209, 102, 0.15);
-}
-
-.why-card:hover::before {
-  background: linear-gradient(135deg, rgba(255, 209, 102, 0.3), rgba(231, 111, 81, 0.2));
-}
-
-.why-card:hover .why-icon {
-  transform: scale(1.2) translateY(-5px);
-  filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.7));
-}
-
-.why-card:hover .why-icon svg {
-  stroke: var(--accent-primary);
 }
 
 .why-icon {
@@ -1933,5 +1822,113 @@
 
   .key-metrics {
     justify-content: center;
+  }
+}
+
+/* ================================================
+   HOVER EFFECTS - Solo para dispositivos con mouse
+   ================================================ */
+@media (hover: hover) {
+  .metric-badge:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 209, 102, 0.4);
+    box-shadow: 0 5px 20px rgba(255, 209, 102, 0.2);
+  }
+
+  .highlight-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255, 209, 102, 0.5);
+    box-shadow: 
+      0 20px 50px rgba(255, 209, 102, 0.2),
+      0 0 30px rgba(255, 209, 102, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .highlight-card:hover::after {
+    opacity: 1;
+  }
+
+  .highlight-card:hover .highlight-icon {
+    transform: scale(1.15) rotate(-5deg);
+    filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.6));
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .demo-item:hover {
+    transform: translateY(-8px) scale(1.03);
+    border-color: rgba(255, 209, 102, 0.4);
+    box-shadow: 
+      0 20px 50px rgba(0, 0, 0, 0.35),
+      0 0 30px rgba(255, 209, 102, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+  }
+
+  .demo-item:hover::after {
+    left: 100%;
+  }
+
+  .demo-item:hover .demo-icon {
+    transform: scale(1.15) rotate(5deg);
+    filter: drop-shadow(0 0 15px rgba(255, 209, 102, 0.6));
+  }
+
+  .service-tier:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .brand-category:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.45),
+      0 0 40px rgba(255, 209, 102, 0.15);
+  }
+
+  .brand-category:hover::before {
+    background: linear-gradient(135deg, rgba(255, 209, 102, 0.3), rgba(231, 111, 81, 0.2));
+  }
+
+  .brand-category:hover .category-icon {
+    transform: scale(1.2) translateY(-5px);
+    filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.7));
+  }
+
+  .brand-category:hover .category-icon svg {
+    stroke: var(--accent-primary);
+  }
+
+  .social-icons a:hover {
+    background: rgba(255, 209, 102, 0.1);
+    border-color: var(--accent-primary);
+    transform: translateY(-3px);
+  }
+
+  .why-card:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.45),
+      0 0 40px rgba(255, 209, 102, 0.15);
+  }
+
+  .why-card:hover::before {
+    background: linear-gradient(135deg, rgba(255, 209, 102, 0.3), rgba(231, 111, 81, 0.2));
+  }
+
+  .why-card:hover .why-icon {
+    transform: scale(1.2) translateY(-5px);
+    filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.7));
+  }
+
+  .why-card:hover .why-icon svg {
+    stroke: var(--accent-primary);
+  }
+
+  .contact-item a:hover {
+    color: var(--accent-primary);
   }
 }
