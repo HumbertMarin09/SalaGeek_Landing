@@ -40,37 +40,63 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
-    <link rel="stylesheet" href="/src/css/media-kit.css?v=25" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=204" />
+    <link rel="stylesheet" href="/src/css/media-kit.css?v=32" />
 
     <!-- Scripts -->
-    <script defer src="/src/js/script.min.js?v=130"></script>
+    <script defer src="/src/js/script.min.js?v=131"></script>
   </head>
   <body class="media-kit-page">
-    <!-- Header inyectado -->
-    <div id="header-placeholder"></div>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-    <main class="media-kit-main">
+    <!-- Header (parcial) -->
+    <header
+      id="header-placeholder"
+      data-include="partials/header.html"
+    ></header>
+
+    <main id="contenido" class="media-kit-main">
       <!-- Hero Section -->
       <section class="media-kit-hero">
+        <!-- Partículas decorativas de fondo -->
+        <div class="mediakit-particles" aria-hidden="true">
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+          <span class="mediakit-particle"></span>
+        </div>
+        
         <div class="container">
           <div class="hero-content">
-            <img
-              src="/src/images/SalaGeek_LOGO.webp"
-              alt="Sala Geek Logo"
-              class="media-kit-logo"
-              width="150"
-              height="150"
-            />
+            <div class="media-kit-logo-wrapper">
+              <img
+                src="/src/images/SalaGeek_LOGO.webp"
+                alt="Sala Geek Logo"
+                class="media-kit-logo"
+                width="150"
+                height="150"
+              />
+            </div>
             <h1 class="media-kit-title">Media Kit</h1>
             <p class="media-kit-subtitle">
               Conecta tu marca con más de <strong>20,000 geeks</strong> apasionados por películas,
               series, anime, videojuegos y tecnología.
-              <span style="color: #06ffa5">Alcanza a la audiencia que realmente importa.</span>
+              <span class="highlight-text">Alcanza a la audiencia que realmente importa.</span>
             </p>
             <div class="hero-cta">
-              <a href="#contact" class="btn btn-primary">Solicitar Cotización</a>
-              <a href="/assets/SalaGeek_MediaKit_2025.pdf" class="btn btn-secondary" download>
+              <a href="#contact" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                Solicitar Cotización
+              </a>
+              <a href="/assets/SalaGeek_MediaKit_2026.pdf" class="btn btn-secondary" download>
                 <svg
                   width="20"
                   height="20"
@@ -129,7 +155,20 @@
             </div>
             <div class="about-highlights">
               <div class="highlight-card">
-                <div class="highlight-icon">🎯</div>
+                <div class="highlight-icon">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.3"/>
+                    <circle cx="12" cy="12" r="7" stroke-opacity="0.5"/>
+                    <circle cx="12" cy="12" r="4" stroke-opacity="0.8"/>
+                    <circle cx="12" cy="12" r="2.5" fill="var(--accent-primary)" stroke="var(--accent-primary)"/>
+                    <line x1="12" y1="2" x2="12" y2="6" stroke-linecap="round" stroke-width="2"/>
+                    <line x1="12" y1="18" x2="12" y2="22" stroke-linecap="round" stroke-width="2"/>
+                    <line x1="2" y1="12" x2="6" y2="12" stroke-linecap="round" stroke-width="2"/>
+                    <line x1="18" y1="12" x2="22" y2="12" stroke-linecap="round" stroke-width="2"/>
+                    <path d="M17 7l-5 5" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="17" cy="7" r="1.5" fill="var(--accent-secondary)" stroke="none"/>
+                  </svg>
+                </div>
                 <h3>Audiencia Definida</h3>
                 <p>
                   Geeks apasionados de 18-35 años con alto poder adquisitivo y genuino interés en
@@ -137,7 +176,12 @@
                 </p>
               </div>
               <div class="highlight-card">
-                <div class="highlight-icon">📈</div>
+                <div class="highlight-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                </div>
                 <h3>Alto Engagement</h3>
                 <p>
                   Tasa de interacción superior al promedio con comentarios, shares y menciones
@@ -145,12 +189,24 @@
                 </p>
               </div>
               <div class="highlight-card">
-                <div class="highlight-icon">💎</div>
+                <div class="highlight-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 3h12l4 6-10 13L2 9z"/>
+                    <path d="M2 9h20"/>
+                    <path d="M12 22V9"/>
+                  </svg>
+                </div>
                 <h3>Contenido Premium</h3>
                 <p>Cobertura diaria exclusiva con análisis profundos y opiniones especializadas</p>
               </div>
               <div class="highlight-card">
-                <div class="highlight-icon">🌎</div>
+                <div class="highlight-icon">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>
+                  </svg>
+                </div>
                 <h3>Alcance Internacional</h3>
                 <p>Presencia en México, Latinoamérica y España con audiencia hispanohablante</p>
               </div>
@@ -222,7 +278,7 @@
                   ></path>
                 </svg>
               </div>
-              <div class="stat-number">10.7K</div>
+              <div class="stat-number">13.8K</div>
               <div class="stat-label">Facebook</div>
               <div class="stat-detail">Mayor comunidad establecida</div>
             </div>
@@ -242,23 +298,44 @@
                   <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
                 </svg>
               </div>
-              <div class="stat-number">6.5K</div>
+              <div class="stat-number">6.4K</div>
               <div class="stat-label">TikTok</div>
               <div class="stat-detail">Audiencia joven y activa</div>
             </div>
           </div>
 
           <div class="audience-demographics">
-            <h3>📊 Demografía de Nuestra Audiencia</h3>
+            <h3>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M9 17V11"/>
+                <path d="M12 17V7"/>
+                <path d="M15 17V14"/>
+              </svg>
+              Demografía de Nuestra Audiencia
+            </h3>
             <div class="demo-grid">
               <div class="demo-item">
-                <div class="demo-icon">🎂</div>
+                <div class="demo-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="8" r="5"/>
+                    <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/>
+                    <text x="12" y="10" text-anchor="middle" font-size="6" fill="currentColor" stroke="none" font-weight="bold">18</text>
+                  </svg>
+                </div>
                 <strong>Edad Principal</strong>
                 <span>18-35 años (75%)</span>
                 <div class="demo-bar"><div class="demo-fill" style="width: 75%"></div></div>
               </div>
               <div class="demo-item">
-                <div class="demo-icon">👥</div>
+                <div class="demo-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
                 <strong>Género</strong>
                 <span>60% M | 40% F</span>
                 <div class="demo-bar">
@@ -267,17 +344,28 @@
                 </div>
               </div>
               <div class="demo-item">
-                <div class="demo-icon">🌎</div>
+                <div class="demo-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/>
+                  </svg>
+                </div>
                 <strong>Ubicación</strong>
                 <span>México, LATAM, España</span>
                 <div class="demo-countries">
-                  <span class="country-tag">🇲🇽 65%</span>
-                  <span class="country-tag">🌎 30%</span>
-                  <span class="country-tag">🇪🇸 5%</span>
+                  <span class="country-tag">MX 65%</span>
+                  <span class="country-tag">LATAM 30%</span>
+                  <span class="country-tag">ES 5%</span>
                 </div>
               </div>
               <div class="demo-item">
-                <div class="demo-icon">🎮</div>
+                <div class="demo-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(255,209,102,0.2)"/>
+                    <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/>
+                  </svg>
+                </div>
                 <strong>Intereses</strong>
                 <span>Cultura Geek & Tech</span>
                 <div class="demo-tags">
@@ -502,7 +590,11 @@
 
           <div class="pricing-note">
             <p>
-              💰 <strong>Tarifas disponibles en PDF descargable.</strong> Todos los paquetes son
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 6px;">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+              <strong>Tarifas disponibles en PDF descargable.</strong> Todos los paquetes son
               personalizables según tus necesidades.
             </p>
           </div>
@@ -515,32 +607,67 @@
           <h2 class="section-title">Marcas Ideales para Colaborar</h2>
           <div class="brands-grid">
             <div class="brand-category">
-              <div class="category-icon">🎮</div>
+              <div class="category-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M6 11h4M8 9v4" stroke-linecap="round"/>
+                  <circle cx="17" cy="10" r="1" fill="currentColor"/>
+                  <circle cx="15" cy="12" r="1" fill="currentColor"/>
+                  <path d="M17.32 5H6.68a3 3 0 0 0-2.98 2.63L2 17a3 3 0 0 0 3 3h2l1.5-3h7l1.5 3h2a3 3 0 0 0 3-3l-1.7-9.37A3 3 0 0 0 17.32 5z"/>
+                </svg>
+              </div>
               <h3>Gaming</h3>
               <p>Videojuegos, consolas, accesorios, periféricos, sillas gaming</p>
             </div>
             <div class="brand-category">
-              <div class="category-icon">📺</div>
+              <div class="category-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+                  <polyline points="17 2 12 7 7 2"/>
+                </svg>
+              </div>
               <h3>Streaming</h3>
               <p>Plataformas de streaming, servicios VOD, producción de contenido</p>
             </div>
             <div class="brand-category">
-              <div class="category-icon">🛍️</div>
+              <div class="category-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+              </div>
               <h3>Merchandising</h3>
               <p>Figuras coleccionables, ropa geek, accesorios temáticos</p>
             </div>
             <div class="brand-category">
-              <div class="category-icon">🎪</div>
+              <div class="category-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
               <h3>Eventos</h3>
               <p>Convenciones, Comic-Cons, torneos de eSports</p>
             </div>
             <div class="brand-category">
-              <div class="category-icon">💻</div>
+              <div class="category-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                  <line x1="2" y1="20" x2="22" y2="20"/>
+                </svg>
+              </div>
               <h3>Tecnología</h3>
               <p>Gadgets, smartphones, laptops, audio, smart home</p>
             </div>
             <div class="brand-category">
-              <div class="category-icon">📚</div>
+              <div class="category-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>
+              </div>
               <h3>Editorial</h3>
               <p>Manga, cómics, novelas gráficas, libros geek</p>
             </div>
@@ -635,7 +762,7 @@
               </div>
 
               <div class="download-cta">
-                <a href="/assets/SalaGeek_MediaKit_2025.pdf" class="btn btn-primary" download>
+                <a href="/assets/SalaGeek_MediaKit_2026.pdf" class="btn btn-primary" download>
                   <svg
                     width="20"
                     height="20"
@@ -656,7 +783,20 @@
 
             <div class="contact-form">
               <h3>Envíanos un Mensaje</h3>
-              <form id="media-kit-form" class="form">
+              <form 
+                id="media-kit-form" 
+                class="form" 
+                name="media-kit-contact"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+              >
+                <!-- Honeypot anti-spam -->
+                <input type="hidden" name="form-name" value="media-kit-contact" />
+                <p class="hidden" style="display:none;">
+                  <label>No llenar si eres humano: <input name="bot-field" /></label>
+                </p>
+                
                 <div class="form-group">
                   <label for="company">Empresa / Marca *</label>
                   <input
@@ -737,7 +877,20 @@
           <h2 class="section-title">¿Por Qué Elegir Sala Geek?</h2>
           <div class="why-grid">
             <div class="why-card">
-              <div class="why-icon">🎯</div>
+              <div class="why-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" stroke-opacity="0.3"/>
+                  <circle cx="12" cy="12" r="7" stroke-opacity="0.5"/>
+                  <circle cx="12" cy="12" r="4" stroke-opacity="0.8"/>
+                  <circle cx="12" cy="12" r="2.5" fill="var(--accent-primary)" stroke="var(--accent-primary)"/>
+                  <line x1="12" y1="2" x2="12" y2="6" stroke-linecap="round" stroke-width="2"/>
+                  <line x1="12" y1="18" x2="12" y2="22" stroke-linecap="round" stroke-width="2"/>
+                  <line x1="2" y1="12" x2="6" y2="12" stroke-linecap="round" stroke-width="2"/>
+                  <line x1="18" y1="12" x2="22" y2="12" stroke-linecap="round" stroke-width="2"/>
+                  <path d="M17 7l-5 5" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="17" cy="7" r="1.5" fill="var(--accent-secondary)" stroke="none"/>
+                </svg>
+              </div>
               <h3>Audiencia Definida</h3>
               <p>
                 No desperdicies presupuesto. Nuestra comunidad está compuesta específicamente por
@@ -745,7 +898,14 @@
               </p>
             </div>
             <div class="why-card">
-              <div class="why-icon">📊</div>
+              <div class="why-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <path d="M9 17V11"/>
+                  <path d="M12 17V7"/>
+                  <path d="M15 17V14"/>
+                </svg>
+              </div>
               <h3>Resultados Medibles</h3>
               <p>
                 Reportes detallados de alcance, interacciones y conversiones. Transparencia total en
@@ -753,7 +913,11 @@
               </p>
             </div>
             <div class="why-card">
-              <div class="why-icon">🤝</div>
+              <div class="why-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+              </div>
               <h3>Autenticidad</h3>
               <p>
                 Solo trabajamos con marcas y productos que amamos. Tu producto llegará a una
@@ -761,7 +925,11 @@
               </p>
             </div>
             <div class="why-card">
-              <div class="why-icon">⚡</div>
+              <div class="why-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+              </div>
               <h3>Respuesta Rápida</h3>
               <p>
                 Respondemos en menos de 24 horas y entregamos propuestas personalizadas en 48 horas
@@ -773,8 +941,11 @@
       </section>
     </main>
 
-    <!-- Footer inyectado -->
-    <div id="footer-placeholder"></div>
+    <!-- Footer (parcial) -->
+    <footer
+      id="footer-placeholder"
+      data-include="partials/footer.html"
+    ></footer>
 
     <!-- Cookie Consent Banner -->
     <div class="cookie-consent" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc">

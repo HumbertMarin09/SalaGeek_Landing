@@ -27,7 +27,7 @@
 
 4. **Guarda el PDF**:
    - Haz clic en "Guardar" o "Imprimir"
-   - Nombre sugerido: `SalaGeek_MediaKit_2025.pdf`
+   - Nombre sugerido: `SalaGeek_MediaKit_2026.pdf`
    - Guarda en: `c:\Users\humbe\OneDrive\Documentos\Diseño Web\Paginas Diseñadas\SG_Landing\assets\`
 
 ### Firefox
@@ -38,7 +38,7 @@
 4. Formato de papel: A4
 5. Márgenes: Ninguno
 6. ✓ Imprimir fondos
-7. Guardar como `SalaGeek_MediaKit_2025.pdf`
+7. Guardar como `SalaGeek_MediaKit_2026.pdf`
 
 ---
 
@@ -54,7 +54,7 @@
 ```powershell
 cd "c:\Users\humbe\OneDrive\Documentos\Diseño Web\Paginas Diseñadas\SG_Landing\assets"
 
-wkhtmltopdf --page-size A4 --margin-top 0 --margin-bottom 0 --margin-left 0 --margin-right 0 --enable-local-file-access mediakit-print.html SalaGeek_MediaKit_2025.pdf
+wkhtmltopdf --page-size A4 --margin-top 0 --margin-bottom 0 --margin-left 0 --margin-right 0 --enable-local-file-access mediakit-print.html SalaGeek_MediaKit_2026.pdf
 ```
 
 ---
@@ -66,7 +66,7 @@ wkhtmltopdf --page-size A4 --margin-top 0 --margin-bottom 0 --margin-left 0 --ma
 1. Ve a: https://www.sejda.com/html-to-pdf
 2. Sube el archivo `mediakit-print.html`
 3. Espera la conversión
-4. Descarga como `SalaGeek_MediaKit_2025.pdf`
+4. Descarga como `SalaGeek_MediaKit_2026.pdf`
 
 ### Alternativas Online
 
