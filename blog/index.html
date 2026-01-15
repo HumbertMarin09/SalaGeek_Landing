@@ -47,7 +47,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
     <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
-    <link rel="stylesheet" href="/src/css/blog.css" />
+    <link rel="stylesheet" href="/src/css/blog.min.css?v=208" />
 
     <!-- Schema.org - Blog -->
     <script type="application/ld+json">
@@ -91,75 +91,9 @@
       }
     </script>
   </head>
-  <body>
-    <!-- Header -->
-    <header class="site-header" role="banner">
-      <div class="container">
-        <a href="/index.html" class="logo" aria-label="Sala Geek - Ir al inicio">
-          <img
-            src="/src/images/Icono_SG.ico"
-            alt="Sala Geek"
-            width="80"
-            height="80"
-            loading="eager"
-          />
-        </a>
-
-        <button
-          class="nav-toggle"
-          aria-label="Abrir menú de navegación"
-          aria-expanded="false"
-          aria-controls="main-nav"
-        >
-          <span class="hamburger" aria-hidden="true"></span>
-        </button>
-
-        <nav id="main-nav" class="main-nav" role="navigation" aria-label="Navegación principal">
-          <button class="nav-close" aria-label="Cerrar menú de navegación">
-            <span aria-hidden="true">✕</span>
-          </button>
-
-          <ul class="menu menu-blog" role="menubar">
-            <li role="none">
-              <a href="/index.html" class="nav-link" role="menuitem">
-                <span class="nav-icon" aria-hidden="true">🏠</span>
-                <span class="nav-text">Inicio</span>
-              </a>
-            </li>
-            <li role="none">
-              <a href="/blog/" class="nav-link active" role="menuitem">
-                <span class="nav-icon" aria-hidden="true">📰</span>
-                <span class="nav-text">Blog</span>
-              </a>
-            </li>
-            <li role="none">
-              <a href="/blog/categorias/peliculas.html" class="nav-link" role="menuitem">
-                <span class="nav-icon" aria-hidden="true">🎬</span>
-                <span class="nav-text">Películas</span>
-              </a>
-            </li>
-            <li role="none">
-              <a href="/blog/categorias/series.html" class="nav-link" role="menuitem">
-                <span class="nav-icon" aria-hidden="true">📺</span>
-                <span class="nav-text">Series</span>
-              </a>
-            </li>
-            <li role="none">
-              <a href="/blog/categorias/anime.html" class="nav-link" role="menuitem">
-                <span class="nav-icon" aria-hidden="true">🎌</span>
-                <span class="nav-text">Anime</span>
-              </a>
-            </li>
-            <li role="none">
-              <a href="/blog/categorias/videojuegos.html" class="nav-link" role="menuitem">
-                <span class="nav-icon" aria-hidden="true">🎮</span>
-                <span class="nav-text">Videojuegos</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+  <body class="blog-page">
+    <!-- Header inyectado -->
+    <div id="header-placeholder"></div>
 
     <main id="main-content">
       <!-- Breadcrumbs -->
@@ -178,91 +112,233 @@
       <section class="blog-header">
         <div class="container">
           <h1 class="blog-title">
-            <span class="title-icon">📰</span>
+            <svg class="title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+              <path d="M6 7h12M6 11h8"></path>
+            </svg>
             Blog <span class="text-accent">Sala Geek</span>
           </h1>
           <p class="blog-subtitle">
             Noticias, análisis y guías sobre lo que más te apasiona del mundo geek
           </p>
 
-          <!-- Category Pills -->
-          <div class="category-pills">
-            <a href="/blog/" class="pill active">Todos</a>
-            <a href="/blog/categorias/peliculas.html" class="pill">🎬 Películas</a>
-            <a href="/blog/categorias/series.html" class="pill">📺 Series</a>
-            <a href="/blog/categorias/anime.html" class="pill">🎌 Anime</a>
-            <a href="/blog/categorias/videojuegos.html" class="pill">🎮 Videojuegos</a>
-            <a href="/blog/categorias/tecnologia.html" class="pill">💻 Tecnología</a>
+          <!-- Category Pills - Filtros -->
+          <div class="category-pills-wrapper">
+            <div class="category-pills" id="category-filters">
+              <button type="button" class="pill active" data-category="all">Todos</button>
+              <button type="button" class="pill" data-category="peliculas">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                <line x1="7" y1="2" x2="7" y2="22"></line>
+                <line x1="17" y1="2" x2="17" y2="22"></line>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <line x1="2" y1="7" x2="7" y2="7"></line>
+                <line x1="2" y1="17" x2="7" y2="17"></line>
+                <line x1="17" y1="17" x2="22" y2="17"></line>
+                <line x1="17" y1="7" x2="22" y2="7"></line>
+              </svg>
+              Películas
+            </button>
+            <button type="button" class="pill" data-category="series">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                <polyline points="17 2 12 7 7 2"></polyline>
+              </svg>
+              Series
+            </button>
+            <button type="button" class="pill" data-category="anime">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <path d="M12 2C8 2 4 6 4 10c0 2.5 1 4.5 2.5 6l-1 4 3-2c1 .6 2.2 1 3.5 1s2.5-.4 3.5-1l3 2-1-4c1.5-1.5 2.5-3.5 2.5-6 0-4-4-8-8-8z"></path>
+                <circle cx="9" cy="10" r="1.5" fill="currentColor"></circle>
+                <circle cx="15" cy="10" r="1.5" fill="currentColor"></circle>
+                <path d="M9 14c1 1 2 1.5 3 1.5s2-.5 3-1.5"></path>
+                <path d="M7 5l2 2"></path>
+                <path d="M17 5l-2 2"></path>
+              </svg>
+              Anime
+            </button>
+            <button type="button" class="pill" data-category="gaming">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <line x1="6" y1="11" x2="10" y2="11"></line>
+                <line x1="8" y1="9" x2="8" y2="13"></line>
+                <line x1="15" y1="12" x2="15.01" y2="12"></line>
+                <line x1="18" y1="10" x2="18.01" y2="10"></line>
+                <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"></path>
+              </svg>
+              Gaming
+            </button>
+            <button type="button" class="pill" data-category="tecnologia">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+              Tecnología
+            </button>
+            </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Featured Article -->
-      <section class="featured-article">
-        <div class="container">
-          <article class="article-card featured">
-            <a href="/blog/articulos/stranger-things-temporada-5-fecha-estreno.html" class="article-link">
-              <div class="article-image">
-                <img
-                  src="/src/images/blog/stranger-things-t5-featured.webp"
-                  alt="Stranger Things Temporada 5"
-                  loading="eager"
-                  width="800"
-                  height="450"
-                />
-                <span class="article-category">Series</span>
-                <span class="article-badge">⭐ Destacado</span>
-              </div>
-              <div class="article-content">
-                <h2 class="article-title">
-                  Stranger Things Temporada 5: Fecha de Estreno, Tráiler y Todo lo que Sabemos
-                </h2>
-                <p class="article-excerpt">
-                  La temporada final de Stranger Things está cada vez más cerca. Te contamos todo sobre 
-                  la fecha de estreno confirmada, el nuevo tráiler y las teorías más locas sobre el final.
-                </p>
-                <div class="article-meta">
-                  <span class="meta-author">
-                    <img src="/src/images/SalaGeek_LOGO.webp" alt="Sala Geek" width="24" height="24" />
-                    Sala Geek
-                  </span>
-                  <span class="meta-date">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
-                    </svg>
-                    12 Enero 2026
-                  </span>
-                  <span class="meta-reading">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                    </svg>
-                    8 min lectura
-                  </span>
-                </div>
-              </div>
-            </a>
-          </article>
         </div>
       </section>
 
       <!-- Articles Grid -->
       <section class="articles-section">
         <div class="container">
-          <h2 class="section-title">Últimos Artículos</h2>
+          <!-- Featured Articles Carousel (visible solo cuando filtro = "Todos") -->
+          <div class="featured-carousel-section" id="featured-carousel-section">
+            <div class="featured-carousel-header">
+              <h2 class="featured-carousel-title">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                Artículos Destacados
+              </h2>
+              <div class="carousel-dots" id="carousel-dots"></div>
+            </div>
+            <!-- Botones de navegación fuera del header -->
+            <button class="carousel-btn carousel-prev" aria-label="Anterior">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="carousel-btn carousel-next" aria-label="Siguiente">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+            <div class="featured-carousel" id="featured-carousel">
+              <div class="featured-carousel-track" id="featured-carousel-track">
+                <!-- Los artículos destacados se moverán aquí via JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <h2 class="section-title">Últimos Artículos</h2>
+            <div class="articles-count">
+              <span id="visible-count">6</span> de <span id="total-count">13</span> artículos
+            </div>
+          </div>
           
-          <div class="articles-grid">
-            <!-- Article Card 1 -->
-            <article class="article-card">
-              <a href="/blog/articulos/mejores-juegos-ps5-2026.html" class="article-link">
+          <div class="articles-grid" id="articles-grid">
+            <!-- Featured Article (primer artículo, ocupa 2 columnas en "Todos") -->
+            <article class="article-card featured-card" data-category="series" data-date="2026-01-12" data-featured="true">
+              <a href="/blog/articulos/stranger-things-temporada-5-detalles.html" class="article-link">
                 <div class="article-image">
                   <img
-                    src="/src/images/blog/ps5-games-2026.webp"
+                    src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=450&fit=crop&q=80"
+                    alt="Stranger Things Temporada 5"
+                    loading="eager"
+                    width="800"
+                    height="450"
+                  />
+                  <span class="article-category">Series</span>
+                  <span class="article-badge featured-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    Destacado
+                  </span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">
+                    Stranger Things Temporada 5: Fecha de Estreno, Tráiler y Todo lo que Sabemos
+                  </h3>
+                  <p class="article-excerpt">
+                    La temporada final de Stranger Things está cada vez más cerca. Te contamos todo sobre 
+                    la fecha de estreno confirmada, el nuevo tráiler y las teorías más locas sobre el final.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">12 Enero 2026</span>
+                    <span class="meta-reading">8 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            
+            <!-- Featured Article 2 - Anime -->
+            <article class="article-card featured-card" data-category="anime" data-date="2026-01-11" data-featured="true">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=800&h=450&fit=crop&q=80"
+                    alt="Demon Slayer Temporada 4"
+                    loading="lazy"
+                    width="800"
+                    height="450"
+                  />
+                  <span class="article-category">Anime</span>
+                  <span class="article-badge featured-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    Destacado
+                  </span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">
+                    Demon Slayer Temporada 4: Todo Sobre el Arco del Entrenamiento Hashira
+                  </h3>
+                  <p class="article-excerpt">
+                    La cuarta temporada de Kimetsu no Yaiba llega con el esperado arco del entrenamiento. 
+                    Fechas, episodios confirmados y lo que sabemos del arco final.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">11 Enero 2026</span>
+                    <span class="meta-reading">6 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            
+            <!-- Featured Article 3 - Películas -->
+            <article class="article-card featured-card" data-category="peliculas" data-date="2026-01-10" data-featured="true">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800&h=450&fit=crop&q=80"
+                    alt="Marvel Fase 6 Películas"
+                    loading="lazy"
+                    width="800"
+                    height="450"
+                  />
+                  <span class="article-category">Películas</span>
+                  <span class="article-badge featured-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    Destacado
+                  </span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">
+                    Marvel Fase 6: Todas las Películas Confirmadas y Fechas de Estreno
+                  </h3>
+                  <p class="article-excerpt">
+                    El MCU prepara su gran cierre con Avengers: Secret Wars. Te contamos todo sobre las 
+                    películas confirmadas, el calendario completo y las sorpresas que vienen.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">10 Enero 2026</span>
+                    <span class="meta-reading">10 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            
+            <!-- Article Card 1 -->
+            <article class="article-card" data-category="gaming" data-date="2026-01-11">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=225&fit=crop&q=80"
                     alt="Mejores Juegos PS5 2026"
                     loading="lazy"
                     width="400"
                     height="225"
                   />
-                  <span class="article-category">Videojuegos</span>
+                  <span class="article-category">Gaming</span>
                 </div>
                 <div class="article-content">
                   <h3 class="article-title">Mejores Juegos PS5 2026: Los 25 Imprescindibles</h3>
@@ -278,11 +354,11 @@
             </article>
 
             <!-- Article Card 2 -->
-            <article class="article-card">
-              <a href="/blog/articulos/estrenos-netflix-enero-2026.html" class="article-link">
+            <article class="article-card" data-category="series" data-date="2026-01-10">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
                 <div class="article-image">
                   <img
-                    src="/src/images/blog/netflix-enero-2026.webp"
+                    src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=225&fit=crop&q=80"
                     alt="Estrenos Netflix Enero 2026"
                     loading="lazy"
                     width="400"
@@ -304,17 +380,17 @@
             </article>
 
             <!-- Article Card 3 -->
-            <article class="article-card">
-              <a href="/blog/articulos/gta-6-fecha-lanzamiento.html" class="article-link">
+            <article class="article-card" data-category="gaming" data-date="2026-01-09">
+              <a href="/blog/articulos/gta-6-fecha-gameplay.html" class="article-link">
                 <div class="article-image">
                   <img
-                    src="/src/images/blog/gta-6-preview.webp"
+                    src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop&q=80"
                     alt="GTA 6 Fecha de Lanzamiento"
                     loading="lazy"
                     width="400"
                     height="225"
                   />
-                  <span class="article-category">Videojuegos</span>
+                  <span class="article-category">Gaming</span>
                 </div>
                 <div class="article-content">
                   <h3 class="article-title">GTA 6: Fecha de Lanzamiento, Trailer y Todo lo Filtrado</h3>
@@ -330,11 +406,11 @@
             </article>
 
             <!-- Article Card 4 -->
-            <article class="article-card">
-              <a href="/blog/articulos/anime-temporada-invierno-2026.html" class="article-link">
+            <article class="article-card" data-category="anime" data-date="2026-01-08">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
                 <div class="article-image">
                   <img
-                    src="/src/images/blog/anime-winter-2026.webp"
+                    src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&h=225&fit=crop&q=80"
                     alt="Anime Temporada Invierno 2026"
                     loading="lazy"
                     width="400"
@@ -356,11 +432,11 @@
             </article>
 
             <!-- Article Card 5 -->
-            <article class="article-card">
-              <a href="/blog/articulos/estrenos-marvel-2026.html" class="article-link">
+            <article class="article-card" data-category="peliculas" data-date="2026-01-07">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
                 <div class="article-image">
                   <img
-                    src="/src/images/blog/marvel-2026.webp"
+                    src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400&h=225&fit=crop&q=80"
                     alt="Estrenos Marvel 2026"
                     loading="lazy"
                     width="400"
@@ -382,11 +458,11 @@
             </article>
 
             <!-- Article Card 6 -->
-            <article class="article-card">
-              <a href="/blog/articulos/house-of-the-dragon-temporada-3.html" class="article-link">
+            <article class="article-card" data-category="series" data-date="2026-01-06">
+              <a href="#" class="article-link coming-soon" title="Próximamente">
                 <div class="article-image">
                   <img
-                    src="/src/images/blog/hotd-t3.webp"
+                    src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=225&fit=crop&q=80"
                     alt="House of the Dragon Temporada 3"
                     loading="lazy"
                     width="400"
@@ -406,14 +482,191 @@
                 </div>
               </a>
             </article>
+
+            <!-- Article Card 7 -->
+            <article class="article-card" data-category="tecnologia" data-date="2026-01-05">
+              <a href="/blog/articulos/apple-vision-pro-2-anuncio.html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=400&h=225&fit=crop&q=80"
+                    alt="Apple Vision Pro 2"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">Tecnología</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">Apple Vision Pro 2: Todo sobre el nuevo visor de realidad mixta</h3>
+                  <p class="article-excerpt">
+                    Apple sorprende con el anuncio del Vision Pro 2 con mejoras significativas en rendimiento.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">5 Enero 2026</span>
+                    <span class="meta-reading">6 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Article Card 8 -->
+            <article class="article-card" data-category="anime" data-date="2026-01-04">
+              <a href="/blog/articulos/demon-slayer-temporada-4-fecha.html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1607604276583-c1a83e27b66a?w=400&h=225&fit=crop&q=80"
+                    alt="Demon Slayer Temporada 4"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">Anime</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">Demon Slayer Temporada 4: Fecha de Estreno y Nuevo Tráiler</h3>
+                  <p class="article-excerpt">
+                    Ufotable confirma la fecha de la nueva temporada con un espectacular adelanto.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">4 Enero 2026</span>
+                    <span class="meta-reading">5 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Article Card 9 -->
+            <article class="article-card" data-category="peliculas" data-date="2026-01-03">
+              <a href="/blog/articulos/supergirl-dcu-trailer-2026.html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=225&fit=crop&q=80"
+                    alt="Supergirl DCU"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">Películas</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">Supergirl: Woman of Tomorrow - Primer Tráiler del DCU</h3>
+                  <p class="article-excerpt">
+                    James Gunn revela el primer vistazo oficial a la Supergirl de Milly Alcock.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">3 Enero 2026</span>
+                    <span class="meta-reading">7 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Article Card 10 -->
+            <article class="article-card" data-category="gaming" data-date="2026-01-02">
+              <a href="/blog/articulos/the-last-of-us-part-3-anuncio.html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=225&fit=crop&q=80"
+                    alt="The Last of Us Part III"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">Gaming</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">The Last of Us Part III: Naughty Dog Confirma el Desarrollo</h3>
+                  <p class="article-excerpt">
+                    Neil Druckmann confirma que el tercer juego está en desarrollo activo.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">2 Enero 2026</span>
+                    <span class="meta-reading">8 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Article Card 11 -->
+            <article class="article-card" data-category="anime" data-date="2026-01-01">
+              <a href="/blog/articulos/one-piece-temporada-2-netflix.html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1569701813229-33284b643e3c?w=400&h=225&fit=crop&q=80"
+                    alt="One Piece Temporada 2 Netflix"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">Anime</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">One Piece Live Action Temporada 2: Fecha y Nuevos Personajes</h3>
+                  <p class="article-excerpt">
+                    Netflix revela el elenco completo del arco de Arabasta con sorpresas increíbles.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">1 Enero 2026</span>
+                    <span class="meta-reading">9 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+            <!-- Article Card 12 -->
+            <article class="article-card" data-category="peliculas" data-date="2025-12-30">
+              <a href="/blog/articulos/marvel-plan-2026-2027.html" class="article-link">
+                <div class="article-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1559583109-3e7968136c99?w=400&h=225&fit=crop&q=80"
+                    alt="Marvel Plan 2026-2027"
+                    loading="lazy"
+                    width="400"
+                    height="225"
+                  />
+                  <span class="article-category">Películas</span>
+                </div>
+                <div class="article-content">
+                  <h3 class="article-title">Marvel Fase 6: Plan Completo 2026-2027 Revelado</h3>
+                  <p class="article-excerpt">
+                    Kevin Feige presenta el roadmap completo hacia Avengers: Secret Wars.
+                  </p>
+                  <div class="article-meta">
+                    <span class="meta-date">30 Diciembre 2025</span>
+                    <span class="meta-reading">11 min</span>
+                  </div>
+                </div>
+              </a>
+            </article>
           </div>
 
-          <!-- Load More -->
-          <div class="load-more">
-            <button class="btn btn-secondary" id="load-more-btn">
-              Cargar más artículos
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+          <!-- No Results Message -->
+          <div class="no-results" id="no-results" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="64" height="64">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+              <path d="M8 8l6 6M14 8l-6 6"></path>
+            </svg>
+            <h3>No se encontraron artículos</h3>
+            <p>No hay artículos en esta categoría. Prueba con otra categoría o vuelve a "Todos".</p>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination" id="pagination">
+            <button class="pagination-btn prev" id="prev-page" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              Anterior
+            </button>
+            <div class="pagination-numbers" id="pagination-numbers">
+              <button class="page-number active" data-page="1">1</button>
+              <button class="page-number" data-page="2">2</button>
+            </div>
+            <button class="pagination-btn next" id="next-page">
+              Siguiente
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
           </div>
@@ -425,83 +678,46 @@
         <div class="container">
           <div class="newsletter-box">
             <div class="newsletter-content">
-              <h2>📧 ¿Te gusta nuestro contenido?</h2>
+              <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" class="newsletter-icon">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                ¿Te gusta nuestro contenido?
+              </h2>
               <p>Suscríbete al newsletter y recibe las mejores noticias geek en tu email cada semana.</p>
             </div>
-            <a href="/index.html#newsletter" class="btn btn-primary">
-              Suscribirme Gratis
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-              </svg>
-            </a>
+            <form id="blog-subscribe-form" class="blog-subscribe-form">
+              <div class="subscribe-input-group">
+                <input 
+                  type="email" 
+                  placeholder="Tu correo electrónico" 
+                  required 
+                  autocomplete="email"
+                  aria-label="Correo electrónico"
+                />
+                <button type="submit" class="btn btn-primary">
+                  <span>Suscribirme</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                  </svg>
+                </button>
+              </div>
+              <p class="subscribe-privacy">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" class="privacy-icon">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Sin spam. Cancela cuando quieras.
+              </p>
+            </form>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="site-footer" role="contentinfo">
-      <div class="footer-container">
-        <div class="footer-main">
-          <div class="footer-brand">
-            <img
-              src="/src/images/SalaGeek_LOGO.webp"
-              alt="Sala Geek Logo"
-              class="footer-logo"
-              width="60"
-              height="60"
-              loading="lazy"
-            />
-            <p class="footer-tagline">Tu espacio geek definitivo</p>
-            <div class="footer-social">
-              <a href="https://www.facebook.com/SalaGeek19" target="_blank" rel="noopener" aria-label="Facebook">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
-              <a href="https://www.instagram.com/sala_geek/" target="_blank" rel="noopener" aria-label="Instagram">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </a>
-              <a href="https://x.com/Sala_Geek" target="_blank" rel="noopener" aria-label="X (Twitter)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              <a href="https://www.tiktok.com/@salageek19" target="_blank" rel="noopener" aria-label="TikTok">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-
-          <nav class="footer-links" aria-label="Enlaces rápidos">
-            <h3 class="footer-heading">Categorías</h3>
-            <ul class="footer-list">
-              <li><a href="/blog/categorias/peliculas.html">Películas</a></li>
-              <li><a href="/blog/categorias/series.html">Series</a></li>
-              <li><a href="/blog/categorias/anime.html">Anime</a></li>
-              <li><a href="/blog/categorias/videojuegos.html">Videojuegos</a></li>
-            </ul>
-          </nav>
-
-          <nav class="footer-links" aria-label="Legal">
-            <h3 class="footer-heading">Legal</h3>
-            <ul class="footer-list">
-              <li><a href="/src/pages/legal/privacy.html">Privacidad</a></li>
-              <li><a href="/src/pages/legal/terms.html">Términos</a></li>
-              <li><a href="/src/pages/legal/cookies.html">Cookies</a></li>
-            </ul>
-          </nav>
-        </div>
-
-        <div class="footer-bottom">
-          <p>&copy; 2017-2026 Sala Geek. Todos los derechos reservados.</p>
-        </div>
-      </div>
-    </footer>
+    <!-- Footer inyectado -->
+    <div id="footer-placeholder"></div>
 
     <!-- Cookie Consent Banner -->
     <div class="cookie-consent" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
@@ -543,6 +759,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/src/js/script.min.js?v=130" defer></script>
+    <script src="/src/js/script.js?v=131" defer></script>
   </body>
 </html>

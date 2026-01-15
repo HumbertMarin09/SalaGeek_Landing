@@ -48,11 +48,11 @@
         <div class="search-categories-section">
           <span class="search-categories-label">Categorías:</span>
           <div class="search-categories-grid">
-            <a href="/blog/categorias/peliculas.html" class="search-category-btn">Películas</a>
-            <a href="/blog/categorias/series.html" class="search-category-btn">Series</a>
-            <a href="/blog/categorias/anime.html" class="search-category-btn">Anime</a>
-            <a href="/blog/categorias/videojuegos.html" class="search-category-btn">Videojuegos</a>
-            <a href="/blog/categorias/tecnologia.html" class="search-category-btn">Tecnología</a>
+            <a href="/blog/?categoria=peliculas" class="search-category-btn">Películas</a>
+            <a href="/blog/?categoria=series" class="search-category-btn">Series</a>
+            <a href="/blog/?categoria=anime" class="search-category-btn">Anime</a>
+            <a href="/blog/?categoria=gaming" class="search-category-btn">Gaming</a>
+            <a href="/blog/?categoria=tecnologia" class="search-category-btn">Tecnología</a>
           </div>
         </div>
 
@@ -157,6 +157,77 @@
             </svg>
             <span class="nav-text">Noticias</span>
             <span class="nav-badge">🔥</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Blog Menu (Blog y Categorías) -->
+      <ul class="menu menu-blog" role="menubar" style="display: none">
+        <li role="none">
+          <a href="/blog/" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+            </svg>
+            <span class="nav-text">Blog</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/blog/?categoria=peliculas" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <rect width="20" height="20" x="2" y="2" rx="2.18" ry="2.18"></rect>
+              <line x1="7" x2="7" y1="2" y2="22"></line>
+              <line x1="17" x2="17" y1="2" y2="22"></line>
+              <line x1="2" x2="22" y1="12" y2="12"></line>
+              <line x1="2" x2="7" y1="7" y2="7"></line>
+              <line x1="2" x2="7" y1="17" y2="17"></line>
+              <line x1="17" x2="22" y1="7" y2="7"></line>
+              <line x1="17" x2="22" y1="17" y2="17"></line>
+            </svg>
+            <span class="nav-text">Películas</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/blog/?categoria=series" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <rect width="20" height="15" x="2" y="7" rx="2" ry="2"></rect>
+              <polyline points="17 2 12 7 7 2"></polyline>
+            </svg>
+            <span class="nav-text">Series</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/blog/?categoria=anime" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 2C8 2 4 6 4 10c0 2.5 1 4.5 2.5 6l-1 4 3-2c1 .6 2.2 1 3.5 1s2.5-.4 3.5-1l3 2-1-4c1.5-1.5 2.5-3.5 2.5-6 0-4-4-8-8-8z"></path>
+              <circle cx="9" cy="10" r="1.5" fill="currentColor"></circle>
+              <circle cx="15" cy="10" r="1.5" fill="currentColor"></circle>
+              <path d="M9 14c1 1 2 1.5 3 1.5s2-.5 3-1.5"></path>
+              <path d="M7 5l2 2"></path>
+              <path d="M17 5l-2 2"></path>
+            </svg>
+            <span class="nav-text">Anime</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/blog/?categoria=gaming" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <line x1="6" x2="10" y1="12" y2="12"></line>
+              <line x1="8" x2="8" y1="10" y2="14"></line>
+              <line x1="15" x2="15.01" y1="13" y2="13"></line>
+              <line x1="18" x2="18.01" y1="11" y2="11"></line>
+              <rect width="20" height="12" x="2" y="6" rx="2"></rect>
+            </svg>
+            <span class="nav-text">Gaming</span>
+          </a>
+        </li>
+        <li role="none">
+          <a href="/blog/?categoria=tecnologia" class="nav-link" role="menuitem">
+            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span class="nav-text">Tecnología</span>
           </a>
         </li>
       </ul>

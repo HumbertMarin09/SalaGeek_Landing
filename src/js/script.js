@@ -121,6 +121,92 @@ function updateResponsiveState() {
   responsiveState.isDesktop = window.innerWidth > 1024;
 }
 
+/* ============================================
+   PAGE TRANSITIONS - Transiciones entre páginas
+   ============================================ */
+
+/**
+ * Sistema de transiciones suaves entre páginas
+ * Usa View Transitions API si está disponible, con fallback CSS
+ */
+const PageTransitions = {
+  supportsViewTransitions: 'startViewTransition' in document,
+  
+  init() {
+    // Fade-in al cargar la página
+    this.fadeInOnLoad();
+    
+    // Interceptar clicks en enlaces internos
+    this.interceptLinks();
+  },
+  
+  fadeInOnLoad() {
+    // Solo aplicar si no hay View Transitions nativas
+    if (this.supportsViewTransitions) return;
+    
+    document.body.classList.add('page-entering');
+    
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.body.classList.remove('page-entering');
+        document.body.classList.add('page-entered');
+        
+        // Limpiar clase después de la transición
+        setTimeout(() => {
+          document.body.classList.remove('page-entered');
+        }, 350);
+      });
+    });
+  },
+  
+  interceptLinks() {
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      
+      // Ignorar si no es un enlace válido
+      if (!link) return;
+      
+      const href = link.getAttribute('href');
+      
+      // Ignorar enlaces externos, anclas, javascript:, mailto:, tel:
+      if (!href || 
+          href.startsWith('#') || 
+          href.startsWith('javascript:') ||
+          href.startsWith('mailto:') ||
+          href.startsWith('tel:') ||
+          link.target === '_blank' ||
+          link.hasAttribute('download') ||
+          href.startsWith('http') && !href.includes(window.location.hostname)) {
+        return;
+      }
+      
+      // Si el navegador soporta View Transitions, dejar que funcione nativamente
+      if (this.supportsViewTransitions) return;
+      
+      // Fallback: transición manual
+      e.preventDefault();
+      this.navigateTo(href);
+    });
+  },
+  
+  navigateTo(url) {
+    // Aplicar fade-out
+    document.body.classList.add('page-transitioning');
+    
+    // Navegar después de la animación de salida
+    setTimeout(() => {
+      window.location.href = url;
+    }, 250);
+  }
+};
+
+// Inicializar transiciones de página
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => PageTransitions.init());
+} else {
+  PageTransitions.init();
+}
+
 /**
  * Inicializa el manejador de resize con debounce
  * Cierra elementos del UI que no deberían estar abiertos al cambiar de móvil a desktop
@@ -568,8 +654,8 @@ function initSearch() {
     const articles = [
       { title: "Stranger Things Temporada 5", url: "/blog/articulos/stranger-things-temporada-5-detalles.html", category: "Series" },
       { title: "Demon Slayer Temporada 4", url: "/blog/articulos/demon-slayer-temporada-4-fecha.html", category: "Anime" },
-      { title: "GTA 6 - Fecha y Gameplay", url: "/blog/articulos/gta-6-fecha-gameplay.html", category: "Videojuegos" },
-      { title: "The Last of Us Part 3", url: "/blog/articulos/the-last-of-us-part-3-anuncio.html", category: "Videojuegos" },
+      { title: "GTA 6 - Fecha y Gameplay", url: "/blog/articulos/gta-6-fecha-gameplay.html", category: "Gaming" },
+      { title: "The Last of Us Part 3", url: "/blog/articulos/the-last-of-us-part-3-anuncio.html", category: "Gaming" },
       { title: "One Piece Temporada 2", url: "/blog/articulos/one-piece-temporada-2-netflix.html", category: "Series" },
       { title: "Marvel Plan 2026-2027", url: "/blog/articulos/marvel-plan-2026-2027.html", category: "Películas" },
       { title: "Apple Vision Pro 2", url: "/blog/articulos/apple-vision-pro-2-anuncio.html", category: "Tecnología" },
@@ -1816,6 +1902,85 @@ function initNewsSubscribeForm() {
 }
 
 /* ============================================
+   BLOG SUBSCRIBE FORM
+   ============================================ */
+
+function initBlogSubscribeForm() {
+  const form = document.getElementById("blog-subscribe-form");
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const emailInput = form.querySelector('input[type="email"]');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const btnText = submitBtn.querySelector("span");
+    const email = emailInput.value.trim();
+
+    if (!email) return;
+
+    // Validar formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showNotification("Por favor, ingresa un correo electrónico válido", "error");
+      return;
+    }
+
+    // Estado de carga
+    const originalText = btnText.textContent;
+    submitBtn.disabled = true;
+    btnText.textContent = "Enviando...";
+
+    try {
+      // Esperar a que reCAPTCHA esté listo
+      if (typeof grecaptcha !== "undefined") {
+        await new Promise((resolve) => grecaptcha.ready(resolve));
+        
+        const recaptchaToken = await grecaptcha.execute("6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB", {
+          action: "newsletter_subscribe",
+        });
+
+        const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, recaptchaToken }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Éxito
+          form.classList.add("success");
+          btnText.textContent = "¡Suscrito!";
+          emailInput.value = "";
+          showNotification("¡Gracias por suscribirte! Revisa tu correo.", "success");
+          localStorage.setItem("newsletter_subscribed", "true");
+          
+          // Restaurar después de 3s
+          setTimeout(() => {
+            form.classList.remove("success");
+            btnText.textContent = originalText;
+            submitBtn.disabled = false;
+          }, 3000);
+          return;
+        } else {
+          throw new Error(data.error || "Error al procesar la suscripción");
+        }
+      } else {
+        throw new Error("Sistema de seguridad no disponible");
+      }
+    } catch (error) {
+      console.error("Error al suscribir:", error);
+      showNotification(error.message || "Error al suscribir. Intenta de nuevo.", "error");
+    }
+
+    // Restaurar botón
+    btnText.textContent = originalText;
+    submitBtn.disabled = false;
+  });
+}
+
+/* ============================================
    SECCIÓN 4: SISTEMA DE NOTIFICACIONES
    ============================================ */
 
@@ -2095,6 +2260,7 @@ function initAdaptiveMenu() {
   const menuLanding = document.querySelector(".menu-landing");
   const menuLegal = document.querySelector(".menu-legal");
   const menuMediaKit = document.querySelector(".menu-mediakit");
+  const menuBlog = document.querySelector(".menu-blog");
 
   if (!menuLanding || !menuLegal || !menuMediaKit) {
     return;
@@ -2104,17 +2270,39 @@ function initAdaptiveMenu() {
   const isMediaKitPage = document.body.classList.contains("media-kit-page") || 
                          window.location.pathname.includes("media-kit.html");
   const isLegalPage = window.location.pathname.includes("/legal/");
+  const isBlogPage = window.location.pathname.includes("/blog/") || 
+                     document.body.classList.contains("blog-page");
 
-  if (isMediaKitPage) {
+  // Ocultar todos los menús primero
+  menuLanding.style.display = "none";
+  menuLegal.style.display = "none";
+  menuMediaKit.style.display = "none";
+  if (menuBlog) menuBlog.style.display = "none";
+
+  if (isBlogPage && menuBlog) {
+    // Mostrar menú Blog
+    menuBlog.style.display = "flex";
+
+    // Marcar el link activo según la página actual
+    const currentPath = window.location.pathname;
+    const blogLinks = menuBlog.querySelectorAll(".nav-link");
+
+    blogLinks.forEach((link) => {
+      link.classList.remove("active");
+      const linkPath = new URL(link.href).pathname;
+      
+      // Coincidencia exacta para /blog/ o incluir para categorías
+      if ((currentPath === "/blog/" && linkPath === "/blog/") ||
+          (currentPath.includes(linkPath) && linkPath !== "/index.html" && linkPath !== "/blog/")) {
+        link.classList.add("active");
+      }
+    });
+  } else if (isMediaKitPage) {
     // Mostrar menú Media Kit
-    menuLanding.style.display = "none";
-    menuLegal.style.display = "none";
     menuMediaKit.style.display = "flex";
   } else if (isLegalPage) {
     // Mostrar menú Legal
-    menuLanding.style.display = "none";
     menuLegal.style.display = "flex";
-    menuMediaKit.style.display = "none";
 
     // Marcar el link activo según la página actual
     const currentPage = window.location.pathname;
@@ -2129,8 +2317,6 @@ function initAdaptiveMenu() {
   } else {
     // Mostrar menú Landing
     menuLanding.style.display = "flex";
-    menuLegal.style.display = "none";
-    menuMediaKit.style.display = "none";
   }
 }
 
@@ -2417,6 +2603,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTestimonialsCarousel();
   initNewsletterForm();
   initNewsSubscribeForm();
+  initBlogSubscribeForm();
   initCookieConsent();
   initSmoothScroll();
   initBackToTop();
@@ -5223,3 +5410,775 @@ function updateNewsTime() {
   // Actualizar cada hora
   setTimeout(updateNewsTime, 3600000);
 }
+
+/* ============================================
+   📰 BLOG - FILTRADO Y PAGINACIÓN
+   ============================================ */
+
+/**
+ * Sistema de filtrado por categorías y paginación para el blog
+ * Funcionalidades:
+ * - Filtrado dinámico por categorías
+ * - Paginación con 6 artículos por página
+ * - Animaciones de transición
+ * - Estado en URL para compartir filtros
+ */
+const BlogFilterSystem = {
+  // Configuración
+  articlesPerPage: 6,
+  currentPage: 1,
+  currentCategory: 'all',
+  isInitialized: false,
+  
+  // Carrusel de destacados
+  carousel: {
+    section: null,
+    track: null,
+    dots: null,
+    prevBtn: null,
+    nextBtn: null,
+    currentSlide: 0,
+    featuredArticles: [],
+    autoplayInterval: null
+  },
+  
+  // Elementos del DOM
+  elements: {
+    grid: null,
+    filters: null,
+    pagination: null,
+    paginationNumbers: null,
+    prevBtn: null,
+    nextBtn: null,
+    visibleCount: null,
+    totalCount: null,
+    noResults: null
+  },
+
+  /**
+   * Inicializar el sistema de filtrado
+   */
+  init() {
+    // Solo ejecutar en la página del blog
+    if (!document.body.classList.contains('blog-page')) {
+      console.log('BlogFilterSystem: No es página de blog, saltando inicialización');
+      return;
+    }
+
+    // Evitar doble inicialización
+    if (this.isInitialized) {
+      console.log('BlogFilterSystem: Ya inicializado');
+      return;
+    }
+
+    console.log('BlogFilterSystem: Iniciando...');
+
+    // Obtener elementos del DOM
+    this.elements.grid = document.getElementById('articles-grid');
+    this.elements.filters = document.getElementById('category-filters');
+    this.elements.pagination = document.getElementById('pagination');
+    this.elements.paginationNumbers = document.getElementById('pagination-numbers');
+    this.elements.prevBtn = document.getElementById('prev-page');
+    this.elements.nextBtn = document.getElementById('next-page');
+    this.elements.visibleCount = document.getElementById('visible-count');
+    this.elements.totalCount = document.getElementById('total-count');
+    this.elements.noResults = document.getElementById('no-results');
+    
+    // Elementos del carrusel
+    this.carousel.section = document.getElementById('featured-carousel-section');
+    this.carousel.track = document.getElementById('featured-carousel-track');
+    this.carousel.dots = document.getElementById('carousel-dots');
+
+    // Verificar que los elementos críticos existan
+    if (!this.elements.grid) {
+      console.error('BlogFilterSystem: No se encontró #articles-grid');
+      return;
+    }
+    
+    if (!this.elements.filters) {
+      console.error('BlogFilterSystem: No se encontró #category-filters');
+      return;
+    }
+
+    console.log('BlogFilterSystem: Elementos encontrados');
+    
+    // Inicializar carrusel de destacados
+    this.initFeaturedCarousel();
+
+    // Obtener parámetros de URL
+    this.parseURLParams();
+
+    // Configurar event listeners
+    this.setupEventListeners();
+
+    // Marcar grid como inicializado por JS (para CSS)
+    this.elements.grid.classList.add('js-initialized');
+
+    // Renderizar estado inicial
+    this.filterArticles(this.currentCategory);
+    
+    this.isInitialized = true;
+    console.log('BlogFilterSystem: Inicialización completa');
+  },
+  
+  /**
+   * Inicializar carrusel de artículos destacados
+   */
+  initFeaturedCarousel() {
+    if (!this.carousel.section || !this.carousel.track) {
+      console.log('BlogFilterSystem: Carrusel no encontrado');
+      return;
+    }
+    
+    // Encontrar todos los artículos destacados en el grid
+    const featuredArticles = Array.from(
+      this.elements.grid.querySelectorAll('.article-card[data-featured="true"]')
+    );
+    
+    if (featuredArticles.length === 0) {
+      this.carousel.section.classList.add('hidden');
+      return;
+    }
+    
+    console.log('BlogFilterSystem: Artículos destacados encontrados:', featuredArticles.length);
+    
+    // Guardar referencia a los artículos destacados (los originales)
+    this.carousel.featuredArticles = featuredArticles;
+    
+    // Guardar la posición original de cada destacado para poder restaurarlos
+    this.carousel.originalPositions = featuredArticles.map(article => ({
+      article,
+      nextSibling: article.nextElementSibling
+    }));
+    
+    // MOVER artículos destacados al carrusel (no clonar)
+    featuredArticles.forEach(article => {
+      // Limpiar cualquier estilo inline previo
+      article.style.display = '';
+      article.style.opacity = '';
+      article.style.transform = '';
+      article.style.visibility = '';
+      article.classList.remove('filtering', 'filtering-out', 'fade-in');
+      article.classList.add('in-carousel');
+      this.carousel.track.appendChild(article);
+    });
+    
+    // Configurar dimensiones del carrusel
+    this.setupCarouselDimensions();
+    
+    // Crear dots de navegación
+    this.createCarouselDots(featuredArticles.length);
+    
+    // Configurar botones de navegación
+    this.setupCarouselNavigation();
+    
+    // Ocultar navegación si solo hay un destacado
+    const navContainer = document.getElementById('carousel-nav');
+    if (navContainer && featuredArticles.length <= 1) {
+      navContainer.style.display = 'none';
+    }
+    
+    // Iniciar autoplay (cambiar cada 6 segundos)
+    this.startCarouselAutoplay();
+  },
+  
+  /**
+   * Mover destacados al carrusel (cuando filtro es "Todos")
+   */
+  moveFeaturedToCarousel() {
+    if (!this.carousel.track || !this.carousel.featuredArticles) return;
+    
+    this.carousel.featuredArticles.forEach(article => {
+      // Limpiar estilos y clases de animación del grid
+      article.style.display = '';
+      article.style.opacity = '';
+      article.style.transform = '';
+      article.style.visibility = '';
+      article.classList.remove('filtering', 'filtering-out', 'fade-in');
+      article.classList.add('in-carousel');
+      this.carousel.track.appendChild(article);
+    });
+    
+    // Re-configurar dimensiones después de mover
+    this.setupCarouselDimensions();
+  },
+  
+  /**
+   * Devolver destacados al grid (cuando se filtra por categoría)
+   */
+  moveFeaturedToGrid() {
+    if (!this.carousel.originalPositions) return;
+    
+    this.carousel.originalPositions.forEach(({ article, nextSibling }) => {
+      article.classList.remove('in-carousel');
+      // Limpiar estilos inline del carrusel
+      article.style.width = '';
+      article.style.flex = '';
+      
+      // Restaurar a posición original
+      if (nextSibling && nextSibling.parentNode === this.elements.grid) {
+        this.elements.grid.insertBefore(article, nextSibling);
+      } else {
+        // Si no hay siguiente, agregar al principio del grid
+        this.elements.grid.insertBefore(article, this.elements.grid.firstChild);
+      }
+    });
+  },
+  
+  /**
+   * Configurar dimensiones del carrusel dinámicamente
+   */
+  setupCarouselDimensions() {
+    if (!this.carousel.track || !this.carousel.featuredArticles) return;
+    
+    const count = this.carousel.featuredArticles.length;
+    if (count === 0) return;
+    
+    // El track debe tener ancho = 100% * número de slides
+    this.carousel.track.style.width = `${count * 100}%`;
+    
+    // Cada card debe tener ancho = 100% / número de slides (para ocupar su espacio)
+    const cardWidth = 100 / count;
+    this.carousel.featuredArticles.forEach(article => {
+      article.style.width = `${cardWidth}%`;
+      article.style.flex = `0 0 ${cardWidth}%`;
+    });
+    
+    console.log(`BlogFilterSystem: Carrusel configurado - ${count} slides, track: ${count * 100}%, cards: ${cardWidth}%`);
+  },
+  
+  /**
+   * Crear dots de navegación del carrusel
+   */
+  createCarouselDots(count) {
+    if (!this.carousel.dots) return;
+    
+    this.carousel.dots.innerHTML = '';
+    
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('button');
+      dot.className = `carousel-dot${i === 0 ? ' active' : ''}`;
+      dot.setAttribute('aria-label', `Ir al artículo ${i + 1}`);
+      dot.addEventListener('click', () => this.goToSlide(i));
+      this.carousel.dots.appendChild(dot);
+    }
+  },
+  
+  /**
+   * Configurar navegación del carrusel
+   */
+  setupCarouselNavigation() {
+    const prevBtn = this.carousel.section.querySelector('.carousel-prev');
+    const nextBtn = this.carousel.section.querySelector('.carousel-next');
+    
+    if (prevBtn) {
+      this.carousel.prevBtn = prevBtn;
+      prevBtn.addEventListener('click', () => this.prevSlide());
+    }
+    
+    if (nextBtn) {
+      this.carousel.nextBtn = nextBtn;
+      nextBtn.addEventListener('click', () => this.nextSlide());
+    }
+    
+    // Touch/swipe support
+    let startX = 0;
+    let endX = 0;
+    
+    this.carousel.track.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      this.stopCarouselAutoplay();
+    }, { passive: true });
+    
+    this.carousel.track.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          this.nextSlide();
+        } else {
+          this.prevSlide();
+        }
+      }
+      
+      this.startCarouselAutoplay();
+    }, { passive: true });
+    
+    // Pausar autoplay al hover
+    this.carousel.section.addEventListener('mouseenter', () => this.stopCarouselAutoplay());
+    this.carousel.section.addEventListener('mouseleave', () => this.startCarouselAutoplay());
+  },
+  
+  /**
+   * Ir al slide anterior
+   */
+  prevSlide() {
+    const total = this.carousel.featuredArticles.length;
+    this.carousel.currentSlide = (this.carousel.currentSlide - 1 + total) % total;
+    this.updateCarousel();
+  },
+  
+  /**
+   * Ir al siguiente slide
+   */
+  nextSlide() {
+    const total = this.carousel.featuredArticles.length;
+    this.carousel.currentSlide = (this.carousel.currentSlide + 1) % total;
+    this.updateCarousel();
+  },
+  
+  /**
+   * Ir a un slide específico
+   */
+  goToSlide(index) {
+    this.carousel.currentSlide = index;
+    this.updateCarousel();
+  },
+  
+  /**
+   * Actualizar posición del carrusel
+   */
+  updateCarousel() {
+    if (!this.carousel.track || !this.carousel.featuredArticles) return;
+    
+    const count = this.carousel.featuredArticles.length;
+    // Cada slide ocupa (100 / count)% del track
+    // Para ir al slide N, movemos N * (100 / count)% hacia la izquierda
+    const slideWidth = 100 / count;
+    const offset = -this.carousel.currentSlide * slideWidth;
+    this.carousel.track.style.transform = `translateX(${offset}%)`;
+    
+    // Actualizar dots
+    const dots = this.carousel.dots?.querySelectorAll('.carousel-dot');
+    dots?.forEach((dot, index) => {
+      dot.classList.toggle('active', index === this.carousel.currentSlide);
+    });
+    
+    // Actualizar estado de botones
+    this.updateCarouselButtons();
+  },
+  
+  /**
+   * Actualizar estado de botones prev/next
+   */
+  updateCarouselButtons() {
+    // En modo circular, los botones siempre están habilitados
+    // Si quisieras modo lineal, descomenta:
+    // if (this.carousel.prevBtn) {
+    //   this.carousel.prevBtn.disabled = this.carousel.currentSlide === 0;
+    // }
+    // if (this.carousel.nextBtn) {
+    //   this.carousel.nextBtn.disabled = this.carousel.currentSlide === this.carousel.featuredArticles.length - 1;
+    // }
+  },
+  
+  /**
+   * Iniciar autoplay del carrusel
+   */
+  startCarouselAutoplay() {
+    if (this.carousel.featuredArticles.length <= 1) return;
+    
+    this.stopCarouselAutoplay();
+    this.carousel.autoplayInterval = setInterval(() => {
+      this.nextSlide();
+    }, 6000);
+  },
+  
+  /**
+   * Detener autoplay del carrusel
+   */
+  stopCarouselAutoplay() {
+    if (this.carousel.autoplayInterval) {
+      clearInterval(this.carousel.autoplayInterval);
+      this.carousel.autoplayInterval = null;
+    }
+  },
+  
+  /**
+   * Mostrar/ocultar carrusel según el filtro
+   * También mueve los artículos destacados entre carrusel y grid
+   */
+  toggleCarousel(show) {
+    if (!this.carousel.section || !this.carousel.featuredArticles) return;
+    
+    if (show && this.carousel.featuredArticles.length > 0) {
+      // Mostrar carrusel y mover destacados al carrusel
+      this.moveFeaturedToCarousel();
+      this.carousel.section.classList.remove('hidden');
+      this.carousel.currentSlide = 0;
+      this.updateCarousel();
+      this.startCarouselAutoplay();
+    } else {
+      // Ocultar carrusel y devolver destacados al grid
+      this.carousel.section.classList.add('hidden');
+      this.stopCarouselAutoplay();
+      this.moveFeaturedToGrid();
+    }
+  },
+
+  /**
+   * Parsear parámetros de la URL para mantener estado
+   */
+  parseURLParams() {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('categoria');
+    const page = parseInt(params.get('pagina')) || 1;
+
+    if (category && this.isValidCategory(category)) {
+      this.currentCategory = category;
+    }
+    this.currentPage = page;
+  },
+
+  /**
+   * Verificar si una categoría es válida
+   */
+  isValidCategory(category) {
+    const validCategories = ['all', 'peliculas', 'series', 'anime', 'gaming', 'tecnologia'];
+    return validCategories.includes(category);
+  },
+
+  /**
+   * Configurar event listeners
+   */
+  setupEventListeners() {
+    // Filtros de categoría - usar event delegation
+    this.elements.filters.addEventListener('click', (e) => {
+      const pill = e.target.closest('.pill');
+      if (pill && pill.dataset.category) {
+        e.preventDefault();
+        const category = pill.dataset.category;
+        console.log('BlogFilterSystem: Filtro clickeado -', category);
+        this.filterArticles(category);
+      }
+    });
+
+    // Botones de paginación
+    if (this.elements.prevBtn) {
+      this.elements.prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.goToPage(this.currentPage - 1);
+      });
+    }
+    
+    if (this.elements.nextBtn) {
+      this.elements.nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.goToPage(this.currentPage + 1);
+      });
+    }
+
+    // Números de página - event delegation
+    if (this.elements.paginationNumbers) {
+      this.elements.paginationNumbers.addEventListener('click', (e) => {
+        const pageBtn = e.target.closest('.page-number');
+        if (pageBtn && pageBtn.dataset.page) {
+          e.preventDefault();
+          const page = parseInt(pageBtn.dataset.page);
+          this.goToPage(page);
+        }
+      });
+    }
+  },
+
+  /**
+   * Filtrar artículos por categoría
+   */
+  filterArticles(category) {
+    console.log('BlogFilterSystem: Filtrando por categoría -', category);
+    
+    this.currentCategory = category;
+    this.currentPage = 1;
+
+    // Actualizar estado de los filtros
+    this.updateFilterState();
+
+    // Toggle clase 'filtered' en el grid (para CSS del destacado)
+    // Toggle carrusel de destacados
+    if (category === 'all') {
+      this.elements.grid.classList.remove('filtered');
+      this.toggleCarousel(true); // Mostrar carrusel
+    } else {
+      this.elements.grid.classList.add('filtered');
+      this.toggleCarousel(false); // Ocultar carrusel
+    }
+
+    // Obtener artículos filtrados (excluyendo destacados si es "todos")
+    const allArticles = this.getAllArticles();
+    const filteredArticles = this.getFilteredArticles(allArticles, category);
+
+    console.log('BlogFilterSystem: Total artículos:', allArticles.length, '| Filtrados:', filteredArticles.length);
+
+    // Actualizar visibilidad y paginación
+    this.updateArticlesVisibility(filteredArticles);
+    this.updatePagination(filteredArticles.length);
+    this.updateCounts(filteredArticles.length);
+    this.updateURL();
+
+    // Mostrar mensaje si no hay resultados
+    this.toggleNoResults(filteredArticles.length === 0);
+
+    // Scroll suave al grid solo cuando se filtra por categoría específica (no "Todos")
+    if (category !== 'all') {
+      const gridRect = this.elements.grid.getBoundingClientRect();
+      if (gridRect.top < 0 || gridRect.top > window.innerHeight * 0.5) {
+        const gridTop = this.elements.grid.getBoundingClientRect().top + window.pageYOffset - 100;
+        window.scrollTo({ top: gridTop, behavior: 'smooth' });
+      }
+    }
+  },
+
+  /**
+   * Obtener todos los artículos del grid
+   * Nota: Los destacados siempre se incluyen aquí, el filtrado determina cuáles mostrar
+   */
+  getAllArticles() {
+    return Array.from(this.elements.grid.querySelectorAll('.article-card'));
+  },
+  
+  /**
+   * Obtener artículos NO destacados del grid
+   */
+  getNonFeaturedArticles() {
+    return Array.from(this.elements.grid.querySelectorAll('.article-card:not([data-featured="true"])'));
+  },
+  
+  /**
+   * Obtener artículos destacados del grid
+   */
+  getFeaturedArticles() {
+    return Array.from(this.elements.grid.querySelectorAll('.article-card[data-featured="true"]'));
+  },
+
+  /**
+   * Obtener artículos filtrados por categoría
+   * Cuando es "todos", excluye destacados (están en el carrusel)
+   * Cuando es categoría específica, incluye destacados de esa categoría
+   */
+  getFilteredArticles(articles, category) {
+    if (category === 'all') {
+      // Excluir destacados - están en el carrusel
+      return articles.filter(article => article.dataset.featured !== 'true');
+    }
+    // Filtrar por categoría (incluye destacados de esa categoría)
+    return articles.filter(article => article.dataset.category === category);
+  },
+
+  /**
+   * Actualizar visibilidad de artículos con paginación
+   * Animación suave: primero sale lo viejo, luego entra lo nuevo
+   */
+  updateArticlesVisibility(filteredArticles) {
+    const allArticles = this.getAllArticles();
+    const start = (this.currentPage - 1) * this.articlesPerPage;
+    const end = start + this.articlesPerPage;
+    const articlesToShow = filteredArticles.slice(start, end);
+    
+    // Marcar grid como en transición
+    this.elements.grid.classList.add('is-transitioning');
+
+    // Paso 1: Animar salida de artículos visibles
+    const visibleArticles = allArticles.filter(article => 
+      article.style.display !== 'none' && article.classList.contains('fade-in')
+    );
+    
+    visibleArticles.forEach(article => {
+      article.classList.remove('fade-in');
+      article.classList.add('filtering-out');
+    });
+
+    // Paso 2: Después de la animación de salida, ocultar y mostrar nuevos
+    const exitDuration = visibleArticles.length > 0 ? 200 : 0;
+    
+    setTimeout(() => {
+      // Ocultar todos y limpiar clases
+      allArticles.forEach(article => {
+        article.style.display = 'none';
+        article.classList.remove('fade-in', 'filtering', 'filtering-out');
+      });
+
+      // Paso 3: Mostrar artículos nuevos con animación de entrada
+      articlesToShow.forEach((article, index) => {
+        article.style.display = 'block';
+        article.classList.add('filtering');
+        
+        // Forzar reflow para que la transición funcione
+        article.offsetHeight;
+        
+        // Animación escalonada de entrada (más suave)
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            article.classList.remove('filtering');
+            article.classList.add('fade-in');
+          }, index * 50);
+        });
+      });
+
+      // Quitar clase de transición después de que terminen las animaciones
+      setTimeout(() => {
+        this.elements.grid.classList.remove('is-transitioning');
+      }, articlesToShow.length * 50 + 350);
+
+      console.log('BlogFilterSystem: Mostrando artículos', start + 1, '-', start + articlesToShow.length);
+    }, exitDuration);
+  },
+
+  /**
+   * Actualizar estado visual de los filtros
+   */
+  updateFilterState() {
+    const pills = this.elements.filters.querySelectorAll('.pill');
+    pills.forEach(pill => {
+      const isActive = pill.dataset.category === this.currentCategory;
+      pill.classList.toggle('active', isActive);
+    });
+  },
+
+  /**
+   * Actualizar paginación
+   */
+  updatePagination(totalFilteredArticles) {
+    const totalPages = Math.ceil(totalFilteredArticles / this.articlesPerPage);
+
+    console.log('BlogFilterSystem: Páginas totales:', totalPages, '| Página actual:', this.currentPage);
+
+    // Ocultar paginación si solo hay una página o ningún artículo
+    if (this.elements.pagination) {
+      this.elements.pagination.style.display = totalPages <= 1 ? 'none' : 'flex';
+    }
+
+    // Actualizar botones prev/next
+    if (this.elements.prevBtn) {
+      this.elements.prevBtn.disabled = this.currentPage <= 1;
+    }
+    if (this.elements.nextBtn) {
+      this.elements.nextBtn.disabled = this.currentPage >= totalPages;
+    }
+
+    // Generar números de página
+    this.renderPageNumbers(totalPages);
+  },
+
+  /**
+   * Renderizar números de página
+   */
+  renderPageNumbers(totalPages) {
+    if (!this.elements.paginationNumbers || totalPages === 0) return;
+
+    let html = '';
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(totalPages, start + maxVisible - 1);
+
+    // Ajustar inicio si estamos cerca del final
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    // Primera página si no está visible
+    if (start > 1) {
+      html += `<button type="button" class="page-number" data-page="1">1</button>`;
+      if (start > 2) {
+        html += `<span class="page-ellipsis">...</span>`;
+      }
+    }
+
+    // Páginas visibles
+    for (let i = start; i <= end; i++) {
+      const isActive = i === this.currentPage ? 'active' : '';
+      html += `<button type="button" class="page-number ${isActive}" data-page="${i}">${i}</button>`;
+    }
+
+    // Última página si no está visible
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        html += `<span class="page-ellipsis">...</span>`;
+      }
+      html += `<button type="button" class="page-number" data-page="${totalPages}">${totalPages}</button>`;
+    }
+
+    this.elements.paginationNumbers.innerHTML = html;
+  },
+
+  /**
+   * Ir a una página específica
+   */
+  goToPage(page) {
+    const filteredArticles = this.getFilteredArticles(this.getAllArticles(), this.currentCategory);
+    const totalPages = Math.ceil(filteredArticles.length / this.articlesPerPage);
+
+    if (page < 1 || page > totalPages) return;
+
+    console.log('BlogFilterSystem: Navegando a página', page);
+
+    this.currentPage = page;
+    this.updateArticlesVisibility(filteredArticles);
+    this.updatePagination(filteredArticles.length);
+    this.updateCounts(filteredArticles.length);
+    this.updateURL();
+
+    // Scroll suave a la sección de artículos
+    const gridTop = this.elements.grid.getBoundingClientRect().top + window.pageYOffset - 100;
+    window.scrollTo({ top: gridTop, behavior: 'smooth' });
+  },
+
+  /**
+   * Actualizar contadores
+   */
+  updateCounts(totalFiltered) {
+    const start = (this.currentPage - 1) * this.articlesPerPage;
+    const currentPageCount = Math.min(this.articlesPerPage, totalFiltered - start);
+    
+    if (this.elements.visibleCount) {
+      this.elements.visibleCount.textContent = currentPageCount > 0 ? currentPageCount : 0;
+    }
+    if (this.elements.totalCount) {
+      this.elements.totalCount.textContent = totalFiltered;
+    }
+  },
+
+  /**
+   * Actualizar URL con parámetros de estado
+   */
+  updateURL() {
+    const params = new URLSearchParams();
+    
+    if (this.currentCategory !== 'all') {
+      params.set('categoria', this.currentCategory);
+    }
+    if (this.currentPage > 1) {
+      params.set('pagina', this.currentPage);
+    }
+
+    const newURL = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+
+    window.history.replaceState({}, '', newURL);
+  },
+
+  /**
+   * Mostrar/ocultar mensaje de sin resultados
+   */
+  toggleNoResults(show) {
+    if (this.elements.noResults) {
+      this.elements.noResults.style.display = show ? 'flex' : 'none';
+    }
+    // Ocultar el grid si no hay resultados
+    if (this.elements.grid) {
+      this.elements.grid.style.display = show ? 'none' : 'grid';
+    }
+  }
+};
+
+// Inicializar sistema de blog cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  // Inicializar inmediatamente si los elementos existen
+  if (document.body.classList.contains('blog-page')) {
+    // Pequeño delay para asegurar que todo esté listo
+    setTimeout(() => {
+      BlogFilterSystem.init();
+    }, 150);
+  }
+});

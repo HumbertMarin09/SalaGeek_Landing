@@ -85,6 +85,48 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ============================================
+   VIEW TRANSITIONS - Transiciones entre páginas
+   ============================================ */
+
+/* Habilitar View Transitions API */
+@view-transition {
+  navigation: auto;
+}
+
+/* Animación de salida de página */
+::view-transition-old(root) {
+  animation: page-fade-out 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Animación de entrada de página */
+::view-transition-new(root) {
+  animation: page-fade-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Fallback para navegadores sin View Transitions API */
 body {
   font-family:
     Inter,
@@ -100,6 +142,27 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Clase para fade-out manual (fallback) */
+body.page-transitioning {
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estado inicial para fade-in */
+body.page-entering {
+  opacity: 0;
+  transform: scale(1.02);
+}
+
+body.page-entered {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .container {
@@ -3195,36 +3258,15 @@ a {
 .featured-category {
   display: inline-flex;
   align-items: center;
-  padding: 0.4rem 0.9rem;
-  border-radius: 6px;
-  font-size: 0.7rem;
+  padding: 0.375rem 1rem;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.featured-category.category-series {
-  background: rgba(78, 205, 196, 0.15);
-  color: #4ecdc4;
-  border: 1px solid rgba(78, 205, 196, 0.25);
-}
-
-.featured-category.category-gaming {
-  background: rgba(99, 179, 237, 0.15);
-  color: #63b3ed;
-  border: 1px solid rgba(99, 179, 237, 0.25);
-}
-
-.featured-category.category-movies {
-  background: rgba(255, 209, 102, 0.15);
-  color: var(--accent-primary);
-  border: 1px solid rgba(255, 209, 102, 0.25);
-}
-
-.featured-category.category-anime {
-  background: rgba(231, 111, 81, 0.15);
-  color: var(--accent-secondary);
-  border: 1px solid rgba(231, 111, 81, 0.25);
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(255, 209, 102, 0.4);
 }
 
 .featured-badge {
@@ -3762,12 +3804,15 @@ a {
   position: absolute;
   bottom: 0.75rem;
   left: 0.75rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
+  padding: 0.375rem 1rem;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(255, 209, 102, 0.4);
 }
 
 .news-card-content {
@@ -6387,31 +6432,15 @@ a {
 .news-category {
   display: inline-block;
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
+  font-weight: 700;
+  padding: 0.375rem 1rem;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
+  border-radius: 50px;
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.news-category.gaming {
-  background: rgba(13, 110, 253, 0.15);
-  color: #4dabf7;
-  border: 1px solid rgba(13, 110, 253, 0.3);
-}
-
-.news-category.movies,
-.news-category.series {
-  background: rgba(231, 111, 81, 0.15);
-  color: #ff8b7b;
-  border: 1px solid rgba(231, 111, 81, 0.3);
-}
-
-.news-category.anime {
-  background: rgba(255, 107, 107, 0.15);
-  color: #ff6b9d;
-  border: 1px solid rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 209, 102, 0.4);
 }
 
 /* News Title */
