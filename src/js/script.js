@@ -453,13 +453,22 @@ async function loadPartial(selector, path) {
 /**
  * Carga header y footer de forma paralela
  * Inicializa la navegación una vez cargados
+ * Soporta múltiples selectores para compatibilidad
  */
 async function loadIncludes() {
   try {
+    // Selectores compatibles (blog usa header-container, resto usa header-placeholder)
+    const headerSelector = document.querySelector("#header-placeholder") 
+      ? "#header-placeholder" 
+      : "#header-container";
+    const footerSelector = document.querySelector("#footer-placeholder") 
+      ? "#footer-placeholder" 
+      : "#footer-container";
+    
     // Carga paralela para mejor performance
     await Promise.all([
-      loadPartial("#header-placeholder", "/src/pages/partials/header.html"),
-      loadPartial("#footer-placeholder", "/src/pages/partials/footer.html"),
+      loadPartial(headerSelector, "/src/pages/partials/header.html"),
+      loadPartial(footerSelector, "/src/pages/partials/footer.html"),
     ]);
 
     // Actualizar año dinámicamente en el footer
@@ -3290,8 +3299,9 @@ function activateSnapEffect() {
   showNotification("💎 THANOS SNAP ACTIVADO! *chasquido*", "error");
   easterEggTracker.unlock("thanos");
 
+  // Selectores actualizados: usar clases actuales del DOM
   const elements = document.querySelectorAll(
-    "section > *, .hero-badge, .testimonial-card, .about-stat"
+    "section > *, .hero-badge, .about-stat, .about-card, .feature-card, .featured-slide"
   );
   const elementsArray = Array.from(elements);
 
@@ -3688,7 +3698,8 @@ function activateMouseDodge() {
   showNotification("🏃 ¡Los elementos te esquivan! Mueve el mouse rápido", "success");
   easterEggTracker.unlock("shake");
 
-  const elements = document.querySelectorAll(".hero-badge, .btn, .testimonial-card, .stat-card");
+  // Selectores actualizados: usar clases actuales del DOM
+  const elements = document.querySelectorAll(".hero-badge, .btn, .about-stat, .about-card, .feature-card");
 
   elements.forEach((el) => {
     el.style.transition = "transform 0.15s ease-out";
@@ -3861,10 +3872,11 @@ function initSpecialDates() {
     }, 2000);
   }
 
-  // Año Nuevo (31 dic - 1 ene)
+  // Año Nuevo (31 dic - 1 ene) - Año dinámico
   if ((month === 12 && day === 31) || (month === 1 && day === 1)) {
     setTimeout(() => {
-      showNotification("🎆 ¡Feliz Año Nuevo! 2025 🎉", "success");
+      const year = new Date().getFullYear();
+      showNotification(`🎆 ¡Feliz Año Nuevo! ${year} 🎉`, "success");
       applyNewYearTheme();
     }, 2000);
   }
@@ -5023,7 +5035,10 @@ function initMobileEasterEggs() {
 
   // 3. LONG PRESS en email input del Newsletter -> Glitch Stats
   let newsletterLongPressTimer = null;
-  const newsletterInput = document.querySelector(".newsletter-form input[type='email']");
+  // Selector actualizado: buscar en múltiples formularios de newsletter
+  const newsletterInput = document.querySelector(".news-subscribe-form input[type='email']") || 
+                          document.querySelector("#news-subscribe-form input[type='email']") ||
+                          document.querySelector(".newsletter-form input[type='email']");
 
   const handleNewsletterStart = (e) => {
     if (window.innerWidth > 1024) return;
@@ -5068,7 +5083,10 @@ function initMobileEasterEggs() {
   // 4. DOBLE TAP/CLICK en copyright del footer -> Thanos Snap
   let copyrightTapCount = 0;
   let copyrightTapTimer = null;
-  const copyright = document.querySelector(".footer-bottom p");
+  // Selector actualizado: usar .footer-copyright o fallback a .footer-bottom p
+  const copyright = document.querySelector(".footer-copyright") || 
+                    document.querySelector(".footer-bottom-left p") ||
+                    document.querySelector(".footer-bottom p");
 
   const handleCopyrightTap = (e) => {
     if (window.areEasterEggsDisabled?.()) return;
@@ -5126,8 +5144,11 @@ function initMobileEasterEggs() {
   setTimeout(() => {
     let footerBrandLongPress = null;
 
-    // PASO 1: Intentar selector directo
-    let footerBrand = document.querySelector(".footer-bottom strong");
+    // PASO 1: Intentar selectores actualizados (estructura 2026)
+    let footerBrand = document.querySelector(".footer-copyright strong") ||
+                      document.querySelector(".footer-bottom-left strong") ||
+                      document.querySelector(".footer-brand-name") ||
+                      document.querySelector(".footer-bottom strong");
 
     // PASO 2: Fallback - buscar por contenido de texto
     if (!footerBrand) {

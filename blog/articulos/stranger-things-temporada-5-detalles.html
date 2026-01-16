@@ -29,8 +29,8 @@
 
     <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
-    <link rel="stylesheet" href="/src/css/blog.css" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=209" />
+    <link rel="stylesheet" href="/src/css/blog.min.css?v=209" />
   </head>
 
   <body>
@@ -265,17 +265,156 @@
         <aside class="article-share">
           <h3>Compartir artículo</h3>
           <div class="share-buttons">
-            <button class="share-btn share-twitter">🐦 Twitter</button>
-            <button class="share-btn share-facebook">📘 Facebook</button>
-            <button class="share-btn share-whatsapp">💬 WhatsApp</button>
-            <button class="share-btn share-copy">🔗 Copiar</button>
+            <button class="share-btn share-twitter" onclick="shareOnTwitter()">🐦 Twitter</button>
+            <button class="share-btn share-facebook" onclick="shareOnFacebook()">📘 Facebook</button>
+            <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()">💬 WhatsApp</button>
+            <button class="share-btn share-copy" onclick="copyLink(this)">🔗 Copiar</button>
           </div>
         </aside>
+
+        <!-- Comments Section -->
+        <section class="comments-section" id="comments">
+          <h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Comentarios
+          </h3>
+
+          <!-- Comment Form -->
+          <form class="comment-form" id="comment-form">
+            <h4>Deja tu comentario</h4>
+            <div class="comment-form-grid">
+              <div class="form-group">
+                <label for="comment-name">Nombre *</label>
+                <input type="text" id="comment-name" name="name" placeholder="Tu nombre" required>
+              </div>
+              <div class="form-group">
+                <label for="comment-email">Email *</label>
+                <input type="email" id="comment-email" name="email" placeholder="tu@email.com" required>
+              </div>
+              <div class="form-group full-width">
+                <label for="comment-content">Comentario *</label>
+                <textarea id="comment-content" name="content" placeholder="¿Qué opinas sobre este artículo?" required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              Publicar comentario
+            </button>
+          </form>
+
+          <!-- Comments List -->
+          <div class="comments-list" id="comments-list">
+            <!-- Example comments - these would be loaded dynamically -->
+            <div class="comment">
+              <div class="comment-header">
+                <div class="comment-avatar">MG</div>
+                <div class="comment-meta">
+                  <span class="comment-author">María García</span>
+                  <span class="comment-date">Hace 2 horas</span>
+                </div>
+              </div>
+              <div class="comment-content">
+                <p>¡No puedo esperar a que salga! He sido fan de Stranger Things desde la primera temporada. Espero que Max se recupere 😭</p>
+              </div>
+              <div class="comment-actions">
+                <button><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg> 12</button>
+                <button>Responder</button>
+              </div>
+            </div>
+
+            <div class="comment">
+              <div class="comment-header">
+                <div class="comment-avatar">JP</div>
+                <div class="comment-meta">
+                  <span class="comment-author">Juan Pablo</span>
+                  <span class="comment-date">Hace 5 horas</span>
+                </div>
+              </div>
+              <div class="comment-content">
+                <p>El presupuesto de $250M es increíble. Se nota que Netflix quiere cerrar la serie con todo. Las imágenes filtradas se ven prometedoras.</p>
+              </div>
+              <div class="comment-actions">
+                <button><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg> 8</button>
+                <button>Responder</button>
+              </div>
+
+              <!-- Reply example -->
+              <div class="comment-replies">
+                <div class="comment">
+                  <div class="comment-header">
+                    <div class="comment-avatar">AL</div>
+                    <div class="comment-meta">
+                      <span class="comment-author">Ana López</span>
+                      <span class="comment-date">Hace 3 horas</span>
+                    </div>
+                  </div>
+                  <div class="comment-content">
+                    <p>Totalmente de acuerdo. La escena final de la T4 ya era impresionante, imagino lo que harán con este presupuesto.</p>
+                  </div>
+                  <div class="comment-actions">
+                    <button><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg> 3</button>
+                    <button>Responder</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comment">
+              <div class="comment-header">
+                <div class="comment-avatar">CR</div>
+                <div class="comment-meta">
+                  <span class="comment-author">Carlos Ruiz</span>
+                  <span class="comment-date">Hace 1 día</span>
+                </div>
+              </div>
+              <div class="comment-content">
+                <p>¿Alguien más cree que Eddie debió sobrevivir? 💔 Aún no supero la T4...</p>
+              </div>
+              <div class="comment-actions">
+                <button><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg> 24</button>
+                <button>Responder</button>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </article>
     </main>
 
     <div id="footer-container"></div>
+
+    <!-- Share functions -->
+    <script>
+      function shareOnTwitter() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(document.title);
+        window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=550,height=420');
+      }
+      
+      function shareOnFacebook() {
+        const url = encodeURIComponent(window.location.href);
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420');
+      }
+      
+      function shareOnWhatsApp() {
+        const url = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent(document.title);
+        window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+      }
+      
+      function copyLink(btn) {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          const originalText = btn.textContent;
+          btn.textContent = '✓ Copiado';
+          setTimeout(() => btn.textContent = originalText, 2000);
+        });
+      }
+    </script>
 
     <!-- Cookie Consent Banner -->
     <div class="cookie-consent" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
