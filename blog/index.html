@@ -47,7 +47,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
     <link rel="stylesheet" href="/src/css/style.min.css?v=214" />
-    <link rel="stylesheet" href="/src/css/blog.css?v=233" />
+    <link rel="stylesheet" href="/src/css/blog.css?v=244" />
     
     <!-- Blog Engine -->
     <script src="/src/js/blog-engine.js?v=5"></script>
@@ -210,7 +210,11 @@
                 </svg>
                 Artículos Destacados
               </h2>
-              <div class="carousel-dots" id="carousel-dots"></div>
+              <div class="carousel-indicator" id="carousel-indicator">
+                <span class="indicator-current">1</span>
+                <span class="indicator-separator">/</span>
+                <span class="indicator-total">3</span>
+              </div>
             </div>
             <!-- Botones de navegación fuera del header -->
             <button class="carousel-btn carousel-prev" aria-label="Anterior">
@@ -358,8 +362,17 @@
       let blogEngine;
       let featuredIds = []; // IDs de artículos destacados para excluirlos del grid
       
+      // Función para obtener artículos por página según el ancho de pantalla
+      function getArticlesPerPage() {
+        return window.innerWidth <= 480 ? 4 : 6;
+      }
+      
       window.addEventListener('load', async () => {
         blogEngine = new BlogEngine();
+        
+        // Configurar artículos por página según dispositivo
+        blogEngine.articlesPerPage = getArticlesPerPage();
+        
         const loaded = await blogEngine.init();
         
         if (!loaded) {
@@ -464,6 +477,20 @@
               }, 350);
             }
           }
+        });
+        
+        // Actualizar articlesPerPage en resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            const newPerPage = getArticlesPerPage();
+            if (blogEngine.articlesPerPage !== newPerPage) {
+              blogEngine.articlesPerPage = newPerPage;
+              blogEngine.currentPage = 1;
+              updateView(blogEngine.currentFilter || 'all');
+            }
+          }, 250);
         });
       });
       
@@ -630,17 +657,27 @@
         const slides = track.querySelectorAll('.featured-slide');
         const prevBtn = document.querySelector('.carousel-prev');
         const nextBtn = document.querySelector('.carousel-next');
+        const indicatorCurrent = document.querySelector('.indicator-current');
+        const indicatorTotal = document.querySelector('.indicator-total');
         
         if (slides.length === 0) return;
         
         let currentIndex = 0;
         let autoplayInterval = null;
         
+        // Actualizar total inicial
+        if (indicatorTotal) indicatorTotal.textContent = slides.length;
+        
+        function updateIndicator() {
+          if (indicatorCurrent) indicatorCurrent.textContent = currentIndex + 1;
+        }
+        
         function showSlide(index) {
           slides.forEach((s, i) => {
             s.classList.remove('active');
             if (i === index) s.classList.add('active');
           });
+          updateIndicator();
         }
         
         function nextSlide() {
@@ -670,6 +707,7 @@
         
         // Iniciar autoplay
         autoplayInterval = setInterval(nextSlide, 6000);
+        updateIndicator();
       }
     </script>
   </body>
