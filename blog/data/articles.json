@@ -143,6 +143,42 @@
       "views": 3421,
       "featured": false,
       "trending": false
+    },
+    {
+      "id": "zelda-echoes-of-wisdom-review",
+      "title": "Zelda: Echoes of Wisdom - Review: La Princesa Finalmente Brilla Como Protagonista",
+      "slug": "zelda-echoes-of-wisdom-review",
+      "excerpt": "Nintendo sorprende con un Zelda donde la princesa es la heroína. Echoes of Wisdom ofrece mecánicas frescas, puzzles creativos y una historia encantadora.",
+      "content": "/blog/articulos/zelda-echoes-of-wisdom-review.html",
+      "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=450&fit=crop&q=80",
+      "category": "gaming",
+      "categoryDisplay": "Gaming",
+      "tags": ["zelda", "nintendo", "switch", "review"],
+      "author": "Sala Geek",
+      "publishDate": "2026-01-01T12:00:00Z",
+      "modifiedDate": "2026-01-01T12:00:00Z",
+      "readTime": "10 min",
+      "views": 2156,
+      "featured": false,
+      "trending": false
+    },
+    {
+      "id": "jujutsu-kaisen-final-arc",
+      "title": "Jujutsu Kaisen: El Arco Final del Manga Llega con Sorpresas Impactantes",
+      "slug": "jujutsu-kaisen-final-arc",
+      "excerpt": "Gege Akutami confirma que Jujutsu Kaisen entra en su arco final. Los fans se preparan para despedirse de Yuji, Megumi y el resto de los hechiceros.",
+      "content": "/blog/articulos/jujutsu-kaisen-final-arc.html",
+      "image": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=450&fit=crop&q=80",
+      "category": "anime",
+      "categoryDisplay": "Anime",
+      "tags": ["jujutsu kaisen", "manga", "anime", "shonen jump"],
+      "author": "Sala Geek",
+      "publishDate": "2025-12-30T14:00:00Z",
+      "modifiedDate": "2025-12-30T14:00:00Z",
+      "readTime": "6 min",
+      "views": 4521,
+      "featured": false,
+      "trending": false
     }
   ],
   "categories": [

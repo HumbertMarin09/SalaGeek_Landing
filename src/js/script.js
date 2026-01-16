@@ -467,7 +467,7 @@ async function loadIncludes() {
     
     // Carga paralela para mejor performance
     await Promise.all([
-      loadPartial(headerSelector, "/src/pages/partials/header.html"),
+      loadPartial(headerSelector, "/src/pages/partials/header.html?v=135"),
       loadPartial(footerSelector, "/src/pages/partials/footer.html"),
     ]);
 
@@ -2340,12 +2340,9 @@ function initLegalPages() {
   const legalPage = document.querySelector(".legal-page");
   if (!legalPage) return;
 
-  // Animar elementos iniciales
+  // Animar TOC con delay
   setTimeout(() => {
-    const header = document.querySelector(".legal-header");
     const toc = document.querySelector(".legal-toc");
-
-    if (header) header.classList.add("animate-in");
     if (toc) toc.classList.add("animate-in");
   }, 100);
 
@@ -2354,9 +2351,6 @@ function initLegalPages() {
 
   // Inicializar animaciones de secciones
   initLegalSectionAnimations();
-
-  // Inicializar progress bar de lectura
-  initReadingProgress();
 }
 
 /**
@@ -2736,6 +2730,97 @@ function playSound(soundName) {
    - Confetti celebration al completar todos
    
    ============================================ */
+
+/**
+ * Helper para crear interacciones de Long Press
+ * Reduce código duplicado en Easter Eggs móviles
+ * 
+ * @param {HTMLElement} element - Elemento al que añadir long press
+ * @param {Object} options - Configuración
+ * @param {Function} options.onActivate - Callback al completar long press
+ * @param {number} options.duration - Milisegundos para activar (default: 600)
+ * @param {boolean} options.mobileOnly - Solo activar en móvil (default: true)
+ * @param {Object} options.feedback - Configuración de feedback visual
+ */
+function createLongPressHandler(element, options = {}) {
+  if (!element) return null;
+  
+  const {
+    onActivate,
+    duration = 600,
+    mobileOnly = true,
+    feedback = {}
+  } = options;
+  
+  const {
+    scaleDown = 0.95,
+    scaleUp = 1.1,
+    glowColor = 'var(--accent-primary)'
+  } = feedback;
+  
+  let timer = null;
+  let activated = false;
+  
+  const handleStart = (e) => {
+    if (mobileOnly && window.innerWidth > 1024) return;
+    if (window.areEasterEggsDisabled?.()) return;
+    
+    activated = false;
+    element.style.transform = `scale(${scaleDown})`;
+    element.style.transition = 'transform 0.1s ease';
+    
+    timer = setTimeout(() => {
+      activated = true;
+      if (onActivate) onActivate();
+      
+      // Feedback visual
+      element.style.transform = `scale(${scaleUp})`;
+      element.style.boxShadow = `0 0 20px ${glowColor}`;
+      if (navigator.vibrate) navigator.vibrate(200);
+      
+      setTimeout(() => {
+        element.style.transform = '';
+        element.style.boxShadow = '';
+      }, 500);
+    }, duration);
+  };
+  
+  const handleEnd = (e) => {
+    clearTimeout(timer);
+    element.style.transform = '';
+    
+    if (activated) {
+      e?.preventDefault?.();
+      e?.stopPropagation?.();
+      activated = false;
+      return false;
+    }
+  };
+  
+  const handleMove = () => {
+    clearTimeout(timer);
+    element.style.transform = '';
+  };
+  
+  // Touch events
+  element.addEventListener('touchstart', handleStart, { passive: true });
+  element.addEventListener('touchend', handleEnd);
+  element.addEventListener('touchmove', handleMove);
+  
+  // Mouse events (for responsive testing)
+  element.addEventListener('mousedown', handleStart);
+  element.addEventListener('mouseup', handleEnd);
+  element.addEventListener('mouseleave', handleEnd);
+  
+  return { destroy: () => {
+    element.removeEventListener('touchstart', handleStart);
+    element.removeEventListener('touchend', handleEnd);
+    element.removeEventListener('touchmove', handleMove);
+    element.removeEventListener('mousedown', handleStart);
+    element.removeEventListener('mouseup', handleEnd);
+    element.removeEventListener('mouseleave', handleEnd);
+  }};
+}
 
 /**
  * EASTER EGG #1: Código Konami
@@ -5551,6 +5636,14 @@ const BlogFilterSystem = {
       return;
     }
     
+    // Si el carrusel ya tiene slides generados por el blog (featured-slide), no interferir
+    const blogFeaturedSlides = this.carousel.track.querySelectorAll('.featured-slide');
+    if (blogFeaturedSlides.length > 0) {
+      console.log('BlogFilterSystem: Carrusel del blog detectado, no interferir');
+      this.carousel.section.classList.remove('hidden');
+      return;
+    }
+    
     // Encontrar todos los artículos destacados en el grid
     const featuredArticles = Array.from(
       this.elements.grid.querySelectorAll('.article-card[data-featured="true"]')
@@ -5821,7 +5914,21 @@ const BlogFilterSystem = {
    * También mueve los artículos destacados entre carrusel y grid
    */
   toggleCarousel(show) {
-    if (!this.carousel.section || !this.carousel.featuredArticles) return;
+    if (!this.carousel.section) return;
+    
+    // Si el carrusel tiene slides del blog (.featured-slide), solo mostrar/ocultar
+    const blogSlides = this.carousel.track?.querySelectorAll('.featured-slide');
+    if (blogSlides && blogSlides.length > 0) {
+      if (show) {
+        this.carousel.section.classList.remove('hidden');
+      } else {
+        this.carousel.section.classList.add('hidden');
+      }
+      return;
+    }
+    
+    // Sistema original para el landing page
+    if (!this.carousel.featuredArticles) return;
     
     if (show && this.carousel.featuredArticles.length > 0) {
       // Mostrar carrusel y mover destacados al carrusel
@@ -6193,13 +6300,12 @@ const BlogFilterSystem = {
   }
 };
 
-// Inicializar sistema de blog cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar inmediatamente si los elementos existen
-  if (document.body.classList.contains('blog-page')) {
-    // Pequeño delay para asegurar que todo esté listo
-    setTimeout(() => {
-      BlogFilterSystem.init();
-    }, 150);
-  }
-});
+// NOTA: BlogFilterSystem DESHABILITADO - Ahora usamos BlogEngine de blog-engine.js
+// El sistema dinámico de blog-engine.js maneja filtros, paginación y carrusel
+// document.addEventListener('DOMContentLoaded', () => {
+//   if (document.body.classList.contains('blog-page')) {
+//     setTimeout(() => {
+//       BlogFilterSystem.init();
+//     }, 150);
+//   }
+// });

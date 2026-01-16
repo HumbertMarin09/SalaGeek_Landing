@@ -46,11 +46,11 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=213" />
-    <link rel="stylesheet" href="/src/css/blog.css?v=218" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=214" />
+    <link rel="stylesheet" href="/src/css/blog.css?v=233" />
     
     <!-- Blog Engine -->
-    <script src="/src/js/blog-engine.js?v=1"></script>
+    <script src="/src/js/blog-engine.js?v=5"></script>
 
     <!-- Schema.org - Blog -->
     <script type="application/ld+json">
@@ -204,7 +204,7 @@
           <!-- Featured Articles Carousel (visible solo cuando filtro = "Todos") -->
           <div class="featured-carousel-section" id="featured-carousel-section">
             <div class="featured-carousel-header">
-              <h2 class="featured-carousel-title">
+              <h2 class="featured-carousel-title" id="featured-title">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
@@ -230,8 +230,8 @@
             </div>
           </div>
 
-          <div class="section-header">
-            <h2 class="section-title">Últimos Artículos</h2>
+          <div class="section-header" id="articles-section-header">
+            <h2 class="section-title" id="latest-title">Últimos Artículos</h2>
             <div class="articles-count">
               <span id="visible-count">0</span> de <span id="total-count">0</span> artículos
             </div>
@@ -350,12 +350,13 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/src/js/script.js?v=131" defer></script>
+    <script src="/src/js/script.js?v=139" defer></script>
     
     <!-- Blog Initialization -->
     <script>
       // Inicializar el motor del blog
       let blogEngine;
+      let featuredIds = []; // IDs de artículos destacados para excluirlos del grid
       
       window.addEventListener('load', async () => {
         blogEngine = new BlogEngine();
@@ -370,8 +371,8 @@
           return;
         }
         
-        // Renderizar artículos iniciales
-        updateView();
+        // Guardar IDs de artículos destacados
+        featuredIds = blogEngine.getFeaturedArticles(3).map(a => a.id);
         
         // Cargar artículos destacados en el carrusel
         const featured = blogEngine.getFeaturedArticles(3);
@@ -385,10 +386,10 @@
                   <img src="${article.image}" alt="${article.title}" class="featured-image" loading="lazy" />
                 </div>
                 <div class="featured-content">
-                  <div class="featured-badges">
-                    <span class="featured-category category-${article.category}">${article.categoryDisplay}</span>
-                    <span class="featured-badge">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <div class="blog-carousel-badges">
+                    <span class="blog-carousel-category category-${article.category}">${article.categoryDisplay}</span>
+                    <span class="blog-carousel-featured">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                       </svg>
                       Destacado
@@ -409,21 +410,39 @@
           initBlogFeaturedCarousel();
         }
         
+        // Renderizar artículos iniciales (excluyendo destacados en "Todos")
+        updateView('all');
+        
         // Event listeners para filtros
         document.querySelectorAll(".category-pills .pill").forEach((pill) => {
           pill.addEventListener("click", () => {
             const category = pill.dataset.category;
             
-            // Actualizar UI de pills
+            // Actualizar UI de pills con animación
             document.querySelectorAll(".category-pills .pill").forEach((p) => p.classList.remove("active"));
             pill.classList.add("active");
             
             // Filtrar artículos
             blogEngine.filterByCategory(category);
-            updateView();
+            updateView(category);
             
-            // Scroll suave al grid
-            document.getElementById("articles-grid").scrollIntoView({ behavior: "smooth", block: "start" });
+            // Scroll suave al título correspondiente
+            // En "Todos": scroll al título "Artículos Destacados"
+            // En categorías: scroll al título "Últimos Artículos"
+            const targetTitle = category === 'all' 
+              ? document.getElementById("featured-title")
+              : document.getElementById("latest-title");
+            
+            // Delay más largo para esperar que el DOM se actualice completamente
+            setTimeout(() => {
+              if (targetTitle) {
+                // Calcular posición exacta del título con más offset arriba
+                const titleRect = targetTitle.getBoundingClientRect();
+                const absoluteTop = window.pageYOffset + titleRect.top - 150; // 150px de margen arriba
+                console.log('Scroll to:', absoluteTop, 'Title:', targetTitle.textContent.trim());
+                window.scrollTo({ top: absoluteTop, behavior: 'smooth' });
+              }
+            }, 350); // Más tiempo para que las animaciones terminen
           });
         });
         
@@ -432,24 +451,67 @@
           if (e.target.closest(".pagination-btn[data-page]")) {
             const page = parseInt(e.target.closest(".pagination-btn").dataset.page);
             if (blogEngine.goToPage(page)) {
-              updateView();
-              document.getElementById("articles-grid").scrollIntoView({ behavior: "smooth" });
+              const currentCategory = blogEngine.currentFilter;
+              updateView(currentCategory);
+              // Scroll al título "Últimos Artículos" en paginación
+              setTimeout(() => {
+                const latestTitle = document.getElementById("latest-title");
+                if (latestTitle) {
+                  const titleRect = latestTitle.getBoundingClientRect();
+                  const absoluteTop = window.pageYOffset + titleRect.top - 150; // 150px de margen arriba
+                  window.scrollTo({ top: absoluteTop, behavior: 'smooth' });
+                }
+              }, 350);
             }
           }
         });
       });
       
-      function updateView() {
-        // Renderizar artículos y paginación
-        blogEngine.renderArticles("articles-grid");
-        blogEngine.renderPagination("pagination");
+      function updateView(category) {
+        const carouselSection = document.getElementById('featured-carousel-section');
+        const isAll = category === 'all';
+        
+        // Mostrar/ocultar carrusel con animación suave
+        if (carouselSection) {
+          if (isAll) {
+            carouselSection.style.opacity = '0';
+            carouselSection.style.display = 'block';
+            requestAnimationFrame(() => {
+              carouselSection.style.transition = 'opacity 0.4s ease-out';
+              carouselSection.style.opacity = '1';
+            });
+          } else {
+            carouselSection.style.transition = 'opacity 0.3s ease-out';
+            carouselSection.style.opacity = '0';
+            setTimeout(() => {
+              carouselSection.style.display = 'none';
+            }, 300);
+          }
+        }
+        
+        // Filtrar artículos: excluir destacados solo cuando está en "Todos"
+        let articlesToRender;
+        if (isAll) {
+          // En "Todos": excluir los destacados del grid (están en el carrusel)
+          articlesToRender = blogEngine.filteredArticles.filter(a => !featuredIds.includes(a.id));
+        } else {
+          // En categoría específica: mostrar todos los de esa categoría (incluidos destacados)
+          articlesToRender = blogEngine.filteredArticles;
+        }
+        
+        // Renderizar artículos con la lista filtrada
+        renderArticlesCustom(articlesToRender);
+        
+        // Renderizar paginación considerando los artículos reales a mostrar
+        renderPaginationCustom(articlesToRender.length);
         
         // Actualizar contador
-        const totalArticles = blogEngine.filteredArticles.length;
-        const currentArticles = blogEngine.getArticlesForCurrentPage().length;
+        const totalArticles = articlesToRender.length;
+        const start = (blogEngine.currentPage - 1) * blogEngine.articlesPerPage;
+        const currentArticles = Math.min(blogEngine.articlesPerPage, totalArticles - start);
         
         document.getElementById("total-count").textContent = totalArticles;
-        document.getElementById("visible-count").textContent = currentArticles;
+        document.getElementById("visible-count").textContent = Math.max(0, currentArticles);
         
         // Mostrar/ocultar mensaje de no resultados
         const noResults = document.getElementById("no-results");
@@ -461,6 +523,105 @@
           noResults.style.display = "none";
           articlesGrid.style.display = "grid";
         }
+      }
+      
+      // Renderizar artículos con animación mejorada
+      function renderArticlesCustom(articles) {
+        const container = document.getElementById("articles-grid");
+        if (!container) return;
+        
+        container.classList.add('js-initialized');
+        
+        const start = (blogEngine.currentPage - 1) * blogEngine.articlesPerPage;
+        const end = start + blogEngine.articlesPerPage;
+        const pageArticles = articles.slice(start, end);
+        
+        if (pageArticles.length === 0) {
+          container.innerHTML = `
+            <div class="no-results">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <h3>No se encontraron artículos</h3>
+              <p>Intenta con otra categoría</p>
+            </div>
+          `;
+          return;
+        }
+        
+        // Fade out con animación suave
+        const existingCards = container.querySelectorAll('.article-card');
+        existingCards.forEach(card => {
+          card.style.transition = 'opacity 0.25s ease-out, transform 0.25s ease-out';
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(-10px) scale(0.98)';
+        });
+        
+        // Delay para animación de salida, luego renderizar nuevos
+        setTimeout(() => {
+          container.innerHTML = pageArticles.map((article) => blogEngine.generateArticleCard(article)).join("");
+          
+          // Animación de entrada escalonada
+          const newCards = container.querySelectorAll('.article-card');
+          newCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px) scale(0.98)';
+            
+            setTimeout(() => {
+              card.style.transition = 'opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0) scale(1)';
+            }, index * 60); // Stagger de 60ms entre cada card
+          });
+        }, existingCards.length > 0 ? 250 : 0);
+      }
+      
+      // Renderizar paginación personalizada
+      function renderPaginationCustom(totalArticles) {
+        const container = document.getElementById("pagination");
+        if (!container) return;
+        
+        const totalPages = Math.ceil(totalArticles / blogEngine.articlesPerPage);
+        
+        if (totalPages <= 1) {
+          container.innerHTML = "";
+          return;
+        }
+        
+        let html = '<div class="pagination">';
+        
+        // Botón anterior
+        if (blogEngine.currentPage > 1) {
+          html += `<button class="pagination-btn pagination-prev" data-page="${blogEngine.currentPage - 1}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Anterior</span>
+          </button>`;
+        }
+        
+        // Números de página
+        for (let i = 1; i <= totalPages; i++) {
+          if (i === 1 || i === totalPages || (i >= blogEngine.currentPage - 1 && i <= blogEngine.currentPage + 1)) {
+            html += `<button class="pagination-btn ${i === blogEngine.currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
+          } else if (i === blogEngine.currentPage - 2 || i === blogEngine.currentPage + 2) {
+            html += '<span class="pagination-dots">...</span>';
+          }
+        }
+        
+        // Botón siguiente
+        if (blogEngine.currentPage < totalPages) {
+          html += `<button class="pagination-btn pagination-next" data-page="${blogEngine.currentPage + 1}">
+            <span>Siguiente</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>`;
+        }
+        
+        html += "</div>";
+        container.innerHTML = html;
       }
       
       // Carrusel simple para artículos destacados en blog

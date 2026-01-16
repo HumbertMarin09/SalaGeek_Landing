@@ -490,6 +490,7 @@
   border: 1px solid rgba(255, 209, 102, 0.15);
   position: relative;
   overflow: hidden;
+  scroll-margin-top: 2rem; /* Espacio arriba al hacer scroll */
 }
 
 .featured-carousel-section::before {
@@ -513,6 +514,269 @@
 .featured-carousel-section.hidden {
   display: none;
 }
+
+/* ============================================
+   FEATURED SLIDES - Diseño Grid con badges mejorados
+   ============================================ */
+.featured-carousel-section .featured-slide {
+  display: none !important;
+  opacity: 0 !important;
+  width: 100%;
+}
+
+.featured-carousel-section .featured-slide.active {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  opacity: 1 !important;
+  visibility: visible !important;
+  min-height: 320px;
+  background: linear-gradient(135deg, rgba(10, 14, 39, 0.95) 0%, rgba(26, 31, 58, 0.95) 100%);
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(255, 209, 102, 0.05);
+  animation: blogCarouselFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transition: all 0.4s ease;
+}
+
+.featured-carousel-section .featured-slide:hover {
+  border-color: rgba(255, 209, 102, 0.4);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 209, 102, 0.1);
+  transform: translateY(-4px);
+}
+
+.featured-carousel-section .featured-link {
+  display: contents;
+}
+
+.featured-carousel-section .featured-image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-carousel-section .featured-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 320px;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.featured-carousel-section .featured-slide:hover .featured-image {
+  transform: scale(1.05);
+}
+
+.featured-carousel-section .featured-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* ============================================
+   BADGES DEL CARRUSEL DEL BLOG - Clases únicas
+   Sin conflictos con style.css
+   ============================================ */
+.blog-carousel-badges {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-carousel-category {
+  display: inline-block;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(255, 209, 102, 0.35);
+}
+
+/* Todas las categorías usan el mismo estilo dorado */
+.blog-carousel-category.category-series,
+.blog-carousel-category.category-gaming,
+.blog-carousel-category.category-peliculas,
+.blog-carousel-category.category-anime,
+.blog-carousel-category.category-tecnologia {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
+}
+
+.blog-carousel-featured {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 50px;
+  background: rgba(255, 209, 102, 0.15);
+  color: var(--accent-primary);
+  border: 1px solid rgba(255, 209, 102, 0.4);
+  white-space: nowrap;
+}
+
+.blog-carousel-featured svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.featured-carousel-section .featured-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.featured-carousel-section .featured-slide:hover .featured-title {
+  color: var(--accent-primary);
+}
+
+.featured-carousel-section .featured-excerpt {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.featured-carousel-section .featured-meta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 209, 102, 0.1);
+  margin-top: auto;
+}
+
+.featured-carousel-section .featured-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes blogCarouselFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Responsive para carrusel del blog */
+@media (max-width: 1024px) {
+  .featured-carousel-section .featured-slide.active {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .featured-carousel-section .featured-image {
+    min-height: 220px;
+    max-height: 280px;
+  }
+
+  .featured-carousel-section .featured-content {
+    padding: 1.5rem;
+  }
+
+  .featured-carousel-section .featured-title {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .featured-carousel-section {
+    padding: 1.5rem;
+  }
+
+  .featured-carousel-section .featured-image {
+    min-height: 180px;
+    max-height: 220px;
+  }
+
+  .featured-carousel-section .featured-title {
+    font-size: 1.15rem;
+  }
+
+  .featured-carousel-section .featured-excerpt {
+    font-size: 0.9rem;
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-carousel-section {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .featured-carousel-section .featured-slide.active {
+    border-radius: 12px;
+  }
+
+  .featured-carousel-section .featured-image {
+    min-height: 160px;
+    max-height: 200px;
+  }
+
+  .featured-carousel-section .featured-content {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .featured-carousel-section .featured-title {
+    font-size: 1.1rem;
+  }
+
+  .featured-carousel-section .featured-badges {
+    gap: 0.5rem;
+  }
+
+  .featured-carousel-section .featured-category,
+  .featured-carousel-section .featured-badge {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.85rem;
+  }
+
+  .featured-carousel-section .featured-badge svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .featured-carousel-section .featured-meta {
+    font-size: 0.8rem;
+    gap: 1rem;
+  }
+}
+
 
 .featured-carousel-header {
   display: flex;
@@ -1731,65 +1995,7 @@
   margin-bottom: 1rem;
 }
 
-.share-buttons {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
-  border: 1px solid var(--border-color);
-  margin-bottom: 1.5rem;
-}
-
-.share-icons {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.share-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  transition: all var(--transition-fast);
-}
-
-.share-btn:hover {
-  transform: translateY(-2px);
-}
-
-.share-btn.twitter:hover {
-  background: #1da1f2;
-  color: white;
-  border-color: #1da1f2;
-}
-
-.share-btn.facebook:hover {
-  background: #1877f2;
-  color: white;
-  border-color: #1877f2;
-}
-
-.share-btn.whatsapp:hover {
-  background: #25d366;
-  color: white;
-  border-color: #25d366;
-}
-
-.share-btn.copy-link:hover {
-  background: var(--accent-primary);
-  color: var(--bg-primary);
-  border-color: var(--accent-primary);
-}
-
-.share-btn.copied {
-  background: #10b981;
-  color: white;
-  border-color: #10b981;
-}
+/* NOTA: .share-buttons y .share-btn estilos premium están en línea ~3370 */
 
 /* Sidebar Newsletter */
 .sidebar-newsletter {
@@ -1821,35 +2027,7 @@
   margin-top: 2rem;
 }
 
-.article-tags {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.tags-label {
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.tag {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 50px;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  transition: all var(--transition-fast);
-}
-
-.tag:hover {
-  background: var(--accent-primary);
-  border-color: var(--accent-primary);
-  color: var(--bg-primary);
-}
+/* NOTA: .article-tags y .tag estilos premium están en línea ~3444 */
 
 /* Author Box */
 .author-box {
@@ -2112,6 +2290,7 @@
   margin-bottom: 2.5rem;
   flex-wrap: wrap;
   gap: 1rem;
+  scroll-margin-top: 2rem; /* Espacio arriba al hacer scroll */
 }
 
 .articles-count {
