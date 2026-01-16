@@ -1692,24 +1692,7 @@ a {
   margin-left: 1rem;
 }
 
-.search-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 209, 102, 0.1);
-  color: var(--logo-accent);
-  border: 1px solid rgba(255, 209, 102, 0.2);
-  transition: all var(--transition);
-  cursor: pointer;
-}
-
-.search-toggle:hover {
-  background: rgba(255, 209, 102, 0.2);
-  transform: scale(1.1);
-}
+/* NOTA: .search-toggle principal está en línea ~708 con diseño premium */
 
 .search-dropdown {
   position: absolute;
@@ -2874,36 +2857,7 @@ a {
   border-right: none;
 }
 
-/* Gradient animado mejorado para "Sala Geek" */
-.hero-brand {
-  background: linear-gradient(
-    90deg,
-    var(--accent-primary) 0%,
-    var(--accent-secondary) 25%,
-    #5dade2 50%,
-    var(--accent-secondary) 75%,
-    var(--accent-primary) 100%
-  );
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradientFlow 4s ease-in-out infinite;
-  position: relative;
-  display: inline-block;
-}
-
-@keyframes gradientFlow {
-  0%,
-  100% {
-    background-position: 0% 50%;
-    filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.6));
-  }
-  50% {
-    background-position: 100% 50%;
-    filter: drop-shadow(0 0 30px rgba(93, 173, 226, 0.6));
-  }
-}
+/* NOTA: .hero-brand principal está en línea ~2209 con brandShimmer animation */
 
 /* Pulse animation para botón primario */
 .btn-pulse {
@@ -6501,15 +6455,7 @@ a {
   z-index: 10;
 }
 
-@keyframes float-badge {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
+/* NOTA: @keyframes float-badge principal está en línea ~921 */
 
 /* News Category Badge */
 .news-category {
@@ -11013,9 +10959,6 @@ img.lazy-loaded {
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
   position: relative;
   overflow: hidden;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .legal-header::before {
@@ -11031,11 +10974,6 @@ img.lazy-loaded {
     rgba(231, 111, 81, 0.8) 50%,
     rgba(255, 209, 102, 0.8) 80%,
     transparent 100%);
-}
-
-.legal-header.animate-in {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .legal-header .section-title {

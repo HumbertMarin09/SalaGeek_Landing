@@ -154,8 +154,8 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=213" as="style" />
-    <link rel="preload" href="/src/js/script.js?v=130" as="script" />
+    <link rel="preload" href="/src/css/style.min.css?v=214" as="style" />
+    <link rel="preload" href="/src/js/script.js?v=136" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
     <!-- 
@@ -223,10 +223,10 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=213" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=214" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <link rel="stylesheet" href="/src/css/stranger-things-event.css" />
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=203" /></noscript>
+    <!-- Stranger Things Event eliminado (evento finalizado 2026-01-01) -->
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=214" /></noscript>
 
     <script>
       // Agregar clase 'js' inmediatamente para scroll animations
@@ -425,10 +425,7 @@
       Contiene: navegación, animaciones, Easter Eggs, formularios
     -->
     <!-- Main Script - Deferred for non-blocking load -->
-    <script defer src="/src/js/script.js?v=130"></script>
-
-    <!-- Stranger Things Event Portal (Nov 26 - Jan 1) -->
-    <script defer src="/src/js/stranger-things-portal.js"></script>
+    <script defer src="/src/js/script.js?v=136"></script>
 
     <!-- Google reCAPTCHA v3 - Async para no bloquear carga -->
     <script
@@ -1330,7 +1327,7 @@
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Glitch in the Matrix</div>
-              <div class="achievement-hint">📱 Long press email | 🖥️ 5 clics en logo</div>
+              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Long press email | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 5 clics en logo</div>
             </div>
           </div>
           <div class="achievement locked desktop-only" data-egg="matrix">
@@ -1356,7 +1353,7 @@
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Retro Gamer</div>
-              <div class="achievement-hint">📱 Long press en CTA | 🖥️ Escribe "retro"</div>
+              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Long press en CTA | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Escribe "retro"</div>
             </div>
           </div>
           <div class="achievement locked" data-egg="thanos">
@@ -1367,7 +1364,7 @@
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Perfectly Balanced</div>
-              <div class="achievement-hint">📱 Doble tap copyright | 🖥️ Long press 3s</div>
+              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Doble tap copyright | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Long press 3s</div>
             </div>
           </div>
           <div class="achievement locked desktop-only" data-egg="corners">
@@ -1407,7 +1404,7 @@
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Combo Breaker</div>
-              <div class="achievement-hint">📱 Long press "Sala Geek" | 🖥️ Ctrl+Shift+G</div>
+              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Long press "Sala Geek" | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Ctrl+Shift+G</div>
             </div>
           </div>
           <div class="achievement locked" data-egg="scroll">
