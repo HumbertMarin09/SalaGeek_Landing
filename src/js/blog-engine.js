@@ -11,7 +11,7 @@ class BlogEngine {
     this.currentFilter = "all";
     this.currentSort = "newest";
     this.searchQuery = "";
-    this.articlesPerPage = 9;
+    this.articlesPerPage = 6;
     this.currentPage = 1;
   }
 
@@ -177,8 +177,11 @@ class BlogEngine {
    */
   formatDate(dateString) {
     const date = new Date(dateString);
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString("es-ES", options);
+    const day = date.getDate();
+    const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
   }
 
   /**
@@ -189,36 +192,18 @@ class BlogEngine {
     const formattedDate = this.formatDate(article.publishDate);
 
     return `
-      <article class="blog-card" data-category="${article.category}">
-        <a href="${article.content}" class="blog-card-link">
-          <div class="blog-card-image">
+      <article class="article-card" data-category="${article.category}" data-date="${article.publishDate}">
+        <a href="${article.content}" class="article-link">
+          <div class="article-image">
             <img src="${article.image}" alt="${article.title}" loading="lazy" />
-            <span class="blog-card-category category-${article.category}">
-              ${categoryIcon}
-              <span>${article.categoryDisplay}</span>
-            </span>
+            <span class="article-category">${article.categoryDisplay}</span>
           </div>
-          <div class="blog-card-content">
-            <div class="blog-card-meta">
-              <time datetime="${article.publishDate}">${formattedDate}</time>
-              <span class="blog-card-readtime">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                ${article.readTime}
-              </span>
-            </div>
-            <h2 class="blog-card-title">${article.title}</h2>
-            <p class="blog-card-excerpt">${article.excerpt}</p>
-            <div class="blog-card-footer">
-              <span class="blog-card-views">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                ${article.views.toLocaleString()} vistas
-              </span>
+          <div class="article-content">
+            <h3 class="article-title">${article.title}</h3>
+            <p class="article-excerpt">${article.excerpt}</p>
+            <div class="article-meta">
+              <span class="meta-date">${formattedDate}</span>
+              <span class="meta-reading">${article.readTime}</span>
             </div>
           </div>
         </a>
@@ -267,11 +252,14 @@ class BlogEngine {
   }
 
   /**
-   * Renderiza la grilla de artículos
+   * Renderiza la grilla de artículos con animaciones
    */
   renderArticles(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
+
+    // Marcar como inicializado para que CSS permita mostrar todos los artículos
+    container.classList.add('js-initialized');
 
     const articles = this.getArticlesForCurrentPage();
 
@@ -289,7 +277,27 @@ class BlogEngine {
       return;
     }
 
-    container.innerHTML = articles.map((article) => this.generateArticleCard(article)).join("");
+    // Fade out actual content
+    const existingCards = container.querySelectorAll('.article-card');
+    existingCards.forEach(card => card.classList.add('filtering-out'));
+
+    // Pequeño delay para permitir animación de salida
+    setTimeout(() => {
+      container.innerHTML = articles.map((article) => this.generateArticleCard(article)).join("");
+      
+      // Aplicar animación de entrada con stagger
+      const newCards = container.querySelectorAll('.article-card');
+      newCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          card.classList.add('fade-in');
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 50);
+      });
+    }, existingCards.length > 0 ? 200 : 0);
   }
 
   /**

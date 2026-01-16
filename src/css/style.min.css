@@ -405,7 +405,8 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 0 4px rgba(255, 209, 102, 0.2));
+  color: var(--accent-primary);
+  filter: drop-shadow(0 0 4px rgba(255, 209, 102, 0.3));
 }
 
 .menu .nav-link:hover {
@@ -453,6 +454,82 @@ a {
 
 .menu .nav-link-home .nav-icon {
   filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+}
+
+/* ============================================
+   MENU BLOG - Estilo limpio (solo desktop)
+   ============================================ */
+@media (min-width: 1025px) {
+  .menu.menu-blog {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  .menu.menu-blog .nav-link {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0.5rem 0.875rem !important;
+    color: var(--text-primary) !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 0 !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .menu.menu-blog .nav-link::before {
+    display: none !important;
+  }
+
+  .menu.menu-blog .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 2px;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+    display: block !important;
+  }
+
+  .menu.menu-blog .nav-link:hover {
+    background: transparent !important;
+    color: var(--accent-primary) !important;
+    transform: translateY(-3px) !important;
+  }
+
+  .menu.menu-blog .nav-link:hover::after {
+    width: 60%;
+  }
+
+  .menu.menu-blog .nav-link:hover .nav-icon {
+    color: var(--accent-primary) !important;
+    transform: scale(1.25) rotate(8deg) !important;
+    filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.6));
+  }
+
+  .menu.menu-blog .nav-icon {
+    color: var(--accent-primary);
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s ease;
+  }
+}
+
+/* Ocultar botón Noticias en páginas del blog */
+.blog-page .blog-button {
+  display: none !important;
+}
+
+.blog-page .header-divider {
+  display: none !important;
 }
 
 /* Item visible solo en mobile */
@@ -822,6 +899,7 @@ a {
   transition: transform var(--transition);
   position: relative;
   z-index: 1;
+  color: var(--accent-primary);
 }
 
 .blog-button:hover svg {
@@ -3035,7 +3113,7 @@ a {
    - CTA Newsletter + Blog link
    ============================================ */
 .news-hub-section {
-  padding: 5rem 2rem 6rem;
+  padding: 2rem 2rem 2rem;
   background: linear-gradient(180deg, 
     var(--bg-primary) 0%,
     rgba(15, 21, 53, 0.95) 50%,
@@ -3241,7 +3319,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1.75rem 2rem;
+  padding: 1.75rem 2.5rem 2rem 2rem;
   position: relative;
   z-index: 2;
 }
@@ -3250,8 +3328,8 @@ a {
 .featured-badges {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+  gap: 0.6rem;
+  margin-bottom: 0.875rem;
   flex-wrap: wrap;
 }
 
@@ -3290,12 +3368,16 @@ a {
 }
 
 .featured-title {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #fff;
-  line-height: 1.35;
-  margin-bottom: 0.75rem;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
   transition: color 0.3s ease;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .featured-link:hover .featured-title {
@@ -3303,14 +3385,14 @@ a {
 }
 
 .featured-excerpt {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.6);
-  line-height: 1.5;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .featured-meta {
@@ -3339,8 +3421,8 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 1.25rem;
-  padding: 0.7rem 1.25rem;
+  margin-top: 0.75rem;
+  padding: 0.6rem 1.15rem;
   background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   border-radius: 8px;
   font-size: 0.85rem;
@@ -3701,7 +3783,7 @@ a {
 .latest-news-section {
   position: relative;
   z-index: 1;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .latest-news-header {
@@ -3856,6 +3938,7 @@ a {
   z-index: 1;
   display: flex;
   justify-content: center;
+  padding-top: 3rem;
 }
 
 .news-cta-card {

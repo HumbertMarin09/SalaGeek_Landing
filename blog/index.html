@@ -46,11 +46,11 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
-    <link rel="stylesheet" href="/src/css/blog.min.css?v=209" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=213" />
+    <link rel="stylesheet" href="/src/css/blog.css?v=215" />
     
     <!-- Blog Engine -->
-    <script src="/src/js/blog-engine.js?v=1" defer></script>
+    <script src="/src/js/blog-engine.js?v=1"></script>
 
     <!-- Schema.org - Blog -->
     <script type="application/ld+json">
@@ -99,14 +99,27 @@
     <div id="header-placeholder"></div>
 
     <main id="main-content">
-      <!-- Breadcrumbs -->
+      <!-- Breadcrumbs Premium -->
       <nav class="breadcrumbs" aria-label="Breadcrumb">
         <div class="container">
           <ol class="breadcrumb-list">
             <li class="breadcrumb-item">
-              <a href="/index.html">Inicio</a>
+              <a href="/index.html">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Inicio
+              </a>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Blog</li>
+            <li class="breadcrumb-item active" aria-current="page">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+              Blog
+            </li>
           </ol>
         </div>
       </nav>
@@ -246,426 +259,8 @@
 
           <!-- Pagination -->
           <div id="pagination"></div>
-            <!-- Featured Article (primer artículo, ocupa 2 columnas en "Todos") -->
-            <article class="article-card featured-card" data-category="series" data-date="2026-01-12" data-featured="true">
-              <a href="/blog/articulos/stranger-things-temporada-5-detalles.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=450&fit=crop&q=80"
-                    alt="Stranger Things Temporada 5"
-                    loading="eager"
-                    width="800"
-                    height="450"
-                  />
-                  <span class="article-category">Series</span>
-                  <span class="article-badge featured-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    Destacado
-                  </span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">
-                    Stranger Things Temporada 5: Fecha de Estreno, Tráiler y Todo lo que Sabemos
-                  </h3>
-                  <p class="article-excerpt">
-                    La temporada final de Stranger Things está cada vez más cerca. Te contamos todo sobre 
-                    la fecha de estreno confirmada, el nuevo tráiler y las teorías más locas sobre el final.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">12 Enero 2026</span>
-                    <span class="meta-reading">8 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-            
-            <!-- Featured Article 2 - Anime -->
-            <article class="article-card featured-card" data-category="anime" data-date="2026-01-11" data-featured="true">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=800&h=450&fit=crop&q=80"
-                    alt="Demon Slayer Temporada 4"
-                    loading="lazy"
-                    width="800"
-                    height="450"
-                  />
-                  <span class="article-category">Anime</span>
-                  <span class="article-badge featured-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    Destacado
-                  </span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">
-                    Demon Slayer Temporada 4: Todo Sobre el Arco del Entrenamiento Hashira
-                  </h3>
-                  <p class="article-excerpt">
-                    La cuarta temporada de Kimetsu no Yaiba llega con el esperado arco del entrenamiento. 
-                    Fechas, episodios confirmados y lo que sabemos del arco final.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">11 Enero 2026</span>
-                    <span class="meta-reading">6 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-            
-            <!-- Featured Article 3 - Películas -->
-            <article class="article-card featured-card" data-category="peliculas" data-date="2026-01-10" data-featured="true">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800&h=450&fit=crop&q=80"
-                    alt="Marvel Fase 6 Películas"
-                    loading="lazy"
-                    width="800"
-                    height="450"
-                  />
-                  <span class="article-category">Películas</span>
-                  <span class="article-badge featured-badge">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                    Destacado
-                  </span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">
-                    Marvel Fase 6: Todas las Películas Confirmadas y Fechas de Estreno
-                  </h3>
-                  <p class="article-excerpt">
-                    El MCU prepara su gran cierre con Avengers: Secret Wars. Te contamos todo sobre las 
-                    películas confirmadas, el calendario completo y las sorpresas que vienen.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">10 Enero 2026</span>
-                    <span class="meta-reading">10 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-            
-            <!-- Article Card 1 -->
-            <article class="article-card" data-category="gaming" data-date="2026-01-11">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=225&fit=crop&q=80"
-                    alt="Mejores Juegos PS5 2026"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Gaming</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Mejores Juegos PS5 2026: Los 25 Imprescindibles</h3>
-                  <p class="article-excerpt">
-                    La guía definitiva de los juegos que no te puedes perder en PlayStation 5 este año.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">11 Enero 2026</span>
-                    <span class="meta-reading">12 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 2 -->
-            <article class="article-card" data-category="series" data-date="2026-01-10">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&h=225&fit=crop&q=80"
-                    alt="Estrenos Netflix Enero 2026"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Series</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Mejores Series de Netflix 2026: Top 20 Imperdibles</h3>
-                  <p class="article-excerpt">
-                    Las series que dominarán Netflix este año. Incluye fechas de estreno y trailers.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">10 Enero 2026</span>
-                    <span class="meta-reading">10 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 3 -->
-            <article class="article-card" data-category="gaming" data-date="2026-01-09">
-              <a href="/blog/articulos/gta-6-fecha-gameplay.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop&q=80"
-                    alt="GTA 6 Fecha de Lanzamiento"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Gaming</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">GTA 6: Fecha de Lanzamiento, Trailer y Todo lo Filtrado</h3>
-                  <p class="article-excerpt">
-                    Todo lo que sabemos sobre el juego más esperado de Rockstar Games.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">9 Enero 2026</span>
-                    <span class="meta-reading">9 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 4 -->
-            <article class="article-card" data-category="anime" data-date="2026-01-08">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&h=225&fit=crop&q=80"
-                    alt="Anime Temporada Invierno 2026"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Anime</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Anime Temporada Invierno 2026: Las 15 Series Más Esperadas</h3>
-                  <p class="article-excerpt">
-                    La guía completa de los animes más esperados de la temporada de invierno.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">8 Enero 2026</span>
-                    <span class="meta-reading">10 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 5 -->
-            <article class="article-card" data-category="peliculas" data-date="2026-01-07">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400&h=225&fit=crop&q=80"
-                    alt="Estrenos Marvel 2026"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Películas</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Estrenos de Películas Marvel 2026: Calendario Completo</h3>
-                  <p class="article-excerpt">
-                    Todas las películas y series de Marvel que llegarán este año con fechas confirmadas.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">7 Enero 2026</span>
-                    <span class="meta-reading">8 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 6 -->
-            <article class="article-card" data-category="series" data-date="2026-01-06">
-              <a href="#" class="article-link coming-soon" title="Próximamente">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=225&fit=crop&q=80"
-                    alt="House of the Dragon Temporada 3"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Series</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">House of the Dragon Temporada 3: Fecha y Spoilers</h3>
-                  <p class="article-excerpt">
-                    Todo lo que sabemos sobre la tercera temporada de la precuela de Game of Thrones.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">6 Enero 2026</span>
-                    <span class="meta-reading">7 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 7 -->
-            <article class="article-card" data-category="tecnologia" data-date="2026-01-05">
-              <a href="/blog/articulos/apple-vision-pro-2-anuncio.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1622979135225-d2ba269cf1ac?w=400&h=225&fit=crop&q=80"
-                    alt="Apple Vision Pro 2"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Tecnología</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Apple Vision Pro 2: Todo sobre el nuevo visor de realidad mixta</h3>
-                  <p class="article-excerpt">
-                    Apple sorprende con el anuncio del Vision Pro 2 con mejoras significativas en rendimiento.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">5 Enero 2026</span>
-                    <span class="meta-reading">6 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 8 -->
-            <article class="article-card" data-category="anime" data-date="2026-01-04">
-              <a href="/blog/articulos/demon-slayer-temporada-4-fecha.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1607604276583-c1a83e27b66a?w=400&h=225&fit=crop&q=80"
-                    alt="Demon Slayer Temporada 4"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Anime</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Demon Slayer Temporada 4: Fecha de Estreno y Nuevo Tráiler</h3>
-                  <p class="article-excerpt">
-                    Ufotable confirma la fecha de la nueva temporada con un espectacular adelanto.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">4 Enero 2026</span>
-                    <span class="meta-reading">5 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 9 -->
-            <article class="article-card" data-category="peliculas" data-date="2026-01-03">
-              <a href="/blog/articulos/supergirl-dcu-trailer-2026.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=400&h=225&fit=crop&q=80"
-                    alt="Supergirl DCU"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Películas</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Supergirl: Woman of Tomorrow - Primer Tráiler del DCU</h3>
-                  <p class="article-excerpt">
-                    James Gunn revela el primer vistazo oficial a la Supergirl de Milly Alcock.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">3 Enero 2026</span>
-                    <span class="meta-reading">7 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 10 -->
-            <article class="article-card" data-category="gaming" data-date="2026-01-02">
-              <a href="/blog/articulos/the-last-of-us-part-3-anuncio.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=225&fit=crop&q=80"
-                    alt="The Last of Us Part III"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Gaming</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">The Last of Us Part III: Naughty Dog Confirma el Desarrollo</h3>
-                  <p class="article-excerpt">
-                    Neil Druckmann confirma que el tercer juego está en desarrollo activo.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">2 Enero 2026</span>
-                    <span class="meta-reading">8 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 11 -->
-            <article class="article-card" data-category="anime" data-date="2026-01-01">
-              <a href="/blog/articulos/one-piece-temporada-2-netflix.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1569701813229-33284b643e3c?w=400&h=225&fit=crop&q=80"
-                    alt="One Piece Temporada 2 Netflix"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Anime</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">One Piece Live Action Temporada 2: Fecha y Nuevos Personajes</h3>
-                  <p class="article-excerpt">
-                    Netflix revela el elenco completo del arco de Arabasta con sorpresas increíbles.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">1 Enero 2026</span>
-                    <span class="meta-reading">9 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Article Card 12 -->
-            <article class="article-card" data-category="peliculas" data-date="2025-12-30">
-              <a href="/blog/articulos/marvel-plan-2026-2027.html" class="article-link">
-                <div class="article-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1559583109-3e7968136c99?w=400&h=225&fit=crop&q=80"
-                    alt="Marvel Plan 2026-2027"
-                    loading="lazy"
-                    width="400"
-                    height="225"
-                  />
-                  <span class="article-category">Películas</span>
-                </div>
-                <div class="article-content">
-                  <h3 class="article-title">Marvel Fase 6: Plan Completo 2026-2027 Revelado</h3>
-                  <p class="article-excerpt">
-                    Kevin Feige presenta el roadmap completo hacia Avengers: Secret Wars.
-                  </p>
-                  <div class="article-meta">
-                    <span class="meta-date">30 Diciembre 2025</span>
-                    <span class="meta-reading">11 min</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-          </div>
-
-          <!-- Pagination -->
-          <div id="pagination"></div>
+          
+          <!-- Artículos cargados dinámicamente por blog-engine.js -->
         </div>
       </section>
 
@@ -762,7 +357,7 @@
       // Inicializar el motor del blog
       let blogEngine;
       
-      document.addEventListener("DOMContentLoaded", async () => {
+      window.addEventListener('load', async () => {
         blogEngine = new BlogEngine();
         const loaded = await blogEngine.init();
         
@@ -777,6 +372,42 @@
         
         // Renderizar artículos iniciales
         updateView();
+        
+        // Cargar artículos destacados en el carrusel
+        const featured = blogEngine.getFeaturedArticles(3);
+        const featuredTrack = document.getElementById('featured-carousel-track');
+        
+        if (featuredTrack && featured.length > 0) {
+          featuredTrack.innerHTML = featured.map((article, index) => `
+            <article class="featured-slide ${index === 0 ? 'active' : ''}">
+              <a href="${article.content}" class="featured-link">
+                <div class="featured-image-container">
+                  <img src="${article.image}" alt="${article.title}" class="featured-image" loading="lazy" />
+                </div>
+                <div class="featured-content">
+                  <div class="featured-badges">
+                    <span class="featured-category category-${article.category}">${article.categoryDisplay}</span>
+                    <span class="featured-badge">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                      </svg>
+                      Destacado
+                    </span>
+                  </div>
+                  <h3 class="featured-title">${article.title}</h3>
+                  <p class="featured-excerpt">${article.excerpt}</p>
+                  <div class="featured-meta">
+                    <span class="featured-date">${blogEngine.formatDate(article.publishDate)}</span>
+                    <span class="featured-reading">${article.readTime}</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          `).join('');
+          
+          // Inicializar carrusel simple para blog
+          initBlogFeaturedCarousel();
+        }
         
         // Event listeners para filtros
         document.querySelectorAll(".category-pills .pill").forEach((pill) => {
@@ -822,13 +453,62 @@
         
         // Mostrar/ocultar mensaje de no resultados
         const noResults = document.getElementById("no-results");
+        const articlesGrid = document.getElementById("articles-grid");
         if (totalArticles === 0) {
           noResults.style.display = "flex";
-          document.getElementById("articles-grid").style.display = "none";
+          articlesGrid.style.display = "none";
         } else {
           noResults.style.display = "none";
-          document.getElementById("articles-grid").style.display = "grid";
+          articlesGrid.style.display = "grid";
         }
+      }
+      
+      // Carrusel simple para artículos destacados en blog
+      function initBlogFeaturedCarousel() {
+        const track = document.getElementById('featured-carousel-track');
+        const slides = track.querySelectorAll('.featured-slide');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        
+        if (slides.length === 0) return;
+        
+        let currentIndex = 0;
+        let autoplayInterval = null;
+        
+        function showSlide(index) {
+          slides.forEach((s, i) => {
+            s.classList.remove('active');
+            if (i === index) s.classList.add('active');
+          });
+        }
+        
+        function nextSlide() {
+          currentIndex = (currentIndex + 1) % slides.length;
+          showSlide(currentIndex);
+        }
+        
+        function prevSlide() {
+          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+          showSlide(currentIndex);
+        }
+        
+        if (nextBtn) nextBtn.addEventListener('click', () => {
+          nextSlide();
+          resetAutoplay();
+        });
+        
+        if (prevBtn) prevBtn.addEventListener('click', () => {
+          prevSlide();
+          resetAutoplay();
+        });
+        
+        function resetAutoplay() {
+          clearInterval(autoplayInterval);
+          autoplayInterval = setInterval(nextSlide, 6000);
+        }
+        
+        // Iniciar autoplay
+        autoplayInterval = setInterval(nextSlide, 6000);
       }
     </script>
   </body>

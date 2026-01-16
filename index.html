@@ -154,7 +154,7 @@
       - performance-boost: Carga primero para optimizar event listeners
     -->
     <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=202" as="style" />
+    <link rel="preload" href="/src/css/style.min.css?v=213" as="style" />
     <link rel="preload" href="/src/js/script.js?v=130" as="script" />
     <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
 
@@ -223,7 +223,7 @@
       noscript: Fallback para usuarios sin JavaScript
     -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=204" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=213" />
     <link rel="stylesheet" href="/src/css/easter-eggs.css" />
     <link rel="stylesheet" href="/src/css/stranger-things-event.css" />
     <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=203" /></noscript>
@@ -1477,101 +1477,119 @@
     </div>
     
     <!-- Blog Engine para News Hub -->
-    <script src="/src/js/blog-engine.js?v=1" defer></script>
+    <script src="/src/js/blog-engine.js?v=1"></script>
     <script>
       // Cargar noticias dinámicamente en News Hub
-      document.addEventListener('DOMContentLoaded', async () => {
+      window.addEventListener('load', async () => {
         const blogEngine = new BlogEngine();
         const loaded = await blogEngine.init();
         
-        if (loaded) {
-          // Cargar featured articles en carousel
-          const featured = blogEngine.getFeaturedArticles(3);
-          const featuredTrack = document.querySelector('.featured-carousel-track');
-          
-          if (featuredTrack && featured.length > 0) {
-            featuredTrack.innerHTML = featured.map(article => `
-              <article class="featured-slide">
-                <a href="${article.content}" class="featured-link">
-                  <div class="featured-image-container">
-                    <img 
-                      src="${article.image}" 
-                      alt="${article.title}" 
-                      class="featured-image"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div class="featured-content">
-                    <div class="featured-badges">
-                      <span class="featured-category category-${article.category}">${article.categoryDisplay}</span>
-                      <span class="featured-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                        Destacado
-                      </span>
-                    </div>
-                    <h3 class="featured-title">${article.title}</h3>
-                    <p class="featured-excerpt">${article.excerpt}</p>
-                    <div class="featured-meta">
-                      <time datetime="${article.publishDate}">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        ${blogEngine.formatDate(article.publishDate)}
-                      </time>
-                      <span class="read-time">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        ${article.readTime}
-                      </span>
-                    </div>
-                    <span class="featured-cta">
-                      Leer más
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
+        if (!loaded) {
+          console.error('No se pudieron cargar las noticias');
+          return;
+        }
+        
+        // Cargar featured articles en carousel
+        const featured = blogEngine.getFeaturedArticles(3);
+        const featuredTrack = document.querySelector('.featured-carousel-track');
+        
+        if (featuredTrack && featured.length > 0) {
+          featuredTrack.innerHTML = featured.map(article => `
+            <article class="featured-slide">
+              <a href="${article.content}" class="featured-link">
+                <div class="featured-image-container">
+                  <img 
+                    src="${article.image}" 
+                    alt="${article.title}" 
+                    class="featured-image"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="featured-content">
+                  <div class="featured-badges">
+                    <span class="featured-category category-${article.category}">${article.categoryDisplay}</span>
+                    <span class="featured-badge">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                       </svg>
+                      Destacado
                     </span>
                   </div>
-                </a>
-              </article>
-            `).join('');
+                  <h3 class="featured-title">${article.title}</h3>
+                  <p class="featured-excerpt">${article.excerpt}</p>
+                  <div class="featured-meta">
+                    <time datetime="${article.publishDate}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      ${blogEngine.formatDate(article.publishDate)}
+                    </time>
+                    <span class="read-time">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      ${article.readTime}
+                    </span>
+                  </div>
+                  <span class="featured-cta">
+                    Leer más
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            </article>
+          `).join('');
+          
+          // Reinicializar el carrusel después de inyectar los slides
+          const slides = featuredTrack.querySelectorAll('.featured-slide');
+          const dots = document.querySelectorAll('.featured-dot');
+          
+          // Activar el primer slide
+          if (slides.length > 0) {
+            slides[0].classList.add('active');
+            if (dots.length > 0) dots[0].classList.add('active');
           }
           
-          // Cargar últimas noticias (trending)
-          const trending = blogEngine.getTrendingArticles(6);
-          const latestGrid = document.querySelector('.latest-news-grid');
-          
-          if (latestGrid && trending.length > 0) {
-            latestGrid.innerHTML = trending.slice(0, 6).map(article => `
-              <article class="news-card">
-                <a href="${article.content}" class="news-card-link">
-                  <div class="news-card-image">
-                    <img 
-                      src="${article.image}" 
-                      alt="${article.title}" 
-                      loading="lazy"
-                    />
-                    <span class="news-card-category category-${article.category}">${article.categoryDisplay}</span>
-                  </div>
-                  <div class="news-card-content">
-                    <h4 class="news-card-title">${article.title}</h4>
-                    <div class="news-card-meta">
-                      <time datetime="${article.publishDate}">${blogEngine.formatDate(article.publishDate)}</time>
-                      <span class="separator">•</span>
-                      <span>${article.readTime}</span>
-                    </div>
-                  </div>
-                </a>
-              </article>
-            `).join('');
+          // Reinicializar el carrusel completo si existe la función
+          if (typeof initFeaturedNewsCarousel === 'function') {
+            initFeaturedNewsCarousel();
           }
+        }
+        
+        // Cargar últimas noticias (trending) - máximo 4 para el grid
+        const trending = blogEngine.getTrendingArticles(4);
+        const latestGrid = document.querySelector('.latest-news-grid');
+        
+        if (latestGrid && trending.length > 0) {
+          latestGrid.innerHTML = trending.slice(0, 4).map(article => `
+            <article class="news-card">
+              <a href="${article.content}" class="news-card-link">
+                <div class="news-card-image">
+                  <img 
+                    src="${article.image}" 
+                    alt="${article.title}" 
+                    loading="lazy"
+                  />
+                  <span class="news-card-category category-${article.category}">${article.categoryDisplay}</span>
+                </div>
+                <div class="news-card-content">
+                  <h4 class="news-card-title">${article.title}</h4>
+                  <div class="news-card-meta">
+                    <time datetime="${article.publishDate}">${blogEngine.formatDate(article.publishDate)}</time>
+                    <span class="separator">•</span>
+                    <span>${article.readTime}</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          `).join('');
         }
       });
     </script>
