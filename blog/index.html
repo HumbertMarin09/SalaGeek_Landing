@@ -48,6 +48,9 @@
     <link rel="stylesheet" href="/src/css/normalize.css" />
     <link rel="stylesheet" href="/src/css/style.min.css?v=202" />
     <link rel="stylesheet" href="/src/css/blog.min.css?v=209" />
+    
+    <!-- Blog Engine -->
+    <script src="/src/js/blog-engine.js?v=1" defer></script>
 
     <!-- Schema.org - Blog -->
     <script type="application/ld+json">
@@ -217,11 +220,32 @@
           <div class="section-header">
             <h2 class="section-title">Últimos Artículos</h2>
             <div class="articles-count">
-              <span id="visible-count">6</span> de <span id="total-count">13</span> artículos
+              <span id="visible-count">0</span> de <span id="total-count">0</span> artículos
             </div>
           </div>
           
           <div class="articles-grid" id="articles-grid">
+            <!-- Los artículos se cargan dinámicamente desde articles.json -->
+            <div class="loading-spinner">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+              <p>Cargando artículos...</p>
+            </div>
+          </div>
+
+          <!-- No Results Message -->
+          <div class="no-results" id="no-results" style="display: none;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="64" height="64">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <h3>No se encontraron artículos</h3>
+            <p>No hay artículos en esta categoría. Prueba con otra categoría o vuelve a "Todos".</p>
+          </div>
+
+          <!-- Pagination -->
+          <div id="pagination"></div>
             <!-- Featured Article (primer artículo, ocupa 2 columnas en "Todos") -->
             <article class="article-card featured-card" data-category="series" data-date="2026-01-12" data-featured="true">
               <a href="/blog/articulos/stranger-things-temporada-5-detalles.html" class="article-link">
@@ -640,36 +664,8 @@
             </article>
           </div>
 
-          <!-- No Results Message -->
-          <div class="no-results" id="no-results" style="display: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="64" height="64">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-              <path d="M8 8l6 6M14 8l-6 6"></path>
-            </svg>
-            <h3>No se encontraron artículos</h3>
-            <p>No hay artículos en esta categoría. Prueba con otra categoría o vuelve a "Todos".</p>
-          </div>
-
           <!-- Pagination -->
-          <div class="pagination" id="pagination">
-            <button class="pagination-btn prev" id="prev-page" disabled>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-              Anterior
-            </button>
-            <div class="pagination-numbers" id="pagination-numbers">
-              <button class="page-number active" data-page="1">1</button>
-              <button class="page-number" data-page="2">2</button>
-            </div>
-            <button class="pagination-btn next" id="next-page">
-              Siguiente
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
-          </div>
+          <div id="pagination"></div>
         </div>
       </section>
 
@@ -760,5 +756,80 @@
 
     <!-- Scripts -->
     <script src="/src/js/script.js?v=131" defer></script>
+    
+    <!-- Blog Initialization -->
+    <script>
+      // Inicializar el motor del blog
+      let blogEngine;
+      
+      document.addEventListener("DOMContentLoaded", async () => {
+        blogEngine = new BlogEngine();
+        const loaded = await blogEngine.init();
+        
+        if (!loaded) {
+          document.getElementById("articles-grid").innerHTML = `
+            <div class="error-message">
+              <p>Error cargando artículos. Por favor, recarga la página.</p>
+            </div>
+          `;
+          return;
+        }
+        
+        // Renderizar artículos iniciales
+        updateView();
+        
+        // Event listeners para filtros
+        document.querySelectorAll(".category-pills .pill").forEach((pill) => {
+          pill.addEventListener("click", () => {
+            const category = pill.dataset.category;
+            
+            // Actualizar UI de pills
+            document.querySelectorAll(".category-pills .pill").forEach((p) => p.classList.remove("active"));
+            pill.classList.add("active");
+            
+            // Filtrar artículos
+            blogEngine.filterByCategory(category);
+            updateView();
+            
+            // Scroll suave al grid
+            document.getElementById("articles-grid").scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+        
+        // Event listeners para paginación
+        document.addEventListener("click", (e) => {
+          if (e.target.closest(".pagination-btn[data-page]")) {
+            const page = parseInt(e.target.closest(".pagination-btn").dataset.page);
+            if (blogEngine.goToPage(page)) {
+              updateView();
+              document.getElementById("articles-grid").scrollIntoView({ behavior: "smooth" });
+            }
+          }
+        });
+      });
+      
+      function updateView() {
+        // Renderizar artículos y paginación
+        blogEngine.renderArticles("articles-grid");
+        blogEngine.renderPagination("pagination");
+        
+        // Actualizar contador
+        const totalArticles = blogEngine.filteredArticles.length;
+        const currentArticles = blogEngine.getArticlesForCurrentPage().length;
+        
+        document.getElementById("total-count").textContent = totalArticles;
+        document.getElementById("visible-count").textContent = currentArticles;
+        
+        // Mostrar/ocultar mensaje de no resultados
+        const noResults = document.getElementById("no-results");
+        if (totalArticles === 0) {
+          noResults.style.display = "flex";
+          document.getElementById("articles-grid").style.display = "none";
+        } else {
+          noResults.style.display = "none";
+          document.getElementById("articles-grid").style.display = "grid";
+        }
+      }
+    </script>
   </body>
 </html>
