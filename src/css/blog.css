@@ -696,6 +696,56 @@
   }
 }
 
+/* ============================================
+   BLOG CAROUSEL - Empty State
+   ============================================ */
+.featured-carousel-section .carousel-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 2rem;
+  min-height: 320px;
+  width: 100%;
+  background: transparent;
+  border: none;
+}
+
+.featured-carousel-section .empty-state-icon {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.1), rgba(255, 209, 102, 0.05));
+  border-radius: 50%;
+  animation: emptyIconPulse 3s ease-in-out infinite;
+}
+
+.featured-carousel-section .empty-state-icon svg {
+  color: var(--primary);
+  opacity: 0.7;
+  width: 48px;
+  height: 48px;
+}
+
+.featured-carousel-section .empty-state-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.featured-carousel-section .empty-state-text {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 320px;
+}
+
 /* Responsive para carrusel del blog */
 @media (max-width: 1024px) {
   .featured-carousel-section .featured-slide.active {

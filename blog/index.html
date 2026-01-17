@@ -46,8 +46,8 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=218" />
-    <link rel="stylesheet" href="/src/css/blog.css?v=251" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=221" />
+    <link rel="stylesheet" href="/src/css/blog.css?v=252" />
     
     <!-- Blog Engine -->
     <script src="/src/js/blog-engine.js?v=5"></script>
@@ -230,6 +230,18 @@
             <div class="featured-carousel" id="featured-carousel">
               <div class="featured-carousel-track" id="featured-carousel-track">
                 <!-- Los artículos destacados se moverán aquí via JS -->
+                <!-- Estado vacío cuando no hay artículos -->
+                <div class="carousel-empty-state" id="carousel-empty-state">
+                  <div class="empty-state-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                      <path d="M8 7h6"></path>
+                      <path d="M8 11h8"></path>
+                    </svg>
+                  </div>
+                  <h3 class="empty-state-title">Próximamente</h3>
+                  <p class="empty-state-text">Estamos preparando contenido increíble para ti.<br>¡Vuelve pronto!</p>
+                </div>
               </div>
             </div>
           </div>
@@ -332,7 +344,7 @@
           <p id="cookie-title" class="cookie-title">Usamos cookies</p>
           <p id="cookie-desc" class="cookie-text">
             Utilizamos cookies para mejorar tu experiencia en nuestro sitio. Al continuar navegando, aceptas nuestra 
-            <a href="/src/pages/legal/cookies.html" class="cookie-link">Política de Cookies</a>.
+            <a href="/cookies" class="cookie-link">Política de Cookies</a>.
           </p>
         </div>
         <div class="cookie-actions">
@@ -354,7 +366,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/src/js/script.js?v=139" defer></script>
+    <script src="/src/js/script.min.js?v=145" defer></script>
     
     <!-- Blog Initialization -->
     <script>
@@ -390,8 +402,26 @@
         // Cargar artículos destacados en el carrusel
         const featured = blogEngine.getFeaturedArticles(3);
         const featuredTrack = document.getElementById('featured-carousel-track');
+        const carouselSection = document.getElementById('featured-carousel-section');
+        const carouselIndicator = document.getElementById('carousel-indicator');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        const emptyState = document.getElementById('carousel-empty-state');
         
-        if (featuredTrack && featured.length > 0) {
+        // Si no hay artículos destacados, mostrar estado vacío
+        if (!featured || featured.length === 0) {
+          if (prevBtn) prevBtn.style.display = 'none';
+          if (nextBtn) nextBtn.style.display = 'none';
+          if (carouselIndicator) carouselIndicator.style.display = 'none';
+          // El empty state ya está en el HTML
+        } else {
+          // Ocultar empty state y mostrar controles
+          if (emptyState) emptyState.style.display = 'none';
+          if (prevBtn) prevBtn.style.display = '';
+          if (nextBtn) nextBtn.style.display = '';
+          if (carouselIndicator) carouselIndicator.style.display = '';
+        
+        if (featuredTrack) {
           featuredTrack.innerHTML = featured.map((article, index) => `
             <article class="featured-slide ${index === 0 ? 'active' : ''}">
               <a href="${article.content}" class="featured-link">
@@ -421,6 +451,7 @@
           
           // Inicializar carrusel simple para blog
           initBlogFeaturedCarousel();
+          }
         }
         
         // ═══════════════════════════════════════════════════════════

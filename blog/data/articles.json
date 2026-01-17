@@ -1,5 +1,6 @@
 {
-  "articles": [
+  "articles": [],
+  "_commented_articles": [
     {
       "id": "stranger-things-temporada-5-detalles",
       "title": "Stranger Things Temporada 5: Netflix Confirma Julio 2025 y Revela Nuevas Imágenes del Apocalipsis Final",
@@ -16,25 +17,8 @@
       "readTime": "8 min",
       "views": 2847,
       "featured": true,
-      "trending": true
-    },
-    {
-      "id": "marvel-plan-2026-2027",
-      "title": "Marvel Studios Revela su Plan Completo 2026-2027: Nuevos Vengadores y el Regreso de los X-Men",
-      "slug": "marvel-plan-2026-2027",
-      "excerpt": "Kevin Feige presenta la Fase 6 completa del MCU con fechas confirmadas para Secret Wars, Fantastic Four y la integración de los mutantes al universo cinematográfico.",
-      "content": "/blog/articulos/marvel-plan-2026-2027.html",
-      "image": "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800&h=450&fit=crop&q=80",
-      "category": "peliculas",
-      "categoryDisplay": "Películas",
-      "tags": ["marvel", "mcu", "x-men", "vengadores"],
-      "author": "Sala Geek",
-      "publishDate": "2026-01-07T09:00:00Z",
-      "modifiedDate": "2026-01-07T09:00:00Z",
-      "readTime": "12 min",
-      "views": 4156,
-      "featured": true,
-      "trending": true
+      "trending": true,
+      "_comment": "Artículo deshabilitado - archivo HTML eliminado"
     }
   ],
   "categories": [

@@ -2,6 +2,6 @@ Contact: mailto:contacto@salageek.com
 Expires: 2026-12-31T23:59:59.000Z
 Preferred-Languages: es, en
 Canonical: https://salageek.com/.well-known/security.txt
-Policy: https://salageek.com/src/pages/legal/privacy.html
+Policy: https://salageek.com/privacidad
 Hiring: https://salageek.com/#contacto
 Acknowledgments: https://salageek.com/

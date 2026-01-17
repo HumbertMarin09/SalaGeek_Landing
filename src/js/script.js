@@ -477,19 +477,9 @@ async function loadIncludes() {
       yearElement.textContent = new Date().getFullYear();
     }
 
-    // Fix z-index: Mover elementos fixed al body en páginas de artículos
-    // Esto los saca del stacking context creado por backdrop-filter del header
-    if (document.body.classList.contains("article-page")) {
-      const mainNav = document.querySelector(".main-nav");
-      const searchModal = document.querySelector(".search-modal");
-      
-      if (mainNav && mainNav.parentElement !== document.body) {
-        document.body.appendChild(mainNav);
-      }
-      if (searchModal && searchModal.parentElement !== document.body) {
-        document.body.appendChild(searchModal);
-      }
-    }
+    // NOTA: El fix de z-index ahora se maneja puramente con CSS
+    // El CSS de article-page solo aplica position:fixed en móvil (≤1024px)
+    // ya no es necesario mover elementos al body con JavaScript
 
     // Inicializar navegación y búsqueda después de que el header esté cargado
     initNavigation();

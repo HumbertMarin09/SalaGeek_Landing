@@ -422,11 +422,15 @@ cd SalaGeek_Landing- **Suscriptores objetivo:** 1000+ en 3 meses
 
 
 
-# 2. Servir localmente## � Licencia
+# 2. Servir localmente
+
+## 📄 Licencia
 
 # Opción A: Python
 
-python -m http.server 8080© 2025 Sala Geek. Todos los derechos reservados.
+python -m http.server 8080
+
+© 2025 Sala Geek. Todos los derechos reservados.
 
 
 

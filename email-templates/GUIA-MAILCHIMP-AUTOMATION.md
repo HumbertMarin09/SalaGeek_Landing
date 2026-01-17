@@ -147,7 +147,7 @@ Antes de empezar, asegúrate de tener:
 1. **Design Email**
 2. **Email Subject (elige uno):**
    ```
-   � ¿Cómo va tu experiencia en Sala Geek?
+   📧 ¿Cómo va tu experiencia en Sala Geek?
    ```
    O
    ```
@@ -159,7 +159,7 @@ Antes de empezar, asegúrate de tener:
    ```
 3. **Preview text:**
    ```
-   � Cuéntanos qué te parece el contenido y cómo podemos mejorar
+   💬 Cuéntanos qué te parece el contenido y cómo podemos mejorar
    ```
 4. **From name:** Sala Geek
 5. **From email:** Mismo
