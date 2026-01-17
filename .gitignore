@@ -49,3 +49,9 @@ fix-encoding*.ps1
 
 # === CSS experimental ===
 src/css/complete_styles.css
+
+# === Documentación interna (no deploy) ===
+AUDITORIA-PROYECTO.md
+OPTIMIZACION-RESUMEN.md
+ROADMAP_FASE_2.md
+SESION-*.md
