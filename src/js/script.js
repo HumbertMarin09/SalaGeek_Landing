@@ -2304,8 +2304,12 @@ function initAdaptiveMenu() {
 
   // Detectar tipo de página por body class y ruta
   const isMediaKitPage = document.body.classList.contains("media-kit-page") || 
-                         window.location.pathname.includes("media-kit.html");
-  const isLegalPage = window.location.pathname.includes("/legal/");
+                         window.location.pathname.includes("media-kit.html") ||
+                         window.location.pathname.includes("/media-kit");
+  const isLegalPage = window.location.pathname.includes("/legal/") ||
+                      window.location.pathname.includes("/privacidad") ||
+                      window.location.pathname.includes("/terminos") ||
+                      window.location.pathname.includes("/cookies");
   const isBlogPage = window.location.pathname.includes("/blog/") || 
                      document.body.classList.contains("blog-page");
 
