@@ -12,233 +12,397 @@
     }
 
     body {
-      background: #f0f0f0;
+      background: #1a1a2e;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     .instructions {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      max-width: 300px;
-      z-index: 1000;
-      display: none; /* Oculto para captura limpia */
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 209, 102, 0.2);
+      padding: 20px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      text-align: center;
     }
 
     .instructions h3 {
-      color: #06ffa5;
-      margin-bottom: 10px;
+      color: #ffd166;
+      margin-bottom: 12px;
+      font-size: 18px;
     }
 
-    .instructions ol {
-      margin-left: 20px;
-      line-height: 1.8;
+    .instructions p {
+      color: #a0aec0;
+      line-height: 1.6;
+      font-size: 14px;
     }
 
     .instructions code {
-      background: #f0f0f0;
-      padding: 2px 6px;
+      background: rgba(255, 209, 102, 0.1);
+      color: #ffd166;
+      padding: 2px 8px;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 13px;
     }
 
-    /* Social Card - Exact dimensions 1200x630px */
+    /* Social Card - Exact dimensions 1200x630px (Facebook/Twitter optimal) */
     .social-card {
       width: 1200px;
       height: 630px;
-      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      background: linear-gradient(135deg, #0a0e27 0%, #141b37 50%, #1a1f3a 100%);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+      border-radius: 0; /* Sin bordes para captura exacta */
     }
 
-    /* Background effects */
-    .social-card::before {
-      content: "";
+    /* Animated gradient orbs */
+    .orb {
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        radial-gradient(circle at 30% 40%, rgba(6, 255, 165, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 70% 60%, rgba(255, 209, 102, 0.06) 0%, transparent 40%);
-      animation: gradientRotate 15s ease infinite;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
     }
 
-    @keyframes gradientRotate {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(180deg); }
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.3) 0%, transparent 70%);
+      top: -100px;
+      right: -50px;
+    }
+
+    .orb-2 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(231, 111, 81, 0.25) 0%, transparent 70%);
+      bottom: -80px;
+      left: -50px;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.2) 0%, transparent 70%);
+      top: 50%;
+      left: 30%;
+      transform: translate(-50%, -50%);
     }
 
     /* Grid pattern overlay */
-    .social-card::after {
-      content: "";
+    .grid-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
       background-image: 
-        linear-gradient(rgba(6, 255, 165, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(6, 255, 165, 0.03) 1px, transparent 1px);
-      background-size: 50px 50px;
-      opacity: 0.3;
+        linear-gradient(rgba(255, 209, 102, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 209, 102, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.5;
+    }
+
+    /* Decorative line */
+    .deco-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, 
+        transparent 0%,
+        #ffd166 20%,
+        #e76f51 50%,
+        #ffd166 80%,
+        transparent 100%
+      );
     }
 
     /* Content container */
     .card-content {
       position: relative;
-      z-index: 2;
+      z-index: 10;
       height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 60px 80px;
+      gap: 60px;
+    }
+
+    /* Left side - Logo & Branding */
+    .card-left {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-logo {
+      width: 200px;
+      height: 200px;
+      border-radius: 24px;
+      filter: drop-shadow(0 10px 40px rgba(255, 209, 102, 0.3));
+      margin-bottom: 24px;
+    }
+
+    .logo-glow {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    /* Right side - Text content */
+    .card-right {
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 80px;
     }
 
-    /* Logo */
-    .card-logo {
-      width: 180px;
-      height: 180px;
-      margin-bottom: 35px;
-      filter: drop-shadow(0 8px 30px rgba(6, 255, 165, 0.3));
-      border-radius: 20px;
+    /* Badge */
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 209, 102, 0.1);
+      border: 1px solid rgba(255, 209, 102, 0.3);
+      border-radius: 30px;
+      color: #ffd166;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      width: fit-content;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: #ffd166;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ffd166;
     }
 
     /* Title */
     .card-title {
-      font-size: 84px;
-      font-weight: 900;
-      background: linear-gradient(135deg, #06ffa5 0%, #5eced2 100%);
+      font-size: 72px;
+      font-weight: 800;
+      color: #f0f2f7;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .card-title span {
+      background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 25px;
-      letter-spacing: 3px;
-      text-shadow: none;
-      filter: drop-shadow(0 4px 20px rgba(6, 255, 165, 0.4));
     }
 
     /* Subtitle */
     .card-subtitle {
-      font-size: 28px;
-      color: #ccd6f6;
+      font-size: 26px;
+      color: #a0aec0;
       font-weight: 400;
-      line-height: 1.6;
-      max-width: 800px;
-      opacity: 0.95;
+      line-height: 1.5;
+      margin-bottom: 32px;
+      max-width: 550px;
     }
 
-    /* Accent line */
-    .card-accent {
-      width: 150px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, #06ffa5, transparent);
-      margin: 25px auto;
-      box-shadow: 0 0 15px rgba(6, 255, 165, 0.5);
-    }
-
-    /* Tags container */
+    /* Tags */
     .card-tags {
       display: flex;
-      gap: 15px;
-      margin-top: 30px;
+      gap: 12px;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
     .card-tag {
-      padding: 8px 20px;
-      background: rgba(6, 255, 165, 0.1);
-      border: 1.5px solid rgba(6, 255, 165, 0.3);
-      border-radius: 25px;
-      color: #06ffa5;
-      font-size: 16px;
-      font-weight: 600;
-      backdrop-filter: blur(10px);
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #f0f2f7;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    /* URL Badge */
-    .card-url-badge {
+    .card-tag-icon {
+      font-size: 18px;
+    }
+
+    /* URL Badge - Bottom right */
+    .card-url {
       position: absolute;
-      bottom: 35px;
-      right: 40px;
-      padding: 12px 28px;
-      background: linear-gradient(135deg, rgba(6, 255, 165, 0.15) 0%, rgba(94, 206, 210, 0.15) 100%);
-      border: 2px solid #06ffa5;
-      border-radius: 30px;
-      color: #06ffa5;
-      font-size: 22px;
+      bottom: 40px;
+      right: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #ffd166 0%, #e5a84a 100%);
+      border-radius: 12px;
+      color: #0a0e27;
+      font-size: 20px;
       font-weight: 700;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 4px 25px rgba(6, 255, 165, 0.3);
-      letter-spacing: 1px;
+      box-shadow: 0 8px 32px rgba(255, 209, 102, 0.3);
+    }
+
+    .card-url svg {
+      width: 20px;
+      height: 20px;
     }
 
     /* Year badge */
     .card-year {
       position: absolute;
-      top: 35px;
-      left: 40px;
-      padding: 10px 24px;
-      background: rgba(255, 209, 102, 0.15);
-      border: 2px solid rgba(255, 209, 102, 0.4);
-      border-radius: 25px;
+      top: 40px;
+      right: 60px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #a0aec0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Stats mini */
+    .card-stats {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      display: flex;
+      gap: 24px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #a0aec0;
+      font-size: 14px;
+    }
+
+    .stat-item svg {
+      width: 16px;
+      height: 16px;
       color: #ffd166;
-      font-size: 18px;
+    }
+
+    .stat-value {
       font-weight: 700;
-      backdrop-filter: blur(10px);
+      color: #f0f2f7;
     }
   </style>
 </head>
 <body>
   <div class="instructions">
-    <h3>📸 Instrucciones</h3>
-    <ol>
-      <li>Presiona <code>F11</code> para pantalla completa</li>
-      <li>Usa la herramienta de recorte de Windows (<code>Win + Shift + S</code>)</li>
-      <li>Captura SOLO la tarjeta (1200x630px)</li>
-      <li>Guarda como: <code>social-card.webp</code></li>
-      <li>Coloca en: <code>/src/images/</code></li>
-    </ol>
+    <h3>📸 Cómo capturar la Social Card</h3>
+    <p>
+      1. Presiona <code>F11</code> para pantalla completa<br>
+      2. Usa <code>Win + Shift + S</code> y selecciona SOLO la tarjeta<br>
+      3. Guarda como <code>social-card.png</code> en <code>/src/images/</code>
+    </p>
   </div>
 
   <div class="social-card">
+    <!-- Decorative elements -->
+    <div class="deco-line"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+
     <!-- Year badge -->
-    <div class="card-year">2025</div>
-    
-    <!-- URL badge -->
-    <div class="card-url-badge">salageek.com</div>
-    
-    <!-- Content -->
+    <div class="card-year">🚀 Desde 2017</div>
+
+    <!-- URL Badge -->
+    <div class="card-url">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      salageek.com
+    </div>
+
+    <!-- Stats -->
+    <div class="card-stats">
+      <div class="stat-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span class="stat-value">+50K</span> Geeks
+      </div>
+      <div class="stat-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        Newsletter <span class="stat-value">Semanal</span>
+      </div>
+    </div>
+
+    <!-- Main content -->
     <div class="card-content">
-      <img 
-        src="../src/images/SalaGeek_LOGO.webp" 
-        alt="Sala Geek Logo" 
-        class="card-logo"
-      />
-      <h1 class="card-title">SALA GEEK</h1>
-      <div class="card-accent"></div>
-      <p class="card-subtitle">
-        Tu fuente de entretenimiento geek definitiva
-      </p>
-      <div class="card-tags">
-        <span class="card-tag">🎮 Gaming</span>
-        <span class="card-tag">🎬 Movies</span>
-        <span class="card-tag">📺 Series</span>
-        <span class="card-tag">💻 Tech</span>
+      <!-- Left: Logo -->
+      <div class="card-left">
+        <div class="logo-glow"></div>
+        <img 
+          src="../src/images/SalaGeek_LOGO.webp" 
+          alt="Sala Geek Logo" 
+          class="card-logo"
+        />
+      </div>
+
+      <!-- Right: Text -->
+      <div class="card-right">
+        <div class="card-badge">
+          <span class="badge-dot"></span>
+          Comunidad Geek #1 en Español
+        </div>
+
+        <h1 class="card-title">
+          Tu Espacio <span>Geek</span><br>Definitivo
+        </h1>
+
+        <p class="card-subtitle">
+          Noticias, reseñas y análisis de películas, series, anime, videojuegos y tecnología
+        </p>
+
+        <div class="card-tags">
+          <span class="card-tag">
+            <span class="card-tag-icon">🎬</span> Películas
+          </span>
+          <span class="card-tag">
+            <span class="card-tag-icon">📺</span> Series
+          </span>
+          <span class="card-tag">
+            <span class="card-tag-icon">🎮</span> Videojuegos
+          </span>
+          <span class="card-tag">
+            <span class="card-tag-icon">⚡</span> Anime
+          </span>
+        </div>
       </div>
     </div>
   </div>
