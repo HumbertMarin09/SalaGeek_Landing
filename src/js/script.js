@@ -659,17 +659,32 @@ function initSearch() {
 
     console.log("✅ Búsqueda inicializada");
 
-    // Base de datos de artículos
-    const articles = [
-      { title: "Stranger Things Temporada 5", url: "/blog/articulos/stranger-things-temporada-5-detalles.html", category: "Series" },
-      { title: "Demon Slayer Temporada 4", url: "/blog/articulos/demon-slayer-temporada-4-fecha.html", category: "Anime" },
-      { title: "GTA 6 - Fecha y Gameplay", url: "/blog/articulos/gta-6-fecha-gameplay.html", category: "Gaming" },
-      { title: "The Last of Us Part 3", url: "/blog/articulos/the-last-of-us-part-3-anuncio.html", category: "Gaming" },
-      { title: "One Piece Temporada 2", url: "/blog/articulos/one-piece-temporada-2-netflix.html", category: "Series" },
-      { title: "Marvel Plan 2026-2027", url: "/blog/articulos/marvel-plan-2026-2027.html", category: "Películas" },
-      { title: "Apple Vision Pro 2", url: "/blog/articulos/apple-vision-pro-2-anuncio.html", category: "Tecnología" },
-      { title: "Supergirl DCU Trailer", url: "/blog/articulos/supergirl-dcu-trailer-2026.html", category: "Películas" }
-    ];
+    // ═══════════════════════════════════════════════════════════
+    // 🔄 CARGA DINÁMICA DE ARTÍCULOS DESDE articles.json
+    // ═══════════════════════════════════════════════════════════
+    let articles = [];
+    
+    // Cargar artículos dinámicamente
+    const loadArticles = async () => {
+      try {
+        const response = await fetch("/blog/data/articles.json");
+        const data = await response.json();
+        articles = data.articles.map(article => ({
+          title: article.title,
+          url: article.content,
+          category: article.categoryDisplay,
+          excerpt: article.excerpt,
+          tags: article.tags || []
+        }));
+        console.log(`✅ Búsqueda: ${articles.length} artículos cargados`);
+      } catch (error) {
+        console.error("❌ Error cargando artículos para búsqueda:", error);
+        articles = [];
+      }
+    };
+    
+    // Cargar artículos al iniciar
+    loadArticles();
 
     // Abrir modal
     const openModal = () => {
@@ -697,7 +712,9 @@ function initSearch() {
 
       const results = articles.filter(a => 
         a.title.toLowerCase().includes(q) || 
-        a.category.toLowerCase().includes(q)
+        a.category.toLowerCase().includes(q) ||
+        (a.tags && a.tags.some(tag => tag.toLowerCase().includes(q))) ||
+        (a.excerpt && a.excerpt.toLowerCase().includes(q))
       );
 
       if (results.length === 0) {

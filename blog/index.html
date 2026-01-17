@@ -46,8 +46,8 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=214" />
-    <link rel="stylesheet" href="/src/css/blog.css?v=244" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=215" />
+    <link rel="stylesheet" href="/src/css/blog.css?v=246" />
     
     <!-- Blog Engine -->
     <script src="/src/js/blog-engine.js?v=5"></script>
@@ -423,8 +423,49 @@
           initBlogFeaturedCarousel();
         }
         
-        // Renderizar artículos iniciales (excluyendo destacados en "Todos")
-        updateView('all');
+        // ═══════════════════════════════════════════════════════════
+        // 🔍 DETECTAR FILTRO DE URL: /blog/?categoria=X
+        // ═══════════════════════════════════════════════════════════
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryFromURL = urlParams.get('categoria');
+        let initialCategory = 'all';
+        
+        if (categoryFromURL) {
+          // Validar que la categoría existe
+          const validCategories = ['peliculas', 'series', 'anime', 'gaming', 'tecnologia'];
+          if (validCategories.includes(categoryFromURL.toLowerCase())) {
+            initialCategory = categoryFromURL.toLowerCase();
+            
+            // Actualizar UI del pill activo
+            document.querySelectorAll(".category-pills .pill").forEach((p) => {
+              p.classList.remove("active");
+              if (p.dataset.category === initialCategory) {
+                p.classList.add("active");
+              }
+            });
+            
+            // Aplicar filtro
+            blogEngine.filterByCategory(initialCategory);
+          }
+        }
+        
+        // Renderizar artículos iniciales
+        updateView(initialCategory);
+        
+        // ═══════════════════════════════════════════════════════════
+        // 📜 SCROLL AUTOMÁTICO SI VIENE CON FILTRO DE URL
+        // ═══════════════════════════════════════════════════════════
+        if (categoryFromURL && initialCategory !== 'all') {
+          // Scroll al título "Últimos Artículos" cuando viene con filtro
+          setTimeout(() => {
+            const targetTitle = document.getElementById("latest-title");
+            if (targetTitle) {
+              const titleRect = targetTitle.getBoundingClientRect();
+              const absoluteTop = window.pageYOffset + titleRect.top - 150;
+              window.scrollTo({ top: absoluteTop, behavior: 'smooth' });
+            }
+          }, 400);
+        }
         
         // Event listeners para filtros
         document.querySelectorAll(".category-pills .pill").forEach((pill) => {
@@ -438,6 +479,14 @@
             // Filtrar artículos
             blogEngine.filterByCategory(category);
             updateView(category);
+            
+            // ═══════════════════════════════════════════════════════════
+            // 🔗 ACTUALIZAR URL SIN RECARGAR (para que sea compartible)
+            // ═══════════════════════════════════════════════════════════
+            const newUrl = category === 'all' 
+              ? '/blog/' 
+              : `/blog/?categoria=${category}`;
+            window.history.pushState({ category }, '', newUrl);
             
             // Scroll suave al título correspondiente
             // En "Todos": scroll al título "Artículos Destacados"
@@ -491,6 +540,26 @@
               updateView(blogEngine.currentFilter || 'all');
             }
           }, 250);
+        });
+        
+        // ═══════════════════════════════════════════════════════════
+        // 🔙 SOPORTE PARA BOTONES BACK/FORWARD DEL NAVEGADOR
+        // ═══════════════════════════════════════════════════════════
+        window.addEventListener('popstate', (event) => {
+          const urlParams = new URLSearchParams(window.location.search);
+          const category = urlParams.get('categoria') || 'all';
+          
+          // Actualizar UI del pill activo
+          document.querySelectorAll(".category-pills .pill").forEach((p) => {
+            p.classList.remove("active");
+            if (p.dataset.category === category) {
+              p.classList.add("active");
+            }
+          });
+          
+          // Aplicar filtro
+          blogEngine.filterByCategory(category);
+          updateView(category);
         });
       });
       
