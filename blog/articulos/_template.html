@@ -39,8 +39,8 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/src/css/normalize.css" />
-  <link rel="stylesheet" href="/src/css/style.min.css?v=214" />
-  <link rel="stylesheet" href="/src/css/blog.css?v=246" />
+  <link rel="stylesheet" href="/src/css/style.min.css?v=219" />
+  <link rel="stylesheet" href="/src/css/blog.css?v=253" />
   
   <!-- Blog Engine para artículos relacionados -->
   <script src="/src/js/blog-engine.js?v=5" defer></script>
@@ -48,9 +48,9 @@
 
 <body class="article-page">
   <!-- Header inyectado -->
-  <div id="header-placeholder"></div>
+  <div id="header-container"></div>
 
-  <main id="main-content">
+  <main class="blog-article-page">
     <!-- Breadcrumbs -->
     <nav class="breadcrumbs" aria-label="Breadcrumb">
       <ol>
@@ -90,10 +90,8 @@
       </ol>
     </nav>
 
-    <article class="article-container">
-      <!-- ═══════════════════════════════════════════════════════════════
-           📝 EDITA AQUÍ: HEADER DEL ARTÍCULO
-           ═══════════════════════════════════════════════════════════════ -->
+    <article class="article-full">
+      <!-- HEADER DEL ARTÍCULO -->
       <header class="article-header">
         <div class="article-meta-top">
           <a href="/blog/?categoria=[categoria-id]" class="article-category category-[categoria-id]">
@@ -134,9 +132,7 @@
         </div>
       </header>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           📝 EDITA AQUÍ: IMAGEN DESTACADA
-           ═══════════════════════════════════════════════════════════════ -->
+      <!-- IMAGEN DESTACADA -->
       <figure class="article-featured-image">
         <img 
           src="/src/images/blog/[IMAGEN].webp" 
@@ -148,9 +144,7 @@
         <figcaption>[Pie de foto opcional]</figcaption>
       </figure>
 
-      <!-- ═══════════════════════════════════════════════════════════════
-           📝 EDITA AQUÍ: CONTENIDO DEL ARTÍCULO
-           ═══════════════════════════════════════════════════════════════ -->
+      <!-- CONTENIDO DEL ARTÍCULO -->
       <div class="article-content">
         
         <p class="lead">
@@ -288,10 +282,10 @@
   </main>
 
   <!-- Footer inyectado -->
-  <div id="footer-placeholder"></div>
+  <div id="footer-container"></div>
 
   <!-- Scripts -->
-  <script src="/src/js/script.js?v=131" defer></script>
+  <script src="/src/js/script.min.js?v=143" defer></script>
   
   <!-- Funciones de compartir -->
   <script>

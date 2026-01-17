@@ -477,6 +477,20 @@ async function loadIncludes() {
       yearElement.textContent = new Date().getFullYear();
     }
 
+    // Fix z-index: Mover elementos fixed al body en páginas de artículos
+    // Esto los saca del stacking context creado por backdrop-filter del header
+    if (document.body.classList.contains("article-page")) {
+      const mainNav = document.querySelector(".main-nav");
+      const searchModal = document.querySelector(".search-modal");
+      
+      if (mainNav && mainNav.parentElement !== document.body) {
+        document.body.appendChild(mainNav);
+      }
+      if (searchModal && searchModal.parentElement !== document.body) {
+        document.body.appendChild(searchModal);
+      }
+    }
+
     // Inicializar navegación y búsqueda después de que el header esté cargado
     initNavigation();
     
@@ -517,6 +531,9 @@ function initNavigation() {
 
     // Prevenir scroll del body cuando el menú está abierto
     document.body.style.overflow = isOpen ? "hidden" : "";
+    
+    // Clase para overlay CSS
+    document.body.classList.toggle("menu-open", isOpen);
 
     // Gestión de foco para accesibilidad
     if (isOpen) {
@@ -534,6 +551,7 @@ function initNavigation() {
       nav.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
+      document.body.classList.remove("menu-open");
     });
   }
 
@@ -553,6 +571,7 @@ function initNavigation() {
             nav.classList.remove("open");
             toggle.setAttribute("aria-expanded", "false");
             document.body.style.overflow = "";
+            document.body.classList.remove("menu-open");
           }
 
           // Scroll suave al elemento
@@ -577,6 +596,7 @@ function initNavigation() {
       nav.classList.remove("open");
       toggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
+      document.body.classList.remove("menu-open");
     }
   });
 

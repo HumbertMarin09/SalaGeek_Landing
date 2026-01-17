@@ -194,13 +194,59 @@ a {
    ============================================ */
 
 /**
- * Header Placeholder
+ * Header Placeholder / Container
  * Sticky container para mantener el header fijo
+ * #header-placeholder: usado en index.html
+ * #header-container: usado en blog/articulos
  */
-#header-placeholder {
+#header-placeholder,
+#header-container {
   position: sticky;
   top: 0;
   z-index: 1000;
+  /* Altura mínima para evitar salto de contenido mientras carga */
+  min-height: 80px;
+  background: linear-gradient(180deg, rgba(8, 12, 35, 0.92) 0%, rgba(12, 16, 42, 0.96) 100%);
+}
+
+/* Una vez cargado el header, el contenedor se ajusta automáticamente */
+#header-placeholder:not(:empty),
+#header-container:not(:empty) {
+  min-height: auto;
+  background: transparent;
+}
+
+/**
+ * Footer Container
+ * Asegura que el footer se posicione correctamente
+ */
+#footer-container {
+  position: relative;
+  z-index: 1;
+}
+
+/**
+ * Fix para el menú móvil y modal de búsqueda en páginas de artículos
+ * El backdrop-filter del header crea un containing block para fixed elements
+ * Movemos los elementos fixed fuera del stacking context usando portal CSS
+ */
+.article-page .main-nav,
+.article-page .search-modal {
+  /* Estos elementos necesitan estar fuera del stacking context del header */
+  /* Se posicionan relative al viewport, no al header */
+  position: fixed !important;
+  contain: layout style;
+}
+
+/* Cuando el menú está abierto, asegurar que nada lo bloquee */
+body.menu-open {
+  /* Crear un stacking context limpio */
+}
+
+body.menu-open .blog-article-page,
+body.menu-open main {
+  /* Reducir z-index del contenido cuando menú está abierto */
+  z-index: 0 !important;
 }
 
 /**
@@ -8901,7 +8947,7 @@ img.lazy-loaded {
       transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.4s ease,
       visibility 0s 0.5s;
-    z-index: 999;
+    z-index: 999999;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -9090,7 +9136,7 @@ img.lazy-loaded {
     font-size: 1.25rem;
     font-weight: 300;
     cursor: pointer;
-    z-index: 1001;
+    z-index: 999999;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 
