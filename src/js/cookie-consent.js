@@ -840,16 +840,30 @@
       /* Tablets y pantallas medianas */
       @media (max-width: 960px) {
         .cookie-banner-content {
-          flex-wrap: wrap;
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-rows: auto auto;
+          gap: 12px 16px;
+          align-items: center;
+        }
+        
+        .cookie-banner-icon {
+          grid-row: 1;
+          grid-column: 1;
         }
         
         .cookie-banner-text {
-          flex: 1 1 60%;
-          min-width: 300px;
+          grid-row: 1;
+          grid-column: 2;
         }
         
         .cookie-banner-actions {
-          flex: 0 0 auto;
+          grid-row: 2;
+          grid-column: 2;
+        }
+        
+        .cookie-policy-link {
+          margin-top: 8px;
         }
       }
 
