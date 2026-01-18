@@ -512,7 +512,6 @@
         display: flex;
         align-items: center;
         gap: 20px;
-        flex-wrap: wrap;
       }
 
       .cookie-banner-icon {
@@ -528,7 +527,7 @@
 
       .cookie-banner-text {
         flex: 1;
-        min-width: 280px;
+        min-width: 0;
       }
 
       .cookie-banner-text h3 {
@@ -837,6 +836,24 @@
       /* ============================================
          RESPONSIVE
          ============================================ */
+      
+      /* Tablets y pantallas medianas */
+      @media (max-width: 960px) {
+        .cookie-banner-content {
+          flex-wrap: wrap;
+        }
+        
+        .cookie-banner-text {
+          flex: 1 1 60%;
+          min-width: 300px;
+        }
+        
+        .cookie-banner-actions {
+          flex: 0 0 auto;
+        }
+      }
+
+      /* Móviles */
       @media (max-width: 768px) {
         .cookie-banner {
           padding: 18px 16px 14px;
@@ -859,6 +876,9 @@
         }
 
         .cookie-banner-text {
+          flex: none;
+          min-width: 0;
+          width: 100%;
           text-align: center;
         }
 
