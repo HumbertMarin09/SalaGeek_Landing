@@ -35,26 +35,26 @@
     // Slots de anuncios (configurar cuando crees los ad units en AdSense)
     slots: {
       headerBanner: {
-        slotId: 'XXXXXXXXXX', // Reemplazar con tu slot ID
-        format: 'horizontal',
+        slotId: '2669096526', // SG - Header Banner (Adaptable)
+        format: 'auto',
         sizes: [[728, 90], [970, 90], [320, 50]],
         responsive: true
       },
       inArticle: {
-        slotId: 'XXXXXXXXXX',
+        slotId: '4301548877', // SG - In-Article (Fluid)
         format: 'fluid',
         layout: 'in-article',
         responsive: true
       },
       sidebar: {
-        slotId: 'XXXXXXXXXX',
+        slotId: '8439286191', // SG - Sidebar (Fixed 300x250)
         format: 'rectangle',
         sizes: [[300, 250], [336, 280]],
-        responsive: true
+        responsive: false
       },
       footerBanner: {
-        slotId: 'XXXXXXXXXX',
-        format: 'horizontal',
+        slotId: '6440627054', // SG - Footer (Adaptable)
+        format: 'auto',
         sizes: [[728, 90], [320, 50]],
         responsive: true
       }
