@@ -839,40 +839,59 @@
          ============================================ */
       @media (max-width: 768px) {
         .cookie-banner {
-          padding: 20px 16px 16px;
+          padding: 16px;
         }
 
         .cookie-banner-content {
-          gap: 14px;
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-rows: auto auto;
+          gap: 12px 14px;
+          align-items: center;
         }
 
         .cookie-banner-icon {
-          display: none;
+          grid-row: 1;
+          grid-column: 1;
+          display: flex;
+          align-items: flex-start;
+        }
+
+        .cookie-banner-icon svg {
+          width: 32px;
+          height: 32px;
         }
 
         .cookie-banner-text {
-          text-align: center;
-          min-width: 100%;
+          grid-row: 1;
+          grid-column: 2;
+          text-align: left;
+          min-width: 0;
         }
 
         .cookie-banner-text h3 {
-          font-size: 1rem;
+          font-size: 0.95rem;
+          margin-bottom: 4px;
         }
 
         .cookie-banner-text p {
-          font-size: 0.85rem;
+          font-size: 0.82rem;
+          line-height: 1.4;
         }
 
         .cookie-banner-actions {
-          width: 100%;
+          grid-row: 2;
+          grid-column: 1 / -1;
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 10px;
+          width: 100%;
         }
 
         .cookie-btn {
-          padding: 12px 14px;
-          font-size: 0.82rem;
+          padding: 11px 12px;
+          font-size: 0.8rem;
+          border-radius: 8px;
         }
 
         .cookie-btn svg {
@@ -881,7 +900,9 @@
         }
 
         .cookie-policy-link {
-          margin-top: 10px;
+          grid-row: 3;
+          grid-column: 1 / -1;
+          margin-top: 4px;
           font-size: 0.7rem;
         }
 
@@ -899,7 +920,35 @@
         }
       }
 
-      @media (max-width: 380px) {
+      @media (max-width: 400px) {
+        .cookie-banner {
+          padding: 14px 12px;
+        }
+
+        .cookie-banner-content {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .cookie-banner-icon {
+          display: none;
+        }
+
+        .cookie-banner-text {
+          grid-column: 1;
+          text-align: center;
+        }
+
+        .cookie-banner-actions {
+          grid-column: 1;
+        }
+
+        .cookie-policy-link {
+          grid-column: 1;
+        }
+      }
+
+      @media (max-width: 340px) {
         .cookie-banner-actions {
           grid-template-columns: 1fr;
         }
