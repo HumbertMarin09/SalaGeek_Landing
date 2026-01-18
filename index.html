@@ -433,6 +433,26 @@
       async
       defer
     ></script>
+
+    <!-- Features Plus: Skeleton, Progress Bar, Web Share, PWA Install, Print Styles -->
+    <script defer src="/src/js/features-plus.min.js?v=100"></script>
+    
+    <!-- Cookie Consent Banner - GDPR/LOPD Compliant -->
+    <script defer src="/src/js/cookie-consent.min.js?v=100"></script>
+    
+    <!-- Monetización - AdSense Integration -->
+    <script defer src="/src/js/monetization.min.js?v=100"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('[🔧 SW] Service Worker registrado:', reg.scope))
+            .catch(err => console.error('[🔧 SW] Error al registrar SW:', err));
+        });
+      }
+    </script>
   </head>
   <body class="home">
     <!-- Google Tag Manager (noscript) -->
