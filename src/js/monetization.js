@@ -29,8 +29,8 @@
   // ============================================================================
   
   const ADS_CONFIG = {
-    // Tu ID de publisher de Google AdSense (reemplazar cuando tengas cuenta aprobada)
-    publisherId: 'ca-pub-XXXXXXXXXXXXXXXXX',
+    // Tu ID de publisher de Google AdSense
+    publisherId: 'ca-pub-3884162231581435',
     
     // Slots de anuncios (configurar cuando crees los ad units en AdSense)
     slots: {
