@@ -2104,45 +2104,11 @@ if (!document.getElementById("notification-styles")) {
 }
 
 /* ============================================
-   COOKIE CONSENT
+   COOKIE CONSENT - DEPRECATED
+   Ahora manejado por cookie-consent.js (banner premium)
    ============================================ */
 
-function initCookieConsent() {
-  const COOKIE_NAME = "sg_cookie_consent";
-  const cookieBanner = document.querySelector(".cookie-consent");
-
-  if (!cookieBanner) return;
-
-  // Verificar si ya se aceptaron las cookies
-  const hasConsent = localStorage.getItem(COOKIE_NAME);
-
-  if (!hasConsent) {
-    // Mostrar banner después de un pequeño delay
-    setTimeout(() => {
-      cookieBanner.classList.add("show");
-    }, 1000);
-  }
-
-  // Botón de aceptar
-  const acceptBtn = cookieBanner.querySelector(".cookie-btn.accept");
-  if (acceptBtn) {
-    acceptBtn.addEventListener("click", () => {
-      localStorage.setItem(COOKIE_NAME, "accepted");
-      cookieBanner.classList.remove("show");
-      setTimeout(() => cookieBanner.remove(), 400);
-    });
-  }
-
-  // Botón de rechazar
-  const rejectBtn = cookieBanner.querySelector(".cookie-btn.reject");
-  if (rejectBtn) {
-    rejectBtn.addEventListener("click", () => {
-      localStorage.setItem(COOKIE_NAME, "rejected");
-      cookieBanner.classList.remove("show");
-      setTimeout(() => cookieBanner.remove(), 400);
-    });
-  }
-}
+// function initCookieConsent() { ... } // REMOVIDO - Ver cookie-consent.js
 
 /* ============================================
    BACK TO TOP BUTTON + SCROLL PROGRESS
@@ -2638,7 +2604,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNewsletterForm();
   initNewsSubscribeForm();
   initBlogSubscribeForm();
-  initCookieConsent();
+  // initCookieConsent(); // DEPRECATED - Ahora manejado por cookie-consent.js
   initSmoothScroll();
   initBackToTop();
   initHeaderScroll();
