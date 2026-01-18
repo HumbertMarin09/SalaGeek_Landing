@@ -10,7 +10,12 @@
       "image": "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=800&h=450&fit=crop&q=80",
       "category": "series",
       "categoryDisplay": "Series",
-      "tags": ["stranger things", "netflix", "series", "duffer brothers"],
+      "tags": [
+        "stranger things",
+        "netflix",
+        "series",
+        "duffer brothers"
+      ],
       "author": "Sala Geek",
       "publishDate": "2026-01-09T10:00:00Z",
       "modifiedDate": "2026-01-09T10:00:00Z",

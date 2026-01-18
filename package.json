@@ -1,19 +1,18 @@
 {
-  "name": "pagina-prueba",
-  "version": "1.0.0",
+  "name": "salageek-landing",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
     "clean": "powershell -NoProfile -Command \"Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue\"",
     "serve": "npx http-server dist -p 5173 -o",
-    "_comment_minify": "Scripts de minificación para optimización de performance",
     "minify:css": "cleancss -o src/css/style.min.css src/css/style.css",
     "minify:js": "terser src/js/script.js -o src/js/script.min.js --compress --mangle --comments false",
     "minify": "npm run minify:css && npm run minify:js",
-    "_comment_format": "Scripts de formateo con Prettier",
     "format": "prettier --write \"src/**/*.{js,css}\" \"*.{html,json,md}\"",
-    "format:check": "prettier --check \"src/**/*.{js,css}\" \"*.{html,json,md}\""
+    "format:check": "prettier --check \"src/**/*.{js,css}\" \"*.{html,json,md}\"",
+    "convert-article": "node scripts/word-to-blog.mjs"
   },
   "dependencies": {
     "node-fetch": "^2.6.7"
