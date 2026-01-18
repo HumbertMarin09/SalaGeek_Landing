@@ -839,42 +839,74 @@
          ============================================ */
       @media (max-width: 768px) {
         .cookie-banner {
-          padding: 18px 16px;
+          padding: 20px 16px 16px;
         }
 
         .cookie-banner-content {
-          flex-direction: column;
-          text-align: center;
-          gap: 16px;
+          gap: 14px;
         }
 
         .cookie-banner-icon {
           display: none;
         }
 
+        .cookie-banner-text {
+          text-align: center;
+          min-width: 100%;
+        }
+
+        .cookie-banner-text h3 {
+          font-size: 1rem;
+        }
+
+        .cookie-banner-text p {
+          font-size: 0.85rem;
+        }
+
         .cookie-banner-actions {
           width: 100%;
-          flex-direction: row;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
         }
 
         .cookie-btn {
-          flex: 1;
-          padding: 14px 16px;
-          font-size: 0.85rem;
+          padding: 12px 14px;
+          font-size: 0.82rem;
+        }
+
+        .cookie-btn svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .cookie-policy-link {
+          margin-top: 10px;
+          font-size: 0.7rem;
         }
 
         .cookie-modal-content {
           max-height: 90vh;
+          margin: 10px;
+        }
+
+        .cookie-modal-body {
+          padding: 16px;
+        }
+
+        .cookie-category {
+          padding: 12px;
         }
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: 380px) {
         .cookie-banner-actions {
-          flex-direction: column;
+          grid-template-columns: 1fr;
         }
 
         .cookie-btn {
           width: 100%;
+          justify-content: center;
         }
       }
 

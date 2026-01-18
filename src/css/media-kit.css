@@ -1940,3 +1940,305 @@
     color: var(--accent-primary);
   }
 }
+
+/* ============================================
+   PROGRAMMATIC ADVERTISING SECTION
+   ============================================ */
+.programmatic-section {
+  background: linear-gradient(180deg, rgba(26, 31, 58, 0.5) 0%, rgba(10, 14, 39, 0.8) 100%);
+}
+
+.section-intro {
+  max-width: 700px;
+  margin: 0 auto 3rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.section-intro strong {
+  color: var(--accent-primary);
+}
+
+.ad-formats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.ad-format-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ad-format-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 209, 102, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 209, 102, 0.1);
+}
+
+.ad-format-card.featured {
+  border-color: rgba(255, 209, 102, 0.3);
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, rgba(231, 111, 81, 0.05) 100%);
+}
+
+.ad-format-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: var(--bg-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+  z-index: 2;
+}
+
+/* Ad Format Previews */
+.ad-format-preview {
+  height: 160px;
+  padding: 16px;
+  background: linear-gradient(135deg, #0a0e27 0%, #141b37 100%);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.ad-format-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(90deg, transparent 49%, rgba(255, 255, 255, 0.03) 50%, transparent 51%),
+    linear-gradient(0deg, transparent 49%, rgba(255, 255, 255, 0.03) 50%, transparent 51%);
+  background-size: 20px 20px;
+  opacity: 0.5;
+}
+
+/* Header Preview */
+.header-preview .preview-nav {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.header-preview .preview-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(231, 111, 81, 0.15) 100%);
+  border: 1px dashed rgba(255, 209, 102, 0.4);
+  border-radius: 6px;
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: adPulse 2s ease-in-out infinite;
+}
+
+.header-preview .preview-content {
+  flex: 1;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+/* Article Preview */
+.article-preview {
+  gap: 10px;
+}
+
+.article-preview .preview-text-block {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+.article-preview .preview-ad-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(231, 111, 81, 0.15) 100%);
+  border: 1px dashed rgba(255, 209, 102, 0.4);
+  border-radius: 6px;
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: adPulse 2s ease-in-out infinite;
+}
+
+/* Sidebar Preview */
+.sidebar-preview {
+  flex-direction: row;
+  gap: 12px;
+}
+
+.sidebar-preview .preview-main-content {
+  flex: 2;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+.sidebar-preview .preview-sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-preview .preview-sidebar-ad {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(231, 111, 81, 0.15) 100%);
+  border: 1px dashed rgba(255, 209, 102, 0.4);
+  border-radius: 6px;
+  color: var(--accent-primary);
+  animation: adPulse 2s ease-in-out infinite;
+}
+
+/* Footer Preview */
+.footer-preview {
+  justify-content: flex-end;
+}
+
+.footer-preview .preview-content-area {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.footer-preview .preview-footer-ad {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(231, 111, 81, 0.15) 100%);
+  border: 1px dashed rgba(255, 209, 102, 0.4);
+  border-radius: 6px;
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  animation: adPulse 2s ease-in-out infinite;
+}
+
+@keyframes adPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Ad Format Info */
+.ad-format-info {
+  padding: 20px;
+}
+
+.ad-format-info h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+.ad-format-info h3 svg {
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.ad-format-info p {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.ad-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ad-specs .spec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.ad-specs .spec svg {
+  color: var(--accent-primary);
+  opacity: 0.8;
+}
+
+.ad-specs .spec.highlight {
+  background: rgba(255, 209, 102, 0.1);
+  border-color: rgba(255, 209, 102, 0.3);
+  color: var(--accent-primary);
+}
+
+/* Programmatic CTA */
+.programmatic-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, rgba(231, 111, 81, 0.05) 100%);
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: 16px;
+}
+
+.programmatic-cta .cta-content h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.programmatic-cta .cta-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.programmatic-cta .btn {
+  flex-shrink: 0;
+}
+
+/* Responsive - Programmatic Section */
+@media (max-width: 768px) {
+  .ad-formats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .programmatic-cta {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .programmatic-cta .btn {
+    width: 100%;
+  }
+}
