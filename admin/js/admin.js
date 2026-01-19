@@ -304,6 +304,7 @@ class SalaGeekAdmin {
 
     // Keyboard shortcuts
     editor?.addEventListener('keydown', (e) => {
+      // Ctrl/Cmd shortcuts
       if (e.ctrlKey || e.metaKey) {
         switch (e.key.toLowerCase()) {
           case 'b':
@@ -314,6 +315,22 @@ class SalaGeekAdmin {
             e.preventDefault();
             this.executeEditorCommand('italic');
             break;
+        }
+      }
+      
+      // Delete/Backspace para eliminar imágenes seleccionadas
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        const selectedImg = editor.querySelector('img.selected');
+        if (selectedImg) {
+          e.preventDefault();
+          this.deleteSelectedImage(selectedImg);
+        }
+        
+        // También eliminar grids seleccionados
+        const selectedGrid = editor.querySelector('.image-grid-container.selected');
+        if (selectedGrid) {
+          e.preventDefault();
+          this.deleteSelectedGrid(selectedGrid);
         }
       }
     });
@@ -356,11 +373,66 @@ class SalaGeekAdmin {
 
     // Click en imágenes del editor para seleccionar/redimensionar
     editor?.addEventListener('click', (e) => {
-      if (e.target.tagName === 'IMG') {
-        this.selectEditorImage(e.target);
-      } else {
-        this.deselectEditorImages();
+      const target = e.target;
+      
+      // Click en imagen individual
+      if (target.tagName === 'IMG') {
+        // Si la imagen está dentro de un grid, seleccionar el grid
+        const parentGrid = target.closest('.image-grid-container');
+        if (parentGrid) {
+          this.selectEditorGrid(parentGrid);
+        } else {
+          this.selectEditorImage(target);
+        }
+      } 
+      // Click en grid container
+      else if (target.classList.contains('image-grid-container')) {
+        this.selectEditorGrid(target);
       }
+      // Click fuera - deseleccionar
+      else {
+        this.deselectEditorImages();
+        this.deselectEditorGrids();
+      }
+    });
+  }
+
+  deleteSelectedImage(img) {
+    // Buscar el wrapper (puede ser image-resize-wrapper, figure, p, etc)
+    let elementToRemove = img;
+    
+    if (img.parentElement.classList.contains('image-resize-wrapper')) {
+      elementToRemove = img.parentElement;
+    }
+    if (elementToRemove.parentElement.tagName === 'FIGURE') {
+      elementToRemove = elementToRemove.parentElement;
+    }
+    if (elementToRemove.parentElement.tagName === 'P' && elementToRemove.parentElement.childNodes.length === 1) {
+      elementToRemove = elementToRemove.parentElement;
+    }
+    
+    elementToRemove.remove();
+    this.showToast('Imagen eliminada', 'success');
+  }
+
+  deleteSelectedGrid(grid) {
+    grid.remove();
+    this.showToast('Galería eliminada', 'success');
+  }
+
+  selectEditorGrid(grid) {
+    // Deseleccionar otras cosas
+    this.deselectEditorImages();
+    this.deselectEditorGrids();
+    
+    // Marcar grid como seleccionado
+    grid.classList.add('selected');
+  }
+
+  deselectEditorGrids() {
+    const editor = document.getElementById('article-editor');
+    editor?.querySelectorAll('.image-grid-container.selected').forEach(grid => {
+      grid.classList.remove('selected');
     });
   }
 
@@ -409,6 +481,7 @@ class SalaGeekAdmin {
   selectEditorImage(img) {
     // Deseleccionar otras
     this.deselectEditorImages();
+    this.deselectEditorGrids();
     
     // Marcar como seleccionada
     img.classList.add('selected');
@@ -416,7 +489,7 @@ class SalaGeekAdmin {
     // Crear handles de redimensionamiento si no existen
     if (!img.parentElement.classList.contains('image-resize-wrapper')) {
       const wrapper = document.createElement('span');
-      wrapper.className = 'image-resize-wrapper';
+      wrapper.className = 'image-resize-wrapper has-selected';
       wrapper.contentEditable = 'false';
       img.parentElement.insertBefore(wrapper, img);
       wrapper.appendChild(img);
@@ -433,6 +506,8 @@ class SalaGeekAdmin {
           this.startImageResize(img, pos, e);
         });
       });
+    } else {
+      img.parentElement.classList.add('has-selected');
     }
   }
 
@@ -440,6 +515,9 @@ class SalaGeekAdmin {
     const editor = document.getElementById('article-editor');
     editor?.querySelectorAll('img.selected').forEach(img => {
       img.classList.remove('selected');
+      if (img.parentElement.classList.contains('image-resize-wrapper')) {
+        img.parentElement.classList.remove('has-selected');
+      }
     });
   }
 
