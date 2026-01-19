@@ -809,6 +809,7 @@ input, select, textarea {
 
 /* Article Editor */
 .article-editor {
+  position: relative;
   min-height: 400px;
   padding: 1.25rem;
   background: var(--admin-surface);
@@ -816,10 +817,41 @@ input, select, textarea {
   border-radius: 0 0 0.5rem 0.5rem;
   outline: none;
   line-height: 1.8;
+  transition: all var(--transition-fast);
 }
 
 .article-editor:focus {
   border-color: var(--admin-primary);
+}
+
+/* Drag & Drop state */
+.article-editor.drag-over {
+  border-color: var(--admin-primary);
+  background: rgba(124, 58, 237, 0.05);
+  box-shadow: inset 0 0 0 2px var(--admin-primary);
+}
+
+.article-editor.drag-over::after {
+  content: '📷 Suelta la imagen aquí';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1rem 2rem;
+  background: var(--admin-primary);
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Editor help text */
+.editor-help {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--admin-text-muted);
+  font-size: 0.8rem;
 }
 
 .article-editor h2 {
@@ -865,6 +897,71 @@ input, select, textarea {
   max-width: 100%;
   border-radius: 0.5rem;
   margin: 1rem 0;
+  cursor: pointer;
+  transition: outline var(--transition-fast);
+}
+
+.article-editor img:hover {
+  outline: 2px dashed var(--admin-primary);
+  outline-offset: 2px;
+}
+
+.article-editor img.selected {
+  outline: 3px solid var(--admin-primary);
+  outline-offset: 2px;
+}
+
+/* Image Resize Wrapper */
+.image-resize-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 1rem 0;
+}
+
+.image-resize-wrapper img {
+  display: block;
+  margin: 0;
+}
+
+.image-resize-wrapper .resize-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--admin-primary);
+  border: 2px solid white;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 10;
+}
+
+.image-resize-wrapper:hover .resize-handle,
+.image-resize-wrapper img.selected ~ .resize-handle {
+  opacity: 1;
+}
+
+.image-resize-wrapper .resize-handle.nw {
+  top: -6px;
+  left: -6px;
+  cursor: nwse-resize;
+}
+
+.image-resize-wrapper .resize-handle.ne {
+  top: -6px;
+  right: -6px;
+  cursor: nesw-resize;
+}
+
+.image-resize-wrapper .resize-handle.sw {
+  bottom: -6px;
+  left: -6px;
+  cursor: nesw-resize;
+}
+
+.image-resize-wrapper .resize-handle.se {
+  bottom: -6px;
+  right: -6px;
+  cursor: nwse-resize;
 }
 
 /* Form Sidebar */

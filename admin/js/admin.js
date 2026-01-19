@@ -312,6 +312,168 @@ class SalaGeekAdmin {
         }
       }
     });
+
+    // ═══════════════════════════════════════════════════════════════
+    // Drag & Drop de imágenes directamente en el editor
+    // ═══════════════════════════════════════════════════════════════
+    editor?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      editor.classList.add('drag-over');
+    });
+
+    editor?.addEventListener('dragleave', (e) => {
+      // Solo remover si realmente salimos del editor
+      if (!editor.contains(e.relatedTarget)) {
+        editor.classList.remove('drag-over');
+      }
+    });
+
+    editor?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      editor.classList.remove('drag-over');
+      
+      // Verificar si es un archivo de imagen
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+          this.insertImageFromFile(file);
+          return;
+        }
+      }
+      
+      // Verificar si es una URL de imagen arrastrada
+      const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+      if (url && (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) || url.startsWith('data:image'))) {
+        this.insertImageAtCursor(url);
+      }
+    });
+
+    // Click en imágenes del editor para seleccionar/redimensionar
+    editor?.addEventListener('click', (e) => {
+      if (e.target.tagName === 'IMG') {
+        this.selectEditorImage(e.target);
+      } else {
+        this.deselectEditorImages();
+      }
+    });
+  }
+
+  insertImageFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.insertImageAtCursor(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  insertImageAtCursor(url) {
+    const editor = document.getElementById('article-editor');
+    editor.focus();
+    
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = '';
+    img.style.maxWidth = '100%';
+    img.style.height = 'auto';
+    img.className = 'editor-image resizable';
+    
+    // Insertar en la posición del cursor
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      range.deleteContents();
+      
+      // Envolver en un párrafo si es necesario
+      const wrapper = document.createElement('p');
+      wrapper.appendChild(img);
+      range.insertNode(wrapper);
+      
+      // Mover cursor después de la imagen
+      range.setStartAfter(wrapper);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    } else {
+      editor.appendChild(img);
+    }
+    
+    this.showToast('Imagen insertada', 'success');
+  }
+
+  selectEditorImage(img) {
+    // Deseleccionar otras
+    this.deselectEditorImages();
+    
+    // Marcar como seleccionada
+    img.classList.add('selected');
+    
+    // Crear handles de redimensionamiento si no existen
+    if (!img.parentElement.classList.contains('image-resize-wrapper')) {
+      const wrapper = document.createElement('span');
+      wrapper.className = 'image-resize-wrapper';
+      wrapper.contentEditable = 'false';
+      img.parentElement.insertBefore(wrapper, img);
+      wrapper.appendChild(img);
+      
+      // Agregar handles
+      ['nw', 'ne', 'sw', 'se'].forEach(pos => {
+        const handle = document.createElement('span');
+        handle.className = `resize-handle ${pos}`;
+        handle.dataset.position = pos;
+        wrapper.appendChild(handle);
+        
+        handle.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          this.startImageResize(img, pos, e);
+        });
+      });
+    }
+  }
+
+  deselectEditorImages() {
+    const editor = document.getElementById('article-editor');
+    editor?.querySelectorAll('img.selected').forEach(img => {
+      img.classList.remove('selected');
+    });
+  }
+
+  startImageResize(img, position, startEvent) {
+    const startWidth = img.offsetWidth;
+    const startHeight = img.offsetHeight;
+    const startX = startEvent.clientX;
+    const startY = startEvent.clientY;
+    const aspectRatio = startWidth / startHeight;
+
+    const onMouseMove = (e) => {
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      
+      let newWidth, newHeight;
+      
+      if (position.includes('e')) {
+        newWidth = startWidth + deltaX;
+      } else {
+        newWidth = startWidth - deltaX;
+      }
+      
+      // Mantener aspect ratio
+      newHeight = newWidth / aspectRatio;
+      
+      // Mínimo 50px
+      if (newWidth >= 50) {
+        img.style.width = newWidth + 'px';
+        img.style.height = 'auto';
+      }
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
   executeEditorCommand(command) {
@@ -349,6 +511,15 @@ class SalaGeekAdmin {
           document.execCommand('createLink', false, url);
         }
         break;
+      case 'justifyLeft':
+        document.execCommand('justifyLeft', false, null);
+        break;
+      case 'justifyCenter':
+        document.execCommand('justifyCenter', false, null);
+        break;
+      case 'justifyRight':
+        document.execCommand('justifyRight', false, null);
+        break;
       case 'image':
         this.openImageModal();
         break;
@@ -360,6 +531,16 @@ class SalaGeekAdmin {
         break;
       case 'clear':
         document.execCommand('removeFormat', false, null);
+        // También limpiar estilos inline
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const content = range.cloneContents();
+          const text = content.textContent;
+          range.deleteContents();
+          range.insertNode(document.createTextNode(text));
+        }
+        this.showToast('Formato limpiado', 'success');
         break;
     }
   }
