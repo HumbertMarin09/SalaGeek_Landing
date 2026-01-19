@@ -1589,7 +1589,7 @@ class SalaGeekAdmin {
     if (this.currentSection === 'new-article' && section !== 'new-article') {
       const editor = document.getElementById('article-editor');
       const title = document.getElementById('article-title')?.value;
-      const hasContent = editor && editor.innerHTML !== '<p>Escribe tu artículo aquí... (Puedes arrastrar imágenes directamente)</p>' && editor.innerHTML !== '<p>Escribe tu artículo aquí...</p>';
+      const hasContent = editor && editor.innerHTML.trim() !== '' && editor.innerHTML !== '<br>';
       
       if ((title || hasContent) && !this.editingArticle) {
         if (!confirm('¿Tienes cambios sin guardar. ¿Estás seguro de que deseas salir?')) {
@@ -1859,7 +1859,7 @@ class SalaGeekAdmin {
     document.getElementById('article-id').value = '';
     document.getElementById('article-slug').value = '';
     document.getElementById('excerpt-count').textContent = '0';
-    document.getElementById('article-editor').innerHTML = '<p>Escribe tu artículo aquí... (Puedes arrastrar imágenes directamente)</p>';
+    document.getElementById('article-editor').innerHTML = '';
     
     // Reset image
     document.getElementById('image-preview').classList.add('hidden');
@@ -1908,7 +1908,7 @@ class SalaGeekAdmin {
       document.getElementById('article-excerpt').focus();
       return;
     }
-    if (!content || content === '<p>Escribe tu artículo aquí...</p>' || content === '<p>Escribe tu artículo aquí... (Puedes arrastrar imágenes directamente)</p>') {
+    if (!content || content.trim() === '' || content === '<br>') {
       this.showToast('El contenido del artículo es requerido', 'error');
       document.getElementById('article-editor').focus();
       return;

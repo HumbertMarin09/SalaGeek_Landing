@@ -820,6 +820,13 @@ input, select, textarea {
   transition: all var(--transition-fast);
 }
 
+.article-editor:empty::before {
+  content: attr(data-placeholder);
+  color: var(--admin-text-muted);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .article-editor:focus {
   border-color: var(--admin-primary);
 }
