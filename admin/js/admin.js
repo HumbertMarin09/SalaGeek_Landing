@@ -64,15 +64,6 @@ class SalaGeekAdmin {
     netlifyIdentity.init({
       locale: 'es'
     });
-    
-    // Si hay tokens en la URL (confirmación, recovery, invite), procesarlos
-    const hash = window.location.hash;
-    if (hash && (hash.includes('confirmation_token') || hash.includes('recovery_token') || hash.includes('invite_token'))) {
-      // Limpiar el hash de la URL después de procesar
-      setTimeout(() => {
-        window.history.replaceState(null, null, window.location.pathname);
-      }, 2000);
-    }
   }
 
   handleLogin(user) {

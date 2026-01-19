@@ -1415,14 +1415,18 @@
       // Si el usuario viene de confirmar email/password desde Netlify Identity, redirigir al admin
       if (window.netlifyIdentity) {
         netlifyIdentity.on('init', user => {
-          // Si hay un token en la URL (confirmación de email, recovery, etc)
-          const hash = window.location.hash;
-          if (hash && (hash.includes('confirmation_token') || hash.includes('recovery_token') || hash.includes('invite_token'))) {
-            // Redirigir al admin después de que Identity procese el token
-            setTimeout(() => {
+          // Si ya está logueado y viene de un token, redirigir
+          if (user) {
+            const hash = window.location.hash;
+            if (hash && (hash.includes('confirmation_token') || hash.includes('recovery_token') || hash.includes('invite_token'))) {
               window.location.href = '/admin';
-            }, 1000);
+            }
           }
+        });
+        
+        // También redirigir después de login exitoso
+        netlifyIdentity.on('login', () => {
+          window.location.href = '/admin';
         });
       }
     </script>
