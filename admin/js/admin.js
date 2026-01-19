@@ -504,18 +504,23 @@ class SalaGeekAdmin {
       } else if (remainingImages.length === 1) {
         // Solo queda 1 imagen - deshacer el grid y dejar la imagen suelta
         const lastImg = remainingImages[0];
-        let imgToMove = lastImg;
         
-        // Obtener el elemento contenedor de la imagen
-        if (lastImg.parentElement.classList.contains('image-resize-wrapper')) {
-          imgToMove = lastImg.parentElement;
+        // Crear nueva imagen limpia (sin wrapper de resize)
+        const newImg = document.createElement('img');
+        newImg.src = lastImg.src;
+        newImg.alt = lastImg.alt || '';
+        newImg.className = 'editor-image resizable';
+        newImg.draggable = true;
+        newImg.style.maxWidth = '100%';
+        newImg.style.height = 'auto';
+        // Preservar dimensiones si las tenía
+        if (lastImg.style.width) {
+          newImg.style.width = lastImg.style.width;
         }
         
         // Crear nuevo párrafo con la imagen
-        const clonedImg = imgToMove.cloneNode(true);
-        clonedImg.draggable = true;
         const newP = document.createElement('p');
-        newP.appendChild(clonedImg);
+        newP.appendChild(newImg);
         parentGrid.parentElement.insertBefore(newP, parentGrid);
         parentGrid.remove();
         
@@ -592,12 +597,10 @@ class SalaGeekAdmin {
     
     // CASO 2: Imagen arrastrada está en un grid, target está fuera - sacarla del grid
     if (draggedParentGrid && !targetParentGrid) {
-      // Clonar la imagen para insertar fuera
-      const clonedImg = draggedImg.cloneNode(true);
-      clonedImg.classList.remove('dragging', 'selected');
-      clonedImg.draggable = true;
+      // Crear imagen limpia para insertar fuera
+      const newImg = this.createCleanImage(draggedImg);
       const newP = document.createElement('p');
-      newP.appendChild(clonedImg);
+      newP.appendChild(newImg);
       
       // Encontrar el párrafo/contenedor del target
       let targetContainer = targetElement;
@@ -620,16 +623,11 @@ class SalaGeekAdmin {
       if (remainingImages.length === 0) {
         draggedParentGrid.remove();
       } else if (remainingImages.length === 1) {
-        // Deshacer el grid
+        // Deshacer el grid - crear imagen limpia
         const lastImg = remainingImages[0];
-        let imgToMove = lastImg;
-        if (lastImg.parentElement.classList.contains('image-resize-wrapper')) {
-          imgToMove = lastImg.parentElement;
-        }
-        const clonedLast = imgToMove.cloneNode(true);
-        clonedLast.draggable = true;
+        const newLastImg = this.createCleanImage(lastImg);
         const newPara = document.createElement('p');
-        newPara.appendChild(clonedLast);
+        newPara.appendChild(newLastImg);
         draggedParentGrid.parentElement.insertBefore(newPara, draggedParentGrid);
         draggedParentGrid.remove();
       } else {
@@ -646,17 +644,14 @@ class SalaGeekAdmin {
     
     // CASO 3: Imagen arrastrada está fuera, target está en un grid - agregarla al grid
     if (!draggedParentGrid && targetParentGrid) {
-      // Clonar imagen para agregar al grid
-      const clonedImg = draggedImg.cloneNode(true);
-      clonedImg.classList.remove('dragging', 'selected');
-      clonedImg.draggable = true;
-      clonedImg.removeAttribute('style'); // Limpiar estilos de resize
+      // Crear imagen limpia para agregar al grid
+      const newImg = this.createCleanImage(draggedImg);
       
       // Insertar en el grid
       if (insertBefore) {
-        targetParentGrid.insertBefore(clonedImg, targetElement);
+        targetParentGrid.insertBefore(newImg, targetElement);
       } else {
-        targetParentGrid.insertBefore(clonedImg, targetElement.nextSibling);
+        targetParentGrid.insertBefore(newImg, targetElement.nextSibling);
       }
       
       // Ajustar columnas del grid (máximo 4)
@@ -685,15 +680,9 @@ class SalaGeekAdmin {
       const grid = document.createElement('div');
       grid.className = 'image-grid-container cols-2 gap-md';
       
-      // Clonar ambas imágenes
-      const img1 = targetImg.cloneNode(true);
-      const img2 = draggedImg.cloneNode(true);
-      img1.classList.remove('selected', 'dragging');
-      img2.classList.remove('selected', 'dragging');
-      img1.removeAttribute('style'); // Limpiar estilos de resize
-      img2.removeAttribute('style');
-      img1.draggable = true;
-      img2.draggable = true;
+      // Crear imágenes limpias
+      const img1 = this.createCleanImage(targetImg);
+      const img2 = this.createCleanImage(draggedImg);
       
       // Ordenar según posición
       if (insertBefore) {
@@ -732,15 +721,13 @@ class SalaGeekAdmin {
     
     // CASO 5: Ambas están en grids diferentes - mover de un grid a otro
     if (draggedParentGrid && targetParentGrid && draggedParentGrid !== targetParentGrid) {
-      // Agregar al grid destino
-      const clonedImg = draggedImg.cloneNode(true);
-      clonedImg.classList.remove('dragging', 'selected');
-      clonedImg.draggable = true;
+      // Crear imagen limpia para agregar al grid destino
+      const newImg = this.createCleanImage(draggedImg);
       
       if (insertBefore) {
-        targetParentGrid.insertBefore(clonedImg, targetElement);
+        targetParentGrid.insertBefore(newImg, targetElement);
       } else {
-        targetParentGrid.insertBefore(clonedImg, targetElement.nextSibling);
+        targetParentGrid.insertBefore(newImg, targetElement.nextSibling);
       }
       
       // Ajustar columnas del grid destino
@@ -755,15 +742,11 @@ class SalaGeekAdmin {
       if (remainingImages.length === 0) {
         draggedParentGrid.remove();
       } else if (remainingImages.length === 1) {
+        // Crear imagen limpia para la última imagen
         const lastImg = remainingImages[0];
-        let imgToMove = lastImg;
-        if (lastImg.parentElement.classList.contains('image-resize-wrapper')) {
-          imgToMove = lastImg.parentElement;
-        }
-        const clonedLast = imgToMove.cloneNode(true);
-        clonedLast.draggable = true;
+        const newLastImg = this.createCleanImage(lastImg);
         const newPara = document.createElement('p');
-        newPara.appendChild(clonedLast);
+        newPara.appendChild(newLastImg);
         draggedParentGrid.parentElement.insertBefore(newPara, draggedParentGrid);
         draggedParentGrid.remove();
       } else {
@@ -775,6 +758,18 @@ class SalaGeekAdmin {
       
       this.showToast('Imagen movida entre galerías', 'success');
     }
+  }
+
+  // Helper para crear imagen limpia desde otra imagen
+  createCleanImage(sourceImg) {
+    const newImg = document.createElement('img');
+    newImg.src = sourceImg.src;
+    newImg.alt = sourceImg.alt || '';
+    newImg.className = 'editor-image resizable';
+    newImg.draggable = true;
+    newImg.style.maxWidth = '100%';
+    newImg.style.height = 'auto';
+    return newImg;
   }
 
   selectEditorGrid(grid) {
@@ -1414,7 +1409,7 @@ class SalaGeekAdmin {
         return;
       }
 
-      const images = this.gridImages.map(url => `<img src="${url}" alt="" draggable="true">`).join('\n  ');
+      const images = this.gridImages.map(url => `<img src="${url}" alt="" draggable="true" class="editor-image resizable">`).join('\n  ');
       const grid = `<div class="image-grid-container cols-${this.gridCols}" style="gap: ${this.gridGap}px;">
   ${images}
 </div>`;
