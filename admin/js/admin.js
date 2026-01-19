@@ -18,6 +18,10 @@ class SalaGeekAdmin {
     this.editingArticle = null;
     this.tags = [];
     
+    // Image modal states
+    this.currentImageSource = 'url';
+    this.uploadedImageData = null;
+    
     this.init();
   }
 
@@ -361,21 +365,81 @@ class SalaGeekAdmin {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // IMAGE MODALS
+  // IMAGE MODALS - Enhanced
   // ═══════════════════════════════════════════════════════════════
 
   openImageModal() {
-    document.getElementById('image-modal').classList.remove('hidden');
+    const modal = document.getElementById('image-modal');
+    modal.classList.remove('hidden');
+    
+    // Reset form
     document.getElementById('modal-image-url').value = '';
     document.getElementById('modal-image-alt').value = '';
-    document.querySelector('input[name="image-size"][value="medium"]').checked = true;
-    document.querySelector('input[name="image-align"][value="center"]').checked = true;
+    document.getElementById('image-width').value = '';
+    document.getElementById('image-height').value = '';
+    document.getElementById('image-caption').checked = false;
+    
+    // Reset tabs to URL
+    this.switchImageTab('url');
+    
+    // Reset alignment
+    document.querySelectorAll('.align-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.align === 'center');
+    });
+    
+    // Clear upload preview
+    const dropZone = document.getElementById('drop-zone');
+    const uploadPreview = document.getElementById('upload-preview');
+    if (dropZone) dropZone.style.display = 'block';
+    if (uploadPreview) uploadPreview.classList.add('hidden');
+    
+    this.currentImageSource = 'url';
+    this.uploadedImageData = null;
+  }
+
+  switchImageTab(tab) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+    
+    // Update tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.toggle('active', content.id === `tab-${tab}`);
+    });
+    
+    this.currentImageSource = tab;
   }
 
   openGridModal() {
-    document.getElementById('grid-modal').classList.remove('hidden');
+    const modal = document.getElementById('grid-modal');
+    modal.classList.remove('hidden');
     document.getElementById('grid-images').value = '';
     document.querySelector('input[name="grid-cols"][value="2"]').checked = true;
+    document.querySelector('input[name="grid-gap"][value="8"]').checked = true;
+    
+    // Clear preview
+    const previewContainer = document.querySelector('.grid-preview-container');
+    if (previewContainer) {
+      previewContainer.innerHTML = '';
+      previewContainer.classList.remove('has-images');
+    }
+  }
+
+  setPreviewDevice(device) {
+    const container = document.querySelector('.preview-frame-container');
+    const buttons = document.querySelectorAll('.device-btn');
+    
+    if (!container) return;
+    
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.device === device);
+    });
+    
+    container.className = 'preview-frame-container';
+    if (device !== 'desktop') {
+      container.classList.add(device);
+    }
   }
 
   setupImageModals() {
@@ -396,32 +460,175 @@ class SalaGeekAdmin {
       });
     });
 
-    // Insert single image
-    document.getElementById('insert-image-btn')?.addEventListener('click', () => {
-      const url = document.getElementById('modal-image-url').value.trim();
-      const alt = document.getElementById('modal-image-alt').value.trim();
-      const size = document.querySelector('input[name="image-size"]:checked').value;
-      const align = document.querySelector('input[name="image-align"]:checked').value;
+    // ═══════════════════════════════════════════════════════════════
+    // Image Modal - Tabs
+    // ═══════════════════════════════════════════════════════════════
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.switchImageTab(btn.dataset.tab);
+      });
+    });
 
-      if (!url) {
-        this.showToast('Ingresa una URL de imagen', 'error');
+    // ═══════════════════════════════════════════════════════════════
+    // Image Modal - Drag & Drop
+    // ═══════════════════════════════════════════════════════════════
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('modal-file-input');
+    const uploadPreview = document.getElementById('upload-preview');
+    const uploadedImg = document.getElementById('uploaded-img');
+
+    dropZone?.addEventListener('click', () => fileInput?.click());
+
+    dropZone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
+
+    dropZone?.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        this.handleModalImageUpload(file);
+      }
+    });
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        this.handleModalImageUpload(file);
+      }
+    });
+
+    // Remove uploaded image
+    document.getElementById('remove-upload')?.addEventListener('click', () => {
+      dropZone.style.display = 'block';
+      uploadPreview?.classList.add('hidden');
+      this.uploadedImageData = null;
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // Image Modal - Preset Sizes
+    // ═══════════════════════════════════════════════════════════════
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const widthInput = document.getElementById('image-width');
+        const heightInput = document.getElementById('image-height');
+        const preset = btn.dataset.preset;
+        
+        switch (preset) {
+          case 'small':
+            widthInput.value = '300';
+            heightInput.value = '';
+            break;
+          case 'medium':
+            widthInput.value = '600';
+            heightInput.value = '';
+            break;
+          case 'large':
+            widthInput.value = '900';
+            heightInput.value = '';
+            break;
+          case 'full':
+            widthInput.value = '100';
+            // Change unit to %
+            break;
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // Image Modal - Alignment Buttons
+    // ═══════════════════════════════════════════════════════════════
+    document.querySelectorAll('.align-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // Insert Image - Enhanced
+    // ═══════════════════════════════════════════════════════════════
+    document.getElementById('insert-image-btn')?.addEventListener('click', () => {
+      let imageUrl = '';
+      
+      // Get image source
+      if (this.currentImageSource === 'url') {
+        imageUrl = document.getElementById('modal-image-url')?.value.trim();
+      } else if (this.uploadedImageData) {
+        imageUrl = this.uploadedImageData;
+      }
+
+      if (!imageUrl) {
+        this.showToast('Selecciona o ingresa una imagen', 'error');
         return;
       }
 
-      const figure = `<figure class="img-${size} align-${align}">
-  <img src="${url}" alt="${alt || ''}">
-  ${alt ? `<figcaption>${alt}</figcaption>` : ''}
+      const alt = document.getElementById('modal-image-alt')?.value.trim() || '';
+      const width = document.getElementById('image-width')?.value.trim();
+      const height = document.getElementById('image-height')?.value.trim();
+      const addCaption = document.getElementById('image-caption')?.checked;
+      const alignment = document.querySelector('.align-btn.active')?.dataset.align || 'center';
+
+      // Build style
+      let style = '';
+      if (width) style += `width: ${width}px; `;
+      if (height) style += `height: ${height}px; `;
+
+      // Build class based on alignment
+      let wrapperClass = 'resizable-image';
+      if (alignment === 'float-left') wrapperClass += ' float-left';
+      else if (alignment === 'float-right') wrapperClass += ' float-right';
+      else if (alignment === 'center') wrapperClass += ' align-center';
+
+      // Generate HTML
+      let html = '';
+      if (addCaption && alt) {
+        html = `<figure class="${wrapperClass}" style="${style}">
+  <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
+  <figcaption>${alt}</figcaption>
 </figure>`;
+      } else {
+        html = `<span class="${wrapperClass}" style="${style}">
+  <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
+</span>`;
+      }
 
       document.getElementById('article-editor').focus();
-      document.execCommand('insertHTML', false, figure);
+      document.execCommand('insertHTML', false, html);
       document.getElementById('image-modal').classList.add('hidden');
+      
+      // Setup resize handles on new image
+      this.setupEditorImageHandlers();
     });
 
-    // Insert image grid
+    // ═══════════════════════════════════════════════════════════════
+    // Grid Modal - Layout Options
+    // ═══════════════════════════════════════════════════════════════
+    document.getElementById('grid-images')?.addEventListener('input', (e) => {
+      this.updateGridPreview();
+    });
+
+    document.querySelectorAll('input[name="grid-cols"]').forEach(input => {
+      input.addEventListener('change', () => this.updateGridPreview());
+    });
+
+    document.querySelectorAll('input[name="grid-gap"]').forEach(input => {
+      input.addEventListener('change', () => this.updateGridPreview());
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // Insert Grid - Enhanced
+    // ═══════════════════════════════════════════════════════════════
     document.getElementById('insert-grid-btn')?.addEventListener('click', () => {
-      const imagesText = document.getElementById('grid-images').value.trim();
-      const cols = document.querySelector('input[name="grid-cols"]:checked').value;
+      const imagesText = document.getElementById('grid-images')?.value.trim();
+      const cols = document.querySelector('input[name="grid-cols"]:checked')?.value || '2';
+      const gap = document.querySelector('input[name="grid-gap"]:checked')?.value || '8';
 
       if (!imagesText) {
         this.showToast('Ingresa al menos una URL', 'error');
@@ -435,13 +642,93 @@ class SalaGeekAdmin {
       }
 
       const images = urls.map(url => `<img src="${url.trim()}" alt="">`).join('\n  ');
-      const grid = `<div class="image-grid-container cols-${cols}">
+      const grid = `<div class="image-grid-container cols-${cols}" style="gap: ${gap}px;">
   ${images}
 </div>`;
 
       document.getElementById('article-editor').focus();
       document.execCommand('insertHTML', false, grid);
       document.getElementById('grid-modal').classList.add('hidden');
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // Preview Modal - Device Selector
+    // ═══════════════════════════════════════════════════════════════
+    document.querySelectorAll('.device-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.setPreviewDevice(btn.dataset.device);
+      });
+    });
+
+    document.getElementById('close-preview-modal')?.addEventListener('click', () => {
+      document.getElementById('preview-modal').classList.add('hidden');
+    });
+  }
+
+  handleModalImageUpload(file) {
+    const dropZone = document.getElementById('drop-zone');
+    const uploadPreview = document.getElementById('upload-preview');
+    const uploadedImg = document.getElementById('uploaded-img');
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.uploadedImageData = e.target.result;
+      uploadedImg.src = e.target.result;
+      dropZone.style.display = 'none';
+      uploadPreview?.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  updateGridPreview() {
+    const imagesText = document.getElementById('grid-images')?.value.trim();
+    const cols = document.querySelector('input[name="grid-cols"]:checked')?.value || '2';
+    const gap = document.querySelector('input[name="grid-gap"]:checked')?.value || '8';
+    const previewContainer = document.querySelector('.grid-preview-container');
+
+    if (!previewContainer) return;
+
+    const urls = imagesText ? imagesText.split('\n').filter(u => u.trim()) : [];
+
+    if (urls.length === 0) {
+      previewContainer.innerHTML = '';
+      previewContainer.classList.remove('has-images');
+      previewContainer.style.display = 'none';
+      return;
+    }
+
+    previewContainer.style.display = 'grid';
+    previewContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    previewContainer.style.gap = `${gap}px`;
+    previewContainer.classList.add('has-images');
+    previewContainer.innerHTML = urls.slice(0, 8).map(url => 
+      `<img src="${url.trim()}" alt="" onerror="this.style.background='#333'">`
+    ).join('');
+  }
+
+  setupEditorImageHandlers() {
+    const editor = document.getElementById('article-editor');
+    if (!editor) return;
+
+    // Make images selectable
+    editor.querySelectorAll('.resizable-image, figure').forEach(wrapper => {
+      wrapper.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Remove selection from others
+        editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
+          w.classList.remove('selected');
+        });
+        wrapper.classList.add('selected');
+      });
+    });
+
+    // Deselect on editor click
+    editor.addEventListener('click', (e) => {
+      if (e.target === editor) {
+        editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
+          w.classList.remove('selected');
+        });
+      }
     });
   }
 
@@ -893,18 +1180,21 @@ class SalaGeekAdmin {
     const title = document.getElementById('article-title').value || 'Sin título';
     const excerpt = document.getElementById('article-excerpt').value || '';
     const content = document.getElementById('article-editor').innerHTML;
-    const category = document.querySelector('input[name="category"]:checked').value;
-    const image = document.getElementById('image-url').value || document.getElementById('preview-img').src;
+    const category = document.querySelector('input[name="category"]:checked')?.value || '';
+    const image = document.getElementById('image-url').value || document.getElementById('preview-img')?.src;
 
-    const previewHTML = this.generatePreviewHTML(title, excerpt, content, category, image);
+    const previewHTML = this.generateArticlePreviewHTML(title, excerpt, content, category, image);
     
-    const iframe = document.getElementById('preview-iframe');
+    const iframe = document.getElementById('preview-frame');
     iframe.srcdoc = previewHTML;
     
     document.getElementById('preview-modal').classList.remove('hidden');
+    
+    // Set default device to desktop
+    this.setPreviewDevice('desktop');
   }
 
-  generatePreviewHTML(title, excerpt, content, category, image) {
+  generateArticlePreviewHTML(title, excerpt, content, category, image) {
     return `
       <!DOCTYPE html>
       <html lang="es">
@@ -916,8 +1206,18 @@ class SalaGeekAdmin {
         <link rel="stylesheet" href="/src/css/style.min.css">
         <link rel="stylesheet" href="/src/css/blog.css">
         <style>
-          body { padding: 2rem; }
+          body { padding: 2rem; background: var(--sg-bg-primary, #0a0a0f); }
           .article-full { max-width: 800px; margin: 0 auto; }
+          .resizable-image, .resizable-image img { max-width: 100%; }
+          .resizable-image.float-left { float: left; margin: 0 1rem 1rem 0; }
+          .resizable-image.float-right { float: right; margin: 0 0 1rem 1rem; }
+          .resizable-image.align-center { display: block; margin: 1rem auto; text-align: center; }
+          .image-grid-container { display: grid; margin: 1rem 0; }
+          .image-grid-container.cols-2 { grid-template-columns: repeat(2, 1fr); }
+          .image-grid-container.cols-3 { grid-template-columns: repeat(3, 1fr); }
+          .image-grid-container.cols-4 { grid-template-columns: repeat(4, 1fr); }
+          .image-grid-container img { width: 100%; height: auto; object-fit: cover; border-radius: 0.375rem; }
+          figcaption { text-align: center; font-size: 0.85rem; color: #888; margin-top: 0.5rem; font-style: italic; }
         </style>
       </head>
       <body class="article-page">
