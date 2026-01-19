@@ -6,7 +6,16 @@
 [build]
   publish = "."              # Directorio raíz como public
   command = ""               # Sin comando de build (archivos pre-minificados)
-  functions = "netlify/functions"  # Funciones serverless (ej: mailchimp-subscribe)
+  functions = "netlify/functions"  # Funciones serverless
+
+# ============================================
+# Netlify Identity - Sistema de autenticación
+# Para el panel de administración /admin
+# ============================================
+[identity]
+  # Registro solo por invitación (más seguro para admin)
+  [identity.invite]
+    enabled = true
 
 # ============================================
 # Optimizaciones de Build
@@ -125,6 +134,17 @@
 [[redirects]]
   from = "/media-kit"
   to = "/src/pages/media-kit.html"
+  status = 200
+
+# Panel de Administración
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/:splat"
   status = 200
 
 # Páginas Legales

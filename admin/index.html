@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin | Sala Geek</title>
+  
+  <!-- Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- Favicons -->
+  <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon">
+  
+  <!-- Admin Styles -->
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-container">
+      <div class="login-logo">
+        <img src="/src/images/SalaGeek_LOGO.webp" alt="Sala Geek" width="120">
+        <h1>Panel de Administración</h1>
+        <p>Inicia sesión para continuar</p>
+      </div>
+      <button id="login-btn" class="btn-primary btn-large">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+          <polyline points="10 17 15 12 10 7"/>
+          <line x1="15" y1="12" x2="3" y2="12"/>
+        </svg>
+        Iniciar Sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="admin-dashboard" class="admin-dashboard hidden">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <img src="/src/images/SalaGeek_LOGO.webp" alt="Sala Geek" width="40">
+        <span>Sala Geek</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-item active" data-section="dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Dashboard
+        </a>
+        <a href="#articles" class="nav-item" data-section="articles">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+          Artículos
+        </a>
+        <a href="#new-article" class="nav-item" data-section="new-article">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Nuevo Artículo
+        </a>
+        <a href="#media" class="nav-item" data-section="media">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          Multimedia
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="user-avatar">SG</div>
+          <div class="user-details">
+            <span id="user-name">Admin</span>
+            <span id="user-email">admin@salageek.com</span>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn-logout" title="Cerrar sesión">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <h2 id="section-title">Dashboard</h2>
+        <div class="topbar-actions">
+          <a href="/" target="_blank" class="btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Ver Sitio
+          </a>
+        </div>
+      </header>
+
+      <!-- Content Sections -->
+      <div class="admin-content">
+        
+        <!-- Dashboard Section -->
+        <section id="section-dashboard" class="content-section active">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon articles">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-articles">0</span>
+                <span class="stat-label">Artículos</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon categories">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-categories">5</span>
+                <span class="stat-label">Categorías</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon featured">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-featured">0</span>
+                <span class="stat-label">Destacados</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon trending">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                  <polyline points="17 6 23 6 23 12"/>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-trending">0</span>
+                <span class="stat-label">Trending</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="dashboard-card recent-articles">
+              <div class="card-header">
+                <h3>Artículos Recientes</h3>
+                <a href="#articles" class="view-all" data-section="articles">Ver todos</a>
+              </div>
+              <div class="card-content" id="recent-articles-list">
+                <p class="empty-state">No hay artículos aún</p>
+              </div>
+            </div>
+
+            <div class="dashboard-card quick-actions">
+              <div class="card-header">
+                <h3>Acciones Rápidas</h3>
+              </div>
+              <div class="card-content">
+                <button class="action-btn" data-action="new-article">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                  Nuevo Artículo
+                </button>
+                <button class="action-btn" data-action="upload-media">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Subir Imagen
+                </button>
+                <a href="/blog/" target="_blank" class="action-btn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  Ver Blog
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Articles Section -->
+        <section id="section-articles" class="content-section">
+          <div class="section-header">
+            <div class="search-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="search-articles" placeholder="Buscar artículos...">
+            </div>
+            <button class="btn-primary" data-action="new-article">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Nuevo Artículo
+            </button>
+          </div>
+
+          <div class="filter-bar">
+            <select id="filter-category">
+              <option value="all">Todas las categorías</option>
+              <option value="series">Series</option>
+              <option value="peliculas">Películas</option>
+              <option value="gaming">Gaming</option>
+              <option value="anime">Anime</option>
+              <option value="tecnologia">Tecnología</option>
+            </select>
+            <select id="filter-status">
+              <option value="all">Todos los estados</option>
+              <option value="published">Publicados</option>
+              <option value="draft">Borradores</option>
+            </select>
+          </div>
+
+          <div class="articles-table-container">
+            <table class="articles-table">
+              <thead>
+                <tr>
+                  <th>Artículo</th>
+                  <th>Categoría</th>
+                  <th>Fecha</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="articles-table-body">
+                <tr>
+                  <td colspan="5" class="empty-state">No hay artículos</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- New/Edit Article Section -->
+        <section id="section-new-article" class="content-section">
+          <form id="article-form" class="article-form">
+            <input type="hidden" id="article-id" name="id">
+            
+            <div class="form-grid">
+              <!-- Main Content Column -->
+              <div class="form-main">
+                <div class="form-group">
+                  <label for="article-title">Título del Artículo *</label>
+                  <input type="text" id="article-title" name="title" required 
+                         placeholder="Escribe un título atractivo...">
+                </div>
+
+                <div class="form-group">
+                  <label for="article-slug">URL Slug</label>
+                  <div class="slug-input">
+                    <span>/blog/articulos/</span>
+                    <input type="text" id="article-slug" name="slug" 
+                           placeholder="se-genera-automaticamente">
+                    <span>.html</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="article-excerpt">Extracto / Resumen *</label>
+                  <textarea id="article-excerpt" name="excerpt" rows="3" required
+                            placeholder="Breve descripción del artículo (150-200 caracteres)..."></textarea>
+                  <span class="char-count"><span id="excerpt-count">0</span>/200</span>
+                </div>
+
+                <div class="form-group">
+                  <label>Contenido del Artículo *</label>
+                  <div class="editor-toolbar">
+                    <button type="button" data-command="bold" title="Negrita (Ctrl+B)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                        <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+                      </svg>
+                    </button>
+                    <button type="button" data-command="italic" title="Cursiva (Ctrl+I)">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="4" x2="10" y2="4"/>
+                        <line x1="14" y1="20" x2="5" y2="20"/>
+                        <line x1="15" y1="4" x2="9" y2="20"/>
+                      </svg>
+                    </button>
+                    <span class="toolbar-divider"></span>
+                    <button type="button" data-command="h2" title="Título H2">H2</button>
+                    <button type="button" data-command="h3" title="Subtítulo H3">H3</button>
+                    <span class="toolbar-divider"></span>
+                    <button type="button" data-command="ul" title="Lista">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/>
+                        <line x1="8" y1="12" x2="21" y2="12"/>
+                        <line x1="8" y1="18" x2="21" y2="18"/>
+                        <line x1="3" y1="6" x2="3.01" y2="6"/>
+                        <line x1="3" y1="12" x2="3.01" y2="12"/>
+                        <line x1="3" y1="18" x2="3.01" y2="18"/>
+                      </svg>
+                    </button>
+                    <button type="button" data-command="quote" title="Cita">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"/>
+                        <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"/>
+                      </svg>
+                    </button>
+                    <button type="button" data-command="link" title="Enlace">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                      </svg>
+                    </button>
+                    <button type="button" data-command="image" title="Insertar imagen">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div id="article-editor" class="article-editor" contenteditable="true">
+                    <p>Escribe tu artículo aquí...</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sidebar Column -->
+              <div class="form-sidebar">
+                <div class="sidebar-card">
+                  <h4>Publicación</h4>
+                  <div class="form-group">
+                    <label for="article-status">Estado</label>
+                    <select id="article-status" name="status">
+                      <option value="draft">Borrador</option>
+                      <option value="published">Publicado</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="article-date">Fecha de publicación</label>
+                    <input type="datetime-local" id="article-date" name="publishDate">
+                  </div>
+                  <div class="form-actions">
+                    <button type="button" id="btn-preview" class="btn-secondary">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                      Vista Previa
+                    </button>
+                    <button type="submit" id="btn-publish" class="btn-primary">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                      </svg>
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+
+                <div class="sidebar-card">
+                  <h4>Categoría *</h4>
+                  <div class="category-selector">
+                    <label class="category-option">
+                      <input type="radio" name="category" value="series" checked>
+                      <span class="category-badge category-series">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+                          <polyline points="17 2 12 7 7 2"/>
+                        </svg>
+                        Series
+                      </span>
+                    </label>
+                    <label class="category-option">
+                      <input type="radio" name="category" value="peliculas">
+                      <span class="category-badge category-peliculas">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+                          <line x1="7" y1="2" x2="7" y2="22"/>
+                          <line x1="17" y1="2" x2="17" y2="22"/>
+                          <line x1="2" y1="12" x2="22" y2="12"/>
+                        </svg>
+                        Películas
+                      </span>
+                    </label>
+                    <label class="category-option">
+                      <input type="radio" name="category" value="gaming">
+                      <span class="category-badge category-gaming">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="2" y="6" width="20" height="12" rx="2"/>
+                          <line x1="6" y1="12" x2="6.01" y2="12"/>
+                          <line x1="10" y1="12" x2="18" y2="12"/>
+                        </svg>
+                        Gaming
+                      </span>
+                    </label>
+                    <label class="category-option">
+                      <input type="radio" name="category" value="anime">
+                      <span class="category-badge category-anime">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Anime
+                      </span>
+                    </label>
+                    <label class="category-option">
+                      <input type="radio" name="category" value="tecnologia">
+                      <span class="category-badge category-tecnologia">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                          <line x1="12" y1="18" x2="12.01" y2="18"/>
+                        </svg>
+                        Tecnología
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="sidebar-card">
+                  <h4>Imagen Destacada</h4>
+                  <div class="image-upload" id="image-upload">
+                    <input type="file" id="featured-image" name="image" accept="image/*" hidden>
+                    <div class="upload-placeholder" id="upload-placeholder">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                      <p>Arrastra una imagen o haz clic para subir</p>
+                      <span>PNG, JPG, WebP (max 2MB)</span>
+                    </div>
+                    <div class="image-preview hidden" id="image-preview">
+                      <img src="" alt="Preview" id="preview-img">
+                      <button type="button" class="remove-image" id="remove-image">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <line x1="18" y1="6" x2="6" y2="18"/>
+                          <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="form-group" style="margin-top: 1rem;">
+                    <label for="image-url">O usa una URL externa</label>
+                    <input type="url" id="image-url" name="imageUrl" placeholder="https://...">
+                  </div>
+                </div>
+
+                <div class="sidebar-card">
+                  <h4>Opciones</h4>
+                  <label class="checkbox-option">
+                    <input type="checkbox" id="article-featured" name="featured">
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                      Artículo destacado
+                    </span>
+                  </label>
+                  <label class="checkbox-option">
+                    <input type="checkbox" id="article-trending" name="trending">
+                    <span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                        <polyline points="17 6 23 6 23 12"/>
+                      </svg>
+                      Marcar como trending
+                    </span>
+                  </label>
+                </div>
+
+                <div class="sidebar-card">
+                  <h4>Tags</h4>
+                  <div class="tags-input">
+                    <div class="tags-list" id="tags-list"></div>
+                    <input type="text" id="tags-input" placeholder="Escribe y presiona Enter...">
+                  </div>
+                </div>
+
+                <div class="sidebar-card">
+                  <h4>SEO</h4>
+                  <div class="form-group">
+                    <label for="read-time">Tiempo de lectura</label>
+                    <select id="read-time" name="readTime">
+                      <option value="3 min">3 min</option>
+                      <option value="5 min" selected>5 min</option>
+                      <option value="8 min">8 min</option>
+                      <option value="10 min">10 min</option>
+                      <option value="15 min">15 min</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- Media Section -->
+        <section id="section-media" class="content-section">
+          <div class="section-header">
+            <h3>Biblioteca de Medios</h3>
+            <button class="btn-primary" id="upload-media-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Subir Imagen
+            </button>
+          </div>
+          
+          <div class="media-grid" id="media-grid">
+            <p class="empty-state">Las imágenes se guardan en /src/images/blog/</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="preview-modal" class="modal hidden">
+    <div class="modal-content preview-content">
+      <div class="modal-header">
+        <h3>Vista Previa del Artículo</h3>
+        <button class="modal-close" id="close-preview">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <iframe id="preview-iframe" src="about:blank"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Admin Scripts -->
+  <script src="/admin/js/admin.js"></script>
+</body>
+</html>
