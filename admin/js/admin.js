@@ -22,6 +22,11 @@ class SalaGeekAdmin {
     this.currentImageSource = 'url';
     this.uploadedImageData = null;
     
+    // Grid modal states
+    this.gridImages = [];
+    this.gridCols = 2;
+    this.gridGap = 8;
+    
     this.init();
   }
 
@@ -595,16 +600,122 @@ class SalaGeekAdmin {
   openGridModal() {
     const modal = document.getElementById('grid-modal');
     modal.classList.remove('hidden');
-    document.getElementById('grid-images').value = '';
-    document.querySelector('input[name="grid-cols"][value="2"]').checked = true;
-    document.querySelector('input[name="grid-gap"][value="8"]').checked = true;
     
-    // Clear preview
-    const previewContainer = document.querySelector('.grid-preview-container');
-    if (previewContainer) {
-      previewContainer.innerHTML = '';
-      previewContainer.classList.remove('has-images');
+    // Reset
+    document.getElementById('grid-images').value = '';
+    this.gridImages = [];
+    
+    // Reset selectors
+    document.querySelectorAll('.col-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.cols === '2');
+    });
+    document.querySelectorAll('.gap-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.gap === '8');
+    });
+    
+    this.gridCols = 2;
+    this.gridGap = 8;
+    
+    // Clear previews
+    this.updateGridImagesList();
+    this.updateGridLivePreview();
+  }
+
+  updateGridImagesList() {
+    const list = document.getElementById('grid-images-list');
+    const countEl = document.getElementById('grid-count');
+    
+    if (!list) return;
+    
+    if (this.gridImages.length === 0) {
+      list.innerHTML = '';
+      if (countEl) countEl.textContent = '0 imágenes';
+      return;
     }
+    
+    list.innerHTML = this.gridImages.map((url, index) => `
+      <div class="grid-image-item" data-index="${index}">
+        <img src="${url}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22><rect fill=%22%23333%22 width=%2260%22 height=%2260%22/><text x=%2230%22 y=%2235%22 fill=%22%23666%22 text-anchor=%22middle%22 font-size=%2210%22>Error</text></svg>'">
+        <button type="button" class="remove-btn" data-index="${index}">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    `).join('');
+    
+    if (countEl) countEl.textContent = `${this.gridImages.length} imagen${this.gridImages.length !== 1 ? 'es' : ''}`;
+    
+    // Add remove handlers
+    list.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = parseInt(btn.dataset.index);
+        this.gridImages.splice(index, 1);
+        this.syncGridTextarea();
+        this.updateGridImagesList();
+        this.updateGridLivePreview();
+      });
+    });
+  }
+
+  updateGridLivePreview() {
+    const preview = document.getElementById('grid-live-preview');
+    if (!preview) return;
+    
+    preview.className = `grid-live-preview cols-${this.gridCols}`;
+    preview.style.gap = `${this.gridGap}px`;
+    
+    if (this.gridImages.length === 0) {
+      preview.innerHTML = `
+        <div class="preview-empty">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <span>Agrega imágenes para ver la vista previa</span>
+        </div>
+      `;
+      return;
+    }
+    
+    preview.innerHTML = this.gridImages.map(url => 
+      `<img src="${url}" alt="" onerror="this.style.background='#333'">`
+    ).join('');
+  }
+
+  syncGridTextarea() {
+    const textarea = document.getElementById('grid-images');
+    if (textarea) {
+      textarea.value = this.gridImages.join('\n');
+    }
+  }
+
+  parseGridTextarea() {
+    const textarea = document.getElementById('grid-images');
+    if (!textarea) return;
+    
+    const urls = textarea.value.split('\n')
+      .map(u => u.trim())
+      .filter(u => u && (u.startsWith('http') || u.startsWith('data:')));
+    
+    this.gridImages = urls;
+    this.updateGridImagesList();
+    this.updateGridLivePreview();
+  }
+
+  addGridImageFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.gridImages.push(e.target.result);
+      this.syncGridTextarea();
+      this.updateGridImagesList();
+      this.updateGridLivePreview();
+    };
+    reader.readAsDataURL(file);
   }
 
   setPreviewDevice(device) {
@@ -789,47 +900,93 @@ class SalaGeekAdmin {
     });
 
     // ═══════════════════════════════════════════════════════════════
-    // Grid Modal - Layout Options
+    // Grid Modal v2 - Improved
     // ═══════════════════════════════════════════════════════════════
-    document.getElementById('grid-images')?.addEventListener('input', (e) => {
-      this.updateGridPreview();
+    
+    // Drop zone for grid
+    const gridDropZone = document.getElementById('grid-drop-zone');
+    const gridFileInput = document.getElementById('grid-file-input');
+    
+    gridDropZone?.addEventListener('click', () => gridFileInput?.click());
+    
+    gridDropZone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      gridDropZone.classList.add('drag-over');
     });
-
-    document.querySelectorAll('input[name="grid-cols"]').forEach(input => {
-      input.addEventListener('change', () => this.updateGridPreview());
+    
+    gridDropZone?.addEventListener('dragleave', () => {
+      gridDropZone.classList.remove('drag-over');
     });
-
-    document.querySelectorAll('input[name="grid-gap"]').forEach(input => {
-      input.addEventListener('change', () => this.updateGridPreview());
+    
+    gridDropZone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      gridDropZone.classList.remove('drag-over');
+      
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+      files.forEach(file => this.addGridImageFromFile(file));
+      
+      // Also check for URLs
+      const url = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
+      if (url && (url.startsWith('http') || url.startsWith('data:'))) {
+        this.gridImages.push(url);
+        this.syncGridTextarea();
+        this.updateGridImagesList();
+        this.updateGridLivePreview();
+      }
+    });
+    
+    gridFileInput?.addEventListener('change', (e) => {
+      Array.from(e.target.files).forEach(file => {
+        if (file.type.startsWith('image/')) {
+          this.addGridImageFromFile(file);
+        }
+      });
+      gridFileInput.value = '';
+    });
+    
+    // Textarea change
+    document.getElementById('grid-images')?.addEventListener('input', () => {
+      this.parseGridTextarea();
+    });
+    
+    // Column selector buttons
+    document.querySelectorAll('.col-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.col-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.gridCols = parseInt(btn.dataset.cols);
+        this.updateGridLivePreview();
+      });
+    });
+    
+    // Gap selector buttons
+    document.querySelectorAll('.gap-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.gap-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.gridGap = parseInt(btn.dataset.gap);
+        this.updateGridLivePreview();
+      });
     });
 
     // ═══════════════════════════════════════════════════════════════
     // Insert Grid - Enhanced
     // ═══════════════════════════════════════════════════════════════
     document.getElementById('insert-grid-btn')?.addEventListener('click', () => {
-      const imagesText = document.getElementById('grid-images')?.value.trim();
-      const cols = document.querySelector('input[name="grid-cols"]:checked')?.value || '2';
-      const gap = document.querySelector('input[name="grid-gap"]:checked')?.value || '8';
-
-      if (!imagesText) {
-        this.showToast('Ingresa al menos una URL', 'error');
+      if (this.gridImages.length === 0) {
+        this.showToast('Agrega al menos una imagen', 'error');
         return;
       }
 
-      const urls = imagesText.split('\n').filter(u => u.trim());
-      if (urls.length < 2) {
-        this.showToast('Agrega al menos 2 imágenes para una galería', 'error');
-        return;
-      }
-
-      const images = urls.map(url => `<img src="${url.trim()}" alt="">`).join('\n  ');
-      const grid = `<div class="image-grid-container cols-${cols}" style="gap: ${gap}px;">
+      const images = this.gridImages.map(url => `<img src="${url}" alt="">`).join('\n  ');
+      const grid = `<div class="image-grid-container cols-${this.gridCols}" style="gap: ${this.gridGap}px;">
   ${images}
 </div>`;
 
       document.getElementById('article-editor').focus();
       document.execCommand('insertHTML', false, grid);
       document.getElementById('grid-modal').classList.add('hidden');
+      this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -859,32 +1016,6 @@ class SalaGeekAdmin {
       uploadPreview?.classList.remove('hidden');
     };
     reader.readAsDataURL(file);
-  }
-
-  updateGridPreview() {
-    const imagesText = document.getElementById('grid-images')?.value.trim();
-    const cols = document.querySelector('input[name="grid-cols"]:checked')?.value || '2';
-    const gap = document.querySelector('input[name="grid-gap"]:checked')?.value || '8';
-    const previewContainer = document.querySelector('.grid-preview-container');
-
-    if (!previewContainer) return;
-
-    const urls = imagesText ? imagesText.split('\n').filter(u => u.trim()) : [];
-
-    if (urls.length === 0) {
-      previewContainer.innerHTML = '';
-      previewContainer.classList.remove('has-images');
-      previewContainer.style.display = 'none';
-      return;
-    }
-
-    previewContainer.style.display = 'grid';
-    previewContainer.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    previewContainer.style.gap = `${gap}px`;
-    previewContainer.classList.add('has-images');
-    previewContainer.innerHTML = urls.slice(0, 8).map(url => 
-      `<img src="${url.trim()}" alt="" onerror="this.style.background='#333'">`
-    ).join('');
   }
 
   setupEditorImageHandlers() {
