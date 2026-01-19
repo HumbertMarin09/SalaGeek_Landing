@@ -32,6 +32,9 @@ class SalaGeekAdmin {
     // Setup event listeners
     this.setupEventListeners();
     
+    // Setup image modals
+    this.setupImageModals();
+    
     // Check if user is already logged in
     const user = netlifyIdentity.currentUser();
     if (user) {
@@ -211,10 +214,6 @@ class SalaGeekAdmin {
       this.filterArticlesTable();
     });
 
-    document.getElementById('filter-status')?.addEventListener('change', () => {
-      this.filterArticlesTable();
-    });
-
     // Set default date
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -322,11 +321,17 @@ class SalaGeekAdmin {
       case 'italic':
         document.execCommand('italic', false, null);
         break;
+      case 'underline':
+        document.execCommand('underline', false, null);
+        break;
       case 'h2':
         document.execCommand('formatBlock', false, 'h2');
         break;
       case 'h3':
         document.execCommand('formatBlock', false, 'h3');
+        break;
+      case 'p':
+        document.execCommand('formatBlock', false, 'p');
         break;
       case 'ul':
         document.execCommand('insertUnorderedList', false, null);
@@ -341,12 +346,103 @@ class SalaGeekAdmin {
         }
         break;
       case 'image':
-        const imgUrl = prompt('URL de la imagen:');
-        if (imgUrl) {
-          document.execCommand('insertImage', false, imgUrl);
-        }
+        this.openImageModal();
+        break;
+      case 'image-grid':
+        this.openGridModal();
+        break;
+      case 'hr':
+        document.execCommand('insertHTML', false, '<hr>');
+        break;
+      case 'clear':
+        document.execCommand('removeFormat', false, null);
         break;
     }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // IMAGE MODALS
+  // ═══════════════════════════════════════════════════════════════
+
+  openImageModal() {
+    document.getElementById('image-modal').classList.remove('hidden');
+    document.getElementById('modal-image-url').value = '';
+    document.getElementById('modal-image-alt').value = '';
+    document.querySelector('input[name="image-size"][value="medium"]').checked = true;
+    document.querySelector('input[name="image-align"][value="center"]').checked = true;
+  }
+
+  openGridModal() {
+    document.getElementById('grid-modal').classList.remove('hidden');
+    document.getElementById('grid-images').value = '';
+    document.querySelector('input[name="grid-cols"][value="2"]').checked = true;
+  }
+
+  setupImageModals() {
+    // Close modals
+    document.querySelectorAll('[data-close]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.dataset.close;
+        document.getElementById(modalId).classList.add('hidden');
+      });
+    });
+
+    // Close modal on backdrop click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.add('hidden');
+        }
+      });
+    });
+
+    // Insert single image
+    document.getElementById('insert-image-btn')?.addEventListener('click', () => {
+      const url = document.getElementById('modal-image-url').value.trim();
+      const alt = document.getElementById('modal-image-alt').value.trim();
+      const size = document.querySelector('input[name="image-size"]:checked').value;
+      const align = document.querySelector('input[name="image-align"]:checked').value;
+
+      if (!url) {
+        this.showToast('Ingresa una URL de imagen', 'error');
+        return;
+      }
+
+      const figure = `<figure class="img-${size} align-${align}">
+  <img src="${url}" alt="${alt || ''}">
+  ${alt ? `<figcaption>${alt}</figcaption>` : ''}
+</figure>`;
+
+      document.getElementById('article-editor').focus();
+      document.execCommand('insertHTML', false, figure);
+      document.getElementById('image-modal').classList.add('hidden');
+    });
+
+    // Insert image grid
+    document.getElementById('insert-grid-btn')?.addEventListener('click', () => {
+      const imagesText = document.getElementById('grid-images').value.trim();
+      const cols = document.querySelector('input[name="grid-cols"]:checked').value;
+
+      if (!imagesText) {
+        this.showToast('Ingresa al menos una URL', 'error');
+        return;
+      }
+
+      const urls = imagesText.split('\n').filter(u => u.trim());
+      if (urls.length < 2) {
+        this.showToast('Agrega al menos 2 imágenes para una galería', 'error');
+        return;
+      }
+
+      const images = urls.map(url => `<img src="${url.trim()}" alt="">`).join('\n  ');
+      const grid = `<div class="image-grid-container cols-${cols}">
+  ${images}
+</div>`;
+
+      document.getElementById('article-editor').focus();
+      document.execCommand('insertHTML', false, grid);
+      document.getElementById('grid-modal').classList.add('hidden');
+    });
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -432,7 +528,7 @@ class SalaGeekAdmin {
     if (!tbody) return;
 
     if (this.articles.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No hay artículos</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No hay artículos</td></tr>';
       return;
     }
 
@@ -454,11 +550,6 @@ class SalaGeekAdmin {
           </span>
         </td>
         <td>${this.formatDate(article.publishDate)}</td>
-        <td>
-          <span class="status-badge status-${article.status || 'published'}">
-            ${article.status === 'draft' ? 'Borrador' : 'Publicado'}
-          </span>
-        </td>
         <td>
           <div class="table-actions">
             <button class="edit-btn" onclick="admin.editArticle('${article.id}')" title="Editar">
@@ -505,7 +596,6 @@ class SalaGeekAdmin {
   filterArticlesTable(searchQuery = '') {
     const query = searchQuery || document.getElementById('search-articles')?.value || '';
     const category = document.getElementById('filter-category')?.value || 'all';
-    const status = document.getElementById('filter-status')?.value || 'all';
 
     const filtered = this.articles.filter(article => {
       const matchesQuery = !query || 
@@ -513,16 +603,13 @@ class SalaGeekAdmin {
         article.slug.toLowerCase().includes(query.toLowerCase());
       
       const matchesCategory = category === 'all' || article.category === category;
-      const matchesStatus = status === 'all' || 
-        (status === 'published' && article.status !== 'draft') ||
-        (status === 'draft' && article.status === 'draft');
 
-      return matchesQuery && matchesCategory && matchesStatus;
+      return matchesQuery && matchesCategory;
     });
 
     const tbody = document.getElementById('articles-table-body');
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No se encontraron artículos</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No se encontraron artículos</td></tr>';
     } else {
       // Temporarily replace articles and render
       const original = this.articles;

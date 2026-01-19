@@ -1419,3 +1419,207 @@ input, select, textarea {
 .mt-2 { margin-top: 1rem; }
 .mb-1 { margin-bottom: 0.5rem; }
 .mb-2 { margin-bottom: 1rem; }
+
+/* ═══════════════════════════════════════════════════════════════
+   Editor Toolbar Groups
+   ═══════════════════════════════════════════════════════════════ */
+.toolbar-group {
+  display: flex;
+  gap: 0.125rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Image Modals
+   ═══════════════════════════════════════════════════════════════ */
+.modal-sm {
+  max-width: 480px;
+}
+
+.modal-md {
+  max-width: 600px;
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Size Options */
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.size-option {
+  cursor: pointer;
+}
+
+.size-option input {
+  display: none;
+}
+
+.size-option span {
+  display: block;
+  padding: 0.75rem 0.5rem;
+  background: var(--admin-surface-hover);
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.size-option span small {
+  display: block;
+  color: var(--admin-text-muted);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.size-option:hover span {
+  border-color: var(--admin-border);
+}
+
+.size-option input:checked + span {
+  border-color: var(--admin-primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* Align Options */
+.align-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.align-option {
+  cursor: pointer;
+}
+
+.align-option input {
+  display: none;
+}
+
+.align-option span {
+  display: block;
+  padding: 0.6rem;
+  background: var(--admin-surface-hover);
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.align-option:hover span {
+  border-color: var(--admin-border);
+}
+
+.align-option input:checked + span {
+  border-color: var(--admin-primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* Column Options */
+.columns-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.column-option {
+  cursor: pointer;
+}
+
+.column-option input {
+  display: none;
+}
+
+.column-option span {
+  display: block;
+  padding: 0.6rem;
+  background: var(--admin-surface-hover);
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-size: 0.85rem;
+  transition: all var(--transition-fast);
+}
+
+.column-option:hover span {
+  border-color: var(--admin-border);
+}
+
+.column-option input:checked + span {
+  border-color: var(--admin-primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* Image Grid Styles in Editor */
+.article-editor .image-grid-container {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px dashed var(--admin-border);
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.article-editor .image-grid-container.cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.article-editor .image-grid-container.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.article-editor .image-grid-container.cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.article-editor .image-grid-container img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  margin: 0;
+}
+
+/* Single Image Sizes */
+.article-editor figure {
+  margin: 1rem 0;
+}
+
+.article-editor figure.img-small img { max-width: 300px; }
+.article-editor figure.img-medium img { max-width: 600px; }
+.article-editor figure.img-large img { max-width: 900px; }
+.article-editor figure.img-full img { max-width: 100%; }
+
+.article-editor figure.align-left { text-align: left; }
+.article-editor figure.align-center { text-align: center; }
+.article-editor figure.align-right { text-align: right; }
+
+.article-editor figure img {
+  display: inline-block;
+  margin: 0;
+}
+
+.article-editor figcaption {
+  font-size: 0.85rem;
+  color: var(--admin-text-muted);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* HR separator in editor */
+.article-editor hr {
+  border: none;
+  border-top: 2px solid var(--admin-border);
+  margin: 1.5rem 0;
+}
