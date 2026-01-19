@@ -177,15 +177,37 @@ class SalaGeekAdmin {
       this.saveArticle();
     });
 
+    // Atajo Ctrl+S para guardar artículo
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        if (this.currentSection === 'new-article') {
+          e.preventDefault();
+          this.saveArticle();
+        }
+      }
+    });
+
     // Title to slug
     document.getElementById('article-title')?.addEventListener('input', (e) => {
       const slug = this.generateSlug(e.target.value);
       document.getElementById('article-slug').value = slug;
     });
 
-    // Excerpt character count
+    // Excerpt character count with visual feedback
     document.getElementById('article-excerpt')?.addEventListener('input', (e) => {
-      document.getElementById('excerpt-count').textContent = e.target.value.length;
+      const count = e.target.value.length;
+      const countEl = document.getElementById('excerpt-count');
+      const charCount = countEl.parentElement;
+      countEl.textContent = count;
+      
+      // Cambiar color según límite
+      if (count > 200) {
+        charCount.style.color = 'var(--admin-danger)';
+      } else if (count > 150) {
+        charCount.style.color = 'var(--admin-warning)';
+      } else {
+        charCount.style.color = 'var(--admin-text-muted)';
+      }
     });
 
     // Tags input
@@ -274,10 +296,26 @@ class SalaGeekAdmin {
     });
 
     urlInput?.addEventListener('input', (e) => {
-      if (e.target.value) {
-        previewImg.src = e.target.value;
-        preview.classList.remove('hidden');
-        placeholder.classList.add('hidden');
+      const url = e.target.value.trim();
+      if (url) {
+        // Validar que sea una URL válida de imagen
+        const isValidUrl = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url) || 
+                          /^https?:\/\/.+/i.test(url);
+        if (isValidUrl) {
+          previewImg.src = url;
+          previewImg.onerror = () => {
+            this.showToast('No se pudo cargar la imagen desde esa URL', 'error');
+            preview.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+          };
+          previewImg.onload = () => {
+            preview.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+          };
+        }
+      } else {
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
       }
     });
   }
@@ -302,6 +340,15 @@ class SalaGeekAdmin {
       });
     });
 
+    // Word count update on input
+    editor?.addEventListener('input', () => {
+      this.updateWordCount();
+    });
+
+    // Actualizar estado del toolbar al cambiar selección
+    editor?.addEventListener('mouseup', () => this.updateToolbarState());
+    editor?.addEventListener('keyup', () => this.updateToolbarState());
+
     // Keyboard shortcuts
     editor?.addEventListener('keydown', (e) => {
       // Ctrl/Cmd shortcuts
@@ -314,6 +361,14 @@ class SalaGeekAdmin {
           case 'i':
             e.preventDefault();
             this.executeEditorCommand('italic');
+            break;
+          case 'u':
+            e.preventDefault();
+            this.executeEditorCommand('underline');
+            break;
+          case 'k':
+            e.preventDefault();
+            this.executeEditorCommand('link');
             break;
         }
       }
@@ -944,6 +999,11 @@ class SalaGeekAdmin {
       case 'link':
         const url = prompt('URL del enlace:');
         if (url) {
+          // Validar URL
+          if (!/^https?:\/\//i.test(url)) {
+            this.showToast('La URL debe comenzar con http:// o https://', 'warning');
+            return;
+          }
           document.execCommand('createLink', false, url);
         }
         break;
@@ -979,6 +1039,42 @@ class SalaGeekAdmin {
         this.showToast('Formato limpiado', 'success');
         break;
     }
+    
+    // Actualizar estado de botones del toolbar
+    this.updateToolbarState();
+  }
+
+  updateToolbarState() {
+    // Actualizar botones de formato según estado actual
+    const toolbarBtns = document.querySelectorAll('.editor-toolbar button[data-command]');
+    
+    toolbarBtns.forEach(btn => {
+      const command = btn.dataset.command;
+      let isActive = false;
+      
+      switch (command) {
+        case 'bold':
+          isActive = document.queryCommandState('bold');
+          break;
+        case 'italic':
+          isActive = document.queryCommandState('italic');
+          break;
+        case 'underline':
+          isActive = document.queryCommandState('underline');
+          break;
+        case 'justifyLeft':
+          isActive = document.queryCommandState('justifyLeft');
+          break;
+        case 'justifyCenter':
+          isActive = document.queryCommandState('justifyCenter');
+          break;
+        case 'justifyRight':
+          isActive = document.queryCommandState('justifyRight');
+          break;
+      }
+      
+      btn.classList.toggle('active', isActive);
+    });
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -1181,6 +1277,15 @@ class SalaGeekAdmin {
           modal.classList.add('hidden');
         }
       });
+    });
+
+    // Close modals with ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
+          modal.classList.add('hidden');
+        });
+      }
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -1480,6 +1585,19 @@ class SalaGeekAdmin {
   // ═══════════════════════════════════════════════════════════════
 
   navigateTo(section) {
+    // Verificar si hay cambios sin guardar al salir del editor
+    if (this.currentSection === 'new-article' && section !== 'new-article') {
+      const editor = document.getElementById('article-editor');
+      const title = document.getElementById('article-title')?.value;
+      const hasContent = editor && editor.innerHTML !== '<p>Escribe tu artículo aquí... (Puedes arrastrar imágenes directamente)</p>' && editor.innerHTML !== '<p>Escribe tu artículo aquí...</p>';
+      
+      if ((title || hasContent) && !this.editingArticle) {
+        if (!confirm('¿Tienes cambios sin guardar. ¿Estás seguro de que deseas salir?')) {
+          return;
+        }
+      }
+    }
+    
     this.currentSection = section;
 
     // Update nav
@@ -1530,7 +1648,10 @@ class SalaGeekAdmin {
 
   async loadArticles() {
     try {
-      const response = await fetch('/blog/data/articles.json');
+      const response = await fetch('/blog/data/articles.json?t=' + Date.now());
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
       const data = await response.json();
       this.articles = data.articles || [];
       this.categories = data.categories || [];
@@ -1540,7 +1661,9 @@ class SalaGeekAdmin {
       this.renderRecentArticles();
     } catch (error) {
       console.error('Error loading articles:', error);
-      this.showToast('Error al cargar artículos', 'error');
+      this.showToast('Error al cargar artículos. Verifica tu conexión.', 'error');
+      this.articles = [];
+      this.categories = [];
     }
   }
 
@@ -1729,11 +1852,14 @@ class SalaGeekAdmin {
     this.editingArticle = null;
     this.tags = [];
 
+    // Limpiar auto-guardado
+    localStorage.removeItem('admin_draft_article');
+
     document.getElementById('article-form')?.reset();
     document.getElementById('article-id').value = '';
     document.getElementById('article-slug').value = '';
     document.getElementById('excerpt-count').textContent = '0';
-    document.getElementById('article-editor').innerHTML = '<p>Escribe tu artículo aquí...</p>';
+    document.getElementById('article-editor').innerHTML = '<p>Escribe tu artículo aquí... (Puedes arrastrar imágenes directamente)</p>';
     
     // Reset image
     document.getElementById('image-preview').classList.add('hidden');
@@ -1772,8 +1898,23 @@ class SalaGeekAdmin {
     const content = document.getElementById('article-editor').innerHTML;
 
     // Validation
-    if (!title || !excerpt || !content) {
-      this.showToast('Por favor completa todos los campos requeridos', 'error');
+    if (!title) {
+      this.showToast('El título es requerido', 'error');
+      document.getElementById('article-title').focus();
+      return;
+    }
+    if (!excerpt) {
+      this.showToast('El extracto es requerido', 'error');
+      document.getElementById('article-excerpt').focus();
+      return;
+    }
+    if (!content || content === '<p>Escribe tu artículo aquí...</p>' || content === '<p>Escribe tu artículo aquí... (Puedes arrastrar imágenes directamente)</p>') {
+      this.showToast('El contenido del artículo es requerido', 'error');
+      document.getElementById('article-editor').focus();
+      return;
+    }
+    if (excerpt.length > 250) {
+      this.showToast('El extracto es demasiado largo (máx 250 caracteres)', 'warning');
       return;
     }
 
@@ -2190,13 +2331,26 @@ class SalaGeekAdmin {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
+  updateWordCount() {
+    const editor = document.getElementById('article-editor');
+    const countEl = document.getElementById('word-count');
+    if (!editor || !countEl) return;
+    
+    const text = editor.innerText || '';
+    const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+    countEl.textContent = words.length;
+  }
+
   generateSlug(text) {
     return text
       .toLowerCase()
       .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
+      .replace(/[\u0300-\u036f]/g, '') // Remover acentos
+      .replace(/ñ/g, 'n') // Manejar ñ
+      .replace(/[^a-z0-9\s-]/g, '') // Solo alfanuméricos, espacios y guiones
+      .replace(/\s+/g, '-') // Espacios a guiones
+      .replace(/-+/g, '-') // Múltiples guiones a uno
+      .replace(/(^-|-$)/g, '') // Eliminar guiones al inicio/final
       .substring(0, 60);
   }
 

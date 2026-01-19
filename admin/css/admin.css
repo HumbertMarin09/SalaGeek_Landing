@@ -847,11 +847,23 @@ input, select, textarea {
 }
 
 /* Editor help text */
-.editor-help {
-  display: block;
+.editor-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.editor-help {
   color: var(--admin-text-muted);
   font-size: 0.8rem;
+}
+
+.word-count {
+  color: var(--admin-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 .article-editor h2 {
@@ -1518,6 +1530,31 @@ input, select, textarea {
   
   .login-container {
     padding: 2rem 1.5rem;
+  }
+  
+  /* Editor toolbar responsive */
+  .editor-toolbar {
+    flex-wrap: wrap;
+    padding: 0.5rem;
+  }
+  
+  .toolbar-group {
+    gap: 0.25rem;
+  }
+  
+  .editor-toolbar button {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .toolbar-divider {
+    display: none;
+  }
+  
+  .editor-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 }
 
