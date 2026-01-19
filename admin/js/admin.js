@@ -102,6 +102,20 @@ class SalaGeekAdmin {
     document.getElementById('admin-dashboard').classList.add('hidden');
   }
 
+  changePassword() {
+    // Netlify Identity tiene un método integrado para cambiar contraseña
+    if (confirm('¿Deseas cambiar tu contraseña? Se te enviará un email con instrucciones.')) {
+      try {
+        // Solicitar recuperación de contraseña
+        netlifyIdentity.open('reset');
+        this.showToast('Revisa tu email para cambiar la contraseña', 'info');
+      } catch (error) {
+        console.error('Error:', error);
+        this.showToast('Error al solicitar cambio de contraseña', 'error');
+      }
+    }
+  }
+
   // ═══════════════════════════════════════════════════════════════
   // EVENT LISTENERS
   // ═══════════════════════════════════════════════════════════════
@@ -115,6 +129,11 @@ class SalaGeekAdmin {
     // Logout button
     document.getElementById('logout-btn')?.addEventListener('click', () => {
       netlifyIdentity.logout();
+    });
+
+    // Change password button
+    document.getElementById('change-password-btn')?.addEventListener('click', () => {
+      this.changePassword();
     });
 
     // Navigation
