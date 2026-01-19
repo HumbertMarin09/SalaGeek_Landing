@@ -343,6 +343,12 @@ class SalaGeekAdmin {
     // Word count update on input
     editor?.addEventListener('input', () => {
       this.updateWordCount();
+      
+      // Limpiar completamente el editor si está vacío para que el placeholder vuelva a aparecer
+      const text = editor.innerText.trim();
+      if (text === '' || text === '\n') {
+        editor.innerHTML = '';
+      }
     });
 
     // Actualizar estado del toolbar al cambiar selección
