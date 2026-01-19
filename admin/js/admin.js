@@ -338,21 +338,101 @@ class SalaGeekAdmin {
     // ═══════════════════════════════════════════════════════════════
     // Drag & Drop de imágenes directamente en el editor
     // ═══════════════════════════════════════════════════════════════
+    
+    // Hacer imágenes del editor arrastrables
+    editor?.addEventListener('dragstart', (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.dataTransfer.setData('text/editor-image', 'true');
+        e.dataTransfer.effectAllowed = 'move';
+        this.draggedEditorImage = e.target;
+        e.target.classList.add('dragging');
+      }
+    });
+
+    editor?.addEventListener('dragend', (e) => {
+      if (e.target.tagName === 'IMG') {
+        e.target.classList.remove('dragging');
+        this.draggedEditorImage = null;
+        // Remover todos los indicadores de drop
+        editor.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        editor.querySelectorAll('.drop-zone-active').forEach(el => el.classList.remove('drop-zone-active'));
+      }
+    });
+
     editor?.addEventListener('dragover', (e) => {
       e.preventDefault();
-      editor.classList.add('drag-over');
+      
+      // Si es imagen del editor siendo arrastrada
+      if (this.draggedEditorImage) {
+        const target = e.target.closest('img:not(.dragging)');
+        
+        // Remover indicadores anteriores
+        editor.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        editor.querySelectorAll('.drop-zone-active').forEach(el => el.classList.remove('drop-zone-active'));
+        
+        if (target && target !== this.draggedEditorImage) {
+          // Mostrar indicador de que se puede soltar aquí
+          target.classList.add('drop-zone-active');
+          
+          // Crear indicador visual de posición
+          const rect = target.getBoundingClientRect();
+          const editorRect = editor.getBoundingClientRect();
+          const dropX = e.clientX;
+          const midX = rect.left + rect.width / 2;
+          
+          const indicator = document.createElement('div');
+          indicator.className = 'drop-indicator';
+          indicator.style.position = 'absolute';
+          indicator.style.width = '4px';
+          indicator.style.height = rect.height + 'px';
+          indicator.style.top = (rect.top - editorRect.top + editor.scrollTop) + 'px';
+          indicator.style.backgroundColor = '#00c8ff';
+          indicator.style.borderRadius = '2px';
+          indicator.style.zIndex = '1000';
+          indicator.style.pointerEvents = 'none';
+          
+          if (dropX < midX) {
+            indicator.style.left = (rect.left - editorRect.left - 4) + 'px';
+            indicator.dataset.position = 'before';
+          } else {
+            indicator.style.left = (rect.right - editorRect.left) + 'px';
+            indicator.dataset.position = 'after';
+          }
+          
+          editor.style.position = 'relative';
+          editor.appendChild(indicator);
+        }
+      } else {
+        editor.classList.add('drag-over');
+      }
     });
 
     editor?.addEventListener('dragleave', (e) => {
       // Solo remover si realmente salimos del editor
       if (!editor.contains(e.relatedTarget)) {
         editor.classList.remove('drag-over');
+        editor.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+        editor.querySelectorAll('.drop-zone-active').forEach(el => el.classList.remove('drop-zone-active'));
       }
     });
 
     editor?.addEventListener('drop', (e) => {
       e.preventDefault();
       editor.classList.remove('drag-over');
+      editor.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+      editor.querySelectorAll('.drop-zone-active').forEach(el => el.classList.remove('drop-zone-active'));
+      
+      // Si es una imagen del editor siendo movida
+      if (this.draggedEditorImage) {
+        const targetImg = e.target.closest('img:not(.dragging)');
+        
+        if (targetImg && targetImg !== this.draggedEditorImage) {
+          this.handleImageDropOnImage(this.draggedEditorImage, targetImg, e);
+        }
+        
+        this.draggedEditorImage = null;
+        return;
+      }
       
       // Verificar si es un archivo de imagen
       const files = e.dataTransfer.files;
@@ -375,17 +455,12 @@ class SalaGeekAdmin {
     editor?.addEventListener('click', (e) => {
       const target = e.target;
       
-      // Click en imagen individual
+      // Click en imagen (incluso dentro de grids)
       if (target.tagName === 'IMG') {
-        // Si la imagen está dentro de un grid, seleccionar el grid
-        const parentGrid = target.closest('.image-grid-container');
-        if (parentGrid) {
-          this.selectEditorGrid(parentGrid);
-        } else {
-          this.selectEditorImage(target);
-        }
+        // Siempre seleccionar la imagen individual, incluso en grids
+        this.selectEditorImage(target);
       } 
-      // Click en grid container
+      // Click en grid container (pero no en una imagen)
       else if (target.classList.contains('image-grid-container')) {
         this.selectEditorGrid(target);
       }
@@ -398,26 +473,308 @@ class SalaGeekAdmin {
   }
 
   deleteSelectedImage(img) {
-    // Buscar el wrapper (puede ser image-resize-wrapper, figure, p, etc)
-    let elementToRemove = img;
+    // Verificar si la imagen está dentro de un grid
+    const parentGrid = img.closest('.image-grid-container');
     
-    if (img.parentElement.classList.contains('image-resize-wrapper')) {
-      elementToRemove = img.parentElement;
+    if (parentGrid) {
+      // La imagen está en un grid - eliminar solo esta imagen
+      let elementToRemove = img;
+      
+      // Buscar el contenedor inmediato de la imagen dentro del grid
+      if (img.parentElement.classList.contains('image-resize-wrapper')) {
+        elementToRemove = img.parentElement;
+      }
+      if (elementToRemove.parentElement && elementToRemove.parentElement !== parentGrid) {
+        // Puede estar en un figure o div adicional
+        if (['FIGURE', 'DIV'].includes(elementToRemove.parentElement.tagName) && 
+            elementToRemove.parentElement.parentElement === parentGrid) {
+          elementToRemove = elementToRemove.parentElement;
+        }
+      }
+      
+      elementToRemove.remove();
+      
+      // Contar imágenes restantes en el grid
+      const remainingImages = parentGrid.querySelectorAll('img');
+      
+      if (remainingImages.length === 0) {
+        // No quedan imágenes - eliminar el grid completo
+        parentGrid.remove();
+        this.showToast('Galería eliminada', 'success');
+      } else if (remainingImages.length === 1) {
+        // Solo queda 1 imagen - deshacer el grid y dejar la imagen suelta
+        const lastImg = remainingImages[0];
+        let imgToMove = lastImg;
+        
+        // Obtener el elemento contenedor de la imagen
+        if (lastImg.parentElement.classList.contains('image-resize-wrapper')) {
+          imgToMove = lastImg.parentElement;
+        }
+        
+        // Crear nuevo párrafo con la imagen
+        const clonedImg = imgToMove.cloneNode(true);
+        clonedImg.draggable = true;
+        const newP = document.createElement('p');
+        newP.appendChild(clonedImg);
+        parentGrid.parentElement.insertBefore(newP, parentGrid);
+        parentGrid.remove();
+        
+        this.showToast('Imagen eliminada, galería deshecha', 'success');
+      } else {
+        // Quedan varias imágenes - ajustar columnas si es necesario
+        const currentCols = parseInt(parentGrid.className.match(/cols-(\d+)/)?.[1] || 2);
+        if (remainingImages.length < currentCols) {
+          // Reducir columnas
+          parentGrid.className = parentGrid.className.replace(/cols-\d+/, `cols-${remainingImages.length}`);
+        }
+        this.showToast('Imagen eliminada de la galería', 'success');
+      }
+    } else {
+      // Imagen suelta - eliminar normalmente
+      let elementToRemove = img;
+      
+      if (img.parentElement.classList.contains('image-resize-wrapper')) {
+        elementToRemove = img.parentElement;
+      }
+      if (elementToRemove.parentElement.tagName === 'FIGURE') {
+        elementToRemove = elementToRemove.parentElement;
+      }
+      if (elementToRemove.parentElement.tagName === 'P' && elementToRemove.parentElement.childNodes.length === 1) {
+        elementToRemove = elementToRemove.parentElement;
+      }
+      
+      elementToRemove.remove();
+      this.showToast('Imagen eliminada', 'success');
     }
-    if (elementToRemove.parentElement.tagName === 'FIGURE') {
-      elementToRemove = elementToRemove.parentElement;
-    }
-    if (elementToRemove.parentElement.tagName === 'P' && elementToRemove.parentElement.childNodes.length === 1) {
-      elementToRemove = elementToRemove.parentElement;
-    }
-    
-    elementToRemove.remove();
-    this.showToast('Imagen eliminada', 'success');
   }
 
   deleteSelectedGrid(grid) {
     grid.remove();
     this.showToast('Galería eliminada', 'success');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // Manejar cuando se arrastra una imagen sobre otra
+  // ═══════════════════════════════════════════════════════════════
+  handleImageDropOnImage(draggedImg, targetImg, event) {
+    const editor = document.getElementById('article-editor');
+    
+    // Obtener el contenedor de la imagen arrastrada
+    let draggedElement = draggedImg;
+    if (draggedImg.parentElement.classList.contains('image-resize-wrapper')) {
+      draggedElement = draggedImg.parentElement;
+    }
+    const draggedParentGrid = draggedImg.closest('.image-grid-container');
+    
+    // Obtener el contenedor de la imagen objetivo
+    let targetElement = targetImg;
+    if (targetImg.parentElement.classList.contains('image-resize-wrapper')) {
+      targetElement = targetImg.parentElement;
+    }
+    const targetParentGrid = targetImg.closest('.image-grid-container');
+    
+    // Calcular la posición (antes o después del target)
+    const rect = targetImg.getBoundingClientRect();
+    const dropX = event.clientX;
+    const midX = rect.left + rect.width / 2;
+    const insertBefore = dropX < midX;
+    
+    // CASO 1: Ambas imágenes están en el mismo grid - reordenar
+    if (draggedParentGrid && targetParentGrid && draggedParentGrid === targetParentGrid) {
+      if (insertBefore) {
+        targetParentGrid.insertBefore(draggedElement, targetElement);
+      } else {
+        targetParentGrid.insertBefore(draggedElement, targetElement.nextSibling);
+      }
+      this.showToast('Imagen reordenada', 'success');
+      return;
+    }
+    
+    // CASO 2: Imagen arrastrada está en un grid, target está fuera - sacarla del grid
+    if (draggedParentGrid && !targetParentGrid) {
+      // Clonar la imagen para insertar fuera
+      const clonedImg = draggedImg.cloneNode(true);
+      clonedImg.classList.remove('dragging', 'selected');
+      clonedImg.draggable = true;
+      const newP = document.createElement('p');
+      newP.appendChild(clonedImg);
+      
+      // Encontrar el párrafo/contenedor del target
+      let targetContainer = targetElement;
+      while (targetContainer.parentElement && targetContainer.parentElement !== editor) {
+        targetContainer = targetContainer.parentElement;
+      }
+      
+      // Insertar antes o después
+      if (insertBefore) {
+        targetContainer.parentElement.insertBefore(newP, targetContainer);
+      } else {
+        targetContainer.parentElement.insertBefore(newP, targetContainer.nextSibling);
+      }
+      
+      // Eliminar del grid original
+      draggedElement.remove();
+      
+      // Verificar si el grid original necesita ajustes
+      const remainingImages = draggedParentGrid.querySelectorAll('img');
+      if (remainingImages.length === 0) {
+        draggedParentGrid.remove();
+      } else if (remainingImages.length === 1) {
+        // Deshacer el grid
+        const lastImg = remainingImages[0];
+        let imgToMove = lastImg;
+        if (lastImg.parentElement.classList.contains('image-resize-wrapper')) {
+          imgToMove = lastImg.parentElement;
+        }
+        const clonedLast = imgToMove.cloneNode(true);
+        clonedLast.draggable = true;
+        const newPara = document.createElement('p');
+        newPara.appendChild(clonedLast);
+        draggedParentGrid.parentElement.insertBefore(newPara, draggedParentGrid);
+        draggedParentGrid.remove();
+      } else {
+        // Ajustar columnas
+        const currentCols = parseInt(draggedParentGrid.className.match(/cols-(\d+)/)?.[1] || 2);
+        if (remainingImages.length < currentCols) {
+          draggedParentGrid.className = draggedParentGrid.className.replace(/cols-\d+/, `cols-${Math.min(remainingImages.length, 4)}`);
+        }
+      }
+      
+      this.showToast('Imagen sacada de la galería', 'success');
+      return;
+    }
+    
+    // CASO 3: Imagen arrastrada está fuera, target está en un grid - agregarla al grid
+    if (!draggedParentGrid && targetParentGrid) {
+      // Clonar imagen para agregar al grid
+      const clonedImg = draggedImg.cloneNode(true);
+      clonedImg.classList.remove('dragging', 'selected');
+      clonedImg.draggable = true;
+      clonedImg.removeAttribute('style'); // Limpiar estilos de resize
+      
+      // Insertar en el grid
+      if (insertBefore) {
+        targetParentGrid.insertBefore(clonedImg, targetElement);
+      } else {
+        targetParentGrid.insertBefore(clonedImg, targetElement.nextSibling);
+      }
+      
+      // Ajustar columnas del grid (máximo 4)
+      const newTotal = targetParentGrid.querySelectorAll('img').length;
+      const newCols = Math.min(newTotal, 4);
+      targetParentGrid.className = targetParentGrid.className.replace(/cols-\d+/, `cols-${newCols}`);
+      
+      // Eliminar imagen original
+      let originalContainer = draggedElement;
+      while (originalContainer.parentElement && originalContainer.parentElement !== editor) {
+        if (originalContainer.parentElement.childNodes.length === 1) {
+          originalContainer = originalContainer.parentElement;
+        } else {
+          break;
+        }
+      }
+      originalContainer.remove();
+      
+      this.showToast('Imagen agregada a la galería', 'success');
+      return;
+    }
+    
+    // CASO 4: Ambas imágenes están fuera de grids - crear nuevo grid
+    if (!draggedParentGrid && !targetParentGrid) {
+      // Crear nuevo grid
+      const grid = document.createElement('div');
+      grid.className = 'image-grid-container cols-2 gap-md';
+      
+      // Clonar ambas imágenes
+      const img1 = targetImg.cloneNode(true);
+      const img2 = draggedImg.cloneNode(true);
+      img1.classList.remove('selected', 'dragging');
+      img2.classList.remove('selected', 'dragging');
+      img1.removeAttribute('style'); // Limpiar estilos de resize
+      img2.removeAttribute('style');
+      img1.draggable = true;
+      img2.draggable = true;
+      
+      // Ordenar según posición
+      if (insertBefore) {
+        grid.appendChild(img2);
+        grid.appendChild(img1);
+      } else {
+        grid.appendChild(img1);
+        grid.appendChild(img2);
+      }
+      
+      // Encontrar el contenedor del target
+      let targetContainer = targetElement;
+      while (targetContainer.parentElement && targetContainer.parentElement !== editor) {
+        targetContainer = targetContainer.parentElement;
+      }
+      
+      // Insertar el grid
+      targetContainer.parentElement.insertBefore(grid, targetContainer);
+      
+      // Eliminar las imágenes originales
+      targetContainer.remove();
+      
+      let draggedContainer = draggedElement;
+      while (draggedContainer.parentElement && draggedContainer.parentElement !== editor) {
+        if (draggedContainer.parentElement.childNodes.length === 1) {
+          draggedContainer = draggedContainer.parentElement;
+        } else {
+          break;
+        }
+      }
+      draggedContainer.remove();
+      
+      this.showToast('Galería creada con 2 imágenes', 'success');
+      return;
+    }
+    
+    // CASO 5: Ambas están en grids diferentes - mover de un grid a otro
+    if (draggedParentGrid && targetParentGrid && draggedParentGrid !== targetParentGrid) {
+      // Agregar al grid destino
+      const clonedImg = draggedImg.cloneNode(true);
+      clonedImg.classList.remove('dragging', 'selected');
+      clonedImg.draggable = true;
+      
+      if (insertBefore) {
+        targetParentGrid.insertBefore(clonedImg, targetElement);
+      } else {
+        targetParentGrid.insertBefore(clonedImg, targetElement.nextSibling);
+      }
+      
+      // Ajustar columnas del grid destino
+      const newTotal = targetParentGrid.querySelectorAll('img').length;
+      targetParentGrid.className = targetParentGrid.className.replace(/cols-\d+/, `cols-${Math.min(newTotal, 4)}`);
+      
+      // Eliminar del grid origen
+      draggedElement.remove();
+      
+      // Verificar grid origen
+      const remainingImages = draggedParentGrid.querySelectorAll('img');
+      if (remainingImages.length === 0) {
+        draggedParentGrid.remove();
+      } else if (remainingImages.length === 1) {
+        const lastImg = remainingImages[0];
+        let imgToMove = lastImg;
+        if (lastImg.parentElement.classList.contains('image-resize-wrapper')) {
+          imgToMove = lastImg.parentElement;
+        }
+        const clonedLast = imgToMove.cloneNode(true);
+        clonedLast.draggable = true;
+        const newPara = document.createElement('p');
+        newPara.appendChild(clonedLast);
+        draggedParentGrid.parentElement.insertBefore(newPara, draggedParentGrid);
+        draggedParentGrid.remove();
+      } else {
+        const currentCols = parseInt(draggedParentGrid.className.match(/cols-(\d+)/)?.[1] || 2);
+        if (remainingImages.length < currentCols) {
+          draggedParentGrid.className = draggedParentGrid.className.replace(/cols-\d+/, `cols-${Math.min(remainingImages.length, 4)}`);
+        }
+      }
+      
+      this.showToast('Imagen movida entre galerías', 'success');
+    }
   }
 
   selectEditorGrid(grid) {
@@ -454,6 +811,7 @@ class SalaGeekAdmin {
     img.style.maxWidth = '100%';
     img.style.height = 'auto';
     img.className = 'editor-image resizable';
+    img.draggable = true; // Hacer la imagen arrastrable
     
     // Insertar en la posición del cursor
     const selection = window.getSelection();
@@ -1056,7 +1414,7 @@ class SalaGeekAdmin {
         return;
       }
 
-      const images = this.gridImages.map(url => `<img src="${url}" alt="">`).join('\n  ');
+      const images = this.gridImages.map(url => `<img src="${url}" alt="" draggable="true">`).join('\n  ');
       const grid = `<div class="image-grid-container cols-${this.gridCols}" style="gap: ${this.gridGap}px;">
   ${images}
 </div>`;
