@@ -103,42 +103,15 @@ class SalaGeekAdmin {
   }
 
   changePassword() {
-    // Cuando el usuario está logueado, usar el método correcto
-    if (confirm('¿Deseas cambiar tu contraseña? Se te enviará un email con instrucciones.')) {
-      try {
-        // Usar el método de recuperación de contraseña
-        const email = this.user.email;
-        
-        // Cerrar sesión y abrir el modal de recuperación
-        fetch(`/.netlify/identity/recover`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email })
-        })
-        .then(response => {
-          if (response.ok) {
-            this.showToast('Revisa tu email para cambiar la contraseña', 'success');
-          } else {
-            throw new Error('Error en la solicitud');
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          // Método alternativo: abrir el widget directamente
-          this.showToast('Abriendo formulario de recuperación...', 'info');
-          netlifyIdentity.open();
-          // Simular click en "Forgot password?"
-          setTimeout(() => {
-            const forgotLink = document.querySelector('[data-gotrueaction="signup"] a, .forgot-password, [href*="recover"]');
-            if (forgotLink) forgotLink.click();
-          }, 500);
-        });
-      } catch (error) {
-        console.error('Error:', error);
-        this.showToast('Error al solicitar cambio de contraseña. Intenta cerrar sesión y usar "¿Olvidaste tu contraseña?"', 'error');
-      }
+    if (confirm('Para cambiar tu contraseña necesitas cerrar sesión. ¿Continuar?')) {
+      // Cerrar sesión
+      netlifyIdentity.logout();
+      
+      // Esperar un momento y abrir el widget en modo login
+      setTimeout(() => {
+        netlifyIdentity.open('login');
+        this.showToast('Haz click en "Forgot password?" para cambiar tu contraseña', 'info');
+      }, 500);
     }
   }
 
