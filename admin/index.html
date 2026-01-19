@@ -14,6 +14,17 @@
   
   <!-- Admin Styles -->
   <link rel="stylesheet" href="/admin/css/admin.css">
+  
+  <!-- Debug Script -->
+  <script>
+    // Verificar que netlifyIdentity se cargue
+    window.addEventListener('load', function() {
+      console.log('Netlify Identity disponible:', typeof netlifyIdentity !== 'undefined');
+      if (typeof netlifyIdentity === 'undefined') {
+        alert('Error: Netlify Identity no se cargó. Verifica que Identity esté habilitado en Netlify.');
+      }
+    });
+  </script>
 </head>
 <body>
   <!-- Login Screen -->
