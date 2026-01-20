@@ -1,5 +1,30 @@
 {
-  "articles": [],
+  "articles": [
+    {
+      "id": "mkm5f4upb571dprzi39",
+      "title": "Esta es una prueba.",
+      "slug": "esta-es-una-prueba",
+      "excerpt": "Prueba de guardado.",
+      "content": "/blog/articulos/esta-es-una-prueba.html",
+      "image": "https://salageek.com/admin/",
+      "category": "series",
+      "categoryDisplay": "Series",
+      "tags": [],
+      "author": "Sala Geek",
+      "publishDate": "2026-01-20T05:23:00.000Z",
+      "modifiedDate": "2026-01-20T05:23:36.913Z",
+      "readTime": "5 min",
+      "views": 0,
+      "featured": false,
+      "trending": false,
+      "status": "draft",
+      "metaDescription": "Prueba de guardado.",
+      "metaKeywords": "",
+      "canonicalUrl": "",
+      "ogImage": "https://salageek.com/admin/",
+      "noIndex": false
+    }
+  ],
   "_commented_articles": [
     {
       "id": "stranger-things-temporada-5-detalles",
