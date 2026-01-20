@@ -1,5 +1,30 @@
 {
-  "articles": [],
+  "articles": [
+    {
+      "id": "mkm8oxwxh002kwdit8p",
+      "title": "Prueba de borrado",
+      "slug": "prueba-de-borrado",
+      "excerpt": "Esta es una prueba de borrado.",
+      "content": "/blog/articulos/prueba-de-borrado.html",
+      "image": "https://salageek.com/admin/",
+      "category": "series",
+      "categoryDisplay": "Series",
+      "tags": [],
+      "author": "Sala Geek",
+      "publishDate": "2026-01-20T06:53:00.000Z",
+      "modifiedDate": "2026-01-20T06:55:13.329Z",
+      "readTime": "5 min",
+      "views": 0,
+      "featured": false,
+      "trending": false,
+      "status": "draft",
+      "metaDescription": "Esta es una prueba de borrado.",
+      "metaKeywords": "",
+      "canonicalUrl": "",
+      "ogImage": "https://salageek.com/admin/",
+      "noIndex": false
+    }
+  ],
   "_commented_articles": [
     {
       "id": "stranger-things-temporada-5-detalles",
