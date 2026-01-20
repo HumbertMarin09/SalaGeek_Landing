@@ -236,13 +236,6 @@ class SalaGeekAdmin {
       this.updateWordCount();
     }
     
-    const editor = document.getElementById('article-content');
-    if (editor) {
-      editor.innerHTML = this.editorHistory[this.historyIndex];
-      this.setupEditorImages();
-      this.updateWordCount();
-    }
-    
     this.isUndoRedo = false;
     this.updateUndoRedoButtons();
   }
