@@ -2047,20 +2047,22 @@ class SalaGeekAdmin {
     modal.classList.remove('hidden');
     urlInput.focus();
     
-    // Escuchar cambios en el input para mostrar preview
+    // Escuchar cambios en el input para mostrar preview con video reproducible
     const handleInput = () => {
       const videoId = this.extractYouTubeId(urlInput.value);
       if (videoId) {
         previewArea.innerHTML = `
-          <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" 
-               alt="Vista previa del video"
-               onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
-          <div class="youtube-play-icon">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-          </div>
+          <iframe 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
+            title="Vista previa del video"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
         `;
         previewArea.classList.remove('hidden');
       } else {
+        previewArea.innerHTML = '';
         previewArea.classList.add('hidden');
       }
     };
