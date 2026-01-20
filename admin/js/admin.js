@@ -17,6 +17,8 @@
  * 
  * Atajos de teclado:
  * - Ctrl+S: Guardar artículo
+ * - Ctrl+Z: Deshacer
+ * - Ctrl+Y: Rehacer
  * - Ctrl+B: Negrita
  * - Ctrl+I: Cursiva
  * - Ctrl+U: Subrayado
@@ -35,7 +37,8 @@ const CONFIG = {
   MAX_EXCERPT_LENGTH: 250,
   MAX_SLUG_LENGTH: 60,
   EXCERPT_WARNING_LENGTH: 150,
-  EXCERPT_DANGER_LENGTH: 200
+  EXCERPT_DANGER_LENGTH: 200,
+  MAX_HISTORY_SIZE: 50
 };
 
 class SalaGeekAdmin {
@@ -55,6 +58,11 @@ class SalaGeekAdmin {
     this.gridImages = [];
     this.gridCols = 2;
     this.gridGap = 8;
+    
+    // Historial para Undo/Redo
+    this.editorHistory = [];
+    this.historyIndex = -1;
+    this.isUndoRedo = false;
     
     this.init();
   }
@@ -148,6 +156,120 @@ class SalaGeekAdmin {
         this.showToast('Haz click en "Forgot password?" para cambiar tu contraseña', 'info');
       }, 500);
     }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // UNDO/REDO SYSTEM
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Guarda el estado actual del editor en el historial
+   */
+  saveEditorState() {
+    const editor = document.getElementById('article-content');
+    if (!editor || this.isUndoRedo) return;
+    
+    const currentState = editor.innerHTML;
+    
+    // Si el nuevo estado es igual al actual, no guardar
+    if (this.historyIndex >= 0 && this.editorHistory[this.historyIndex] === currentState) {
+      return;
+    }
+    
+    // Eliminar estados futuros si estamos en medio del historial
+    if (this.historyIndex < this.editorHistory.length - 1) {
+      this.editorHistory = this.editorHistory.slice(0, this.historyIndex + 1);
+    }
+    
+    // Agregar nuevo estado
+    this.editorHistory.push(currentState);
+    
+    // Limitar tamaño del historial
+    if (this.editorHistory.length > CONFIG.MAX_HISTORY_SIZE) {
+      this.editorHistory.shift();
+    } else {
+      this.historyIndex++;
+    }
+    
+    this.updateUndoRedoButtons();
+  }
+
+  /**
+   * Deshace la última acción (Ctrl+Z)
+   */
+  undo() {
+    if (this.historyIndex <= 0) {
+      this.showToast('No hay más acciones para deshacer', 'info');
+      return;
+    }
+    
+    this.isUndoRedo = true;
+    this.historyIndex--;
+    
+    const editor = document.getElementById('article-content');
+    if (editor) {
+      editor.innerHTML = this.editorHistory[this.historyIndex];
+      this.setupEditorImages();
+      this.updateWordCount();
+    }
+    
+    this.isUndoRedo = false;
+    this.updateUndoRedoButtons();
+  }
+
+  /**
+   * Rehace la última acción deshecha (Ctrl+Y)
+   */
+  redo() {
+    if (this.historyIndex >= this.editorHistory.length - 1) {
+      this.showToast('No hay más acciones para rehacer', 'info');
+      return;
+    }
+    
+    this.isUndoRedo = true;
+    this.historyIndex++;
+    
+    const editor = document.getElementById('article-content');
+    if (editor) {
+      editor.innerHTML = this.editorHistory[this.historyIndex];
+      this.setupEditorImages();
+      this.updateWordCount();
+    }
+    
+    this.isUndoRedo = false;
+    this.updateUndoRedoButtons();
+  }
+
+  /**
+   * Actualiza el estado visual de los botones Undo/Redo
+   */
+  updateUndoRedoButtons() {
+    const undoBtn = document.querySelector('[data-command="undo"]');
+    const redoBtn = document.querySelector('[data-command="redo"]');
+    
+    if (undoBtn) {
+      undoBtn.classList.toggle('disabled', this.historyIndex <= 0);
+      undoBtn.title = this.historyIndex > 0 
+        ? `Deshacer (Ctrl+Z) - ${this.historyIndex} acciones disponibles` 
+        : 'Nada que deshacer';
+    }
+    
+    if (redoBtn) {
+      const redoCount = this.editorHistory.length - 1 - this.historyIndex;
+      redoBtn.classList.toggle('disabled', redoCount <= 0);
+      redoBtn.title = redoCount > 0 
+        ? `Rehacer (Ctrl+Y) - ${redoCount} acciones disponibles` 
+        : 'Nada que rehacer';
+    }
+  }
+
+  /**
+   * Limpia el historial del editor
+   */
+  clearEditorHistory() {
+    this.editorHistory = [];
+    this.historyIndex = -1;
+    this.updateUndoRedoButtons();
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -372,7 +494,8 @@ class SalaGeekAdmin {
       });
     });
 
-    // Word count update on input
+    // Word count update on input + guardar estado para Undo/Redo
+    let saveStateTimeout;
     editor?.addEventListener('input', () => {
       this.updateWordCount();
       
@@ -381,6 +504,12 @@ class SalaGeekAdmin {
       if (text === '' || text === '\n') {
         editor.innerHTML = '';
       }
+      
+      // Guardar estado con debounce (300ms después de dejar de escribir)
+      clearTimeout(saveStateTimeout);
+      saveStateTimeout = setTimeout(() => {
+        this.saveEditorState();
+      }, 300);
     });
 
     // Actualizar estado del toolbar al cambiar selección
@@ -392,6 +521,18 @@ class SalaGeekAdmin {
       // Ctrl/Cmd shortcuts
       if (e.ctrlKey || e.metaKey) {
         switch (e.key.toLowerCase()) {
+          case 'z':
+            e.preventDefault();
+            if (e.shiftKey) {
+              this.redo(); // Ctrl+Shift+Z = Redo
+            } else {
+              this.undo(); // Ctrl+Z = Undo
+            }
+            break;
+          case 'y':
+            e.preventDefault();
+            this.redo(); // Ctrl+Y = Redo
+            break;
           case 'b':
             e.preventDefault();
             this.executeEditorCommand('bold');
@@ -467,29 +608,72 @@ class SalaGeekAdmin {
           // Mostrar indicador de que se puede soltar aquí
           target.classList.add('drop-zone-active');
           
-          // Crear indicador visual de posición
+          // Crear indicador visual de posición (horizontal Y vertical)
           const rect = target.getBoundingClientRect();
           const editorRect = editor.getBoundingClientRect();
           const dropX = e.clientX;
+          const dropY = e.clientY;
           const midX = rect.left + rect.width / 2;
+          const midY = rect.top + rect.height / 2;
+          
+          // Determinar si estamos en un grid
+          const parentGrid = target.closest('.image-grid-container');
           
           const indicator = document.createElement('div');
           indicator.className = 'drop-indicator';
           indicator.style.position = 'absolute';
-          indicator.style.width = '4px';
-          indicator.style.height = rect.height + 'px';
-          indicator.style.top = (rect.top - editorRect.top + editor.scrollTop) + 'px';
           indicator.style.backgroundColor = '#00c8ff';
           indicator.style.borderRadius = '2px';
           indicator.style.zIndex = '1000';
           indicator.style.pointerEvents = 'none';
           
-          if (dropX < midX) {
-            indicator.style.left = (rect.left - editorRect.left - 4) + 'px';
-            indicator.dataset.position = 'before';
+          if (parentGrid) {
+            // Dentro de un grid: detectar las 4 direcciones
+            const isLeft = dropX < midX;
+            const isTop = dropY < midY;
+            
+            // Calcular qué eje domina (horizontal o vertical)
+            const distX = Math.abs(dropX - midX) / (rect.width / 2);
+            const distY = Math.abs(dropY - midY) / (rect.height / 2);
+            
+            if (distX > distY) {
+              // Movimiento horizontal dominante
+              indicator.style.width = '4px';
+              indicator.style.height = rect.height + 'px';
+              indicator.style.top = (rect.top - editorRect.top + editor.scrollTop) + 'px';
+              if (isLeft) {
+                indicator.style.left = (rect.left - editorRect.left - 4) + 'px';
+                indicator.dataset.position = 'before';
+              } else {
+                indicator.style.left = (rect.right - editorRect.left) + 'px';
+                indicator.dataset.position = 'after';
+              }
+            } else {
+              // Movimiento vertical dominante
+              indicator.style.height = '4px';
+              indicator.style.width = rect.width + 'px';
+              indicator.style.left = (rect.left - editorRect.left) + 'px';
+              if (isTop) {
+                indicator.style.top = (rect.top - editorRect.top + editor.scrollTop - 4) + 'px';
+                indicator.dataset.position = 'before';
+              } else {
+                indicator.style.top = (rect.bottom - editorRect.top + editor.scrollTop) + 'px';
+                indicator.dataset.position = 'after';
+              }
+            }
           } else {
-            indicator.style.left = (rect.right - editorRect.left) + 'px';
-            indicator.dataset.position = 'after';
+            // Fuera de grid: solo horizontal
+            indicator.style.width = '4px';
+            indicator.style.height = rect.height + 'px';
+            indicator.style.top = (rect.top - editorRect.top + editor.scrollTop) + 'px';
+            
+            if (dropX < midX) {
+              indicator.style.left = (rect.left - editorRect.left - 4) + 'px';
+              indicator.dataset.position = 'before';
+            } else {
+              indicator.style.left = (rect.right - editorRect.left) + 'px';
+              indicator.dataset.position = 'after';
+            }
           }
           
           editor.style.position = 'relative';
@@ -653,11 +837,17 @@ class SalaGeekAdmin {
       elementToRemove.remove();
       this.showToast('Imagen eliminada', 'success');
     }
+    
+    // Guardar estado para Undo/Redo
+    this.saveEditorState();
   }
 
   deleteSelectedGrid(grid) {
     grid.remove();
     this.showToast('Galería eliminada', 'success');
+    
+    // Guardar estado para Undo/Redo
+    this.saveEditorState();
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -680,11 +870,25 @@ class SalaGeekAdmin {
     }
     const targetParentGrid = targetImg.closest('.image-grid-container');
     
-    // Calcular la posición (antes o después del target)
+    // Calcular la posición (antes o después del target) - usando el eje dominante
     const rect = targetImg.getBoundingClientRect();
     const dropX = event.clientX;
+    const dropY = event.clientY;
     const midX = rect.left + rect.width / 2;
-    const insertBefore = dropX < midX;
+    const midY = rect.top + rect.height / 2;
+    
+    // Determinar eje dominante para decidir posición
+    const distX = Math.abs(dropX - midX) / (rect.width / 2);
+    const distY = Math.abs(dropY - midY) / (rect.height / 2);
+    
+    let insertBefore;
+    if (targetParentGrid && distY > distX) {
+      // En grids, si el movimiento vertical domina, usar posición Y
+      insertBefore = dropY < midY;
+    } else {
+      // Usar posición X (horizontal) por defecto
+      insertBefore = dropX < midX;
+    }
     
     // CASO 1: Ambas imágenes están en el mismo grid - reordenar
     if (draggedParentGrid && targetParentGrid && draggedParentGrid === targetParentGrid) {
@@ -693,6 +897,7 @@ class SalaGeekAdmin {
       } else {
         targetParentGrid.insertBefore(draggedElement, targetElement.nextSibling);
       }
+      this.saveEditorState();
       this.showToast('Imagen reordenada', 'success');
       return;
     }
@@ -740,6 +945,7 @@ class SalaGeekAdmin {
         }
       }
       
+      this.saveEditorState();
       this.showToast('Imagen sacada de la galería', 'success');
       return;
     }
@@ -772,6 +978,7 @@ class SalaGeekAdmin {
       }
       originalContainer.remove();
       
+      this.saveEditorState();
       this.showToast('Imagen agregada a la galería', 'success');
       return;
     }
@@ -817,6 +1024,7 @@ class SalaGeekAdmin {
       }
       draggedContainer.remove();
       
+      this.saveEditorState();
       this.showToast('Galería creada con 2 imágenes', 'success');
       return;
     }
@@ -858,6 +1066,7 @@ class SalaGeekAdmin {
         }
       }
       
+      this.saveEditorState();
       this.showToast('Imagen movida entre galerías', 'success');
     }
   }
@@ -929,6 +1138,9 @@ class SalaGeekAdmin {
     } else {
       editor.appendChild(img);
     }
+    
+    // Guardar estado para Undo/Redo
+    this.saveEditorState();
     
     this.showToast('Imagen insertada', 'success');
   }
@@ -1157,6 +1369,12 @@ class SalaGeekAdmin {
     editor.focus();
 
     switch (command) {
+      case 'undo':
+        this.undo();
+        return; // No guardar estado después de undo
+      case 'redo':
+        this.redo();
+        return; // No guardar estado después de redo
       case 'bold':
         document.execCommand('bold', false, null);
         break;
@@ -1203,10 +1421,10 @@ class SalaGeekAdmin {
         break;
       case 'image':
         this.openImageModal();
-        break;
+        return; // No guardar estado aquí, se guarda al insertar la imagen
       case 'image-grid':
         this.openGridModal();
-        break;
+        return; // No guardar estado aquí, se guarda al insertar el grid
       case 'hr':
         document.execCommand('insertHTML', false, '<hr>');
         break;
@@ -1224,6 +1442,9 @@ class SalaGeekAdmin {
         this.showToast('Formato limpiado', 'success');
         break;
     }
+    
+    // Guardar estado después de comandos de formato
+    this.saveEditorState();
     
     // Actualizar estado de botones del toolbar
     this.updateToolbarState();
@@ -1707,6 +1928,10 @@ class SalaGeekAdmin {
       document.getElementById('article-editor').focus();
       document.execCommand('insertHTML', false, grid);
       document.getElementById('grid-modal').classList.add('hidden');
+      
+      // Guardar estado para Undo/Redo
+      this.saveEditorState();
+      
       this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
     });
 
@@ -2027,6 +2252,11 @@ class SalaGeekAdmin {
       
       if (content) {
         document.getElementById('article-editor').innerHTML = content.innerHTML;
+        
+        // Guardar estado inicial del editor para Undo/Redo
+        this.clearEditorHistory();
+        this.saveEditorState();
+        this.setupEditorImages();
       }
     } catch (error) {
       console.error('Error loading article content:', error);
@@ -2039,6 +2269,9 @@ class SalaGeekAdmin {
 
     // Limpiar auto-guardado
     localStorage.removeItem('admin_draft_article');
+    
+    // Limpiar historial del editor
+    this.clearEditorHistory();
 
     document.getElementById('article-form')?.reset();
     document.getElementById('article-id').value = '';

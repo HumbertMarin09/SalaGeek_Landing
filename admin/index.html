@@ -301,6 +301,24 @@
                   
                   <!-- Editor Toolbar Mejorado -->
                   <div class="editor-toolbar">
+                    <!-- Grupo de Undo/Redo -->
+                    <div class="toolbar-group">
+                      <button type="button" data-command="undo" title="Deshacer (Ctrl+Z)" class="disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M3 10h10a5 5 0 0 1 5 5v2"/>
+                          <polyline points="3 10 7 6 3 10 7 14"/>
+                        </svg>
+                      </button>
+                      <button type="button" data-command="redo" title="Rehacer (Ctrl+Y)" class="disabled">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 10h-10a5 5 0 0 0-5 5v2"/>
+                          <polyline points="21 10 17 6 21 10 17 14"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <span class="toolbar-divider"></span>
+
                     <div class="toolbar-group">
                       <button type="button" data-command="bold" title="Negrita (Ctrl+B)">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
