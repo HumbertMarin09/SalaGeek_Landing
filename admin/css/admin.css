@@ -469,6 +469,12 @@ input, select, textarea {
   gap: 1.5rem;
 }
 
+.dashboard-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
 .dashboard-card {
   background: var(--admin-surface);
   border: 1px solid var(--admin-border);
@@ -477,7 +483,7 @@ input, select, textarea {
 }
 
 .card-header {
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1rem;
   border-bottom: 1px solid var(--admin-border);
   display: flex;
   align-items: center;
@@ -485,48 +491,122 @@ input, select, textarea {
 }
 
 .card-header h3 {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-header h3 svg {
+  color: var(--admin-primary);
 }
 
 .view-all {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--admin-primary);
 }
 
 .card-content {
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1rem;
 }
 
 .empty-state {
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem;
   color: var(--admin-text-muted);
+  font-size: 0.85rem;
 }
 
 /* Quick Actions */
 .quick-actions .card-content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.625rem;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  gap: 0.625rem;
+  padding: 0.75rem 0.875rem;
   background: var(--admin-surface-hover);
   border-radius: 0.5rem;
   color: var(--admin-text);
   transition: all var(--transition-fast);
   text-decoration: none;
+  font-size: 0.85rem;
 }
 
 .action-btn:hover {
   background: var(--admin-border);
   transform: translateX(5px);
   text-decoration: none;
+}
+
+/* Recent Drafts in Dashboard */
+.recent-drafts .card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.draft-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem;
+  background: var(--admin-surface-hover);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.draft-item:hover {
+  background: var(--admin-border);
+}
+
+.draft-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 0.375rem;
+  background: linear-gradient(135deg, var(--admin-primary), #9333ea);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.draft-item-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.draft-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.draft-item-info strong {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.draft-item-info span {
+  font-size: 0.7rem;
+  color: var(--admin-text-muted);
+}
+
+/* Stats icon for drafts */
+.stat-icon.drafts {
+  background: linear-gradient(135deg, var(--admin-primary), #9333ea);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1265,6 +1345,155 @@ input, select, textarea {
   margin-bottom: 0.75rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--admin-border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-card h4 svg {
+  color: var(--admin-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PUBLISH CARD - Nuevo diseño compacto
+   ═══════════════════════════════════════════════════════════════ */
+.sidebar-card-publish {
+  padding: 0.75rem;
+}
+
+.sidebar-card-publish h4 {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.publish-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.publish-field label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--admin-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.publish-field select,
+.publish-field input {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--admin-border);
+  background: var(--admin-bg);
+  color: var(--admin-text);
+}
+
+.publish-actions {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.publish-actions .btn-primary {
+  flex: 2;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.publish-actions .btn-outline {
+  flex: 1.5;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.publish-actions .btn-outline:hover {
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
+}
+
+.publish-actions .btn-ghost {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  color: var(--admin-text-muted);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.publish-actions .btn-ghost:hover {
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* Autosave status - nuevo diseño */
+.autosave-status {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--admin-border);
+  font-size: 0.65rem;
+  color: var(--admin-text-muted);
+}
+
+.autosave-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--admin-text-muted);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.autosave-status.saving .autosave-dot {
+  background: var(--admin-warning);
+  animation: pulse 0.5s ease-in-out infinite;
+}
+
+.autosave-status.saved {
+  color: var(--admin-success);
+}
+
+.autosave-status.saved .autosave-dot {
+  background: var(--admin-success);
+  animation: none;
+}
+
+.autosave-status.error {
+  color: var(--admin-danger);
+}
+
+.autosave-status.error .autosave-dot {
+  background: var(--admin-danger);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }
 
 .form-actions {
@@ -1689,6 +1918,10 @@ input, select, textarea {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+  
+  .dashboard-grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1706,6 +1939,10 @@ input, select, textarea {
   
   .mobile-menu-btn {
     display: block;
+  }
+  
+  .dashboard-grid-3 {
+    grid-template-columns: 1fr;
   }
   
   .admin-content {
@@ -2457,13 +2694,13 @@ input, select, textarea {
 .article-editor .image-grid-container {
   display: grid;
   margin: 1rem 0;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px dashed var(--admin-border);
   border-radius: 0.5rem;
   position: relative;
   cursor: pointer;
   transition: all var(--transition-fast);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .article-editor .image-grid-container:hover {
@@ -2492,9 +2729,13 @@ input, select, textarea {
   z-index: 200;
 }
 
-/* Dentro de grids, los handles de resize no deben mostrarse en hover */
+/* NO crear wrappers de resize dentro de grids */
 .article-editor .image-grid-container .image-resize-wrapper {
-  margin: 0;
+  display: contents; /* Elimina el wrapper visualmente */
+}
+
+.article-editor .image-grid-container .resize-handle {
+  display: none !important; /* Ocultar handles en grids */
 }
 
 .article-editor .image-grid-container.cols-1 { grid-template-columns: 1fr; }
@@ -2502,13 +2743,17 @@ input, select, textarea {
 .article-editor .image-grid-container.cols-3 { grid-template-columns: repeat(3, 1fr); }
 .article-editor .image-grid-container.cols-4 { grid-template-columns: repeat(4, 1fr); }
 
+/* Todas las imágenes en grids tienen el mismo tamaño uniforme */
 .article-editor .image-grid-container img {
   width: 100%;
-  height: 150px;
+  aspect-ratio: 16/9;
   object-fit: cover;
   border-radius: 0.375rem;
   cursor: grab;
   transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  /* Reset de estilos individuales */
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 .article-editor .image-grid-container img:active {

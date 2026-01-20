@@ -127,6 +127,16 @@ class SalaGeekAdmin {
     /** @type {boolean} Indica si el contenido ha sido guardado */
     this.contentSaved = false;
     
+    // ─── Auto-guardado ───
+    /** @type {number|null} Timer para auto-guardado */
+    this.autoSaveTimer = null;
+    /** @type {number} Intervalo de auto-guardado en ms (30 segundos) */
+    this.autoSaveInterval = 30000;
+    /** @type {boolean} Auto-guardado habilitado */
+    this.autoSaveEnabled = true;
+    /** @type {string} Último contenido guardado (para detectar cambios) */
+    this.lastSavedContent = '';
+    
     // ─── Modal de Imagen Individual ───
     /** @type {string} Fuente actual: 'url' o 'upload' */
     this.currentImageSource = 'url';
@@ -273,6 +283,240 @@ class SalaGeekAdmin {
         netlifyIdentity.open('login');
         this.showToast('Haz click en "Forgot password?" para cambiar tu contraseña', 'info');
       }, 500);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // AUTO-GUARDADO
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Inicia el sistema de auto-guardado
+   */
+  startAutoSave() {
+    if (!this.autoSaveEnabled) return;
+    
+    // Detener timer existente
+    this.stopAutoSave();
+    
+    // Guardar contenido inicial para comparar cambios
+    this.lastSavedContent = this.getCurrentEditorSnapshot();
+    
+    // Iniciar timer
+    this.autoSaveTimer = setInterval(() => {
+      this.performAutoSave();
+    }, this.autoSaveInterval);
+    
+    // Actualizar indicador
+    this.updateAutoSaveIndicator('active');
+    console.log('Auto-guardado iniciado');
+  }
+
+  /**
+   * Detiene el sistema de auto-guardado
+   */
+  stopAutoSave() {
+    if (this.autoSaveTimer) {
+      clearInterval(this.autoSaveTimer);
+      this.autoSaveTimer = null;
+    }
+    this.updateAutoSaveIndicator('inactive');
+  }
+
+  /**
+   * Obtiene un snapshot del contenido actual del editor
+   */
+  getCurrentEditorSnapshot() {
+    const title = document.getElementById('article-title')?.value || '';
+    const content = document.getElementById('article-editor')?.innerHTML || '';
+    const excerpt = document.getElementById('article-excerpt')?.value || '';
+    return JSON.stringify({ title, content, excerpt });
+  }
+
+  /**
+   * Verifica si hay cambios sin guardar
+   */
+  hasUnsavedChanges() {
+    const currentSnapshot = this.getCurrentEditorSnapshot();
+    return currentSnapshot !== this.lastSavedContent;
+  }
+
+  /**
+   * Ejecuta el auto-guardado si hay cambios
+   */
+  async performAutoSave() {
+    // Solo auto-guardar si estamos en la sección de editor
+    if (this.currentSection !== 'new-article') return;
+    
+    // Verificar si hay cambios
+    if (!this.hasUnsavedChanges()) {
+      console.log('Auto-guardado: Sin cambios');
+      return;
+    }
+    
+    // Verificar que haya contenido mínimo
+    const title = document.getElementById('article-title')?.value?.trim();
+    if (!title) {
+      console.log('Auto-guardado: Sin título');
+      return;
+    }
+    
+    // Actualizar indicador a "guardando"
+    this.updateAutoSaveIndicator('saving');
+    
+    try {
+      // Guardar como borrador silenciosamente
+      await this.autoSaveAsDraft();
+      
+      // Actualizar contenido guardado
+      this.lastSavedContent = this.getCurrentEditorSnapshot();
+      
+      // Actualizar indicador a "guardado"
+      this.updateAutoSaveIndicator('saved');
+      
+      console.log('Auto-guardado exitoso:', new Date().toLocaleTimeString());
+    } catch (error) {
+      console.error('Error en auto-guardado:', error);
+      this.updateAutoSaveIndicator('error');
+    }
+  }
+
+  /**
+   * Guarda silenciosamente como borrador (sin navegación ni toast)
+   */
+  async autoSaveAsDraft() {
+    const title = document.getElementById('article-title')?.value?.trim();
+    const content = document.getElementById('article-editor')?.innerHTML || '';
+    const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
+    const image = document.getElementById('article-image')?.value || '';
+    const category = document.querySelector('input[name="category"]:checked')?.value || 'series';
+    const publishDate = document.getElementById('article-date')?.value 
+      ? new Date(document.getElementById('article-date').value).toISOString()
+      : new Date().toISOString();
+    
+    const id = this.editingArticle?.id || this.generateArticleId(title);
+    const slug = this.editingArticle?.slug || this.generateSlug(title);
+    const readTime = this.calculateReadTime(content);
+
+    const categoryNames = {
+      series: 'Series',
+      peliculas: 'Películas',
+      gaming: 'Gaming',
+      anime: 'Anime',
+      tecnologia: 'Tecnología'
+    };
+
+    const articleData = {
+      id,
+      title,
+      slug,
+      excerpt,
+      content: `/blog/articulos/${slug}.html`,
+      image,
+      category,
+      categoryDisplay: categoryNames[category],
+      tags: this.tags,
+      author: 'Sala Geek',
+      publishDate,
+      modifiedDate: new Date().toISOString(),
+      readTime,
+      views: this.editingArticle?.views || 0,
+      featured: document.getElementById('article-featured')?.checked || false,
+      trending: document.getElementById('article-trending')?.checked || false,
+      status: 'draft', // Siempre como borrador en auto-save
+      metaDescription: document.getElementById('meta-description')?.value || excerpt.substring(0, 160),
+      metaKeywords: document.getElementById('meta-keywords')?.value || '',
+      canonicalUrl: document.getElementById('canonical-url')?.value || '',
+      ogImage: document.getElementById('og-image')?.value || image,
+      noIndex: document.getElementById('no-index')?.checked || false
+    };
+
+    // Obtener token actualizado (refrescar si es necesario)
+    const currentUser = netlifyIdentity.currentUser();
+    if (!currentUser) {
+      throw new Error('Sin sesión activa');
+    }
+    
+    // Intentar refrescar el token
+    let accessToken;
+    try {
+      const jwt = await currentUser.jwt();
+      accessToken = jwt;
+    } catch (e) {
+      accessToken = currentUser.token?.access_token;
+    }
+    
+    if (!accessToken) {
+      throw new Error('Token no disponible');
+    }
+
+    const response = await fetch('/.netlify/functions/save-article', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        article: articleData,
+        htmlContent: this.generateArticleHTML(articleData, content),
+        isNew: !this.editingArticle
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `HTTP ${response.status}`);
+    }
+
+    // Actualizar el editingArticle si era nuevo
+    if (!this.editingArticle) {
+      this.editingArticle = articleData;
+    }
+
+    // Recargar lista de borradores en segundo plano (sin toast)
+    await this.loadArticles();
+  }
+
+  /**
+   * Actualiza el indicador visual de auto-guardado
+   * @param {string} state - 'active', 'saving', 'saved', 'error', 'inactive'
+   */
+  updateAutoSaveIndicator(state) {
+    const indicator = document.getElementById('autosave-indicator');
+    if (!indicator) return;
+
+    const textEl = indicator.querySelector('span');
+    
+    // Limpiar clases
+    indicator.classList.remove('saving', 'saved', 'error');
+    
+    switch (state) {
+      case 'active':
+        indicator.style.display = 'flex';
+        textEl.textContent = 'Auto-guardado activo';
+        break;
+      case 'saving':
+        indicator.classList.add('saving');
+        textEl.textContent = 'Guardando...';
+        break;
+      case 'saved':
+        indicator.classList.add('saved');
+        textEl.textContent = `Guardado ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+        // Volver al estado normal después de 3 segundos
+        setTimeout(() => {
+          if (indicator.classList.contains('saved')) {
+            indicator.classList.remove('saved');
+            textEl.textContent = 'Auto-guardado activo';
+          }
+        }, 3000);
+        break;
+      case 'error':
+        indicator.classList.add('error');
+        textEl.textContent = 'Error al guardar';
+        break;
+      case 'inactive':
+        indicator.style.display = 'none';
+        break;
     }
   }
 
@@ -1358,7 +1602,17 @@ class SalaGeekAdmin {
     // Marcar como seleccionada
     img.classList.add('selected');
     
-    // Crear handles de redimensionamiento si no existen
+    // Verificar si la imagen está dentro de un grid
+    const isInGrid = img.closest('.image-grid-container') !== null;
+    
+    // NO crear handles de redimensionamiento para imágenes en grids
+    // El grid CSS maneja el tamaño automáticamente
+    if (isInGrid) {
+      // Solo marcar como seleccionada, sin wrapper
+      return;
+    }
+    
+    // Crear handles de redimensionamiento si no existen (solo para imágenes fuera de grids)
     if (!img.parentElement.classList.contains('image-resize-wrapper')) {
       const wrapper = document.createElement('span');
       wrapper.className = 'image-resize-wrapper has-selected';
@@ -2748,6 +3002,9 @@ class SalaGeekAdmin {
         }
       }
       
+      // Detener auto-guardado al salir del editor
+      this.stopAutoSave();
+      
       // Resetear flag de guardado al salir
       this.contentSaved = false;
     }
@@ -2779,6 +3036,12 @@ class SalaGeekAdmin {
     // Reset form if navigating to new article
     if (section === 'new-article' && !this.editingArticle) {
       this.resetArticleForm();
+    }
+    
+    // Iniciar auto-guardado al entrar al editor
+    if (section === 'new-article') {
+      // Pequeño delay para asegurar que el formulario esté listo
+      setTimeout(() => this.startAutoSave(), 500);
     }
   }
 
@@ -2825,6 +3088,7 @@ class SalaGeekAdmin {
       this.renderArticlesTable();
       this.renderDraftsTable();
       this.renderRecentArticles();
+      this.renderRecentDrafts();
       this.updateDraftsCount();
     } catch (error) {
       console.error('Error loading articles:', error);
@@ -2983,6 +3247,36 @@ class SalaGeekAdmin {
     `).join('');
   }
 
+  renderRecentDrafts() {
+    const container = document.getElementById('recent-drafts-list');
+    if (!container) return;
+
+    // Actualizar stat de borradores
+    const statDrafts = document.getElementById('stat-drafts');
+    if (statDrafts) statDrafts.textContent = this.drafts.length;
+
+    if (this.drafts.length === 0) {
+      container.innerHTML = '<p class="empty-state">No hay borradores</p>';
+      return;
+    }
+
+    const recent = this.drafts.slice(0, 5);
+    container.innerHTML = recent.map(draft => `
+      <div class="draft-item" onclick="admin.editArticle('${draft.id}')">
+        <div class="draft-item-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
+        <div class="draft-item-info">
+          <strong>${this.escapeHtml(draft.title)}</strong>
+          <span>${this.formatDate(draft.modifiedDate || draft.publishDate)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
   filterArticlesTable(searchQuery = '') {
     const query = searchQuery || document.getElementById('search-articles')?.value || '';
     const category = document.getElementById('filter-category')?.value || 'all';
@@ -3014,13 +3308,22 @@ class SalaGeekAdmin {
   // ═══════════════════════════════════════════════════════════════
 
   editArticle(id) {
-    const article = this.articles.find(a => a.id === id);
-    if (!article) return;
+    // Buscar en artículos publicados y en borradores
+    let article = this.articles.find(a => a.id === id);
+    if (!article) {
+      article = this.drafts.find(a => a.id === id);
+    }
+    if (!article) {
+      this.showToast('Artículo no encontrado', 'error');
+      return;
+    }
 
     this.editingArticle = article;
     this.populateArticleForm(article);
     this.navigateTo('new-article');
-    document.getElementById('section-title').textContent = 'Editar Artículo';
+    
+    const titleText = article.status === 'draft' ? 'Editar Borrador' : 'Editar Artículo';
+    document.getElementById('section-title').textContent = titleText;
   }
 
   populateArticleForm(article) {
@@ -3300,7 +3603,9 @@ class SalaGeekAdmin {
       // Marcar como guardado para evitar mensaje de cambios sin guardar
       this.contentSaved = true;
       
-      // Reload articles
+      // Esperar un momento para que GitHub procese el commit, luego recargar
+      // GitHub/Netlify puede tardar unos segundos en reflejar los cambios
+      await new Promise(resolve => setTimeout(resolve, 1500));
       await this.loadArticles();
       
       // Navigate to appropriate section
@@ -3336,10 +3641,19 @@ class SalaGeekAdmin {
    * y borra el archivo HTML correspondiente
    */
   async deleteArticle(id) {
-    const article = this.articles.find(a => a.id === id);
-    if (!article) return;
+    // Buscar en artículos publicados y en borradores
+    let article = this.articles.find(a => a.id === id);
+    const isDraft = !article;
+    if (!article) {
+      article = this.drafts.find(a => a.id === id);
+    }
+    if (!article) {
+      this.showToast('Artículo no encontrado', 'error');
+      return;
+    }
 
-    if (!confirm(`¿Estás seguro de eliminar "${article.title}"?`)) {
+    const itemType = isDraft ? 'borrador' : 'artículo';
+    if (!confirm(`¿Estás seguro de eliminar el ${itemType} "${article.title}"?`)) {
       return;
     }
 
@@ -3364,7 +3678,7 @@ class SalaGeekAdmin {
         throw new Error(errorData.error || 'Error al eliminar');
       }
 
-      this.showToast('Artículo eliminado', 'success');
+      this.showToast(`${isDraft ? 'Borrador' : 'Artículo'} eliminado`, 'success');
       await this.loadArticles();
 
     } catch (error) {
@@ -3785,5 +4099,5 @@ class SalaGeekAdmin {
   }
 }
 
-// Initialize admin
-const admin = new SalaGeekAdmin();
+// Initialize admin (global for onclick handlers)
+window.admin = new SalaGeekAdmin();
