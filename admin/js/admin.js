@@ -44,6 +44,9 @@ class SalaGeekAdmin {
     // Setup image modals
     this.setupImageModals();
     
+    // Setup image resize modal
+    this.setupImageResizeModal();
+    
     // Check if user is already logged in
     const user = netlifyIdentity.currentUser();
     if (user) {
@@ -531,6 +534,15 @@ class SalaGeekAdmin {
         this.deselectEditorGrids();
       }
     });
+
+    // Doble clic en imagen para abrir modal de redimensionamiento manual
+    editor?.addEventListener('dblclick', (e) => {
+      const target = e.target;
+      if (target.tagName === 'IMG') {
+        e.preventDefault();
+        this.openImageResizeModal(target);
+      }
+    });
   }
 
   deleteSelectedImage(img) {
@@ -971,6 +983,144 @@ class SalaGeekAdmin {
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // MODAL DE REDIMENSIONAMIENTO MANUAL
+  // ═══════════════════════════════════════════════════════════════
+
+  openImageResizeModal(img) {
+    const modal = document.getElementById('image-resize-modal');
+    const previewImg = document.getElementById('resize-preview-img');
+    const widthInput = document.getElementById('resize-width');
+    const heightInput = document.getElementById('resize-height');
+    const originalSize = document.getElementById('original-size');
+    
+    // Guardar referencia a la imagen que estamos editando
+    this.resizingImage = img;
+    
+    // Obtener dimensiones originales (natural) y actuales
+    this.originalImageWidth = img.naturalWidth;
+    this.originalImageHeight = img.naturalHeight;
+    this.aspectRatio = this.originalImageWidth / this.originalImageHeight;
+    this.lockAspectRatio = true;
+    
+    // Mostrar vista previa
+    previewImg.src = img.src;
+    
+    // Mostrar dimensiones originales
+    originalSize.textContent = `${this.originalImageWidth} x ${this.originalImageHeight}`;
+    
+    // Poner dimensiones actuales en los inputs
+    const currentWidth = img.offsetWidth || img.naturalWidth;
+    const currentHeight = img.offsetHeight || img.naturalHeight;
+    widthInput.value = Math.round(currentWidth);
+    heightInput.value = Math.round(currentHeight);
+    
+    // Asegurar que el botón de lock esté activo
+    document.getElementById('lock-aspect-ratio').classList.add('active');
+    
+    // Mostrar modal
+    modal.classList.remove('hidden');
+    
+    // Focus en el input de ancho
+    setTimeout(() => widthInput.select(), 100);
+  }
+
+  setupImageResizeModal() {
+    const modal = document.getElementById('image-resize-modal');
+    const widthInput = document.getElementById('resize-width');
+    const heightInput = document.getElementById('resize-height');
+    const lockBtn = document.getElementById('lock-aspect-ratio');
+    const resetBtn = document.getElementById('reset-size-btn');
+    const applyBtn = document.getElementById('apply-resize-btn');
+    
+    // Toggle lock aspect ratio
+    lockBtn?.addEventListener('click', () => {
+      this.lockAspectRatio = !this.lockAspectRatio;
+      lockBtn.classList.toggle('active', this.lockAspectRatio);
+      
+      // Si se activa el lock, recalcular altura basada en el ancho actual
+      if (this.lockAspectRatio && widthInput.value) {
+        heightInput.value = Math.round(parseInt(widthInput.value) / this.aspectRatio);
+      }
+    });
+    
+    // Cambio de ancho - actualizar altura si está bloqueado
+    widthInput?.addEventListener('input', () => {
+      if (this.lockAspectRatio && widthInput.value) {
+        const newWidth = parseInt(widthInput.value);
+        if (newWidth >= CONFIG.MIN_IMAGE_SIZE) {
+          heightInput.value = Math.round(newWidth / this.aspectRatio);
+        }
+      }
+    });
+    
+    // Cambio de altura - actualizar ancho si está bloqueado
+    heightInput?.addEventListener('input', () => {
+      if (this.lockAspectRatio && heightInput.value) {
+        const newHeight = parseInt(heightInput.value);
+        if (newHeight >= CONFIG.MIN_IMAGE_SIZE) {
+          widthInput.value = Math.round(newHeight * this.aspectRatio);
+        }
+      }
+    });
+    
+    // Restablecer tamaño original
+    resetBtn?.addEventListener('click', () => {
+      widthInput.value = this.originalImageWidth;
+      heightInput.value = this.originalImageHeight;
+    });
+    
+    // Aplicar redimensionamiento
+    applyBtn?.addEventListener('click', () => {
+      this.applyImageResize();
+    });
+    
+    // Enter para aplicar
+    widthInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        this.applyImageResize();
+      }
+    });
+    
+    heightInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        this.applyImageResize();
+      }
+    });
+  }
+
+  applyImageResize() {
+    const widthInput = document.getElementById('resize-width');
+    const heightInput = document.getElementById('resize-height');
+    const modal = document.getElementById('image-resize-modal');
+    
+    const newWidth = parseInt(widthInput.value);
+    const newHeight = parseInt(heightInput.value);
+    
+    // Validar dimensiones
+    if (!newWidth || newWidth < CONFIG.MIN_IMAGE_SIZE) {
+      this.showToast(`El ancho mínimo es ${CONFIG.MIN_IMAGE_SIZE}px`, 'warning');
+      return;
+    }
+    
+    if (!newHeight || newHeight < CONFIG.MIN_IMAGE_SIZE) {
+      this.showToast(`El alto mínimo es ${CONFIG.MIN_IMAGE_SIZE}px`, 'warning');
+      return;
+    }
+    
+    // Aplicar dimensiones a la imagen
+    if (this.resizingImage) {
+      this.resizingImage.style.width = newWidth + 'px';
+      this.resizingImage.style.height = this.lockAspectRatio ? 'auto' : newHeight + 'px';
+      
+      this.showToast('Imagen redimensionada', 'success');
+    }
+    
+    // Cerrar modal
+    modal.classList.add('hidden');
+    this.resizingImage = null;
   }
 
   executeEditorCommand(command) {

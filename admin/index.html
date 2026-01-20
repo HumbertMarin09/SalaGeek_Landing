@@ -856,6 +856,60 @@
   <!-- Toast Notifications -->
   <div id="toast-container" class="toast-container"></div>
 
+  <!-- Image Resize Modal - Redimensionamiento manual -->
+  <div id="image-resize-modal" class="modal modal-small hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 21H3V3"/>
+            <path d="M21 15V21H15"/>
+            <path d="M15 15L21 21"/>
+          </svg>
+          Redimensionar Imagen
+        </h3>
+        <button class="modal-close" data-close="image-resize-modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="resize-preview">
+          <img id="resize-preview-img" src="" alt="Vista previa">
+        </div>
+        <div class="resize-inputs">
+          <div class="form-group">
+            <label for="resize-width">Ancho (px)</label>
+            <input type="number" id="resize-width" min="50" max="1920" placeholder="Ancho">
+          </div>
+          <button type="button" id="lock-aspect-ratio" class="lock-btn active" title="Mantener proporción">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </button>
+          <div class="form-group">
+            <label for="resize-height">Alto (px)</label>
+            <input type="number" id="resize-height" min="50" max="1920" placeholder="Alto">
+          </div>
+        </div>
+        <div class="resize-info">
+          <span>Original: <strong id="original-size">0 x 0</strong></span>
+          <button type="button" id="reset-size-btn" class="btn-text">Restablecer</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close="image-resize-modal">Cancelar</button>
+        <button type="button" id="apply-resize-btn" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Aplicar
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Admin Scripts -->
   <script src="/admin/js/admin.js"></script>
 </body>
