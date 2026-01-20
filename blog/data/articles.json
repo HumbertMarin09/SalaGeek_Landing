@@ -1,6 +1,30 @@
 {
   "articles": [
     {
+      "id": "mkm7mvpgsqrwy65y4fd",
+      "title": "Prueba de guardado.",
+      "slug": "prueba-de-guardado",
+      "excerpt": "Esta es una prueba de guardado.",
+      "content": "/blog/articulos/prueba-de-guardado.html",
+      "image": "https://salageek.com/admin/",
+      "category": "series",
+      "categoryDisplay": "Series",
+      "tags": [],
+      "author": "Sala Geek",
+      "publishDate": "2026-01-20T06:24:00.000Z",
+      "modifiedDate": "2026-01-20T06:25:37.540Z",
+      "readTime": "5 min",
+      "views": 0,
+      "featured": false,
+      "trending": false,
+      "status": "draft",
+      "metaDescription": "Esta es una prueba de guardado.",
+      "metaKeywords": "",
+      "canonicalUrl": "",
+      "ogImage": "https://salageek.com/admin/",
+      "noIndex": false
+    },
+    {
       "id": "mkm73bmbwbilgxvq7pp",
       "title": "Prueba de auto-guardado.",
       "slug": "prueba-de-auto-guardado",
