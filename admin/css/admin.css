@@ -2424,6 +2424,7 @@ input, select, textarea {
   margin: 0;
 }
 
+.article-editor .image-grid-container.cols-1 { grid-template-columns: 1fr; }
 .article-editor .image-grid-container.cols-2 { grid-template-columns: repeat(2, 1fr); }
 .article-editor .image-grid-container.cols-3 { grid-template-columns: repeat(3, 1fr); }
 .article-editor .image-grid-container.cols-4 { grid-template-columns: repeat(4, 1fr); }
