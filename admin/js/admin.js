@@ -5,31 +5,53 @@
  * 
  * @description Sistema de administración completo para SalaGeek
  * @author SalaGeek Team
- * @version 2.1.0
+ * @version 2.2.0
  * @lastUpdate 2026-01-19
  * 
- * Características principales:
- * - Autenticación segura con Netlify Identity
- * - Editor WYSIWYG con soporte completo de formato
- * - Drag & drop de imágenes con posicionamiento inteligente
- * - Sistema de grids/galerías configurables (1-4 columnas)
- * - Redimensionamiento de imágenes (arrastre + modal manual)
- * - Sistema Undo/Redo con historial de 50 estados
- * - Vista previa responsive (desktop/tablet/mobile)
- * - Gestión completa de artículos (CRUD)
- * - Auto-guardado y validación de formularios
+ * CARACTERÍSTICAS PRINCIPALES:
+ * ─────────────────────────────
+ * • Autenticación segura con Netlify Identity
+ * • Editor WYSIWYG con formato completo
+ * • Drag & drop de imágenes con posicionamiento inteligente
+ * • Sistema de grids/galerías (1-4 columnas)
+ * • Redimensionamiento de imágenes (arrastre + modal)
+ * • Sistema Undo/Redo (historial de 50 estados)
+ * • Vista previa responsive (desktop/tablet/mobile)
+ * • Gestión completa de artículos (CRUD)
+ * • Inserción de videos de YouTube
+ * • SEO avanzado (meta tags, canonical, Open Graph)
+ * • Galería de imágenes subidas
  * 
- * Atajos de teclado:
- * - Ctrl+S: Guardar artículo
- * - Ctrl+Z: Deshacer última acción
- * - Ctrl+Y / Ctrl+Shift+Z: Rehacer acción
- * - Ctrl+B: Negrita
- * - Ctrl+I: Cursiva
- * - Ctrl+U: Subrayado
- * - Ctrl+K: Insertar enlace
- * - ESC: Cerrar modales abiertos
- * - Delete/Supr: Eliminar imagen/grid seleccionado
- * - Doble clic en imagen: Abrir modal de redimensionamiento
+ * ATAJOS DE TECLADO:
+ * ──────────────────
+ * Ctrl+S         → Guardar artículo
+ * Ctrl+Z         → Deshacer última acción
+ * Ctrl+Y/Shift+Z → Rehacer acción
+ * Ctrl+B         → Negrita
+ * Ctrl+I         → Cursiva
+ * Ctrl+U         → Subrayado
+ * Ctrl+K         → Insertar enlace
+ * ESC            → Cerrar modales
+ * Delete/Supr   → Eliminar imagen/grid seleccionado
+ * Doble clic    → Abrir modal de redimensionamiento
+ * 
+ * ESTRUCTURA DEL CÓDIGO:
+ * ──────────────────────
+ * 1. Configuración Global (CONFIG)
+ * 2. Clase Principal (SalaGeekAdmin)
+ *    - Inicialización y Autenticación
+ *    - Sistema Undo/Redo
+ *    - Event Listeners
+ *    - Editor y Toolbar
+ *    - Manejo de Imágenes y Grids
+ *    - Modales (imagen, grid, galería, resize)
+ *    - YouTube Embed
+ *    - Navegación
+ *    - CRUD de Artículos
+ *    - Tags y SEO
+ *    - Vista Previa
+ *    - Generación de HTML
+ *    - Utilidades
  * 
  * ═══════════════════════════════════════════════════════════════
  */
@@ -39,22 +61,32 @@
 // ═══════════════════════════════════════════════════════════════
 
 const CONFIG = {
-  // UI & Notificaciones
+  // ─── UI & Notificaciones ───
   TOAST_DURATION: 5000,           // Duración de notificaciones (ms)
   
-  // Imágenes
+  // ─── Imágenes ───
   MIN_IMAGE_SIZE: 50,             // Tamaño mínimo de imagen (px)
+  MAX_GRID_COLUMNS: 4,            // Máximo columnas en grid
+  DEFAULT_GRID_GAP: 8,            // Espaciado por defecto en grid (px)
   
-  // Extracto del artículo
+  // ─── Extracto del artículo ───
   MAX_EXCERPT_LENGTH: 250,        // Máximo caracteres permitidos
   EXCERPT_WARNING_LENGTH: 150,    // Umbral de advertencia (amarillo)
   EXCERPT_DANGER_LENGTH: 200,     // Umbral de peligro (rojo)
   
-  // URL/Slug
+  // ─── Meta Description (SEO) ───
+  META_DESC_OPTIMAL: 160,         // Longitud óptima para SEO
+  META_DESC_WARNING: 140,         // Umbral de advertencia
+  
+  // ─── URL/Slug ───
   MAX_SLUG_LENGTH: 60,            // Máximo caracteres en slug
   
-  // Editor - Undo/Redo
-  MAX_HISTORY_SIZE: 50            // Estados máximos en historial
+  // ─── Editor - Undo/Redo ───
+  MAX_HISTORY_SIZE: 50,           // Estados máximos en historial
+  DEBOUNCE_SAVE_STATE: 300,       // Delay para guardar estado (ms)
+  
+  // ─── Artículos Recientes ───
+  RECENT_ARTICLES_LIMIT: 5        // Artículos mostrados en dashboard
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -64,40 +96,64 @@ const CONFIG = {
 class SalaGeekAdmin {
   /**
    * Constructor - Inicializa el estado de la aplicación
+   * 
+   * @description Configura todas las propiedades iniciales del admin:
+   * - Estado de autenticación (user)
+   * - Datos de artículos y categorías
+   * - Estado de navegación y edición
+   * - Configuración de modales
+   * - Sistema de historial para Undo/Redo
    */
   constructor() {
-    // Estado de usuario
+    // ─── Estado de Autenticación ───
+    /** @type {Object|null} Usuario autenticado de Netlify Identity */
     this.user = null;
     
-    // Datos
+    // ─── Datos Principales ───
+    /** @type {Array} Lista de artículos cargados */
     this.articles = [];
+    /** @type {Array} Categorías disponibles */
     this.categories = [];
+    /** @type {Array} Tags del artículo actual */
     this.tags = [];
     
-    // Estado de navegación
+    // ─── Estado de Navegación ───
+    /** @type {string} Sección actual del admin */
     this.currentSection = 'dashboard';
+    /** @type {Object|null} Artículo en edición */
     this.editingArticle = null;
     
-    // Modal de imagen - Estado
+    // ─── Modal de Imagen Individual ───
+    /** @type {string} Fuente actual: 'url' o 'upload' */
     this.currentImageSource = 'url';
+    /** @type {string|null} Datos de imagen subida (base64) */
     this.uploadedImageData = null;
+    /** @type {HTMLElement|null} Imagen siendo arrastrada en editor */
     this.draggedEditorImage = null;
     
-    // Modal de galería/grid - Estado
+    // ─── Modal de Grid/Galería ───
+    /** @type {Array} URLs de imágenes para el grid */
     this.gridImages = [];
+    /** @type {number} Columnas del grid (1-4) */
     this.gridCols = 2;
-    this.gridGap = 8;
+    /** @type {number} Espaciado entre imágenes (px) */
+    this.gridGap = CONFIG.DEFAULT_GRID_GAP;
     
-    // Galería de imágenes subidas - Estado
+    // ─── Galería de Imágenes Subidas ───
+    /** @type {Array} Imágenes disponibles en la galería */
     this.galleryImages = [];
+    /** @type {Object|null} Datos de imagen pendiente de subir */
     this.galleryUploadData = null;
     
-    // Sistema Undo/Redo - Historial
+    // ─── Sistema Undo/Redo ───
+    /** @type {Array} Historial de estados del editor */
     this.editorHistory = [];
+    /** @type {number} Índice actual en el historial */
     this.historyIndex = -1;
+    /** @type {boolean} Flag para evitar guardar durante undo/redo */
     this.isUndoRedo = false;
     
-    // Inicializar aplicación
+    // ─── Inicializar Aplicación ───
     this.init();
   }
 
@@ -122,6 +178,15 @@ class SalaGeekAdmin {
     }
   }
 
+  /**
+   * Configura Netlify Identity y sus eventos
+   * 
+   * @description Maneja los eventos del widget de autenticación:
+   * - init: Usuario ya autenticado al cargar
+   * - login: Login exitoso
+   * - logout: Cierre de sesión
+   * - error: Errores de autenticación
+   */
   initNetlifyIdentity() {
     netlifyIdentity.on('init', user => {
       if (user) {
@@ -149,6 +214,12 @@ class SalaGeekAdmin {
     });
   }
 
+  /**
+   * Maneja el login exitoso
+   * 
+   * @param {Object} user - Objeto de usuario de Netlify Identity
+   * @description Actualiza la UI, muestra info del usuario y carga datos
+   */
   handleLogin(user) {
     this.user = user;
     
@@ -168,6 +239,11 @@ class SalaGeekAdmin {
     this.showToast(`¡Bienvenido, ${name}!`, 'success');
   }
 
+  /**
+   * Maneja el cierre de sesión
+   * 
+   * @description Limpia el estado y muestra la pantalla de login
+   */
   handleLogout() {
     this.user = null;
     this.articles = [];
@@ -176,6 +252,11 @@ class SalaGeekAdmin {
     document.getElementById('admin-dashboard').classList.add('hidden');
   }
 
+  /**
+   * Inicia el flujo de cambio de contraseña
+   * 
+   * @description Cierra sesión y abre el widget para usar "Forgot password"
+   */
   changePassword() {
     if (confirm('Para cambiar tu contraseña necesitas cerrar sesión. ¿Continuar?')) {
       // Cerrar sesión
@@ -404,10 +485,10 @@ class SalaGeekAdmin {
         const charCount = countEl.parentElement;
         countEl.textContent = count;
         
-        // Cambiar color según límite (160 es ideal para SEO)
-        if (count > 160) {
+        // Cambiar color según límite óptimo para SEO
+        if (count > CONFIG.META_DESC_OPTIMAL) {
           charCount.style.color = 'var(--admin-danger)';
-        } else if (count > 140) {
+        } else if (count > CONFIG.META_DESC_WARNING) {
           charCount.style.color = 'var(--admin-warning)';
         } else {
           charCount.style.color = 'var(--admin-text-muted)';
@@ -556,11 +637,11 @@ class SalaGeekAdmin {
         editor.innerHTML = '';
       }
       
-      // Guardar estado con debounce (300ms después de dejar de escribir)
+      // Guardar estado con debounce (evita guardar cada keystroke)
       clearTimeout(saveStateTimeout);
       saveStateTimeout = setTimeout(() => {
         this.saveEditorState();
-      }, 300);
+      }, CONFIG.DEBOUNCE_SAVE_STATE);
     });
 
     // Actualizar estado del toolbar al cambiar selección
@@ -1139,7 +1220,14 @@ class SalaGeekAdmin {
     }
   }
 
-  // Helper para crear imagen limpia desde otra imagen
+  /**
+   * Crea una imagen limpia desde otra imagen
+   * 
+   * @param {HTMLImageElement} sourceImg - Imagen fuente
+   * @returns {HTMLImageElement} Nueva imagen con clases y atributos correctos
+   * @description Usado al mover imágenes entre grids o al editor.
+   * Preserva src, alt, y dimensiones si existen.
+   */
   createCleanImage(sourceImg) {
     const newImg = document.createElement('img');
     newImg.src = sourceImg.src;
@@ -1668,6 +1756,13 @@ class SalaGeekAdmin {
 
   /**
    * Inserta un video de YouTube en el editor
+   * 
+   * @description Solicita URL al usuario, extrae el ID del video
+   * y genera un iframe responsivo con aspect ratio 16:9.
+   * Soporta formatos:
+   * - youtube.com/watch?v=VIDEO_ID
+   * - youtu.be/VIDEO_ID
+   * - youtube.com/embed/VIDEO_ID
    */
   insertYouTube() {
     const url = prompt('Ingresa la URL del video de YouTube:\n\nEjemplo:\nhttps://www.youtube.com/watch?v=VIDEO_ID\nhttps://youtu.be/VIDEO_ID');
@@ -1704,6 +1799,9 @@ class SalaGeekAdmin {
 
   /**
    * Extrae el ID de un video de YouTube de varios formatos de URL
+   * 
+   * @param {string} url - URL de YouTube o ID directo
+   * @returns {string|null} ID de 11 caracteres o null si no es válido
    */
   extractYouTubeId(url) {
     if (!url) return null;
@@ -1797,6 +1895,13 @@ class SalaGeekAdmin {
     }
   }
 
+  /**
+   * Parsea el contenido del textarea de URLs de imágenes
+   * 
+   * @description Usa regex para extraer URLs (http/https y data:image)
+   * de forma robusta, incluso si están en la misma línea.
+   * Elimina duplicados automáticamente.
+   */
   parseGridTextarea() {
     const textarea = document.getElementById('grid-images');
     if (!textarea) return;
@@ -2171,29 +2276,26 @@ class SalaGeekAdmin {
     reader.readAsDataURL(file);
   }
 
+  /**
+   * Configura handlers para imágenes insertadas via modal
+   * 
+   * @deprecated Esta función es legacy, la selección principal
+   * se maneja en setupEditorToolbar(). Se mantiene por compatibilidad
+   * con el flujo de inserción del modal de imagen.
+   */
   setupEditorImageHandlers() {
     const editor = document.getElementById('article-editor');
     if (!editor) return;
 
-    // Make images selectable
+    // Hacer imágenes con wrapper seleccionables (formato antiguo)
     editor.querySelectorAll('.resizable-image, figure').forEach(wrapper => {
       wrapper.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Remove selection from others
         editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
           w.classList.remove('selected');
         });
         wrapper.classList.add('selected');
       });
-    });
-
-    // Deselect on editor click
-    editor.addEventListener('click', (e) => {
-      if (e.target === editor) {
-        editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
-          w.classList.remove('selected');
-        });
-      }
     });
   }
 
@@ -2519,6 +2621,13 @@ class SalaGeekAdmin {
   // NAVIGATION
   // ═══════════════════════════════════════════════════════════════
 
+  /**
+   * Navega a una sección del admin
+   * 
+   * @param {string} section - ID de sección: 'dashboard', 'articles', 'new-article'
+   * @description Verifica cambios sin guardar antes de navegar,
+   * actualiza nav activa, título y visibilidad de secciones
+   */
   navigateTo(section) {
     // Verificar si hay cambios sin guardar al salir del editor
     if (this.currentSection === 'new-article' && section !== 'new-article') {
@@ -2581,6 +2690,13 @@ class SalaGeekAdmin {
   // ARTICLES MANAGEMENT
   // ═══════════════════════════════════════════════════════════════
 
+  /**
+   * Carga los artículos desde el archivo JSON
+   * 
+   * @async
+   * @description Obtiene articles.json con cache-busting,
+   * actualiza stats del dashboard y renderiza tablas
+   */
   async loadArticles() {
     try {
       const response = await fetch('/blog/data/articles.json?t=' + Date.now());
@@ -2662,7 +2778,7 @@ class SalaGeekAdmin {
     const container = document.getElementById('recent-articles-list');
     if (!container) return;
 
-    const recent = this.articles.slice(0, 5);
+    const recent = this.articles.slice(0, CONFIG.RECENT_ARTICLES_LIMIT);
 
     if (recent.length === 0) {
       container.innerHTML = '<p class="empty-state">No hay artículos aún</p>';
@@ -2855,6 +2971,18 @@ class SalaGeekAdmin {
     document.querySelector('input[name="category"][value="series"]').checked = true;
   }
 
+  /**
+   * Guarda el artículo actual (crear o actualizar)
+   * 
+   * @async
+   * @description Flujo completo de guardado:
+   * 1. Recopila datos del formulario
+   * 2. Valida campos requeridos (más flexible para borradores)
+   * 3. Construye objeto articleData con SEO
+   * 4. Envía a Netlify Function con token actualizado
+   * 5. Genera HTML del artículo
+   * 6. Actualiza articles.json en GitHub
+   */
   async saveArticle() {
     const form = document.getElementById('article-form');
     const btn = document.getElementById('btn-publish');
@@ -3001,6 +3129,14 @@ class SalaGeekAdmin {
     }
   }
 
+  /**
+   * Elimina un artículo
+   * 
+   * @async
+   * @param {string} id - ID del artículo a eliminar
+   * @description Solicita confirmación, elimina de articles.json
+   * y borra el archivo HTML correspondiente
+   */
   async deleteArticle(id) {
     const article = this.articles.find(a => a.id === id);
     if (!article) return;
@@ -3138,6 +3274,21 @@ class SalaGeekAdmin {
   // HTML GENERATION
   // ═══════════════════════════════════════════════════════════════
 
+  /**
+   * Genera el HTML completo del artículo para guardar
+   * 
+   * @param {Object} article - Datos del artículo (metadata)
+   * @param {string} content - Contenido HTML del editor
+   * @returns {string} HTML completo listo para guardar como archivo
+   * 
+   * @description Genera una página HTML completa con:
+   * - Meta tags SEO (description, keywords, robots, canonical)
+   * - Open Graph para redes sociales
+   * - Twitter Cards
+   * - Estructura de artículo con breadcrumbs
+   * - Botones de compartir
+   * - Sección de artículos relacionados
+   */
   generateArticleHTML(article, content) {
     const categoryIcons = {
       series: '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline>',
@@ -3353,6 +3504,14 @@ class SalaGeekAdmin {
     countEl.textContent = words.length;
   }
 
+  /**
+   * Genera un slug URL-friendly a partir de texto
+   * 
+   * @param {string} text - Título o texto fuente
+   * @returns {string} Slug normalizado (max 60 chars)
+   * @description Convierte a minúsculas, remueve acentos,
+   * reemplaza espacios por guiones, elimina caracteres especiales
+   */
   generateSlug(text) {
     return text
       .toLowerCase()
@@ -3375,12 +3534,26 @@ class SalaGeekAdmin {
     });
   }
 
+  /**
+   * Escapa caracteres HTML para prevenir XSS
+   * 
+   * @param {string} text - Texto a escapar
+   * @returns {string} Texto con caracteres HTML escapados
+   */
   escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
+  /**
+   * Muestra una notificación toast
+   * 
+   * @param {string} message - Mensaje a mostrar
+   * @param {string} type - Tipo: 'success', 'error', 'warning', 'info'
+   * @description Crea un toast animado que se auto-elimina
+   * después de CONFIG.TOAST_DURATION milisegundos
+   */
   showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     

@@ -3,21 +3,47 @@
  * 💾 SAVE ARTICLE - Netlify Function
  * ═══════════════════════════════════════════════════════════════
  * 
- * Guarda artículos usando GitHub API para persistir cambios
- * Requiere Netlify Identity para autenticación
+ * @description Gestión de artículos vía GitHub API
+ * @author SalaGeek Team
+ * @version 1.1.0
+ * 
+ * ENDPOINTS:
+ * ──────────
+ * POST   → Crear/actualizar artículo
+ * DELETE → Eliminar artículo
+ * 
+ * REQUISITOS:
+ * ───────────
+ * - Netlify Identity para autenticación
+ * - Variables de entorno:
+ *   • GITHUB_TOKEN: Token con permisos de escritura
+ *   • GITHUB_REPO: usuario/repositorio
+ *   • GITHUB_BRANCH: rama (default: main)
+ * 
+ * FLUJO DE GUARDADO:
+ * ──────────────────
+ * 1. Verifica token de autenticación
+ * 2. Obtiene articles.json actual
+ * 3. Actualiza/agrega artículo
+ * 4. Guarda articles.json actualizado
+ * 5. Guarda/actualiza archivo HTML del artículo
  * 
  * ═══════════════════════════════════════════════════════════════
  */
 
 const fetch = require('node-fetch');
 
-// GitHub configuration - Set these in Netlify Environment Variables
+// ─── Configuración de GitHub ───
+// Establecer en Netlify Environment Variables
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPO || 'usuario/sala-geek';
 const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
 
 /**
- * Get file from GitHub
+ * Obtiene un archivo de GitHub
+ * 
+ * @param {string} path - Ruta del archivo en el repositorio
+ * @returns {Object|null} Contenido del archivo o null si no existe
  */
 async function getFile(path) {
   const response = await fetch(
