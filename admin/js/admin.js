@@ -394,7 +394,7 @@ class SalaGeekAdmin {
       ? new Date(document.getElementById('article-date').value).toISOString()
       : new Date().toISOString();
     
-    const id = this.editingArticle?.id || this.generateArticleId(title);
+    const id = this.editingArticle?.id || this.generateId();
     const slug = this.editingArticle?.slug || this.generateSlug(title);
     const readTime = this.calculateReadTime(content);
 
@@ -3108,12 +3108,15 @@ class SalaGeekAdmin {
   }
 
   updateDashboardStats() {
-    document.getElementById('stat-articles').textContent = this.articles.length;
-    document.getElementById('stat-categories').textContent = this.categories.length;
-    document.getElementById('stat-featured').textContent = 
-      this.articles.filter(a => a.featured).length;
-    document.getElementById('stat-trending').textContent = 
-      this.articles.filter(a => a.trending).length;
+    const statArticles = document.getElementById('stat-articles');
+    const statDrafts = document.getElementById('stat-drafts');
+    const statFeatured = document.getElementById('stat-featured');
+    const statTrending = document.getElementById('stat-trending');
+    
+    if (statArticles) statArticles.textContent = this.articles.length;
+    if (statDrafts) statDrafts.textContent = this.drafts.length;
+    if (statFeatured) statFeatured.textContent = this.articles.filter(a => a.featured).length;
+    if (statTrending) statTrending.textContent = this.articles.filter(a => a.trending).length;
   }
 
   renderArticlesTable() {
