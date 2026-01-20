@@ -1,30 +1,5 @@
 {
-  "articles": [
-    {
-      "id": "mkm82b2h17pzkuj4plz",
-      "title": "Prueba de auto-guardado",
-      "slug": "prueba-de-auto-guardado",
-      "excerpt": "Esta es una prueba más.",
-      "content": "/blog/articulos/prueba-de-auto-guardado.html",
-      "image": "https://salageek.com/admin/",
-      "category": "series",
-      "categoryDisplay": "Series",
-      "tags": [],
-      "author": "Sala Geek",
-      "publishDate": "2026-01-20T06:37:00.000Z",
-      "modifiedDate": "2026-01-20T06:43:11.871Z",
-      "readTime": "5 min",
-      "views": 0,
-      "featured": false,
-      "trending": false,
-      "status": "published",
-      "metaDescription": "Esta es una prueba más.",
-      "metaKeywords": "",
-      "canonicalUrl": "",
-      "ogImage": "https://salageek.com/admin/",
-      "noIndex": false
-    }
-  ],
+  "articles": [],
   "_commented_articles": [
     {
       "id": "stranger-things-temporada-5-detalles",
