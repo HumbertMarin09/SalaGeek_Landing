@@ -201,9 +201,9 @@ class SalaGeekAdmin {
       countEl.textContent = count;
       
       // Cambiar color según límite
-      if (count > 200) {
+      if (count > CONFIG.EXCERPT_DANGER_LENGTH) {
         charCount.style.color = 'var(--admin-danger)';
-      } else if (count > 150) {
+      } else if (count > CONFIG.EXCERPT_WARNING_LENGTH) {
         charCount.style.color = 'var(--admin-warning)';
       } else {
         charCount.style.color = 'var(--admin-text-muted)';
@@ -1919,8 +1919,8 @@ class SalaGeekAdmin {
       document.getElementById('article-editor').focus();
       return;
     }
-    if (excerpt.length > 250) {
-      this.showToast('El extracto es demasiado largo (máx 250 caracteres)', 'warning');
+    if (excerpt.length > CONFIG.MAX_EXCERPT_LENGTH) {
+      this.showToast(`El extracto es demasiado largo (máx ${CONFIG.MAX_EXCERPT_LENGTH} caracteres)`, 'warning');
       return;
     }
 
@@ -2400,11 +2400,11 @@ class SalaGeekAdmin {
 
     container.appendChild(toast);
 
-    // Auto remove after 5 seconds
+    // Auto remove after configured duration
     setTimeout(() => {
       toast.style.animation = 'slideIn 0.3s ease reverse';
       setTimeout(() => toast.remove(), 300);
-    }, 5000);
+    }, CONFIG.TOAST_DURATION);
   }
 }
 

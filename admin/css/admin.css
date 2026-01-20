@@ -2,6 +2,26 @@
  * ═══════════════════════════════════════════════════════════════
  * 🎨 SALA GEEK ADMIN - Estilos del Panel de Administración
  * ═══════════════════════════════════════════════════════════════
+ * 
+ * @description Estilos para el panel de administración de SalaGeek
+ * @author SalaGeek Team
+ * @version 2.0.0
+ * 
+ * Índice:
+ * 1. Variables CSS
+ * 2. Reset & Base
+ * 3. Login Screen
+ * 4. Buttons
+ * 5. Layout (Sidebar, Topbar, Main)
+ * 6. Dashboard
+ * 7. Articles Table
+ * 8. Article Editor
+ * 9. Image Grid System
+ * 10. Modals
+ * 11. Toast Notifications
+ * 12. Responsive
+ * 
+ * ═══════════════════════════════════════════════════════════════
  */
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2203,48 +2223,8 @@ input, select, textarea {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Editor Images con Resize Handles
+   Editor Images - Estilos adicionales
    ═══════════════════════════════════════════════════════════════ */
-.article-editor .resizable-image {
-  position: relative;
-  display: inline-block;
-  margin: 1rem 0;
-}
-
-.article-editor .resizable-image.selected {
-  outline: 2px solid var(--admin-primary);
-  outline-offset: 2px;
-}
-
-.article-editor .resizable-image img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  cursor: pointer;
-}
-
-.article-editor .resize-handle {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background: var(--admin-primary);
-  border: 2px solid white;
-  border-radius: 50%;
-  cursor: nwse-resize;
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-
-.article-editor .resizable-image.selected .resize-handle,
-.article-editor .resizable-image:hover .resize-handle {
-  opacity: 1;
-}
-
-.article-editor .resize-handle.se { bottom: -6px; right: -6px; }
-.article-editor .resize-handle.sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
-.article-editor .resize-handle.ne { top: -6px; right: -6px; cursor: nesw-resize; }
-.article-editor .resize-handle.nw { top: -6px; left: -6px; }
-
 .article-editor .image-toolbar {
   position: absolute;
   top: -40px;
