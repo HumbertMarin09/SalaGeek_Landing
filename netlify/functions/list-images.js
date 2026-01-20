@@ -73,7 +73,18 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Verify GitHub token is configured
+  if (!GITHUB_TOKEN) {
+    console.error('❌ GITHUB_TOKEN not configured in environment variables');
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: 'GitHub token not configured. Please set GITHUB_TOKEN in Netlify environment variables.' })
+    };
+  }
+
   try {
+    console.log('🔍 Listing images from GitHub repo:', GITHUB_REPO);
     // Get images from src/images/blog directory
     const contents = await getDirectoryContents('src/images/blog');
     
@@ -104,13 +115,24 @@ exports.handler = async (event, context) => {
       })
     };
   } catch (error) {
-    console.error('Error listing images:', error);
+    console.error('❌ Error listing images:', error);
+    console.error('GitHub Config:', {
+      repo: GITHUB_REPO,
+      branch: GITHUB_BRANCH,
+      tokenSet: !!GITHUB_TOKEN,
+      tokenLength: GITHUB_TOKEN ? GITHUB_TOKEN.length : 0
+    });
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
         error: 'Error listing images',
-        message: error.message
+        message: error.message,
+        hint: error.message.includes('401') 
+          ? 'GitHub token is invalid or expired. Check GITHUB_TOKEN in Netlify.'
+          : error.message.includes('404')
+          ? 'Repository or path not found. Check GITHUB_REPO and GITHUB_BRANCH.'
+          : 'Check Netlify function logs for details.'
       })
     };
   }

@@ -61,7 +61,14 @@ async function getFile(path) {
   }
 
   if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status}`);
+    const errorText = await response.text();
+    console.error('❌ GitHub API Error:', {
+      status: response.status,
+      statusText: response.statusText,
+      body: errorText,
+      url: response.url
+    });
+    throw new Error(`GitHub API error: ${response.status} - ${response.statusText}`);
   }
 
   return response.json();
@@ -179,13 +186,25 @@ exports.handler = async (event, context) => {
 
   // Check GitHub token
   if (!GITHUB_TOKEN) {
-    console.error('GITHUB_TOKEN not set in environment variables');
+    console.error('❌ GITHUB_TOKEN not set in environment variables');
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Server configuration error: GitHub token not configured' })
+      body: JSON.stringify({ 
+        error: 'Server configuration error: GitHub token not configured',
+        hint: 'Set GITHUB_TOKEN in Netlify Site Settings > Environment Variables'
+      })
     };
   }
+
+  // Log configuration (without exposing token)
+  console.log('🔧 GitHub Config:', {
+    repo: GITHUB_REPO,
+    branch: GITHUB_BRANCH,
+    tokenSet: !!GITHUB_TOKEN,
+    tokenLength: GITHUB_TOKEN ? GITHUB_TOKEN.length : 0,
+    tokenPrefix: GITHUB_TOKEN ? GITHUB_TOKEN.substring(0, 4) + '...' : 'none'
+  });
 
   try {
     // DELETE - Remove article
