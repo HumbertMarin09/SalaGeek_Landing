@@ -2032,17 +2032,63 @@ class SalaGeekAdmin {
    * - youtube.com/embed/VIDEO_ID
    */
   insertYouTube() {
-    const url = prompt('🎬 Insertar Video de YouTube\n\nPega la URL del video:\n\nFormatos soportados:\n• youtube.com/watch?v=xxxxx\n• youtu.be/xxxxx');
+    // Abrir modal de YouTube
+    const modal = document.getElementById('youtube-modal');
+    const urlInput = document.getElementById('youtube-url');
+    const previewArea = document.getElementById('youtube-preview');
     
-    if (!url) return;
+    if (!modal) return;
     
-    // Extraer el ID del video de YouTube
+    // Limpiar estado anterior
+    urlInput.value = '';
+    previewArea.innerHTML = '';
+    previewArea.classList.add('hidden');
+    
+    modal.classList.remove('hidden');
+    urlInput.focus();
+    
+    // Escuchar cambios en el input para mostrar preview
+    const handleInput = () => {
+      const videoId = this.extractYouTubeId(urlInput.value);
+      if (videoId) {
+        previewArea.innerHTML = `
+          <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg" 
+               alt="Vista previa del video"
+               onerror="this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg'">
+          <div class="youtube-play-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        `;
+        previewArea.classList.remove('hidden');
+      } else {
+        previewArea.classList.add('hidden');
+      }
+    };
+    
+    urlInput.removeEventListener('input', urlInput._handler);
+    urlInput._handler = handleInput;
+    urlInput.addEventListener('input', handleInput);
+  }
+  
+  confirmYouTubeInsert() {
+    const modal = document.getElementById('youtube-modal');
+    const urlInput = document.getElementById('youtube-url');
+    const url = urlInput.value;
+    
+    if (!url) {
+      this.showToast('Ingresa una URL de YouTube', 'warning');
+      return;
+    }
+    
     const videoId = this.extractYouTubeId(url);
     
     if (!videoId) {
       this.showToast('URL de YouTube no válida', 'error');
       return;
     }
+    
+    // Cerrar modal
+    modal.classList.add('hidden');
     
     // Crear el embed responsivo
     const embed = `<div class="video-container youtube-embed">
@@ -2079,6 +2125,11 @@ class SalaGeekAdmin {
     this.saveEditorState();
     
     this.showToast('Video de YouTube insertado', 'success');
+  }
+  
+  closeYouTubeModal() {
+    const modal = document.getElementById('youtube-modal');
+    if (modal) modal.classList.add('hidden');
   }
 
   /**
@@ -2276,6 +2327,23 @@ class SalaGeekAdmin {
         });
       }
     });
+    
+    // YouTube modal - Insert button
+    const insertYouTubeBtn = document.getElementById('insert-youtube-btn');
+    if (insertYouTubeBtn) {
+      insertYouTubeBtn.addEventListener('click', () => this.confirmYouTubeInsert());
+    }
+    
+    // YouTube modal - Enter key to insert
+    const youtubeUrlInput = document.getElementById('youtube-url');
+    if (youtubeUrlInput) {
+      youtubeUrlInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          this.confirmYouTubeInsert();
+        }
+      });
+    }
 
     // ═══════════════════════════════════════════════════════════════
     // Image Modal - Tabs
@@ -3658,9 +3726,16 @@ class SalaGeekAdmin {
     }
 
     const itemType = isDraft ? 'borrador' : 'artículo';
-    if (!confirm(`¿Estás seguro de eliminar el ${itemType} "${article.title}"?`)) {
-      return;
-    }
+    
+    // Usar modal de confirmación personalizado
+    const confirmed = await this.showConfirmModal(
+      `¿Eliminar ${itemType}?`,
+      `"${article.title}" será eliminado permanentemente. Esta acción no se puede deshacer.`,
+      'Eliminar',
+      'danger'
+    );
+    
+    if (!confirmed) return;
 
     try {
       // Obtener token actualizado
@@ -3684,8 +3759,8 @@ class SalaGeekAdmin {
       }
 
       // Mostrar toast con el título
-      const itemType = isDraft ? 'Borrador' : 'Artículo';
-      this.showToast(`${itemType} "${article.title}" eliminado correctamente`, 'success');
+      const type = isDraft ? 'Borrador' : 'Artículo';
+      this.showToast(`${type} "${article.title}" eliminado correctamente`, 'success');
       
       // Esperar un momento para que GitHub procese el commit
       await new Promise(resolve => setTimeout(resolve, 1500));
@@ -3695,6 +3770,74 @@ class SalaGeekAdmin {
       console.error('Error deleting article:', error);
       this.showToast(`Error: ${error.message}`, 'error');
     }
+  }
+  
+  /**
+   * Muestra un modal de confirmación personalizado
+   * @param {string} title - Título del modal
+   * @param {string} message - Mensaje descriptivo
+   * @param {string} confirmText - Texto del botón de confirmar
+   * @param {string} type - Tipo: 'danger', 'warning', 'info'
+   * @returns {Promise<boolean>} - True si confirma, false si cancela
+   */
+  showConfirmModal(title, message, confirmText = 'Confirmar', type = 'danger') {
+    return new Promise((resolve) => {
+      const modal = document.getElementById('confirm-modal');
+      if (!modal) {
+        // Fallback al confirm nativo si no existe el modal
+        resolve(confirm(message));
+        return;
+      }
+      
+      const icon = modal.querySelector('.confirm-icon');
+      const titleEl = modal.querySelector('h3');
+      const messageEl = modal.querySelector('p');
+      const acceptBtn = document.getElementById('confirm-accept');
+      const cancelBtn = document.getElementById('confirm-cancel');
+      
+      // Configurar icono según tipo
+      icon.className = 'confirm-icon' + (type !== 'danger' ? ` ${type}` : '');
+      
+      // Configurar contenido
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+      acceptBtn.textContent = confirmText;
+      
+      // Configurar estilo del botón según tipo
+      acceptBtn.className = type === 'danger' ? 'btn btn-danger' : 'btn btn-primary';
+      
+      // Mostrar modal
+      modal.classList.remove('hidden');
+      
+      // Handlers
+      const cleanup = () => {
+        modal.classList.add('hidden');
+        acceptBtn.removeEventListener('click', onAccept);
+        cancelBtn.removeEventListener('click', onCancel);
+        modal.removeEventListener('click', onBackdrop);
+      };
+      
+      const onAccept = () => {
+        cleanup();
+        resolve(true);
+      };
+      
+      const onCancel = () => {
+        cleanup();
+        resolve(false);
+      };
+      
+      const onBackdrop = (e) => {
+        if (e.target === modal) {
+          cleanup();
+          resolve(false);
+        }
+      };
+      
+      acceptBtn.addEventListener('click', onAccept);
+      cancelBtn.addEventListener('click', onCancel);
+      modal.addEventListener('click', onBackdrop);
+    });
   }
 
   // ═══════════════════════════════════════════════════════════════

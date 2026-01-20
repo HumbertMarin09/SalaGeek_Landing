@@ -1784,9 +1784,12 @@
 
 /* Video embeds - YouTube, etc */
 .article-full .article-content .video-container,
-.video-container {
+.article-full .article-content .youtube-embed,
+.video-container,
+.youtube-embed {
   position: relative;
   width: 100%;
+  max-width: 100%;
   padding-bottom: 56.25%; /* 16:9 aspect ratio */
   margin: 2rem 0;
   background: var(--bg-secondary);
@@ -1796,7 +1799,9 @@
 }
 
 .article-full .article-content .video-container iframe,
-.video-container iframe {
+.article-full .article-content .youtube-embed iframe,
+.video-container iframe,
+.youtube-embed iframe {
   position: absolute;
   top: 0;
   left: 0;

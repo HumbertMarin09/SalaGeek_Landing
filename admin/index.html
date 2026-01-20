@@ -1186,6 +1186,66 @@
     </div>
   </div>
 
+  <!-- YouTube Insert Modal -->
+  <div id="youtube-modal" class="modal modal-small hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/>
+          </svg>
+          Insertar Video de YouTube
+        </h3>
+        <button class="modal-close" data-close="youtube-modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="youtube-url">URL del video</label>
+          <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="input-large">
+          <span class="input-hint">Formatos: youtube.com/watch?v=xxx • youtu.be/xxx</span>
+        </div>
+        <div id="youtube-preview" class="youtube-preview hidden">
+          <img id="youtube-thumb" src="" alt="Preview">
+          <div class="youtube-play-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" data-close="youtube-modal">Cancelar</button>
+        <button type="button" id="insert-youtube-btn" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Insertar Video
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Dialog Modal -->
+  <div id="confirm-modal" class="modal modal-confirm hidden">
+    <div class="modal-content">
+      <div class="confirm-icon" id="confirm-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <h3 id="confirm-title">¿Estás seguro?</h3>
+      <p id="confirm-message">Esta acción no se puede deshacer.</p>
+      <div class="confirm-actions">
+        <button type="button" class="btn-secondary" id="confirm-cancel">Cancelar</button>
+        <button type="button" class="btn-danger" id="confirm-accept">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Admin Scripts -->
   <script src="/admin/js/admin.js"></script>
 </body>
