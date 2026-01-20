@@ -965,6 +965,7 @@ input, select, textarea {
   position: relative;
   display: inline-block;
   margin: 1rem 0;
+  overflow: visible;
 }
 
 .image-resize-wrapper.has-selected::after {
@@ -979,7 +980,7 @@ input, select, textarea {
   font-size: 0.7rem;
   border-radius: 0.25rem;
   white-space: nowrap;
-  z-index: 20;
+  z-index: 200;
 }
 
 .image-resize-wrapper img {
@@ -989,42 +990,59 @@ input, select, textarea {
 
 .image-resize-wrapper .resize-handle {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: var(--admin-primary);
   border: 2px solid white;
   border-radius: 50%;
   opacity: 0;
+  pointer-events: none;
   transition: opacity var(--transition-fast);
-  z-index: 10;
+  z-index: 100;
 }
 
-.image-resize-wrapper:hover .resize-handle,
-.image-resize-wrapper img.selected ~ .resize-handle {
+/* Solo mostrar handles cuando está seleccionada */
+.image-resize-wrapper.has-selected .resize-handle {
   opacity: 1;
+  pointer-events: auto;
+}
+
+/* Dentro de grids, NUNCA mostrar handles en hover, solo en selección */
+.image-grid-container .image-resize-wrapper .resize-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.image-grid-container .image-resize-wrapper.has-selected .resize-handle {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .image-resize-wrapper .resize-handle.nw {
-  top: -6px;
-  left: -6px;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
   cursor: nwse-resize;
 }
 
 .image-resize-wrapper .resize-handle.ne {
-  top: -6px;
-  right: -6px;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
   cursor: nesw-resize;
 }
 
 .image-resize-wrapper .resize-handle.sw {
-  bottom: -6px;
-  left: -6px;
+  bottom: 0;
+  left: 0;
+  transform: translate(-50%, 50%);
   cursor: nesw-resize;
 }
 
 .image-resize-wrapper .resize-handle.se {
-  bottom: -6px;
-  right: -6px;
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 50%);
   cursor: nwse-resize;
 }
 
@@ -2282,12 +2300,13 @@ input, select, textarea {
 .article-editor .image-grid-container {
   display: grid;
   margin: 1rem 0;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px dashed var(--admin-border);
   border-radius: 0.5rem;
   position: relative;
   cursor: pointer;
   transition: all var(--transition-fast);
+  overflow: visible;
 }
 
 .article-editor .image-grid-container:hover {
@@ -2313,6 +2332,12 @@ input, select, textarea {
   font-size: 0.75rem;
   border-radius: 0.25rem;
   white-space: nowrap;
+  z-index: 200;
+}
+
+/* Dentro de grids, los handles de resize no deben mostrarse en hover */
+.article-editor .image-grid-container .image-resize-wrapper {
+  margin: 0;
 }
 
 .article-editor .image-grid-container.cols-2 { grid-template-columns: repeat(2, 1fr); }
