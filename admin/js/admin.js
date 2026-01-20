@@ -396,7 +396,9 @@ class SalaGeekAdmin {
     
     const id = this.editingArticle?.id || this.generateId();
     const slug = this.editingArticle?.slug || this.generateSlug(title);
-    const readTime = this.calculateReadTime(content);
+    // Usar tiempo de lectura del input o estimar basado en contenido
+    const readTimeInput = document.getElementById('read-time')?.value;
+    const readTime = readTimeInput || this.estimateReadTime(content);
 
     const categoryNames = {
       series: 'Series',
@@ -2030,7 +2032,7 @@ class SalaGeekAdmin {
    * - youtube.com/embed/VIDEO_ID
    */
   insertYouTube() {
-    const url = prompt('Ingresa la URL del video de YouTube:\n\nEjemplo:\nhttps://www.youtube.com/watch?v=VIDEO_ID\nhttps://youtu.be/VIDEO_ID');
+    const url = prompt('🎬 Insertar Video de YouTube\n\nPega la URL del video:\n\nFormatos soportados:\n• youtube.com/watch?v=xxxxx\n• youtu.be/xxxxx');
     
     if (!url) return;
     
@@ -3681,7 +3683,12 @@ class SalaGeekAdmin {
         throw new Error(errorData.error || 'Error al eliminar');
       }
 
-      this.showToast(`${isDraft ? 'Borrador' : 'Artículo'} eliminado`, 'success');
+      // Mostrar toast con el título
+      const itemType = isDraft ? 'Borrador' : 'Artículo';
+      this.showToast(`${itemType} "${article.title}" eliminado correctamente`, 'success');
+      
+      // Esperar un momento para que GitHub procese el commit
+      await new Promise(resolve => setTimeout(resolve, 1500));
       await this.loadArticles();
 
     } catch (error) {
@@ -4038,6 +4045,21 @@ class SalaGeekAdmin {
       .replace(/-+/g, '-') // Múltiples guiones a uno
       .replace(/(^-|-$)/g, '') // Eliminar guiones al inicio/final
       .substring(0, 60);
+  }
+
+  /**
+   * Estima el tiempo de lectura basado en el contenido
+   * 
+   * @param {string} content - Contenido HTML del artículo
+   * @returns {string} Tiempo estimado (ej: "5 min")
+   */
+  estimateReadTime(content) {
+    // Remover HTML tags y contar palabras
+    const text = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const wordCount = text.split(' ').filter(w => w.length > 0).length;
+    // Promedio de lectura: 200 palabras por minuto
+    const minutes = Math.max(1, Math.ceil(wordCount / 200));
+    return `${minutes} min`;
   }
 
   formatDate(dateStr) {
