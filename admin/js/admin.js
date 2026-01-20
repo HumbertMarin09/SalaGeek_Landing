@@ -110,8 +110,10 @@ class SalaGeekAdmin {
     this.user = null;
     
     // ─── Datos Principales ───
-    /** @type {Array} Lista de artículos cargados */
+    /** @type {Array} Lista de artículos publicados */
     this.articles = [];
+    /** @type {Array} Lista de borradores */
+    this.drafts = [];
     /** @type {Array} Categorías disponibles */
     this.categories = [];
     /** @type {Array} Tags del artículo actual */
@@ -122,6 +124,8 @@ class SalaGeekAdmin {
     this.currentSection = 'dashboard';
     /** @type {Object|null} Artículo en edición */
     this.editingArticle = null;
+    /** @type {boolean} Indica si el contenido ha sido guardado */
+    this.contentSaved = false;
     
     // ─── Modal de Imagen Individual ───
     /** @type {string} Fuente actual: 'url' o 'upload' */
@@ -440,10 +444,15 @@ class SalaGeekAdmin {
       document.querySelector('.admin-sidebar').classList.toggle('open');
     });
 
-    // Article form
+    // Article form - Publicar
     document.getElementById('article-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
-      this.saveArticle();
+      this.saveArticle(false); // false = no es borrador
+    });
+
+    // Botón Guardar Borrador
+    document.getElementById('btn-draft')?.addEventListener('click', () => {
+      this.saveArticle(true); // true = es borrador
     });
 
     // Atajo Ctrl+S para guardar artículo
@@ -2251,6 +2260,8 @@ class SalaGeekAdmin {
     // Insert Grid - Enhanced
     // ═══════════════════════════════════════════════════════════════
     document.getElementById('insert-grid-btn')?.addEventListener('click', () => {
+      console.log('Insert grid clicked, images:', this.gridImages);
+      
       if (this.gridImages.length === 0) {
         this.showToast('Agrega al menos una imagen', 'error');
         return;
@@ -2259,16 +2270,57 @@ class SalaGeekAdmin {
       const images = this.gridImages.map(url => `<img src="${url}" alt="" draggable="true" class="editor-image resizable">`).join('\n  ');
       const grid = `<div class="image-grid-container cols-${this.gridCols}" style="gap: ${this.gridGap}px;">
   ${images}
-</div>`;
+</div><p><br></p>`;
 
-      document.getElementById('article-editor').focus();
-      document.execCommand('insertHTML', false, grid);
+      // Cerrar el modal primero
       document.getElementById('grid-modal').classList.add('hidden');
       
-      // Guardar estado para Undo/Redo
-      this.saveEditorState();
+      // Obtener el editor y asegurarse de que tenga el foco
+      const editor = document.getElementById('article-editor');
+      editor.focus();
       
-      this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
+      // Usar un pequeño delay para asegurar que el foco está establecido
+      setTimeout(() => {
+        // Insertar el HTML
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0) || document.createRange();
+        
+        // Si el editor está vacío, insertar al inicio
+        if (!editor.innerHTML || editor.innerHTML === '<br>' || editor.innerHTML === '') {
+          editor.innerHTML = grid;
+        } else {
+          // Crear elemento temporal para insertar
+          const temp = document.createElement('div');
+          temp.innerHTML = grid;
+          
+          // Insertar en la posición del cursor o al final
+          try {
+            range.deleteContents();
+            const frag = document.createDocumentFragment();
+            let node, lastNode;
+            while ((node = temp.firstChild)) {
+              lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+            
+            // Mover cursor después del contenido insertado
+            if (lastNode) {
+              range.setStartAfter(lastNode);
+              range.collapse(true);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+          } catch (e) {
+            // Fallback: agregar al final
+            editor.innerHTML += grid;
+          }
+        }
+        
+        // Guardar estado para Undo/Redo
+        this.saveEditorState();
+        
+        this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
+      }, 100);
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -2627,7 +2679,10 @@ class SalaGeekAdmin {
         
         if (this.gallerySelectMode) {
           // Modo selección: agregar al grid
+          console.log('Adding image to grid:', url);
+          console.log('Current gridImages before:', this.gridImages);
           this.gridImages.push(url);
+          console.log('Current gridImages after:', this.gridImages);
           this.syncGridTextarea();
           this.updateGridImagesList();
           this.updateGridLivePreview();
@@ -2686,11 +2741,15 @@ class SalaGeekAdmin {
       const title = document.getElementById('article-title')?.value;
       const hasContent = editor && editor.innerHTML.trim() !== '' && editor.innerHTML !== '<br>';
       
-      if ((title || hasContent) && !this.editingArticle) {
+      // Solo mostrar advertencia si hay contenido Y no se ha guardado aún
+      if ((title || hasContent) && !this.editingArticle && !this.contentSaved) {
         if (!confirm('¿Tienes cambios sin guardar. ¿Estás seguro de que deseas salir?')) {
           return;
         }
       }
+      
+      // Resetear flag de guardado al salir
+      this.contentSaved = false;
     }
     
     this.currentSection = section;
@@ -2755,17 +2814,32 @@ class SalaGeekAdmin {
         throw new Error(`HTTP ${response.status}`);
       }
       const data = await response.json();
-      this.articles = data.articles || [];
+      const allArticles = data.articles || [];
+      
+      // Separar artículos publicados de borradores
+      this.articles = allArticles.filter(a => a.status !== 'draft');
+      this.drafts = allArticles.filter(a => a.status === 'draft');
       this.categories = data.categories || [];
       
       this.updateDashboardStats();
       this.renderArticlesTable();
+      this.renderDraftsTable();
       this.renderRecentArticles();
+      this.updateDraftsCount();
     } catch (error) {
       console.error('Error loading articles:', error);
       this.showToast('Error al cargar artículos. Verifica tu conexión.', 'error');
       this.articles = [];
+      this.drafts = [];
       this.categories = [];
+    }
+  }
+
+  updateDraftsCount() {
+    const countEl = document.getElementById('drafts-count');
+    if (countEl) {
+      countEl.textContent = this.drafts.length;
+      countEl.style.display = this.drafts.length > 0 ? 'inline-flex' : 'none';
     }
   }
 
@@ -2814,6 +2888,67 @@ class SalaGeekAdmin {
               </svg>
             </button>
             <button class="delete-btn" onclick="admin.deleteArticle('${article.id}')" title="Eliminar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  renderDraftsTable() {
+    const tbody = document.getElementById('drafts-table-body');
+    if (!tbody) return;
+
+    if (this.drafts.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.3; margin-bottom: 1rem;">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            <p>No hay borradores</p>
+            <span>Los artículos que guardes como borrador aparecerán aquí</span>
+          </td>
+        </tr>`;
+      return;
+    }
+
+    tbody.innerHTML = this.drafts.map(draft => `
+      <tr data-id="${draft.id}">
+        <td>
+          <div class="article-cell">
+            <div class="draft-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </div>
+            <div class="article-info">
+              <strong>${this.escapeHtml(draft.title)}</strong>
+              <span>${draft.slug || 'sin-slug'}</span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="category-badge category-${draft.category}">
+            ${draft.categoryDisplay || draft.category}
+          </span>
+        </td>
+        <td>${this.formatDate(draft.lastModified || draft.publishDate)}</td>
+        <td>
+          <div class="table-actions">
+            <button class="edit-btn" onclick="admin.editArticle('${draft.id}')" title="Continuar editando">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="delete-btn" onclick="admin.deleteArticle('${draft.id}')" title="Eliminar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"/>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -3026,6 +3161,7 @@ class SalaGeekAdmin {
    * Guarda el artículo actual (crear o actualizar)
    * 
    * @async
+   * @param {boolean} asDraft - Si true, guarda como borrador
    * @description Flujo completo de guardado:
    * 1. Recopila datos del formulario
    * 2. Valida campos requeridos (más flexible para borradores)
@@ -3034,9 +3170,9 @@ class SalaGeekAdmin {
    * 5. Genera HTML del artículo
    * 6. Actualiza articles.json en GitHub
    */
-  async saveArticle() {
+  async saveArticle(asDraft = false) {
     const form = document.getElementById('article-form');
-    const btn = document.getElementById('btn-publish');
+    const btn = asDraft ? document.getElementById('btn-draft') : document.getElementById('btn-publish');
     
     // Gather form data
     const id = document.getElementById('article-id').value || this.generateId();
@@ -3044,7 +3180,8 @@ class SalaGeekAdmin {
     const slug = document.getElementById('article-slug').value.trim() || this.generateSlug(title);
     const excerpt = document.getElementById('article-excerpt').value.trim();
     const category = document.querySelector('input[name="category"]:checked').value;
-    const status = document.getElementById('article-status').value;
+    // Forzar status según el botón presionado
+    const status = asDraft ? 'draft' : 'published';
     const publishDate = new Date(document.getElementById('article-date').value).toISOString();
     const featured = document.getElementById('article-featured').checked;
     const trending = document.getElementById('article-trending').checked;
@@ -3059,7 +3196,7 @@ class SalaGeekAdmin {
     const ogImage = document.getElementById('og-image')?.value.trim() || '';
     const noIndex = document.getElementById('no-index')?.checked || false;
 
-    const isDraft = status === 'draft';
+    const isDraft = asDraft;
 
     // Validation - más flexible para borradores
     if (!title) {
@@ -3155,28 +3292,38 @@ class SalaGeekAdmin {
 
       const result = await response.json();
 
-      this.showToast('¡Artículo guardado exitosamente! Recargando lista...', 'success');
+      const successMsg = isDraft 
+        ? '¡Borrador guardado exitosamente!'
+        : '¡Artículo publicado exitosamente! Recargando lista...';
+      this.showToast(successMsg, 'success');
+      
+      // Marcar como guardado para evitar mensaje de cambios sin guardar
+      this.contentSaved = true;
       
       // Reload articles
       await this.loadArticles();
       
-      // Navigate to articles list
+      // Navigate to appropriate section
       this.editingArticle = null;
-      this.navigateTo('articles');
+      this.navigateTo(isDraft ? 'drafts' : 'articles');
 
     } catch (error) {
       console.error('Error saving article:', error);
       this.showToast(`Error al guardar: ${error.message}`, 'error');
     } finally {
       btn.disabled = false;
-      btn.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
-        </svg>
-        Guardar
-      `;
+      const btnLabel = asDraft ? 'Guardar Borrador' : 'Publicar';
+      const btnIcon = asDraft 
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>`
+        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>`;
+      btn.innerHTML = `${btnIcon} ${btnLabel}`;
     }
   }
 
