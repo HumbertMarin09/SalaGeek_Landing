@@ -309,7 +309,6 @@ class SalaGeekAdmin {
     
     // Actualizar indicador
     this.updateAutoSaveIndicator('active');
-    console.log('Auto-guardado iniciado');
   }
 
   /**
@@ -349,17 +348,11 @@ class SalaGeekAdmin {
     if (this.currentSection !== 'new-article') return;
     
     // Verificar si hay cambios
-    if (!this.hasUnsavedChanges()) {
-      console.log('Auto-guardado: Sin cambios');
-      return;
-    }
+    if (!this.hasUnsavedChanges()) return;
     
     // Verificar que haya contenido mínimo
     const title = document.getElementById('article-title')?.value?.trim();
-    if (!title) {
-      console.log('Auto-guardado: Sin título');
-      return;
-    }
+    if (!title) return;
     
     // Actualizar indicador a "guardando"
     this.updateAutoSaveIndicator('saving');
@@ -373,8 +366,6 @@ class SalaGeekAdmin {
       
       // Actualizar indicador a "guardado"
       this.updateAutoSaveIndicator('saved');
-      
-      console.log('Auto-guardado exitoso:', new Date().toLocaleTimeString());
     } catch (error) {
       console.error('Error en auto-guardado:', error);
       this.updateAutoSaveIndicator('error');
@@ -2586,8 +2577,6 @@ class SalaGeekAdmin {
     // Insert Grid - Enhanced
     // ═══════════════════════════════════════════════════════════════
     document.getElementById('insert-grid-btn')?.addEventListener('click', () => {
-      console.log('Insert grid clicked, images:', this.gridImages);
-      
       if (this.gridImages.length === 0) {
         this.showToast('Agrega al menos una imagen', 'error');
         return;
@@ -3005,10 +2994,7 @@ class SalaGeekAdmin {
         
         if (this.gallerySelectMode) {
           // Modo selección: agregar al grid
-          console.log('Adding image to grid:', url);
-          console.log('Current gridImages before:', this.gridImages);
           this.gridImages.push(url);
-          console.log('Current gridImages after:', this.gridImages);
           this.syncGridTextarea();
           this.updateGridImagesList();
           this.updateGridLivePreview();
