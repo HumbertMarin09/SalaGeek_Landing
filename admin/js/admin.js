@@ -88,6 +88,10 @@ class SalaGeekAdmin {
     this.gridCols = 2;
     this.gridGap = 8;
     
+    // Galería de imágenes subidas - Estado
+    this.galleryImages = [];
+    this.galleryUploadData = null;
+    
     // Sistema Undo/Redo - Historial
     this.editorHistory = [];
     this.historyIndex = -1;
@@ -109,6 +113,7 @@ class SalaGeekAdmin {
     this.setupEventListeners();
     this.setupImageModals();
     this.setupImageResizeModal();
+    this.setupGalleryModal();
     
     // Verificar si hay sesión activa
     const user = netlifyIdentity.currentUser();
@@ -388,6 +393,25 @@ class SalaGeekAdmin {
         charCount.style.color = 'var(--admin-warning)';
       } else {
         charCount.style.color = 'var(--admin-text-muted)';
+      }
+    });
+
+    // Meta description character count
+    document.getElementById('meta-description')?.addEventListener('input', (e) => {
+      const count = e.target.value.length;
+      const countEl = document.getElementById('meta-description-count');
+      if (countEl) {
+        const charCount = countEl.parentElement;
+        countEl.textContent = count;
+        
+        // Cambiar color según límite (160 es ideal para SEO)
+        if (count > 160) {
+          charCount.style.color = 'var(--admin-danger)';
+        } else if (count > 140) {
+          charCount.style.color = 'var(--admin-warning)';
+        } else {
+          charCount.style.color = 'var(--admin-text-muted)';
+        }
       }
     });
 
@@ -1507,6 +1531,9 @@ class SalaGeekAdmin {
       case 'image-grid':
         this.openGridModal();
         return; // No guardar estado aquí, se guarda al insertar el grid
+      case 'gallery':
+        this.openGalleryModal();
+        return; // Solo abre la galería para ver/copiar URLs
       case 'hr':
         document.execCommand('insertHTML', false, '<hr>');
         break;
@@ -1972,6 +1999,19 @@ class SalaGeekAdmin {
     document.getElementById('grid-images')?.addEventListener('input', () => {
       this.parseGridTextarea();
     });
+
+    // Add URL button
+    document.getElementById('add-url-btn')?.addEventListener('click', () => {
+      const textarea = document.getElementById('grid-images');
+      const url = prompt('Ingresa la URL de la imagen:');
+      if (url && url.trim() && (url.startsWith('http') || url.startsWith('data:'))) {
+        const currentValue = textarea.value.trim();
+        textarea.value = currentValue ? `${currentValue}\n${url.trim()}` : url.trim();
+        this.parseGridTextarea();
+      } else if (url) {
+        this.showToast('URL inválida. Debe comenzar con http o https', 'error');
+      }
+    });
     
     // Column selector buttons
     document.querySelectorAll('.col-btn').forEach(btn => {
@@ -2070,6 +2110,311 @@ class SalaGeekAdmin {
         });
       }
     });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // GALERÍA DE IMÁGENES SUBIDAS
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Configura el modal de galería y sus eventos
+   */
+  setupGalleryModal() {
+    // Search input
+    document.getElementById('gallery-search')?.addEventListener('input', (e) => {
+      this.filterGalleryImages(e.target.value);
+    });
+
+    // Refresh button
+    document.getElementById('gallery-refresh-btn')?.addEventListener('click', () => {
+      this.loadGalleryImages();
+    });
+
+    // Upload button opens upload modal
+    document.getElementById('gallery-upload-btn')?.addEventListener('click', () => {
+      this.openGalleryUploadModal();
+    });
+
+    // Upload modal setup
+    this.setupGalleryUploadModal();
+  }
+
+  /**
+   * Configura el modal de subida de imágenes
+   */
+  setupGalleryUploadModal() {
+    const dropzone = document.getElementById('gallery-dropzone');
+    const fileInput = document.getElementById('gallery-file-input');
+    const previewContainer = document.getElementById('upload-preview-container');
+    const previewImg = document.getElementById('upload-preview-img');
+    const removeBtn = document.getElementById('remove-upload-preview');
+    const confirmBtn = document.getElementById('confirm-upload-btn');
+
+    // Click to select file
+    dropzone?.addEventListener('click', () => fileInput?.click());
+
+    // Drag and drop
+    dropzone?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('drag-over');
+    });
+
+    dropzone?.addEventListener('dragleave', () => {
+      dropzone.classList.remove('drag-over');
+    });
+
+    dropzone?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        this.handleGalleryUploadPreview(file);
+      }
+    });
+
+    // File input change
+    fileInput?.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        this.handleGalleryUploadPreview(file);
+      }
+      fileInput.value = '';
+    });
+
+    // Remove preview
+    removeBtn?.addEventListener('click', () => {
+      this.galleryUploadData = null;
+      dropzone.style.display = '';
+      previewContainer?.classList.add('hidden');
+      confirmBtn.disabled = true;
+    });
+
+    // Confirm upload
+    confirmBtn?.addEventListener('click', () => {
+      this.uploadImageToGallery();
+    });
+  }
+
+  /**
+   * Maneja la previsualización de imagen antes de subir
+   */
+  handleGalleryUploadPreview(file) {
+    const dropzone = document.getElementById('gallery-dropzone');
+    const previewContainer = document.getElementById('upload-preview-container');
+    const previewImg = document.getElementById('upload-preview-img');
+    const confirmBtn = document.getElementById('confirm-upload-btn');
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.galleryUploadData = {
+        filename: file.name,
+        content: e.target.result.split(',')[1], // Remove data:image/xxx;base64,
+        type: file.type
+      };
+      
+      previewImg.src = e.target.result;
+      dropzone.style.display = 'none';
+      previewContainer?.classList.remove('hidden');
+      confirmBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /**
+   * Sube una imagen a la galería via GitHub
+   */
+  async uploadImageToGallery() {
+    if (!this.galleryUploadData || !this.user) {
+      this.showToast('Error: datos de imagen no disponibles', 'error');
+      return;
+    }
+
+    const confirmBtn = document.getElementById('confirm-upload-btn');
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<span class="spinner"></span> Subiendo...';
+
+    try {
+      const response = await fetch('/.netlify/functions/upload-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.user.token.access_token}`
+        },
+        body: JSON.stringify(this.galleryUploadData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Error al subir imagen');
+      }
+
+      this.showToast(`Imagen subida: ${result.filename}`, 'success');
+      
+      // Close upload modal and refresh gallery
+      document.getElementById('gallery-upload-modal').classList.add('hidden');
+      this.resetGalleryUploadModal();
+      this.loadGalleryImages();
+
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      this.showToast('Error al subir imagen: ' + error.message, 'error');
+    } finally {
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Subir
+      `;
+    }
+  }
+
+  /**
+   * Resetea el modal de subida
+   */
+  resetGalleryUploadModal() {
+    this.galleryUploadData = null;
+    const dropzone = document.getElementById('gallery-dropzone');
+    const previewContainer = document.getElementById('upload-preview-container');
+    const confirmBtn = document.getElementById('confirm-upload-btn');
+    
+    if (dropzone) dropzone.style.display = '';
+    previewContainer?.classList.add('hidden');
+    if (confirmBtn) confirmBtn.disabled = true;
+  }
+
+  /**
+   * Abre el modal de galería
+   */
+  openGalleryModal() {
+    document.getElementById('gallery-modal').classList.remove('hidden');
+    document.getElementById('gallery-search').value = '';
+    this.loadGalleryImages();
+  }
+
+  /**
+   * Abre el modal de subida de imágenes
+   */
+  openGalleryUploadModal() {
+    this.resetGalleryUploadModal();
+    document.getElementById('gallery-upload-modal').classList.remove('hidden');
+  }
+
+  /**
+   * Carga las imágenes de la galería desde GitHub
+   */
+  async loadGalleryImages() {
+    const grid = document.getElementById('gallery-grid');
+    const countEl = document.getElementById('gallery-count');
+
+    grid.innerHTML = `
+      <div class="gallery-loading">
+        <span class="spinner"></span>
+        <span>Cargando imágenes...</span>
+      </div>
+    `;
+
+    try {
+      const response = await fetch('/.netlify/functions/list-images', {
+        headers: {
+          'Authorization': `Bearer ${this.user.token.access_token}`
+        }
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Error al cargar imágenes');
+      }
+
+      this.galleryImages = result.images || [];
+      this.renderGalleryImages(this.galleryImages);
+      
+      if (countEl) {
+        countEl.textContent = `${this.galleryImages.length} imagen${this.galleryImages.length !== 1 ? 'es' : ''}`;
+      }
+
+    } catch (error) {
+      console.error('Error loading gallery:', error);
+      grid.innerHTML = `
+        <div class="gallery-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p>Error al cargar imágenes</p>
+          <span>${error.message}</span>
+        </div>
+      `;
+    }
+  }
+
+  /**
+   * Renderiza las imágenes en la galería
+   */
+  renderGalleryImages(images) {
+    const grid = document.getElementById('gallery-grid');
+
+    if (!images || images.length === 0) {
+      grid.innerHTML = `
+        <div class="gallery-empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          <p>No hay imágenes</p>
+          <span>Sube tu primera imagen para empezar</span>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = images.map(img => `
+      <div class="gallery-item" data-url="${img.url}" data-name="${img.name}">
+        <img src="${img.url}" alt="${img.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 60 60%22><rect fill=%22%23333%22 width=%2260%22 height=%2260%22/><text x=%2230%22 y=%2235%22 fill=%22%23666%22 text-anchor=%22middle%22 font-size=%2210%22>Error</text></svg>'">
+        <div class="item-overlay">
+          <span class="item-name">${img.name}</span>
+        </div>
+        <span class="copy-indicator">¡URL Copiada!</span>
+      </div>
+    `).join('');
+
+    // Add click handlers to copy URL
+    grid.querySelectorAll('.gallery-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const url = item.dataset.url;
+        navigator.clipboard.writeText(url).then(() => {
+          item.classList.add('copied');
+          setTimeout(() => item.classList.remove('copied'), 1500);
+          this.showToast('URL copiada al portapapeles', 'success');
+        }).catch(() => {
+          this.showToast('Error al copiar URL', 'error');
+        });
+      });
+    });
+  }
+
+  /**
+   * Filtra las imágenes de la galería por nombre
+   */
+  filterGalleryImages(query) {
+    const normalizedQuery = query.toLowerCase().trim();
+    
+    if (!normalizedQuery) {
+      this.renderGalleryImages(this.galleryImages);
+      return;
+    }
+
+    const filtered = this.galleryImages.filter(img => 
+      img.name.toLowerCase().includes(normalizedQuery)
+    );
+    
+    this.renderGalleryImages(filtered);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -2306,6 +2651,19 @@ class SalaGeekAdmin {
     // Read time
     document.getElementById('read-time').value = article.readTime || '5 min';
 
+    // SEO fields
+    if (document.getElementById('meta-description')) {
+      document.getElementById('meta-description').value = article.metaDescription || '';
+      const metaCounter = document.getElementById('meta-description-count');
+      if (metaCounter) metaCounter.textContent = (article.metaDescription || '').length;
+    }
+    if (document.getElementById('meta-keywords')) {
+      document.getElementById('meta-keywords').value = article.metaKeywords || '';
+    }
+    if (document.getElementById('canonical-url')) {
+      document.getElementById('canonical-url').value = article.canonicalUrl || '';
+    }
+
     // Tags
     this.tags = article.tags || [];
     this.renderTags();
@@ -2367,6 +2725,16 @@ class SalaGeekAdmin {
     document.getElementById('preview-img').src = '';
     document.getElementById('image-url').value = '';
 
+    // Reset SEO fields
+    const metaDesc = document.getElementById('meta-description');
+    if (metaDesc) metaDesc.value = '';
+    const metaCount = document.getElementById('meta-description-count');
+    if (metaCount) metaCount.textContent = '0';
+    const metaKeywords = document.getElementById('meta-keywords');
+    if (metaKeywords) metaKeywords.value = '';
+    const canonicalUrl = document.getElementById('canonical-url');
+    if (canonicalUrl) canonicalUrl.value = '';
+
     // Reset tags
     this.renderTags();
 
@@ -2396,23 +2764,35 @@ class SalaGeekAdmin {
     const readTime = document.getElementById('read-time').value;
     const image = document.getElementById('image-url').value || document.getElementById('preview-img').src;
     const content = document.getElementById('article-editor').innerHTML;
+    
+    // SEO fields
+    const metaDescription = document.getElementById('meta-description')?.value.trim() || '';
+    const metaKeywords = document.getElementById('meta-keywords')?.value.trim() || '';
+    const canonicalUrl = document.getElementById('canonical-url')?.value.trim() || '';
 
-    // Validation
+    const isDraft = status === 'draft';
+
+    // Validation - más flexible para borradores
     if (!title) {
       this.showToast('El título es requerido', 'error');
       document.getElementById('article-title').focus();
       return;
     }
-    if (!excerpt) {
-      this.showToast('El extracto es requerido', 'error');
-      document.getElementById('article-excerpt').focus();
-      return;
+    
+    // Solo validar estos campos si NO es borrador
+    if (!isDraft) {
+      if (!excerpt) {
+        this.showToast('El extracto es requerido para publicar', 'error');
+        document.getElementById('article-excerpt').focus();
+        return;
+      }
+      if (!content || content.trim() === '' || content === '<br>') {
+        this.showToast('El contenido del artículo es requerido para publicar', 'error');
+        document.getElementById('article-editor').focus();
+        return;
+      }
     }
-    if (!content || content.trim() === '' || content === '<br>') {
-      this.showToast('El contenido del artículo es requerido', 'error');
-      document.getElementById('article-editor').focus();
-      return;
-    }
+    
     if (excerpt.length > CONFIG.MAX_EXCERPT_LENGTH) {
       this.showToast(`El extracto es demasiado largo (máx ${CONFIG.MAX_EXCERPT_LENGTH} caracteres)`, 'warning');
       return;
@@ -2444,7 +2824,11 @@ class SalaGeekAdmin {
       views: this.editingArticle?.views || 0,
       featured,
       trending,
-      status
+      status,
+      // SEO fields
+      metaDescription: metaDescription || excerpt.substring(0, 160),
+      metaKeywords,
+      canonicalUrl
     };
 
     // Save
