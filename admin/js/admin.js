@@ -3,11 +3,40 @@
  * 🎛️ SALA GEEK ADMIN - Panel de Administración
  * ═══════════════════════════════════════════════════════════════
  * 
- * Sistema de administración con Netlify Identity
- * Gestiona artículos, multimedia y contenido del blog
+ * @description Sistema de administración completo para SalaGeek
+ * @author SalaGeek Team
+ * @version 2.0.0
+ * 
+ * Características:
+ * - Autenticación con Netlify Identity
+ * - Editor WYSIWYG con drag & drop de imágenes
+ * - Sistema de grids/galerías de imágenes
+ * - Redimensionamiento de imágenes (arrastre + manual)
+ * - Vista previa responsive (desktop/tablet/mobile)
+ * - Gestión de artículos (CRUD completo)
+ * 
+ * Atajos de teclado:
+ * - Ctrl+S: Guardar artículo
+ * - Ctrl+B: Negrita
+ * - Ctrl+I: Cursiva
+ * - Ctrl+U: Subrayado
+ * - Ctrl+K: Insertar enlace
+ * - ESC: Cerrar modales
+ * - Delete/Supr: Eliminar imagen/grid seleccionado
+ * - Doble clic en imagen: Redimensionar manualmente
  * 
  * ═══════════════════════════════════════════════════════════════
  */
+
+// Constantes de configuración
+const CONFIG = {
+  TOAST_DURATION: 5000,
+  MIN_IMAGE_SIZE: 50,
+  MAX_EXCERPT_LENGTH: 250,
+  MAX_SLUG_LENGTH: 60,
+  EXCERPT_WARNING_LENGTH: 150,
+  EXCERPT_DANGER_LENGTH: 200
+};
 
 class SalaGeekAdmin {
   constructor() {
