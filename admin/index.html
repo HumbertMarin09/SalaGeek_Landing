@@ -433,6 +433,12 @@
                           <path d="M14 14l3-3 4 4"/>
                         </svg>
                       </button>
+                      <button type="button" data-command="youtube" title="Insertar video de YouTube">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+                          <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                        </svg>
+                      </button>
                     </div>
 
                     <span class="toolbar-divider"></span>
@@ -605,7 +611,7 @@
                   <div class="form-group">
                     <label for="meta-description">Meta descripción</label>
                     <textarea id="meta-description" name="metaDescription" rows="2" placeholder="Descripción para buscadores (150-160 caracteres)" maxlength="160"></textarea>
-                    <small class="char-count"><span id="meta-desc-count">0</span>/160</small>
+                    <small class="char-count"><span id="meta-description-count">0</span>/160</small>
                   </div>
                   <div class="form-group">
                     <label for="meta-keywords">Palabras clave</label>
@@ -625,6 +631,16 @@
                   <div class="form-group">
                     <label for="canonical-url">URL canónica <small>(opcional)</small></label>
                     <input type="url" id="canonical-url" name="canonicalUrl" placeholder="https://salageek.com/blog/...">
+                  </div>
+                  <div class="form-group">
+                    <label for="og-image">Imagen para redes <small>(opcional, usa destacada si vacío)</small></label>
+                    <input type="url" id="og-image" name="ogImage" placeholder="URL de imagen para Open Graph">
+                  </div>
+                  <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" id="no-index" name="noIndex">
+                      <span>No indexar (ocultar de buscadores)</span>
+                    </label>
                   </div>
                 </div>
               </div>

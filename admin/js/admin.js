@@ -1534,6 +1534,9 @@ class SalaGeekAdmin {
       case 'gallery':
         this.openGalleryModal();
         return; // Solo abre la galería para ver/copiar URLs
+      case 'youtube':
+        this.insertYouTube();
+        return; // Maneja su propia lógica
       case 'hr':
         document.execCommand('insertHTML', false, '<hr>');
         break;
@@ -1663,6 +1666,64 @@ class SalaGeekAdmin {
     this.updateGridLivePreview();
   }
 
+  /**
+   * Inserta un video de YouTube en el editor
+   */
+  insertYouTube() {
+    const url = prompt('Ingresa la URL del video de YouTube:\n\nEjemplo:\nhttps://www.youtube.com/watch?v=VIDEO_ID\nhttps://youtu.be/VIDEO_ID');
+    
+    if (!url) return;
+    
+    // Extraer el ID del video de YouTube
+    const videoId = this.extractYouTubeId(url);
+    
+    if (!videoId) {
+      this.showToast('URL de YouTube no válida', 'error');
+      return;
+    }
+    
+    // Crear el embed responsivo
+    const embed = `<div class="video-container youtube-embed">
+  <iframe 
+    src="https://www.youtube.com/embed/${videoId}" 
+    title="YouTube video" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    allowfullscreen>
+  </iframe>
+</div>`;
+    
+    document.getElementById('article-editor').focus();
+    document.execCommand('insertHTML', false, embed);
+    
+    // Guardar estado para Undo/Redo
+    this.saveEditorState();
+    
+    this.showToast('Video de YouTube insertado', 'success');
+  }
+
+  /**
+   * Extrae el ID de un video de YouTube de varios formatos de URL
+   */
+  extractYouTubeId(url) {
+    if (!url) return null;
+    
+    // Patrones para diferentes formatos de URL de YouTube
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+      /^([a-zA-Z0-9_-]{11})$/ // Solo el ID
+    ];
+    
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    
+    return null;
+  }
+
   updateGridImagesList() {
     const list = document.getElementById('grid-images-list');
     const countEl = document.getElementById('grid-count');
@@ -1740,11 +1801,35 @@ class SalaGeekAdmin {
     const textarea = document.getElementById('grid-images');
     if (!textarea) return;
     
-    const urls = textarea.value.split('\n')
-      .map(u => u.trim())
-      .filter(u => u && (u.startsWith('http') || u.startsWith('data:')));
+    // Obtener texto y dividir por líneas
+    let text = textarea.value;
     
-    this.gridImages = urls;
+    // Primero, separar por URLs http/https claramente
+    const urls = [];
+    
+    // Regex para encontrar URLs http/https
+    const httpRegex = /(https?:\/\/[^\s\n]+)/gi;
+    let match;
+    while ((match = httpRegex.exec(text)) !== null) {
+      urls.push(match[1].trim());
+    }
+    
+    // También buscar data URLs (pueden ser muy largas, en una sola línea)
+    const dataRegex = /(data:image\/[^;]+;base64,[A-Za-z0-9+/=]+)/gi;
+    while ((match = dataRegex.exec(text)) !== null) {
+      urls.push(match[1].trim());
+    }
+    
+    // Si no encontramos nada con regex, intentar el método tradicional de líneas
+    if (urls.length === 0) {
+      const lines = text.split('\n')
+        .map(u => u.trim())
+        .filter(u => u && (u.startsWith('http') || u.startsWith('data:')));
+      urls.push(...lines);
+    }
+    
+    // Eliminar duplicados
+    this.gridImages = [...new Set(urls)];
     this.updateGridImagesList();
     this.updateGridLivePreview();
   }
@@ -2224,8 +2309,15 @@ class SalaGeekAdmin {
    * Sube una imagen a la galería via GitHub
    */
   async uploadImageToGallery() {
-    if (!this.galleryUploadData || !this.user) {
+    if (!this.galleryUploadData) {
       this.showToast('Error: datos de imagen no disponibles', 'error');
+      return;
+    }
+
+    // Obtener token actualizado
+    const currentUser = netlifyIdentity.currentUser();
+    if (!currentUser || !currentUser.token?.access_token) {
+      this.showToast('Sesión expirada. Por favor, vuelve a iniciar sesión.', 'error');
       return;
     }
 
@@ -2238,7 +2330,7 @@ class SalaGeekAdmin {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.user.token.access_token}`
+          'Authorization': `Bearer ${currentUser.token.access_token}`
         },
         body: JSON.stringify(this.galleryUploadData)
       });
@@ -2318,9 +2410,15 @@ class SalaGeekAdmin {
     `;
 
     try {
+      // Obtener token actualizado
+      const currentUser = netlifyIdentity.currentUser();
+      if (!currentUser || !currentUser.token?.access_token) {
+        throw new Error('Sesión expirada');
+      }
+      
       const response = await fetch('/.netlify/functions/list-images', {
         headers: {
-          'Authorization': `Bearer ${this.user.token.access_token}`
+          'Authorization': `Bearer ${currentUser.token.access_token}`
         }
       });
 
@@ -2663,6 +2761,12 @@ class SalaGeekAdmin {
     if (document.getElementById('canonical-url')) {
       document.getElementById('canonical-url').value = article.canonicalUrl || '';
     }
+    if (document.getElementById('og-image')) {
+      document.getElementById('og-image').value = article.ogImage || '';
+    }
+    if (document.getElementById('no-index')) {
+      document.getElementById('no-index').checked = article.noIndex || false;
+    }
 
     // Tags
     this.tags = article.tags || [];
@@ -2734,6 +2838,10 @@ class SalaGeekAdmin {
     if (metaKeywords) metaKeywords.value = '';
     const canonicalUrl = document.getElementById('canonical-url');
     if (canonicalUrl) canonicalUrl.value = '';
+    const ogImage = document.getElementById('og-image');
+    if (ogImage) ogImage.value = '';
+    const noIndex = document.getElementById('no-index');
+    if (noIndex) noIndex.checked = false;
 
     // Reset tags
     this.renderTags();
@@ -2769,6 +2877,8 @@ class SalaGeekAdmin {
     const metaDescription = document.getElementById('meta-description')?.value.trim() || '';
     const metaKeywords = document.getElementById('meta-keywords')?.value.trim() || '';
     const canonicalUrl = document.getElementById('canonical-url')?.value.trim() || '';
+    const ogImage = document.getElementById('og-image')?.value.trim() || '';
+    const noIndex = document.getElementById('no-index')?.checked || false;
 
     const isDraft = status === 'draft';
 
@@ -2828,7 +2938,9 @@ class SalaGeekAdmin {
       // SEO fields
       metaDescription: metaDescription || excerpt.substring(0, 160),
       metaKeywords,
-      canonicalUrl
+      canonicalUrl,
+      ogImage: ogImage || image,
+      noIndex
     };
 
     // Save
@@ -2836,11 +2948,17 @@ class SalaGeekAdmin {
     btn.innerHTML = '<span class="spinner"></span> Guardando...';
 
     try {
+      // Obtener token actualizado
+      const currentUser = netlifyIdentity.currentUser();
+      if (!currentUser || !currentUser.token?.access_token) {
+        throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+      }
+      
       const response = await fetch('/.netlify/functions/save-article', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.user.token.access_token}`
+          'Authorization': `Bearer ${currentUser.token.access_token}`
         },
         body: JSON.stringify({
           article: articleData,
@@ -2850,7 +2968,10 @@ class SalaGeekAdmin {
       });
 
       if (!response.ok) {
-        throw new Error('Error al guardar');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error || `HTTP ${response.status}`;
+        console.error('Save error:', errorMsg, errorData);
+        throw new Error(errorMsg);
       }
 
       const result = await response.json();
@@ -2866,7 +2987,7 @@ class SalaGeekAdmin {
 
     } catch (error) {
       console.error('Error saving article:', error);
-      this.showToast('Error al guardar el artículo. Intenta de nuevo.', 'error');
+      this.showToast(`Error al guardar: ${error.message}`, 'error');
     } finally {
       btn.disabled = false;
       btn.innerHTML = `
@@ -2889,17 +3010,24 @@ class SalaGeekAdmin {
     }
 
     try {
+      // Obtener token actualizado
+      const currentUser = netlifyIdentity.currentUser();
+      if (!currentUser || !currentUser.token?.access_token) {
+        throw new Error('Sesión expirada');
+      }
+      
       const response = await fetch('/.netlify/functions/save-article', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.user.token.access_token}`
+          'Authorization': `Bearer ${currentUser.token.access_token}`
         },
         body: JSON.stringify({ id, slug: article.slug })
       });
 
       if (!response.ok) {
-        throw new Error('Error al eliminar');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Error al eliminar');
       }
 
       this.showToast('Artículo eliminado', 'success');
@@ -2907,7 +3035,7 @@ class SalaGeekAdmin {
 
     } catch (error) {
       console.error('Error deleting article:', error);
-      this.showToast('Error al eliminar el artículo', 'error');
+      this.showToast(`Error: ${error.message}`, 'error');
     }
   }
 
@@ -3034,11 +3162,11 @@ class SalaGeekAdmin {
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435" crossorigin="anonymous"></script>
   
   <title>${this.escapeHtml(article.title)} | Sala Geek</title>
-  <meta name="description" content="${this.escapeHtml(article.excerpt)}" />
-  <meta name="keywords" content="${article.tags.join(', ')}" />
+  <meta name="description" content="${this.escapeHtml(article.metaDescription || article.excerpt)}" />
+  <meta name="keywords" content="${article.metaKeywords || article.tags.join(', ')}" />
   <meta name="author" content="Sala Geek" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
-  <link rel="canonical" href="https://salageek.com/blog/articulos/${article.slug}.html" />
+  <meta name="robots" content="${article.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}" />
+  <link rel="canonical" href="${article.canonicalUrl || `https://salageek.com/blog/articulos/${article.slug}.html`}" />
   
   <meta name="article:published_time" content="${article.publishDate}" />
   <meta name="article:modified_time" content="${article.modifiedDate}" />
@@ -3046,8 +3174,8 @@ class SalaGeekAdmin {
 
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${this.escapeHtml(article.title)}" />
-  <meta property="og:description" content="${this.escapeHtml(article.excerpt)}" />
-  <meta property="og:image" content="${article.image}" />
+  <meta property="og:description" content="${this.escapeHtml(article.metaDescription || article.excerpt)}" />
+  <meta property="og:image" content="${article.ogImage || article.image}" />
   <meta property="og:url" content="https://salageek.com/blog/articulos/${article.slug}.html" />
 
   <meta name="twitter:card" content="summary_large_image" />

@@ -108,14 +108,21 @@ async function deleteFile(path, sha, message) {
 /**
  * Verify Netlify Identity token
  */
-function verifyToken(event) {
-  const authHeader = event.headers.authorization;
+function verifyToken(event, context) {
+  // First, check if we have a user from Netlify Identity context
+  if (context.clientContext?.user) {
+    return true;
+  }
+  
+  // Fallback: check Authorization header exists
+  const authHeader = event.headers.authorization || event.headers.Authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return false;
   }
-  // In production, you'd verify the JWT token here
-  // For now, we just check it exists
-  return true;
+  
+  // Check token is not empty
+  const token = authHeader.split(' ')[1];
+  return token && token.length > 0;
 }
 
 /**
@@ -136,20 +143,21 @@ exports.handler = async (event, context) => {
   }
 
   // Verify authentication
-  if (!verifyToken(event)) {
+  if (!verifyToken(event, context)) {
     return {
       statusCode: 401,
       headers,
-      body: JSON.stringify({ error: 'Unauthorized' })
+      body: JSON.stringify({ error: 'Unauthorized - No valid token provided' })
     };
   }
 
   // Check GitHub token
   if (!GITHUB_TOKEN) {
+    console.error('GITHUB_TOKEN not set in environment variables');
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'GitHub token not configured' })
+      body: JSON.stringify({ error: 'Server configuration error: GitHub token not configured' })
     };
   }
 

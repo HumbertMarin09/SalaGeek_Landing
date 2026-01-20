@@ -1782,6 +1782,29 @@
   font-style: normal;
 }
 
+/* Video embeds - YouTube, etc */
+.article-full .article-content .video-container,
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  margin: 2rem 0;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.article-full .article-content .video-container iframe,
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 /* Info boxes */
 .article-full .article-content .info-box {
   margin: 2rem 0;
