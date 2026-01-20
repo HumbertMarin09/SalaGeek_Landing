@@ -935,10 +935,20 @@
             <div class="form-group">
               <label>URLs de imágenes <small>(una por línea - puedes agregar ilimitadas)</small></label>
               <textarea id="grid-images" rows="6" placeholder="https://ejemplo.com/imagen1.jpg&#10;https://ejemplo.com/imagen2.jpg&#10;https://ejemplo.com/imagen3.jpg&#10;https://ejemplo.com/imagen4.jpg"></textarea>
-              <button type="button" id="add-url-btn" class="btn-sm btn-secondary" style="margin-top: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Agregar URL
-              </button>
+              <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button type="button" id="add-url-btn" class="btn-sm btn-secondary" style="flex: 1;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Agregar URL
+                </button>
+                <button type="button" id="open-gallery-from-grid-btn" class="btn-sm btn-primary" style="flex: 1;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                  </svg>
+                  Galería GitHub
+                </button>
+              </div>
             </div>
 
             <!-- Lista de imágenes agregadas -->

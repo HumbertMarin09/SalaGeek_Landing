@@ -144,6 +144,8 @@ class SalaGeekAdmin {
     this.galleryImages = [];
     /** @type {Object|null} Datos de imagen pendiente de subir */
     this.galleryUploadData = null;
+    /** @type {boolean} Modo selección de galería para grid */
+    this.gallerySelectMode = false;
     
     // ─── Sistema Undo/Redo ───
     /** @type {Array} Historial de estados del editor */
@@ -1788,8 +1790,25 @@ class SalaGeekAdmin {
   </iframe>
 </div>`;
     
-    document.getElementById('article-editor').focus();
-    document.execCommand('insertHTML', false, embed);
+    const editor = document.getElementById('article-editor');
+    editor.focus();
+    
+    // Si el editor está vacío o solo tiene <br>, insertarlo directamente
+    const isEmpty = !editor.textContent.trim() || editor.innerHTML === '<br>';
+    
+    if (isEmpty) {
+      editor.innerHTML = embed + '<p><br></p>'; // Agregar párrafo después para continuar escribiendo
+      // Colocar cursor después del video
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.setStart(editor.lastChild, 0);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } else {
+      // Si hay contenido, usar execCommand
+      document.execCommand('insertHTML', false, embed + '<p><br></p>');
+    }
     
     // Guardar estado para Undo/Redo
     this.saveEditorState();
@@ -2202,6 +2221,11 @@ class SalaGeekAdmin {
         this.showToast('URL inválida. Debe comenzar con http o https', 'error');
       }
     });
+
+    // Open gallery from grid modal
+    document.getElementById('open-gallery-from-grid-btn')?.addEventListener('click', () => {
+      this.openGalleryForGrid();
+    });
     
     // Column selector buttons
     document.querySelectorAll('.col-btn').forEach(btn => {
@@ -2486,6 +2510,17 @@ class SalaGeekAdmin {
   openGalleryModal() {
     document.getElementById('gallery-modal').classList.remove('hidden');
     document.getElementById('gallery-search').value = '';
+    this.gallerySelectMode = false; // Modo solo vista/copia
+    this.loadGalleryImages();
+  }
+
+  /**
+   * Abre el modal de galería en modo selección para el grid
+   */
+  openGalleryForGrid() {
+    document.getElementById('gallery-modal').classList.remove('hidden');
+    document.getElementById('gallery-search').value = '';
+    this.gallerySelectMode = true; // Modo selección
     this.loadGalleryImages();
   }
 
@@ -2534,7 +2569,8 @@ class SalaGeekAdmin {
       this.renderGalleryImages(this.galleryImages);
       
       if (countEl) {
-        countEl.textContent = `${this.galleryImages.length} imagen${this.galleryImages.length !== 1 ? 'es' : ''}`;
+        const modeText = this.gallerySelectMode ? ' • Modo selección (clic para agregar)' : '';
+        countEl.textContent = `${this.galleryImages.length} imagen${this.galleryImages.length !== 1 ? 'es' : ''}${modeText}`;
       }
 
     } catch (error) {
@@ -2584,17 +2620,32 @@ class SalaGeekAdmin {
       </div>
     `).join('');
 
-    // Add click handlers to copy URL
+    // Add click handlers to copy URL or select for grid
     grid.querySelectorAll('.gallery-item').forEach(item => {
       item.addEventListener('click', () => {
         const url = item.dataset.url;
-        navigator.clipboard.writeText(url).then(() => {
+        
+        if (this.gallerySelectMode) {
+          // Modo selección: agregar al grid
+          this.gridImages.push(url);
+          this.syncGridTextarea();
+          this.updateGridImagesList();
+          this.updateGridLivePreview();
+          this.showToast('Imagen agregada al grid', 'success');
+          
+          // Visual feedback
           item.classList.add('copied');
-          setTimeout(() => item.classList.remove('copied'), 1500);
-          this.showToast('URL copiada al portapapeles', 'success');
-        }).catch(() => {
-          this.showToast('Error al copiar URL', 'error');
-        });
+          setTimeout(() => item.classList.remove('copied'), 500);
+        } else {
+          // Modo normal: copiar URL
+          navigator.clipboard.writeText(url).then(() => {
+            item.classList.add('copied');
+            setTimeout(() => item.classList.remove('copied'), 1500);
+            this.showToast('URL copiada al portapapeles', 'success');
+          }).catch(() => {
+            this.showToast('Error al copiar URL', 'error');
+          });
+        }
       });
     });
   }
@@ -3104,7 +3155,7 @@ class SalaGeekAdmin {
 
       const result = await response.json();
 
-      this.showToast('¡Artículo guardado exitosamente!', 'success');
+      this.showToast('¡Artículo guardado exitosamente! Recargando lista...', 'success');
       
       // Reload articles
       await this.loadArticles();
