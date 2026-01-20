@@ -206,7 +206,7 @@ class SalaGeekAdmin {
     this.isUndoRedo = true;
     this.historyIndex--;
     
-    const editor = document.getElementById('article-content');
+    const editor = document.getElementById('article-editor');
     if (editor) {
       editor.innerHTML = this.editorHistory[this.historyIndex];
       this.setupEditorImages();
@@ -228,6 +228,13 @@ class SalaGeekAdmin {
     
     this.isUndoRedo = true;
     this.historyIndex++;
+    
+    const editor = document.getElementById('article-editor');
+    if (editor) {
+      editor.innerHTML = this.editorHistory[this.historyIndex];
+      this.setupEditorImages();
+      this.updateWordCount();
+    }
     
     const editor = document.getElementById('article-content');
     if (editor) {
@@ -632,33 +639,41 @@ class SalaGeekAdmin {
             const isLeft = dropX < midX;
             const isTop = dropY < midY;
             
-            // Calcular qué eje domina (horizontal o vertical)
-            const distX = Math.abs(dropX - midX) / (rect.width / 2);
-            const distY = Math.abs(dropY - midY) / (rect.height / 2);
+            // Calcular posición relativa dentro de la imagen (0-1)
+            // Zonas: si estamos en el 25% superior o inferior, usar posicionamiento vertical
+            const relativeY = (dropY - rect.top) / rect.height;
+            const relativeX = (dropX - rect.left) / rect.width;
             
-            if (distX > distY) {
-              // Movimiento horizontal dominante
+            // Usar vertical si estamos en el 30% superior o 30% inferior de la imagen
+            const useVertical = relativeY < 0.30 || relativeY > 0.70;
+            
+            if (!useVertical) {
+              // Movimiento horizontal (izquierda/derecha)
               indicator.style.width = '4px';
               indicator.style.height = rect.height + 'px';
               indicator.style.top = (rect.top - editorRect.top + editor.scrollTop) + 'px';
               if (isLeft) {
                 indicator.style.left = (rect.left - editorRect.left - 4) + 'px';
                 indicator.dataset.position = 'before';
+                indicator.dataset.axis = 'horizontal';
               } else {
                 indicator.style.left = (rect.right - editorRect.left) + 'px';
                 indicator.dataset.position = 'after';
+                indicator.dataset.axis = 'horizontal';
               }
             } else {
-              // Movimiento vertical dominante
+              // Movimiento vertical (arriba/abajo)
               indicator.style.height = '4px';
               indicator.style.width = rect.width + 'px';
               indicator.style.left = (rect.left - editorRect.left) + 'px';
               if (isTop) {
                 indicator.style.top = (rect.top - editorRect.top + editor.scrollTop - 4) + 'px';
                 indicator.dataset.position = 'before';
+                indicator.dataset.axis = 'vertical';
               } else {
                 indicator.style.top = (rect.bottom - editorRect.top + editor.scrollTop) + 'px';
                 indicator.dataset.position = 'after';
+                indicator.dataset.axis = 'vertical';
               }
             }
           } else {
@@ -856,6 +871,11 @@ class SalaGeekAdmin {
   handleImageDropOnImage(draggedImg, targetImg, event) {
     const editor = document.getElementById('article-editor');
     
+    // Obtener información del indicador antes de que se elimine
+    const indicator = editor.querySelector('.drop-indicator');
+    const indicatorPosition = indicator?.dataset.position || 'after';
+    const indicatorAxis = indicator?.dataset.axis || 'horizontal';
+    
     // Obtener el contenedor de la imagen arrastrada
     let draggedElement = draggedImg;
     if (draggedImg.parentElement.classList.contains('image-resize-wrapper')) {
@@ -870,25 +890,8 @@ class SalaGeekAdmin {
     }
     const targetParentGrid = targetImg.closest('.image-grid-container');
     
-    // Calcular la posición (antes o después del target) - usando el eje dominante
-    const rect = targetImg.getBoundingClientRect();
-    const dropX = event.clientX;
-    const dropY = event.clientY;
-    const midX = rect.left + rect.width / 2;
-    const midY = rect.top + rect.height / 2;
-    
-    // Determinar eje dominante para decidir posición
-    const distX = Math.abs(dropX - midX) / (rect.width / 2);
-    const distY = Math.abs(dropY - midY) / (rect.height / 2);
-    
-    let insertBefore;
-    if (targetParentGrid && distY > distX) {
-      // En grids, si el movimiento vertical domina, usar posición Y
-      insertBefore = dropY < midY;
-    } else {
-      // Usar posición X (horizontal) por defecto
-      insertBefore = dropX < midX;
-    }
+    // Usar la posición del indicador
+    const insertBefore = indicatorPosition === 'before';
     
     // CASO 1: Ambas imágenes están en el mismo grid - reordenar
     if (draggedParentGrid && targetParentGrid && draggedParentGrid === targetParentGrid) {
@@ -983,37 +986,15 @@ class SalaGeekAdmin {
       return;
     }
     
-    // CASO 4: Ambas imágenes están fuera de grids - crear nuevo grid
+    // CASO 4: Ambas imágenes están fuera de grids
     if (!draggedParentGrid && !targetParentGrid) {
-      // Crear nuevo grid
-      const grid = document.createElement('div');
-      grid.className = 'image-grid-container cols-2 gap-md';
-      
-      // Crear imágenes limpias
-      const img1 = this.createCleanImage(targetImg);
-      const img2 = this.createCleanImage(draggedImg);
-      
-      // Ordenar según posición
-      if (insertBefore) {
-        grid.appendChild(img2);
-        grid.appendChild(img1);
-      } else {
-        grid.appendChild(img1);
-        grid.appendChild(img2);
-      }
-      
       // Encontrar el contenedor del target
       let targetContainer = targetElement;
       while (targetContainer.parentElement && targetContainer.parentElement !== editor) {
         targetContainer = targetContainer.parentElement;
       }
       
-      // Insertar el grid
-      targetContainer.parentElement.insertBefore(grid, targetContainer);
-      
-      // Eliminar las imágenes originales
-      targetContainer.remove();
-      
+      // Encontrar el contenedor del dragged
       let draggedContainer = draggedElement;
       while (draggedContainer.parentElement && draggedContainer.parentElement !== editor) {
         if (draggedContainer.parentElement.childNodes.length === 1) {
@@ -1022,10 +1003,53 @@ class SalaGeekAdmin {
           break;
         }
       }
-      draggedContainer.remove();
       
-      this.saveEditorState();
-      this.showToast('Galería creada con 2 imágenes', 'success');
+      if (indicatorAxis === 'vertical') {
+        // VERTICAL: Poner imágenes en párrafos separados (una encima de otra)
+        const newImg = this.createCleanImage(draggedImg);
+        const newP = document.createElement('p');
+        newP.appendChild(newImg);
+        
+        if (insertBefore) {
+          targetContainer.parentElement.insertBefore(newP, targetContainer);
+        } else {
+          targetContainer.parentElement.insertBefore(newP, targetContainer.nextSibling);
+        }
+        
+        // Eliminar imagen original
+        draggedContainer.remove();
+        
+        this.saveEditorState();
+        this.showToast('Imagen movida', 'success');
+      } else {
+        // HORIZONTAL: Crear grid de 2 columnas (lado a lado)
+        const grid = document.createElement('div');
+        grid.className = 'image-grid-container cols-2';
+        grid.style.gap = '8px';
+        
+        // Crear imágenes limpias
+        const img1 = this.createCleanImage(targetImg);
+        const img2 = this.createCleanImage(draggedImg);
+        
+        // Ordenar según posición
+        if (insertBefore) {
+          grid.appendChild(img2);
+          grid.appendChild(img1);
+        } else {
+          grid.appendChild(img1);
+          grid.appendChild(img2);
+        }
+        
+        // Insertar el grid
+        targetContainer.parentElement.insertBefore(grid, targetContainer);
+        
+        // Eliminar las imágenes originales
+        targetContainer.remove();
+        draggedContainer.remove();
+        
+        this.saveEditorState();
+        this.showToast('Galería creada con 2 imágenes', 'success');
+      }
       return;
     }
     
@@ -1080,7 +1104,45 @@ class SalaGeekAdmin {
     newImg.draggable = true;
     newImg.style.maxWidth = '100%';
     newImg.style.height = 'auto';
+    // Preservar dimensiones si existen
+    if (sourceImg.style.width) newImg.style.width = sourceImg.style.width;
+    if (sourceImg.style.height && sourceImg.style.height !== 'auto') {
+      newImg.style.height = sourceImg.style.height;
+    }
     return newImg;
+  }
+
+  /**
+   * Reconfigura las imágenes del editor después de restaurar el HTML
+   * (necesario para Undo/Redo y cargar contenido)
+   */
+  setupEditorImages() {
+    const editor = document.getElementById('article-editor');
+    if (!editor) return;
+    
+    // Asegurar que todas las imágenes sean arrastrables
+    editor.querySelectorAll('img').forEach(img => {
+      img.draggable = true;
+      if (!img.classList.contains('editor-image')) {
+        img.classList.add('editor-image');
+      }
+      if (!img.classList.contains('resizable')) {
+        img.classList.add('resizable');
+      }
+    });
+    
+    // Limpiar cualquier estado de selección o wrapper de resize huérfano
+    editor.querySelectorAll('.image-resize-wrapper').forEach(wrapper => {
+      const img = wrapper.querySelector('img');
+      if (img) {
+        wrapper.parentElement.insertBefore(img, wrapper);
+      }
+      wrapper.remove();
+    });
+    
+    // Deseleccionar todo
+    this.deselectEditorImages();
+    this.deselectEditorGrids();
   }
 
   selectEditorGrid(grid) {
