@@ -5,86 +5,112 @@
  * 
  * @description Sistema de administración completo para SalaGeek
  * @author SalaGeek Team
- * @version 2.0.0
+ * @version 2.1.0
+ * @lastUpdate 2026-01-19
  * 
- * Características:
- * - Autenticación con Netlify Identity
- * - Editor WYSIWYG con drag & drop de imágenes
- * - Sistema de grids/galerías de imágenes
- * - Redimensionamiento de imágenes (arrastre + manual)
+ * Características principales:
+ * - Autenticación segura con Netlify Identity
+ * - Editor WYSIWYG con soporte completo de formato
+ * - Drag & drop de imágenes con posicionamiento inteligente
+ * - Sistema de grids/galerías configurables (1-4 columnas)
+ * - Redimensionamiento de imágenes (arrastre + modal manual)
+ * - Sistema Undo/Redo con historial de 50 estados
  * - Vista previa responsive (desktop/tablet/mobile)
- * - Gestión de artículos (CRUD completo)
+ * - Gestión completa de artículos (CRUD)
+ * - Auto-guardado y validación de formularios
  * 
  * Atajos de teclado:
  * - Ctrl+S: Guardar artículo
- * - Ctrl+Z: Deshacer
- * - Ctrl+Y: Rehacer
+ * - Ctrl+Z: Deshacer última acción
+ * - Ctrl+Y / Ctrl+Shift+Z: Rehacer acción
  * - Ctrl+B: Negrita
  * - Ctrl+I: Cursiva
  * - Ctrl+U: Subrayado
  * - Ctrl+K: Insertar enlace
- * - ESC: Cerrar modales
+ * - ESC: Cerrar modales abiertos
  * - Delete/Supr: Eliminar imagen/grid seleccionado
- * - Doble clic en imagen: Redimensionar manualmente
+ * - Doble clic en imagen: Abrir modal de redimensionamiento
  * 
  * ═══════════════════════════════════════════════════════════════
  */
 
-// Constantes de configuración
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURACIÓN GLOBAL
+// ═══════════════════════════════════════════════════════════════
+
 const CONFIG = {
-  TOAST_DURATION: 5000,
-  MIN_IMAGE_SIZE: 50,
-  MAX_EXCERPT_LENGTH: 250,
-  MAX_SLUG_LENGTH: 60,
-  EXCERPT_WARNING_LENGTH: 150,
-  EXCERPT_DANGER_LENGTH: 200,
-  MAX_HISTORY_SIZE: 50
+  // UI & Notificaciones
+  TOAST_DURATION: 5000,           // Duración de notificaciones (ms)
+  
+  // Imágenes
+  MIN_IMAGE_SIZE: 50,             // Tamaño mínimo de imagen (px)
+  
+  // Extracto del artículo
+  MAX_EXCERPT_LENGTH: 250,        // Máximo caracteres permitidos
+  EXCERPT_WARNING_LENGTH: 150,    // Umbral de advertencia (amarillo)
+  EXCERPT_DANGER_LENGTH: 200,     // Umbral de peligro (rojo)
+  
+  // URL/Slug
+  MAX_SLUG_LENGTH: 60,            // Máximo caracteres en slug
+  
+  // Editor - Undo/Redo
+  MAX_HISTORY_SIZE: 50            // Estados máximos en historial
 };
 
+// ═══════════════════════════════════════════════════════════════
+// CLASE PRINCIPAL
+// ═══════════════════════════════════════════════════════════════
+
 class SalaGeekAdmin {
+  /**
+   * Constructor - Inicializa el estado de la aplicación
+   */
   constructor() {
+    // Estado de usuario
     this.user = null;
+    
+    // Datos
     this.articles = [];
     this.categories = [];
-    this.currentSection = 'dashboard';
-    this.editingArticle = null;
     this.tags = [];
     
-    // Image modal states
+    // Estado de navegación
+    this.currentSection = 'dashboard';
+    this.editingArticle = null;
+    
+    // Modal de imagen - Estado
     this.currentImageSource = 'url';
     this.uploadedImageData = null;
+    this.draggedEditorImage = null;
     
-    // Grid modal states
+    // Modal de galería/grid - Estado
     this.gridImages = [];
     this.gridCols = 2;
     this.gridGap = 8;
     
-    // Historial para Undo/Redo
+    // Sistema Undo/Redo - Historial
     this.editorHistory = [];
     this.historyIndex = -1;
     this.isUndoRedo = false;
     
+    // Inicializar aplicación
     this.init();
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // INITIALIZATION
+  // INICIALIZACIÓN
   // ═══════════════════════════════════════════════════════════════
   
+  /**
+   * Inicializa todos los componentes de la aplicación
+   */
   async init() {
-    // Initialize Netlify Identity
     this.initNetlifyIdentity();
-    
-    // Setup event listeners
     this.setupEventListeners();
-    
-    // Setup image modals
     this.setupImageModals();
-    
-    // Setup image resize modal
     this.setupImageResizeModal();
     
-    // Check if user is already logged in
+    // Verificar si hay sesión activa
     const user = netlifyIdentity.currentUser();
     if (user) {
       this.handleLogin(user);
@@ -166,7 +192,7 @@ class SalaGeekAdmin {
    * Guarda el estado actual del editor en el historial
    */
   saveEditorState() {
-    const editor = document.getElementById('article-content');
+    const editor = document.getElementById('article-editor');
     if (!editor || this.isUndoRedo) return;
     
     const currentState = editor.innerHTML;
@@ -273,31 +299,32 @@ class SalaGeekAdmin {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // EVENT LISTENERS
+  // EVENT LISTENERS - Configuración de eventos globales
   // ═══════════════════════════════════════════════════════════════
 
+  /**
+   * Configura todos los event listeners de la aplicación
+   * Incluye: navegación, formularios, atajos de teclado, etc.
+   */
   setupEventListeners() {
-    // Login button
+    // ─── Autenticación ───
     document.getElementById('login-btn')?.addEventListener('click', () => {
       netlifyIdentity.open('login');
     });
 
-    // Logout button
     document.getElementById('logout-btn')?.addEventListener('click', () => {
       netlifyIdentity.logout();
     });
 
-    // Change password button
     document.getElementById('change-password-btn')?.addEventListener('click', () => {
       this.changePassword();
     });
 
-    // Navigation
+    // ─── Navegación ───
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
-        const section = item.dataset.section;
-        this.navigateTo(section);
+        this.navigateTo(item.dataset.section);
       });
     });
 

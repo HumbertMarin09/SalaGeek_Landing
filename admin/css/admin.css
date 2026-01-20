@@ -5,21 +5,22 @@
  * 
  * @description Estilos para el panel de administración de SalaGeek
  * @author SalaGeek Team
- * @version 2.0.0
+ * @version 2.1.0
+ * @lastUpdate 2026-01-19
  * 
  * Índice:
- * 1. Variables CSS
+ * 1. Variables CSS (colores, espaciado, transiciones)
  * 2. Reset & Base
  * 3. Login Screen
- * 4. Buttons
+ * 4. Buttons & Forms
  * 5. Layout (Sidebar, Topbar, Main)
- * 6. Dashboard
+ * 6. Dashboard (stats, cards)
  * 7. Articles Table
- * 8. Article Editor
- * 9. Image Grid System
- * 10. Modals
+ * 8. Article Editor (toolbar, WYSIWYG)
+ * 9. Image System (grids, resize, modals)
+ * 10. Modals (imagen, galería, preview, resize)
  * 11. Toast Notifications
- * 12. Responsive
+ * 12. Responsive (tablet, mobile)
  * 
  * ═══════════════════════════════════════════════════════════════
  */
