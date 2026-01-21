@@ -4816,10 +4816,10 @@ class SalaGeekAdmin {
     // 4. Imagen destacada
     const imageUrlInput = document.getElementById('image-url')?.value?.trim() || '';
     const previewImg = document.getElementById('preview-img');
-    const previewSrc = previewImg?.src || '';
-    // Verificar que la imagen sea válida (no vacía, no placeholder, no data:empty)
+    const previewSrc = previewImg?.getAttribute('src') || ''; // Usar getAttribute para obtener el valor real
+    // Verificar que la imagen sea válida (URL http real, no vacía)
     const hasValidImage = (imageUrlInput && imageUrlInput.startsWith('http')) || 
-                         (previewSrc && previewSrc.startsWith('http') && !previewSrc.includes('placeholder'));
+                         (previewSrc && previewSrc.startsWith('http') && previewSrc.length > 10);
     if (hasValidImage) {
       checks.image = 'pass';
     }
