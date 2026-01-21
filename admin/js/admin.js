@@ -144,6 +144,8 @@ class SalaGeekAdmin {
     this.uploadedImageData = null;
     /** @type {HTMLElement|null} Imagen siendo arrastrada en editor */
     this.draggedEditorImage = null;
+    /** @type {HTMLElement|null} Imagen seleccionada en el editor */
+    this.selectedImage = null;
     
     // ─── Modal de Grid/Galería ───
     /** @type {Array} URLs de imágenes para el grid */
@@ -189,6 +191,7 @@ class SalaGeekAdmin {
     this.setupSEOPreview();
     this.setupCollapsibleSections();
     this.setupCategoryMultiSelect();
+    this.setupEditorImageHandlers(); // Delegación de eventos para imágenes
     
     // Verificar si hay sesión activa
     const user = netlifyIdentity.currentUser();
@@ -2493,9 +2496,11 @@ class SalaGeekAdmin {
         if (width) style += `width: ${width}px; `;
         if (height) style += `height: ${height}px; `;
 
-        // Build class based on alignment - always include alignment class
+        // Build class based on alignment
         let wrapperClass = 'resizable-image';
-        if (alignment === 'float-left') wrapperClass += ' float-left';
+        if (alignment === 'left') wrapperClass += ' align-left';
+        else if (alignment === 'right') wrapperClass += ' align-right';
+        else if (alignment === 'float-left') wrapperClass += ' float-left';
         else if (alignment === 'float-right') wrapperClass += ' float-right';
         else wrapperClass += ' align-center'; // Default to center
 
@@ -2775,25 +2780,45 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Configura handlers para imágenes insertadas via modal
-   * 
-   * @deprecated Esta función es legacy, la selección principal
-   * se maneja en setupEditorToolbar(). Se mantiene por compatibilidad
-   * con el flujo de inserción del modal de imagen.
+   * Configura handlers para imágenes en el editor
+   * Usa delegación de eventos para manejar imágenes dinámicas
    */
   setupEditorImageHandlers() {
     const editor = document.getElementById('article-editor');
     if (!editor) return;
+    
+    // Solo configurar una vez usando delegación de eventos
+    if (editor.dataset.imageHandlersSetup) return;
+    editor.dataset.imageHandlersSetup = 'true';
 
-    // Hacer imágenes con wrapper seleccionables (formato antiguo)
-    editor.querySelectorAll('.resizable-image, figure').forEach(wrapper => {
-      wrapper.addEventListener('click', (e) => {
-        e.stopPropagation();
-        editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
-          w.classList.remove('selected');
-        });
-        wrapper.classList.add('selected');
+    // Delegación de eventos para selección de imágenes
+    editor.addEventListener('click', (e) => {
+      const wrapper = e.target.closest('.resizable-image, figure');
+      
+      // Deseleccionar todas las imágenes primero
+      editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
+        w.classList.remove('selected');
       });
+      
+      // Si se hizo click en una imagen, seleccionarla
+      if (wrapper) {
+        e.stopPropagation();
+        wrapper.classList.add('selected');
+        this.selectedImage = wrapper;
+      } else {
+        this.selectedImage = null;
+      }
+    });
+
+    // Eliminar imagen con Delete o Backspace
+    editor.addEventListener('keydown', (e) => {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && this.selectedImage) {
+        e.preventDefault();
+        this.selectedImage.remove();
+        this.selectedImage = null;
+        this.showToast('Imagen eliminada', 'success');
+        this.saveEditorState();
+      }
     });
   }
 

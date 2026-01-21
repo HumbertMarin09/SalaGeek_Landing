@@ -2956,9 +2956,44 @@ input, select, textarea {
   margin: 0 0 1rem 1rem;
 }
 
+.article-editor .resizable-image.align-left {
+  display: block;
+  margin: 1rem auto 1rem 0;
+}
+
+.article-editor .resizable-image.align-right {
+  display: block;
+  margin: 1rem 0 1rem auto;
+}
+
 .article-editor .resizable-image.align-center {
   display: block;
   margin: 1rem auto;
+}
+
+/* Imagen seleccionada */
+.article-editor .resizable-image.selected,
+.article-editor figure.selected {
+  outline: 3px dashed var(--admin-primary);
+  outline-offset: 4px;
+  position: relative;
+}
+
+.article-editor .resizable-image.selected::after,
+.article-editor figure.selected::after {
+  content: 'Delete para eliminar · Doble clic para redimensionar';
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.35rem 0.75rem;
+  background: var(--admin-primary);
+  color: white;
+  font-size: 0.7rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  z-index: 100;
+  pointer-events: none;
 }
 
 /* Image Grid in Editor */
