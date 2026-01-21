@@ -2492,7 +2492,6 @@ class SalaGeekAdmin {
 
         if (!imageUrl) {
           this.showToast('Selecciona o ingresa una imagen primero', 'error');
-          console.warn('[Image Insert] No image URL found. Source:', this.currentImageSource, 'UploadedData:', !!this.uploadedImageData);
           return;
         }
 
@@ -2516,15 +2515,6 @@ class SalaGeekAdmin {
         else if (alignment === 'float-left') wrapperClass += ' float-left';
         else if (alignment === 'float-right') wrapperClass += ' float-right';
         else wrapperClass += ' align-center'; // Default to center
-
-        console.log('[Image Insert] Building HTML with:', { 
-          imageUrlLength: imageUrl.length, 
-          alt, 
-          width, 
-          height, 
-          alignment,
-          wrapperClass
-        });
 
         // Generate HTML
         let html = '';
@@ -2568,9 +2558,6 @@ class SalaGeekAdmin {
         range.collapse(false);
         selection.removeAllRanges();
         selection.addRange(range);
-        
-        console.log('[Image Insert] Direct DOM insert completed');
-        console.log('[Image Insert] Editor innerHTML:', editor.innerHTML.substring(0, 300));
         
         // Cerrar modal y resetear estado
         document.getElementById('image-modal').classList.add('hidden');

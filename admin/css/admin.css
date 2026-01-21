@@ -38,6 +38,7 @@
   --admin-text-muted: #8b8f9a;
   --admin-primary: #7c3aed;
   --admin-primary-hover: #6d28d9;
+  --admin-primary-dark: #5b21b6;
   --admin-success: #10b981;
   --admin-warning: #f59e0b;
   --admin-danger: #ef4444;
@@ -1758,10 +1759,7 @@ input, select, textarea {
   animation: fadeIn 0.2s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+/* fadeIn ya definido arriba - reutilizando */
 
 .modal-content {
   background: var(--admin-surface);
