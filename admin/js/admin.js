@@ -931,9 +931,13 @@ class SalaGeekAdmin {
     editor?.addEventListener('input', () => {
       this.updateWordCount();
       
-      // Limpiar completamente el editor si está vacío para que el placeholder vuelva a aparecer
+      // Limpiar completamente el editor si está vacío (sin texto NI imágenes)
+      // para que el placeholder vuelva a aparecer
       const text = editor.innerText.trim();
-      if (text === '' || text === '\n') {
+      const hasImages = editor.querySelector('img, .resizable-image, figure, .image-grid-container');
+      const hasMedia = editor.querySelector('iframe, .youtube-embed, .video-container');
+      
+      if ((text === '' || text === '\n') && !hasImages && !hasMedia) {
         editor.innerHTML = '';
       }
       
@@ -1935,6 +1939,9 @@ class SalaGeekAdmin {
           document.execCommand('justifyRight', false, null);
         }
         break;
+      case 'justifyFull':
+        document.execCommand('justifyFull', false, null);
+        break;
       case 'image':
         this.openImageModal();
         return; // No guardar estado aquí, se guarda al insertar la imagen
@@ -1998,6 +2005,9 @@ class SalaGeekAdmin {
           break;
         case 'justifyRight':
           isActive = document.queryCommandState('justifyRight');
+          break;
+        case 'justifyFull':
+          isActive = document.queryCommandState('justifyFull');
           break;
       }
       
@@ -4359,7 +4369,39 @@ class SalaGeekAdmin {
           .resizable-image, .resizable-image img { max-width: 100%; }
           .resizable-image.float-left { float: left; margin: 0 1.5rem 1rem 0; }
           .resizable-image.float-right { float: right; margin: 0 0 1rem 1.5rem; }
-          .resizable-image.align-center { display: block; margin: 1.5rem auto; text-align: center; }
+          .resizable-image.align-left { 
+            display: block; 
+            margin: 1.5rem auto 1.5rem 0;
+            width: fit-content;
+          }
+          .resizable-image.align-center { 
+            display: block; 
+            margin: 1.5rem auto; 
+            text-align: center;
+            width: fit-content;
+          }
+          .resizable-image.align-right { 
+            display: block; 
+            margin: 1.5rem 0 1.5rem auto;
+            width: fit-content;
+          }
+          
+          /* Figure alignment */
+          figure.align-left {
+            display: block;
+            margin: 1.5rem auto 1.5rem 0;
+            width: fit-content;
+          }
+          figure.align-center {
+            display: block;
+            margin: 1.5rem auto;
+            width: fit-content;
+          }
+          figure.align-right {
+            display: block;
+            margin: 1.5rem 0 1.5rem auto;
+            width: fit-content;
+          }
           
           /* Image grids */
           .image-grid-container { display: grid; gap: 0.75rem; margin: 1.5rem 0; }
