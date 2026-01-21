@@ -186,6 +186,9 @@ class SalaGeekAdmin {
     this.setupImageModals();
     this.setupImageResizeModal();
     this.setupGalleryModal();
+    this.setupSEOPreview();
+    this.setupCollapsibleSections();
+    this.setupCategoryMultiSelect();
     
     // Verificar si hay sesión activa
     const user = netlifyIdentity.currentUser();
@@ -379,8 +382,9 @@ class SalaGeekAdmin {
     const title = document.getElementById('article-title')?.value?.trim();
     const content = document.getElementById('article-editor')?.innerHTML || '';
     const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
-    const image = document.getElementById('article-image')?.value || '';
-    const category = document.querySelector('input[name="category"]:checked')?.value || 'series';
+    const image = document.getElementById('image-url')?.value || document.getElementById('preview-img')?.src || '';
+    const categories = this.getSelectedCategories();
+    const category = this.getPrimaryCategory();
     const publishDate = document.getElementById('article-date')?.value 
       ? new Date(document.getElementById('article-date').value).toISOString()
       : new Date().toISOString();
@@ -2657,12 +2661,23 @@ class SalaGeekAdmin {
     const uploadPreview = document.getElementById('upload-preview');
     const uploadedImg = document.getElementById('uploaded-img');
 
+    if (!file || !file.type.startsWith('image/')) {
+      this.showToast('Por favor selecciona una imagen válida', 'error');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
       this.uploadedImageData = e.target.result;
-      uploadedImg.src = e.target.result;
-      dropZone.style.display = 'none';
-      uploadPreview?.classList.remove('hidden');
+      if (uploadedImg) uploadedImg.src = e.target.result;
+      if (dropZone) dropZone.style.display = 'none';
+      if (uploadPreview) uploadPreview.classList.remove('hidden');
+      
+      // Switch to upload tab automatically
+      this.switchImageTab('upload');
+    };
+    reader.onerror = () => {
+      this.showToast('Error al leer el archivo', 'error');
     };
     reader.readAsDataURL(file);
   }
@@ -3518,7 +3533,8 @@ class SalaGeekAdmin {
     document.getElementById('article-date').value = now.toISOString().slice(0, 16);
 
     // Default category
-    document.querySelector('input[name="category"][value="series"]').checked = true;
+    const firstCategory = document.querySelector('input[name="categories"]');
+    if (firstCategory) firstCategory.checked = true;
   }
 
   /**
@@ -3543,7 +3559,8 @@ class SalaGeekAdmin {
     const title = document.getElementById('article-title').value.trim();
     const slug = document.getElementById('article-slug').value.trim() || this.generateSlug(title);
     const excerpt = document.getElementById('article-excerpt').value.trim();
-    const category = document.querySelector('input[name="category"]:checked').value;
+    const categories = this.getSelectedCategories();
+    const category = this.getPrimaryCategory(); // Categoría principal para compatibilidad
     // Forzar status según el botón presionado
     const status = asDraft ? 'draft' : 'published';
     const publishDate = new Date(document.getElementById('article-date').value).toISOString();
@@ -3605,7 +3622,8 @@ class SalaGeekAdmin {
       content: `/blog/articulos/${slug}.html`,
       image,
       category,
-      categoryDisplay: categoryNames[category],
+      categories, // Array de categorías múltiples
+      categoryDisplay: categoryNames[category] || category,
       tags: this.tags,
       author: 'Sala Geek',
       publishDate,
@@ -3865,12 +3883,14 @@ class SalaGeekAdmin {
     const title = document.getElementById('article-title').value || 'Sin título';
     const excerpt = document.getElementById('article-excerpt').value || '';
     const content = document.getElementById('article-editor').innerHTML;
-    const category = document.querySelector('input[name="category"]:checked')?.value || '';
+    const category = this.getPrimaryCategory();
     const image = document.getElementById('image-url').value || document.getElementById('preview-img')?.src;
 
     const previewHTML = this.generateArticlePreviewHTML(title, excerpt, content, category, image);
     
     const iframe = document.getElementById('preview-frame');
+    
+    // Use srcdoc with base tag to resolve relative URLs
     iframe.srcdoc = previewHTML;
     
     document.getElementById('preview-modal').classList.remove('hidden');
@@ -3880,19 +3900,57 @@ class SalaGeekAdmin {
   }
 
   generateArticlePreviewHTML(title, excerpt, content, category, image) {
+    // Get current origin for base URL
+    const baseUrl = window.location.origin;
+    
     return `
       <!DOCTYPE html>
       <html lang="es">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <base href="${baseUrl}/">
         <title>${this.escapeHtml(title)} | Sala Geek</title>
-        <link rel="stylesheet" href="/src/css/normalize.css">
-        <link rel="stylesheet" href="/src/css/style.min.css">
-        <link rel="stylesheet" href="/src/css/blog.css">
+        <link rel="stylesheet" href="${baseUrl}/src/css/normalize.css">
+        <link rel="stylesheet" href="${baseUrl}/src/css/style.min.css">
+        <link rel="stylesheet" href="${baseUrl}/src/css/blog.css">
         <style>
-          body { padding: 2rem; background: var(--sg-bg-primary, #0a0a0f); }
+          body { 
+            padding: 2rem; 
+            background: var(--sg-bg-primary, #0a0a0f); 
+            color: var(--sg-text-primary, #e4e6eb);
+          }
           .article-full { max-width: 800px; margin: 0 auto; }
+          .article-header { margin-bottom: 2rem; }
+          .article-meta-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+          .article-category { 
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: capitalize;
+          }
+          .article-category.category-series { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+          .article-category.category-peliculas { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+          .article-category.category-gaming { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+          .article-category.category-anime { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+          .article-category.category-tecnologia { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+          .article-title { font-size: 2rem; margin-bottom: 1rem; line-height: 1.3; }
+          .article-excerpt { color: #888; font-size: 1.1rem; line-height: 1.6; }
+          .article-featured-image { margin: 2rem 0; }
+          .article-featured-image img { width: 100%; border-radius: 0.75rem; }
+          .article-content { line-height: 1.8; }
+          .article-content h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
+          .article-content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+          .article-content p { margin-bottom: 1rem; }
+          .article-content img { max-width: 100%; border-radius: 0.5rem; }
+          .article-content blockquote { 
+            border-left: 3px solid #7c3aed; 
+            padding-left: 1rem; 
+            margin: 1rem 0; 
+            color: #888; 
+            font-style: italic; 
+          }
           .resizable-image, .resizable-image img { max-width: 100%; }
           .resizable-image.float-left { float: left; margin: 0 1rem 1rem 0; }
           .resizable-image.float-right { float: right; margin: 0 0 1rem 1rem; }
@@ -3903,6 +3961,7 @@ class SalaGeekAdmin {
           .image-grid-container.cols-4 { grid-template-columns: repeat(4, 1fr); }
           .image-grid-container img { width: 100%; height: auto; object-fit: cover; border-radius: 0.375rem; }
           figcaption { text-align: center; font-size: 0.85rem; color: #888; margin-top: 0.5rem; font-style: italic; }
+          time { color: #888; font-size: 0.9rem; }
         </style>
       </head>
       <body class="article-page">
@@ -3915,7 +3974,7 @@ class SalaGeekAdmin {
             <h1 class="article-title">${this.escapeHtml(title)}</h1>
             <p class="article-excerpt">${this.escapeHtml(excerpt)}</p>
           </header>
-          ${image ? `<figure class="article-featured-image"><img src="${image}" alt=""></figure>` : ''}
+          ${image && image !== '' && !image.includes('data:,') ? `<figure class="article-featured-image"><img src="${image}" alt="" onerror="this.parentElement.style.display='none'"></figure>` : ''}
           <div class="article-content">${content}</div>
         </article>
       </body>
@@ -4252,6 +4311,153 @@ class SalaGeekAdmin {
       toast.style.animation = 'slideIn 0.3s ease reverse';
       setTimeout(() => toast.remove(), 300);
     }, CONFIG.TOAST_DURATION);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SEO PREVIEW & COLLAPSIBLE SECTIONS
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Configura la vista previa SEO en tiempo real
+   */
+  setupSEOPreview() {
+    const titleInput = document.getElementById('article-title');
+    const slugInput = document.getElementById('article-slug');
+    const metaDescInput = document.getElementById('meta-description');
+    const excerptInput = document.getElementById('article-excerpt');
+
+    const updateSEOPreview = () => {
+      const title = titleInput?.value?.trim() || 'Título del artículo';
+      const slug = slugInput?.value?.trim() || this.generateSlug(title);
+      const metaDesc = metaDescInput?.value?.trim() || excerptInput?.value?.trim() || 'La meta descripción aparecerá aquí. Escribe una descripción atractiva de 150-160 caracteres...';
+
+      const previewTitle = document.getElementById('seo-preview-title');
+      const previewUrl = document.getElementById('seo-preview-url');
+      const previewDesc = document.getElementById('seo-preview-desc');
+
+      if (previewTitle) previewTitle.textContent = `${title} | Sala Geek`;
+      if (previewUrl) previewUrl.textContent = `salageek.com › blog › ${slug || 'articulos'}`;
+      if (previewDesc) previewDesc.textContent = metaDesc;
+    };
+
+    titleInput?.addEventListener('input', updateSEOPreview);
+    slugInput?.addEventListener('input', updateSEOPreview);
+    metaDescInput?.addEventListener('input', updateSEOPreview);
+    excerptInput?.addEventListener('input', updateSEOPreview);
+
+    // Initial update
+    updateSEOPreview();
+  }
+
+  /**
+   * Configura las secciones colapsables
+   */
+  setupCollapsibleSections() {
+    document.querySelectorAll('.collapsible-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const card = header.closest('.sidebar-card-collapsible');
+        card?.classList.toggle('collapsed');
+      });
+    });
+  }
+
+  /**
+   * Configura la selección múltiple de categorías
+   */
+  setupCategoryMultiSelect() {
+    // Botón para agregar nueva categoría
+    const addBtn = document.getElementById('add-category-btn');
+    const inputWrapper = document.getElementById('new-category-input');
+    const nameInput = document.getElementById('new-category-name');
+    const confirmBtn = document.getElementById('confirm-new-category');
+    const cancelBtn = document.getElementById('cancel-new-category');
+
+    addBtn?.addEventListener('click', () => {
+      inputWrapper?.classList.remove('hidden');
+      addBtn.classList.add('hidden');
+      nameInput?.focus();
+    });
+
+    cancelBtn?.addEventListener('click', () => {
+      inputWrapper?.classList.add('hidden');
+      addBtn?.classList.remove('hidden');
+      if (nameInput) nameInput.value = '';
+    });
+
+    confirmBtn?.addEventListener('click', () => {
+      this.addNewCategory();
+    });
+
+    nameInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        this.addNewCategory();
+      } else if (e.key === 'Escape') {
+        cancelBtn?.click();
+      }
+    });
+  }
+
+  /**
+   * Agrega una nueva categoría personalizada
+   */
+  addNewCategory() {
+    const nameInput = document.getElementById('new-category-name');
+    const inputWrapper = document.getElementById('new-category-input');
+    const addBtn = document.getElementById('add-category-btn');
+    const categorySelector = document.querySelector('.category-selector.multi-select');
+
+    const name = nameInput?.value?.trim();
+    if (!name) {
+      this.showToast('Ingresa un nombre para la categoría', 'warning');
+      return;
+    }
+
+    const value = this.generateSlug(name);
+    
+    // Verificar que no exista
+    if (document.querySelector(`input[name="categories"][value="${value}"]`)) {
+      this.showToast('Esta categoría ya existe', 'warning');
+      return;
+    }
+
+    // Crear nueva opción
+    const newOption = document.createElement('label');
+    newOption.className = 'category-option';
+    newOption.innerHTML = `
+      <input type="checkbox" name="categories" value="${value}" checked>
+      <span class="category-badge category-custom">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        ${this.escapeHtml(name)}
+      </span>
+    `;
+
+    categorySelector?.appendChild(newOption);
+
+    // Limpiar y ocultar input
+    if (nameInput) nameInput.value = '';
+    inputWrapper?.classList.add('hidden');
+    addBtn?.classList.remove('hidden');
+
+    this.showToast(`Categoría "${name}" agregada`, 'success');
+  }
+
+  /**
+   * Obtiene las categorías seleccionadas
+   * @returns {Array<string>} Array de valores de categorías seleccionadas
+   */
+  getSelectedCategories() {
+    const checkboxes = document.querySelectorAll('input[name="categories"]:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+  }
+
+  /**
+   * Obtiene la categoría principal (primera seleccionada o 'series' por defecto)
+   * @returns {string} Valor de la categoría principal
+   */
+  getPrimaryCategory() {
+    const selected = this.getSelectedCategories();
+    return selected.length > 0 ? selected[0] : 'series';
   }
 }
 
