@@ -2503,10 +2503,11 @@ class SalaGeekAdmin {
         const captionText = document.getElementById('image-caption-text')?.value.trim() || alt;
         const alignment = document.querySelector('.align-btn.active')?.dataset.align || 'center';
 
-        // Build style
-        let style = '';
-        if (width) style += `width: ${width}px; `;
-        if (height) style += `height: ${height}px; `;
+        // Build style para la imagen (no el wrapper)
+        // Usar max-width para que sea redimensionable después
+        let imgStyle = 'max-width: 100%;';
+        if (width) imgStyle += ` width: ${width}px;`;
+        if (height) imgStyle += ` height: ${height}px;`;
 
         // Build class based on alignment
         let wrapperClass = 'resizable-image';
@@ -2525,17 +2526,16 @@ class SalaGeekAdmin {
           wrapperClass
         });
 
-        // Generate HTML - agregar un marcador para posicionar el cursor después
+        // Generate HTML
         let html = '';
-        const cursorMarker = '<span id="cursor-marker-temp"></span>';
         if (addCaption && captionText) {
-          html = `<figure class="${wrapperClass}" style="${style}">
-  <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
+          html = `<figure class="${wrapperClass}">
+  <img src="${imageUrl}" alt="${alt}" style="${imgStyle}">
   <figcaption>${captionText}</figcaption>
-</figure>${cursorMarker}`;
+</figure>`;
         } else {
-          html = `<span class="${wrapperClass}" style="${style}">
-  <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
+          html = `<span class="${wrapperClass}">
+  <img src="${imageUrl}" alt="${alt}" style="${imgStyle}">
 </span>`;
         }
 
