@@ -1394,6 +1394,19 @@ input, select, textarea {
   color: var(--admin-text);
 }
 
+.publish-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.publish-options .checkbox-option {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
 .publish-actions {
   display: flex;
   gap: 0.375rem;
