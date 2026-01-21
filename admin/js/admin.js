@@ -4814,9 +4814,13 @@ class SalaGeekAdmin {
     }
 
     // 4. Imagen destacada
-    const imageUrl = document.getElementById('image-url')?.value || 
-                     document.getElementById('preview-img')?.src || '';
-    if (imageUrl && !imageUrl.includes('placeholder') && imageUrl !== '') {
+    const imageUrlInput = document.getElementById('image-url')?.value?.trim() || '';
+    const previewImg = document.getElementById('preview-img');
+    const previewSrc = previewImg?.src || '';
+    // Verificar que la imagen sea válida (no vacía, no placeholder, no data:empty)
+    const hasValidImage = (imageUrlInput && imageUrlInput.startsWith('http')) || 
+                         (previewSrc && previewSrc.startsWith('http') && !previewSrc.includes('placeholder'));
+    if (hasValidImage) {
       checks.image = 'pass';
     }
 
@@ -4840,14 +4844,13 @@ class SalaGeekAdmin {
     }
 
     // Calculate score
-    let score = 0;
+    let passed = 0;
     let total = 0;
     Object.values(checks).forEach(val => {
       total++;
-      if (val === 'pass') score += 100;
-      else if (val === 'warn') score += 50;
+      if (val === 'pass') passed++;
     });
-    const finalScore = Math.round(score / total);
+    const percentage = Math.round((passed / total) * 100);
 
     // Update UI
     const scoreCircle = document.getElementById('seo-score-circle');
@@ -4855,18 +4858,18 @@ class SalaGeekAdmin {
     const scoreLabel = document.getElementById('seo-score-label');
 
     if (scoreCircle && scoreValue && scoreLabel) {
-      scoreValue.textContent = finalScore;
+      scoreValue.textContent = `${passed}/${total}`;
       
       // Remove old classes
       scoreCircle.classList.remove('score-bad', 'score-medium', 'score-good');
       scoreLabel.classList.remove('score-bad', 'score-medium', 'score-good');
       
       // Add new class based on score
-      if (finalScore >= 80) {
+      if (percentage >= 80) {
         scoreCircle.classList.add('score-good');
         scoreLabel.classList.add('score-good');
         scoreLabel.textContent = 'Excelente';
-      } else if (finalScore >= 50) {
+      } else if (percentage >= 50) {
         scoreCircle.classList.add('score-medium');
         scoreLabel.classList.add('score-medium');
         scoreLabel.textContent = 'Mejorable';
