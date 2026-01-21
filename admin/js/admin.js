@@ -5,8 +5,8 @@
  * 
  * @description Sistema de administración completo para SalaGeek
  * @author SalaGeek Team
- * @version 2.2.0
- * @lastUpdate 2026-01-19
+ * @version 2.3.0
+ * @lastUpdate 2026-01-20
  * 
  * CARACTERÍSTICAS PRINCIPALES:
  * ─────────────────────────────
@@ -171,8 +171,23 @@ class SalaGeekAdmin {
     /** @type {boolean} Flag para evitar guardar durante undo/redo */
     this.isUndoRedo = false;
     
+    // ─── Cache de elementos DOM ───
+    /** @type {HTMLElement|null} Referencia cacheada al editor */
+    this._editorElement = null;
+    
     // ─── Inicializar Aplicación ───
     this.init();
+  }
+
+  /**
+   * Obtiene el elemento del editor (con cache)
+   * @returns {HTMLElement|null} El elemento del editor o null si no existe
+   */
+  get editorElement() {
+    if (!this._editorElement || !document.body.contains(this._editorElement)) {
+      this._editorElement = document.getElementById('article-editor');
+    }
+    return this._editorElement;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -274,23 +289,38 @@ class SalaGeekAdmin {
     document.getElementById('admin-dashboard').classList.add('hidden');
   }
 
+  // ═══════════════════════════════════════════════════════════════
+  // AUTENTICACIÓN Y TOKENS
+  // ═══════════════════════════════════════════════════════════════
+
   /**
-   * Obtiene el token de acceso actualizado
-   * @returns {Promise<string>} Token JWT válido
-   * @throws {Error} Si no hay sesión o token
+   * Obtiene el token de acceso actualizado para llamadas a la API
+   * 
+   * @description Método centralizado para obtener el JWT token.
+   * Primero intenta refrescar el token con jwt(), y si falla
+   * usa el token en caché como fallback.
+   * 
+   * @returns {Promise<string>} Token JWT válido para Authorization header
+   * @throws {Error} Si no hay sesión activa o el token no está disponible
+   * 
+   * @example
+   * const token = await this.getAccessToken();
+   * fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
    */
   async getAccessToken() {
     const currentUser = netlifyIdentity.currentUser();
     if (!currentUser) {
-      throw new Error('Sin sesión activa');
+      throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
     }
-    
+
     try {
+      // Intentar obtener token fresco (refresca si es necesario)
       return await currentUser.jwt();
     } catch (e) {
+      // Fallback: usar token en caché si jwt() falla
       const fallbackToken = currentUser.token?.access_token;
       if (!fallbackToken) {
-        throw new Error('Token no disponible');
+        throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
       }
       return fallbackToken;
     }
@@ -583,7 +613,7 @@ class SalaGeekAdmin {
     this.isUndoRedo = true;
     this.historyIndex--;
     
-    const editor = document.getElementById('article-editor');
+    const editor = this.editorElement;
     if (editor) {
       editor.innerHTML = this.editorHistory[this.historyIndex];
       this.setupEditorImages();
@@ -606,7 +636,7 @@ class SalaGeekAdmin {
     this.isUndoRedo = true;
     this.historyIndex++;
     
-    const editor = document.getElementById('article-editor');
+    const editor = this.editorElement;
     if (editor) {
       editor.innerHTML = this.editorHistory[this.historyIndex];
       this.setupEditorImages();
@@ -4879,8 +4909,21 @@ class SalaGeekAdmin {
     updateSEOPreview();
   }
 
+  // ═══════════════════════════════════════════════════════════════
+  // SISTEMA SEO
+  // ═══════════════════════════════════════════════════════════════
+
   /**
    * Calcula el score SEO sin actualizar el UI
+   * 
+   * @description Evalúa 6 criterios SEO:
+   * 1. Título (50-60 chars ideal)
+   * 2. Meta descripción (150-160 chars ideal)
+   * 3. Extracto (mín 50 chars)
+   * 4. Imagen destacada (URL válida)
+   * 5. Contenido (+300 palabras)
+   * 6. Tags (mín 3)
+   * 
    * @returns {{ checks: Object, passed: number, total: number, percentage: number }}
    */
   calculateSEOScore() {
@@ -4966,7 +5009,18 @@ class SalaGeekAdmin {
 
   /**
    * Renderiza el score SEO en el UI
-   * @param {{ checks: Object, passed: number, total: number, percentage: number }} seoData
+   * 
+   * @description Actualiza el círculo de score, etiqueta y checks individuales.
+   * Clases CSS aplicadas:
+   * - score-good (>=80%): Verde
+   * - score-medium (>=50%): Amarillo  
+   * - score-bad (<50%): Rojo
+   * 
+   * @param {Object} seoData - Datos del cálculo SEO
+   * @param {Object} seoData.checks - Estado de cada check (pass/warn/fail/false)
+   * @param {number} seoData.passed - Número de checks pasados
+   * @param {number} seoData.total - Total de checks
+   * @param {number} seoData.percentage - Porcentaje de score (0-100)
    */
   renderSEOScore({ checks, passed, total, percentage }) {
     const scoreCircle = document.getElementById('seo-score-circle');
