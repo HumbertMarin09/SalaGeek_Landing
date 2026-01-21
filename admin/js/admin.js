@@ -2519,7 +2519,7 @@ class SalaGeekAdmin {
         } else {
           html = `<span class="${wrapperClass}" style="${style}">
   <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
-</span>${cursorMarker}`;
+</span>`;
         }
 
         const editor = document.getElementById('article-editor');
@@ -2529,74 +2529,31 @@ class SalaGeekAdmin {
           return;
         }
         
-        // Asegurar que el editor tiene el foco y una selección válida
+        // SOLUCIÓN: Insertar directamente en el DOM del editor
+        // El modal roba el foco, así que execCommand no funciona correctamente
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        // Insertar cada nodo hijo al final del editor
+        while (tempDiv.firstChild) {
+          editor.appendChild(tempDiv.firstChild);
+        }
+        
+        // Agregar un salto de línea después para continuar escribiendo
+        const br = document.createElement('br');
+        editor.appendChild(br);
+        
+        // Mover el cursor al final
         editor.focus();
-        
-        // Verificar si hay una selección válida, si no, crear una al final del editor
         const selection = window.getSelection();
-        if (!selection.rangeCount || !editor.contains(selection.anchorNode)) {
-          // No hay selección válida dentro del editor, colocar cursor al final
-          const range = document.createRange();
-          range.selectNodeContents(editor);
-          range.collapse(false); // Colapsar al final
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
+        const range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
         
-        // Intentar insertar con execCommand
-        let insertSuccess = false;
-        try {
-          insertSuccess = document.execCommand('insertHTML', false, html);
-        } catch (e) {
-          console.warn('[Image Insert] execCommand failed:', e);
-        }
-        
-        console.log('[Image Insert] execCommand result:', insertSuccess);
-        console.log('[Image Insert] Editor innerHTML after exec:', editor.innerHTML.substring(0, 200));
-        
-        // Si execCommand falla, usar fallback manual
-        if (!insertSuccess) {
-          console.warn('[Image Insert] execCommand failed, using fallback');
-          try {
-            const range = selection.getRangeAt(0);
-            range.deleteContents();
-            
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-            const frag = document.createDocumentFragment();
-            let lastNode;
-            while (tempDiv.firstChild) {
-              lastNode = frag.appendChild(tempDiv.firstChild);
-            }
-            range.insertNode(frag);
-            
-            // Mover cursor después del contenido insertado
-            if (lastNode) {
-              range.setStartAfter(lastNode);
-              range.collapse(true);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            }
-            console.log('[Image Insert] Fallback completed, editor innerHTML:', editor.innerHTML.substring(0, 200));
-          } catch (fallbackError) {
-            console.error('[Image Insert] Fallback also failed:', fallbackError);
-            // Último recurso: insertar directamente en el innerHTML
-            editor.innerHTML += html;
-            console.log('[Image Insert] Direct innerHTML append done');
-          }
-        }
-        
-        // Mover el cursor al final del contenido insertado
-        const marker = document.getElementById('cursor-marker-temp');
-        if (marker) {
-          const range = document.createRange();
-          const selection = window.getSelection();
-          range.setStartAfter(marker);
-          range.collapse(true);
-          selection.removeAllRanges();
-          selection.addRange(range);
-          marker.remove();
-        }
+        console.log('[Image Insert] Direct DOM insert completed');
+        console.log('[Image Insert] Editor innerHTML:', editor.innerHTML.substring(0, 300));
         
         // Cerrar modal y resetear estado
         document.getElementById('image-modal').classList.add('hidden');
