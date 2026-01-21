@@ -2455,91 +2455,107 @@ class SalaGeekAdmin {
     // Insert Image - Enhanced
     // ═══════════════════════════════════════════════════════════════
     document.getElementById('insert-image-btn')?.addEventListener('click', () => {
-      let imageUrl = '';
-      
-      // Get image source - priorizar imagen subida si existe
-      if (this.currentImageSource === 'upload' && this.uploadedImageData) {
-        imageUrl = this.uploadedImageData;
-      } else if (this.currentImageSource === 'url') {
-        imageUrl = document.getElementById('modal-image-url')?.value.trim();
-      } else if (this.uploadedImageData) {
-        // Fallback: si hay imagen subida pero el tab es url
-        imageUrl = this.uploadedImageData;
-      }
+      try {
+        let imageUrl = '';
+        
+        // Get image source - priorizar imagen subida si existe
+        if (this.currentImageSource === 'upload' && this.uploadedImageData) {
+          imageUrl = this.uploadedImageData;
+        } else if (this.currentImageSource === 'url') {
+          imageUrl = document.getElementById('modal-image-url')?.value.trim();
+        } else if (this.uploadedImageData) {
+          // Fallback: si hay imagen subida pero el tab es url
+          imageUrl = this.uploadedImageData;
+        }
 
-      if (!imageUrl) {
-        this.showToast('Selecciona o ingresa una imagen primero', 'error');
-        return;
-      }
+        if (!imageUrl) {
+          this.showToast('Selecciona o ingresa una imagen primero', 'error');
+          console.warn('[Image Insert] No image URL found. Source:', this.currentImageSource, 'UploadedData:', !!this.uploadedImageData);
+          return;
+        }
 
-      const alt = document.getElementById('modal-image-alt')?.value.trim() || '';
-      const width = document.getElementById('image-width')?.value.trim();
-      const height = document.getElementById('image-height')?.value.trim();
-      const addCaption = document.getElementById('image-caption')?.checked;
-      const captionText = document.getElementById('image-caption-text')?.value.trim() || alt;
-      const alignment = document.querySelector('.align-btn.active')?.dataset.align || 'center';
+        const alt = document.getElementById('modal-image-alt')?.value.trim() || '';
+        const width = document.getElementById('image-width')?.value.trim();
+        const height = document.getElementById('image-height')?.value.trim();
+        const addCaption = document.getElementById('image-caption')?.checked;
+        const captionText = document.getElementById('image-caption-text')?.value.trim() || alt;
+        const alignment = document.querySelector('.align-btn.active')?.dataset.align || 'center';
 
-      // Build style
-      let style = '';
-      if (width) style += `width: ${width}px; `;
-      if (height) style += `height: ${height}px; `;
+        // Build style
+        let style = '';
+        if (width) style += `width: ${width}px; `;
+        if (height) style += `height: ${height}px; `;
 
-      // Build class based on alignment - always include alignment class
-      let wrapperClass = 'resizable-image';
-      if (alignment === 'float-left') wrapperClass += ' float-left';
-      else if (alignment === 'float-right') wrapperClass += ' float-right';
-      else wrapperClass += ' align-center'; // Default to center
+        // Build class based on alignment - always include alignment class
+        let wrapperClass = 'resizable-image';
+        if (alignment === 'float-left') wrapperClass += ' float-left';
+        else if (alignment === 'float-right') wrapperClass += ' float-right';
+        else wrapperClass += ' align-center'; // Default to center
 
-      // Generate HTML - agregar un marcador para posicionar el cursor después
-      let html = '';
-      const cursorMarker = '<span id="cursor-marker-temp"></span>';
-      if (addCaption && captionText) {
-        html = `<figure class="${wrapperClass}" style="${style}">
+        // Generate HTML - agregar un marcador para posicionar el cursor después
+        let html = '';
+        const cursorMarker = '<span id="cursor-marker-temp"></span>';
+        if (addCaption && captionText) {
+          html = `<figure class="${wrapperClass}" style="${style}">
   <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
   <figcaption>${captionText}</figcaption>
 </figure>${cursorMarker}`;
-      } else {
-        html = `<span class="${wrapperClass}" style="${style}">
+        } else {
+          html = `<span class="${wrapperClass}" style="${style}">
   <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
 </span>${cursorMarker}`;
-      }
+        }
 
-      const editor = document.getElementById('article-editor');
-      editor.focus();
-      document.execCommand('insertHTML', false, html);
-      
-      // Mover el cursor al final del contenido insertado
-      const marker = document.getElementById('cursor-marker-temp');
-      if (marker) {
-        const range = document.createRange();
-        const selection = window.getSelection();
-        range.setStartAfter(marker);
-        range.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        marker.remove();
+        const editor = document.getElementById('article-editor');
+        if (!editor) {
+          this.showToast('Error: No se encontró el editor', 'error');
+          console.error('[Image Insert] Editor element not found');
+          return;
+        }
+        
+        editor.focus();
+        const insertSuccess = document.execCommand('insertHTML', false, html);
+        
+        if (!insertSuccess) {
+          console.warn('[Image Insert] execCommand returned false, attempting fallback');
+        }
+        
+        // Mover el cursor al final del contenido insertado
+        const marker = document.getElementById('cursor-marker-temp');
+        if (marker) {
+          const range = document.createRange();
+          const selection = window.getSelection();
+          range.setStartAfter(marker);
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+          marker.remove();
+        }
+        
+        // Cerrar modal y resetear estado
+        document.getElementById('image-modal').classList.add('hidden');
+        
+        // Resetear completamente el estado del modal
+        this.uploadedImageData = null;
+        this.currentImageSource = 'url';
+        const dropZone = document.getElementById('drop-zone');
+        const uploadPreview = document.getElementById('upload-preview');
+        const fileInput = document.getElementById('modal-file-input');
+        if (dropZone) dropZone.style.display = 'block';
+        if (uploadPreview) uploadPreview.classList.add('hidden');
+        if (fileInput) fileInput.value = ''; // Resetear file input para permitir subir de nuevo
+        
+        // Guardar estado para Undo
+        this.saveEditorState();
+        
+        // Setup resize handles on new image
+        this.setupEditorImageHandlers();
+        
+        this.showToast('Imagen insertada', 'success');
+      } catch (error) {
+        console.error('[Image Insert] Error:', error);
+        this.showToast(`Error al insertar imagen: ${error.message}`, 'error');
       }
-      
-      // Cerrar modal y resetear estado
-      document.getElementById('image-modal').classList.add('hidden');
-      
-      // Resetear completamente el estado del modal
-      this.uploadedImageData = null;
-      this.currentImageSource = 'url';
-      const dropZone = document.getElementById('drop-zone');
-      const uploadPreview = document.getElementById('upload-preview');
-      const fileInput = document.getElementById('modal-file-input');
-      if (dropZone) dropZone.style.display = 'block';
-      if (uploadPreview) uploadPreview.classList.add('hidden');
-      if (fileInput) fileInput.value = ''; // Resetear file input para permitir subir de nuevo
-      
-      // Guardar estado para Undo
-      this.saveEditorState();
-      
-      // Setup resize handles on new image
-      this.setupEditorImageHandlers();
-      
-      this.showToast('Imagen insertada', 'success');
     });
 
     // ═══════════════════════════════════════════════════════════════
