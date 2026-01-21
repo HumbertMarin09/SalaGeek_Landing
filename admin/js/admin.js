@@ -2551,27 +2551,38 @@ class SalaGeekAdmin {
           console.warn('[Image Insert] execCommand failed:', e);
         }
         
+        console.log('[Image Insert] execCommand result:', insertSuccess);
+        console.log('[Image Insert] Editor innerHTML after exec:', editor.innerHTML.substring(0, 200));
+        
         // Si execCommand falla, usar fallback manual
         if (!insertSuccess) {
           console.warn('[Image Insert] execCommand failed, using fallback');
-          const range = selection.getRangeAt(0);
-          range.deleteContents();
-          
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = html;
-          const frag = document.createDocumentFragment();
-          let lastNode;
-          while (tempDiv.firstChild) {
-            lastNode = frag.appendChild(tempDiv.firstChild);
-          }
-          range.insertNode(frag);
-          
-          // Mover cursor después del contenido insertado
-          if (lastNode) {
-            range.setStartAfter(lastNode);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
+          try {
+            const range = selection.getRangeAt(0);
+            range.deleteContents();
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            const frag = document.createDocumentFragment();
+            let lastNode;
+            while (tempDiv.firstChild) {
+              lastNode = frag.appendChild(tempDiv.firstChild);
+            }
+            range.insertNode(frag);
+            
+            // Mover cursor después del contenido insertado
+            if (lastNode) {
+              range.setStartAfter(lastNode);
+              range.collapse(true);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+            console.log('[Image Insert] Fallback completed, editor innerHTML:', editor.innerHTML.substring(0, 200));
+          } catch (fallbackError) {
+            console.error('[Image Insert] Fallback also failed:', fallbackError);
+            // Último recurso: insertar directamente en el innerHTML
+            editor.innerHTML += html;
+            console.log('[Image Insert] Direct innerHTML append done');
           }
         }
         
