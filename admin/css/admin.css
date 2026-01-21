@@ -992,6 +992,9 @@ input, select, textarea {
   outline: none;
   line-height: 1.8;
   transition: all var(--transition-fast);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .article-editor:empty::before {
