@@ -2484,11 +2484,11 @@ class SalaGeekAdmin {
       if (width) style += `width: ${width}px; `;
       if (height) style += `height: ${height}px; `;
 
-      // Build class based on alignment
+      // Build class based on alignment - always include alignment class
       let wrapperClass = 'resizable-image';
       if (alignment === 'float-left') wrapperClass += ' float-left';
       else if (alignment === 'float-right') wrapperClass += ' float-right';
-      else if (alignment === 'center') wrapperClass += ' align-center';
+      else wrapperClass += ' align-center'; // Default to center
 
       // Generate HTML - agregar un marcador para posicionar el cursor después
       let html = '';
@@ -2984,13 +2984,25 @@ class SalaGeekAdmin {
     try {
       // Obtener token actualizado
       const currentUser = netlifyIdentity.currentUser();
-      if (!currentUser || !currentUser.token?.access_token) {
+      if (!currentUser) {
         throw new Error('Sesión expirada');
+      }
+      
+      // Intentar obtener token fresco
+      let accessToken;
+      try {
+        accessToken = await currentUser.jwt();
+      } catch (e) {
+        accessToken = currentUser.token?.access_token;
+      }
+      
+      if (!accessToken) {
+        throw new Error('Token no disponible');
       }
       
       const response = await fetch('/.netlify/functions/list-images', {
         headers: {
-          'Authorization': `Bearer ${currentUser.token.access_token}`
+          'Authorization': `Bearer ${accessToken}`
         }
       });
 
@@ -5088,6 +5100,22 @@ class SalaGeekAdmin {
   getPrimaryCategory() {
     const selected = document.querySelector('input[name="category"]:checked');
     return selected?.value || 'series';
+  }
+
+  /**
+   * Obtiene las categorías seleccionadas (categoría principal + tags)
+   * @returns {string[]} Array de categorías
+   */
+  getSelectedCategories() {
+    const primaryCategory = this.getPrimaryCategory();
+    const categories = [primaryCategory];
+    
+    // Los tags ahora funcionan como subcategorías
+    if (this.tags && this.tags.length > 0) {
+      categories.push(...this.tags);
+    }
+    
+    return categories;
   }
 }
 
