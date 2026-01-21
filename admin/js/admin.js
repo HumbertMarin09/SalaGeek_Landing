@@ -1959,6 +1959,8 @@ class SalaGeekAdmin {
     document.getElementById('image-width').value = '';
     document.getElementById('image-height').value = '';
     document.getElementById('image-caption').checked = false;
+    document.getElementById('image-caption-text').value = '';
+    document.getElementById('image-caption-text').classList.add('hidden');
     
     // Reset tabs to URL
     this.switchImageTab('url');
@@ -2434,6 +2436,20 @@ class SalaGeekAdmin {
     });
 
     // ═══════════════════════════════════════════════════════════════
+    // Image Modal - Caption Toggle
+    // ═══════════════════════════════════════════════════════════════
+    const captionCheckbox = document.getElementById('image-caption');
+    const captionTextInput = document.getElementById('image-caption-text');
+    captionCheckbox?.addEventListener('change', () => {
+      if (captionCheckbox.checked) {
+        captionTextInput?.classList.remove('hidden');
+        captionTextInput?.focus();
+      } else {
+        captionTextInput?.classList.add('hidden');
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════════
     // Insert Image - Enhanced
     // ═══════════════════════════════════════════════════════════════
     document.getElementById('insert-image-btn')?.addEventListener('click', () => {
@@ -2458,6 +2474,7 @@ class SalaGeekAdmin {
       const width = document.getElementById('image-width')?.value.trim();
       const height = document.getElementById('image-height')?.value.trim();
       const addCaption = document.getElementById('image-caption')?.checked;
+      const captionText = document.getElementById('image-caption-text')?.value.trim() || alt;
       const alignment = document.querySelector('.align-btn.active')?.dataset.align || 'center';
 
       // Build style
@@ -2473,10 +2490,10 @@ class SalaGeekAdmin {
 
       // Generate HTML
       let html = '';
-      if (addCaption && alt) {
+      if (addCaption && captionText) {
         html = `<figure class="${wrapperClass}" style="${style}">
   <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
-  <figcaption>${alt}</figcaption>
+  <figcaption>${captionText}</figcaption>
 </figure>`;
       } else {
         html = `<span class="${wrapperClass}" style="${style}">
@@ -4212,18 +4229,53 @@ class SalaGeekAdmin {
           /* Preview badge */
           .preview-badge {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
+            top: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: #0a0e27;
-            padding: 0.5rem 1rem;
+            padding: 0.35rem 0.75rem;
             border-radius: 2rem;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
             z-index: 100;
+            white-space: nowrap;
+          }
+          
+          /* Responsive para móvil */
+          @media (max-width: 768px) {
+            .preview-wrapper {
+              padding: 1rem;
+              padding-top: 2.5rem;
+            }
+            .breadcrumbs {
+              padding: 0.5rem 1rem;
+              margin: -1rem -1rem 1rem -1rem;
+              font-size: 0.75rem;
+              overflow-x: auto;
+              white-space: nowrap;
+            }
+            .breadcrumbs ol {
+              flex-wrap: nowrap;
+            }
+            .article-title {
+              font-size: 1.5rem;
+            }
+            .article-excerpt {
+              font-size: 1rem;
+            }
+            .article-meta-top {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 0.5rem;
+            }
+            .article-meta-bottom {
+              flex-direction: column;
+              gap: 0.75rem;
+            }
           }
         </style>
       </head>
