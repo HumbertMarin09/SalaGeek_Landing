@@ -1879,13 +1879,25 @@ class SalaGeekAdmin {
         }
         break;
       case 'justifyLeft':
-        document.execCommand('justifyLeft', false, null);
+        if (this.selectedImage) {
+          this.setImageAlignment(this.selectedImage, 'left');
+        } else {
+          document.execCommand('justifyLeft', false, null);
+        }
         break;
       case 'justifyCenter':
-        document.execCommand('justifyCenter', false, null);
+        if (this.selectedImage) {
+          this.setImageAlignment(this.selectedImage, 'center');
+        } else {
+          document.execCommand('justifyCenter', false, null);
+        }
         break;
       case 'justifyRight':
-        document.execCommand('justifyRight', false, null);
+        if (this.selectedImage) {
+          this.setImageAlignment(this.selectedImage, 'right');
+        } else {
+          document.execCommand('justifyRight', false, null);
+        }
         break;
       case 'image':
         this.openImageModal();
@@ -2820,6 +2832,34 @@ class SalaGeekAdmin {
         this.saveEditorState();
       }
     });
+  }
+
+  /**
+   * Cambia la alineación de una imagen en el editor
+   * @param {HTMLElement} imageWrapper - El wrapper de la imagen (.resizable-image o figure)
+   * @param {string} alignment - La alineación: 'left', 'center', 'right'
+   */
+  setImageAlignment(imageWrapper, alignment) {
+    if (!imageWrapper) return;
+    
+    // Remover todas las clases de alineación existentes
+    imageWrapper.classList.remove('align-left', 'align-center', 'align-right', 'float-left', 'float-right');
+    
+    // Agregar la nueva clase de alineación
+    switch (alignment) {
+      case 'left':
+        imageWrapper.classList.add('align-left');
+        break;
+      case 'center':
+        imageWrapper.classList.add('align-center');
+        break;
+      case 'right':
+        imageWrapper.classList.add('align-right');
+        break;
+    }
+    
+    this.showToast(`Imagen alineada a la ${alignment === 'left' ? 'izquierda' : alignment === 'right' ? 'derecha' : 'centro'}`, 'success');
+    this.saveEditorState();
   }
 
   // ═══════════════════════════════════════════════════════════════

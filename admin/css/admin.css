@@ -2979,23 +2979,6 @@ input, select, textarea {
   position: relative;
 }
 
-.article-editor .resizable-image.selected::after,
-.article-editor figure.selected::after {
-  content: 'Delete para eliminar · Doble clic para redimensionar';
-  position: absolute;
-  bottom: -32px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.35rem 0.75rem;
-  background: var(--admin-primary);
-  color: white;
-  font-size: 0.7rem;
-  border-radius: 0.25rem;
-  white-space: nowrap;
-  z-index: 100;
-  pointer-events: none;
-}
-
 /* Image Grid in Editor */
 .article-editor .image-grid-container {
   display: grid;
