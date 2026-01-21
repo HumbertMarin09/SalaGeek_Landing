@@ -4746,15 +4746,148 @@ class SalaGeekAdmin {
       if (previewTitle) previewTitle.textContent = `${title} | Sala Geek`;
       if (previewUrl) previewUrl.textContent = `salageek.com › blog › ${slug || 'articulos'}`;
       if (previewDesc) previewDesc.textContent = metaDesc;
+      
+      // Update SEO Score
+      this.updateSEOScore();
     };
 
     titleInput?.addEventListener('input', updateSEOPreview);
     slugInput?.addEventListener('input', updateSEOPreview);
     metaDescInput?.addEventListener('input', updateSEOPreview);
     excerptInput?.addEventListener('input', updateSEOPreview);
+    
+    // Also listen to other relevant inputs
+    document.getElementById('article-editor')?.addEventListener('input', () => this.updateSEOScore());
+    document.getElementById('image-url')?.addEventListener('change', () => this.updateSEOScore());
+    document.getElementById('tags-input')?.addEventListener('keydown', () => setTimeout(() => this.updateSEOScore(), 100));
 
     // Initial update
     updateSEOPreview();
+  }
+
+  /**
+   * Calcula y actualiza el score SEO
+   */
+  updateSEOScore() {
+    const checks = {
+      title: false,
+      description: false,
+      excerpt: false,
+      image: false,
+      content: false,
+      tags: false
+    };
+
+    // 1. Título (50-60 caracteres ideal)
+    const title = document.getElementById('article-title')?.value?.trim() || '';
+    const titleLen = title.length;
+    if (titleLen >= 30 && titleLen <= 70) {
+      checks.title = titleLen >= 50 && titleLen <= 60 ? 'pass' : 'warn';
+    } else if (titleLen > 0) {
+      checks.title = 'fail';
+    }
+
+    // 2. Meta descripción (150-160 caracteres ideal)
+    const metaDesc = document.getElementById('meta-description')?.value?.trim() || '';
+    const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
+    const descLen = metaDesc.length || excerpt.length;
+    if (descLen >= 120 && descLen <= 160) {
+      checks.description = descLen >= 150 ? 'pass' : 'warn';
+    } else if (descLen > 0) {
+      checks.description = descLen < 120 ? 'warn' : 'fail';
+    }
+
+    // 3. Extracto definido
+    if (excerpt.length >= 50) {
+      checks.excerpt = 'pass';
+    } else if (excerpt.length > 0) {
+      checks.excerpt = 'warn';
+    }
+
+    // 4. Imagen destacada
+    const imageUrl = document.getElementById('image-url')?.value || 
+                     document.getElementById('preview-img')?.src || '';
+    if (imageUrl && !imageUrl.includes('placeholder') && imageUrl !== '') {
+      checks.image = 'pass';
+    }
+
+    // 5. Contenido (+300 palabras)
+    const content = document.getElementById('article-editor')?.innerText || '';
+    const wordCount = content.trim().split(/\s+/).filter(w => w.length > 0).length;
+    if (wordCount >= 300) {
+      checks.content = 'pass';
+    } else if (wordCount >= 150) {
+      checks.content = 'warn';
+    } else if (wordCount > 0) {
+      checks.content = 'fail';
+    }
+
+    // 6. Tags definidos
+    const tagsCount = this.tags?.length || 0;
+    if (tagsCount >= 3) {
+      checks.tags = 'pass';
+    } else if (tagsCount > 0) {
+      checks.tags = 'warn';
+    }
+
+    // Calculate score
+    let score = 0;
+    let total = 0;
+    Object.values(checks).forEach(val => {
+      total++;
+      if (val === 'pass') score += 100;
+      else if (val === 'warn') score += 50;
+    });
+    const finalScore = Math.round(score / total);
+
+    // Update UI
+    const scoreCircle = document.getElementById('seo-score-circle');
+    const scoreValue = document.getElementById('seo-score-value');
+    const scoreLabel = document.getElementById('seo-score-label');
+
+    if (scoreCircle && scoreValue && scoreLabel) {
+      scoreValue.textContent = finalScore;
+      
+      // Remove old classes
+      scoreCircle.classList.remove('score-bad', 'score-medium', 'score-good');
+      scoreLabel.classList.remove('score-bad', 'score-medium', 'score-good');
+      
+      // Add new class based on score
+      if (finalScore >= 80) {
+        scoreCircle.classList.add('score-good');
+        scoreLabel.classList.add('score-good');
+        scoreLabel.textContent = 'Excelente';
+      } else if (finalScore >= 50) {
+        scoreCircle.classList.add('score-medium');
+        scoreLabel.classList.add('score-medium');
+        scoreLabel.textContent = 'Mejorable';
+      } else {
+        scoreCircle.classList.add('score-bad');
+        scoreLabel.classList.add('score-bad');
+        scoreLabel.textContent = 'Necesita trabajo';
+      }
+    }
+
+    // Update individual checks
+    Object.entries(checks).forEach(([key, status]) => {
+      const checkEl = document.querySelector(`.seo-check[data-check="${key}"]`);
+      if (checkEl) {
+        checkEl.classList.remove('check-pass', 'check-fail', 'check-warn');
+        const icon = checkEl.querySelector('.seo-check-icon');
+        if (status === 'pass') {
+          checkEl.classList.add('check-pass');
+          if (icon) icon.textContent = '';
+        } else if (status === 'warn') {
+          checkEl.classList.add('check-warn');
+          if (icon) icon.textContent = '';
+        } else if (status === 'fail') {
+          checkEl.classList.add('check-fail');
+          if (icon) icon.textContent = '';
+        } else {
+          if (icon) icon.textContent = '○';
+        }
+      }
+    });
   }
 
   /**

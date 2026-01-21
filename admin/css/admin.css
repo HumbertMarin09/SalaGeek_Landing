@@ -3478,6 +3478,125 @@ input, select, textarea {
   overflow: hidden;
 }
 
+/* SEO Score Panel - Traffic Light */
+.seo-score-panel {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--admin-bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--admin-border);
+}
+
+.seo-score-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.seo-score-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.seo-score-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  background: var(--admin-bg-tertiary);
+  border: 3px solid var(--admin-border);
+  color: var(--admin-text-muted);
+  transition: all 0.3s ease;
+}
+
+.seo-score-circle.score-bad {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.seo-score-circle.score-medium {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.seo-score-circle.score-good {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.seo-score-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--admin-text-muted);
+}
+
+.seo-score-label.score-bad { color: #ef4444; }
+.seo-score-label.score-medium { color: #f59e0b; }
+.seo-score-label.score-good { color: #10b981; }
+
+.seo-checks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.seo-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  padding: 0.25rem 0;
+}
+
+.seo-check-icon {
+  font-size: 0.875rem;
+  width: 16px;
+  text-align: center;
+}
+
+.seo-check.check-pass .seo-check-icon {
+  color: #10b981;
+}
+
+.seo-check.check-pass .seo-check-icon::before {
+  content: "✓";
+}
+
+.seo-check.check-fail .seo-check-icon {
+  color: #ef4444;
+}
+
+.seo-check.check-fail .seo-check-icon::before {
+  content: "✗";
+}
+
+.seo-check.check-warn .seo-check-icon {
+  color: #f59e0b;
+}
+
+.seo-check.check-warn .seo-check-icon::before {
+  content: "!";
+}
+
+.seo-check.check-pass .seo-check-text {
+  color: var(--admin-text);
+}
+
+.seo-check.check-fail .seo-check-text,
+.seo-check.check-warn .seo-check-text {
+  color: var(--admin-text-muted);
+}
+
 /* Dark mode adjustments for SEO preview */
 @media (prefers-color-scheme: dark) {
   .seo-preview {
