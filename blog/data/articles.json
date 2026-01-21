@@ -1,5 +1,30 @@
 {
-  "articles": [],
+  "articles": [
+    {
+      "id": "mknhptchlfcrdy9i7x",
+      "title": "Sin título",
+      "slug": "sin-titulo",
+      "excerpt": "",
+      "content": "/blog/articulos/sin-titulo.html",
+      "image": "https://salageek.com/admin/",
+      "category": "series",
+      "categoryDisplay": "Series",
+      "tags": [],
+      "author": "Sala Geek",
+      "publishDate": "2026-01-21T03:55:00.000Z",
+      "modifiedDate": "2026-01-21T03:55:36.785Z",
+      "readTime": "5 min",
+      "views": 0,
+      "featured": false,
+      "trending": false,
+      "status": "draft",
+      "metaDescription": "",
+      "metaKeywords": "",
+      "canonicalUrl": "",
+      "ogImage": "https://salageek.com/admin/",
+      "noIndex": false
+    }
+  ],
   "_commented_articles": [
     {
       "id": "stranger-things-temporada-5-detalles",
