@@ -984,6 +984,8 @@ input, select, textarea {
 /* Article Editor */
 .article-editor {
   position: relative;
+  width: 100%;
+  max-width: 100%;
   min-height: 400px;
   padding: 1.25rem;
   background: var(--admin-surface);
@@ -994,7 +996,7 @@ input, select, textarea {
   transition: all var(--transition-fast);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .article-editor:empty::before {
