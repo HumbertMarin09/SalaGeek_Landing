@@ -3478,9 +3478,6 @@ class SalaGeekAdmin {
     const categoryRadio = document.querySelector(`input[name="category"][value="${article.category}"]`);
     if (categoryRadio) categoryRadio.checked = true;
 
-    // Status
-    document.getElementById('article-status').value = article.status || 'published';
-
     // Date
     if (article.publishDate) {
       const date = new Date(article.publishDate);
@@ -4056,10 +4053,10 @@ class SalaGeekAdmin {
           
           .article-meta-top { 
             display: flex; 
-            align-items: center; 
-            gap: 1rem; 
-            margin-bottom: 1rem;
             flex-wrap: wrap;
+            align-items: center; 
+            gap: 0.75rem 1rem; 
+            margin-bottom: 1rem;
           }
           
           .article-category { 
@@ -4290,7 +4287,7 @@ class SalaGeekAdmin {
           }
           
           /* Responsive para móvil */
-          @media (max-width: 768px) {
+          @media (max-width: 500px) {
             .preview-wrapper {
               padding: 1rem;
               padding-top: 2.5rem;
@@ -4305,6 +4302,11 @@ class SalaGeekAdmin {
             .breadcrumbs ol {
               flex-wrap: nowrap;
             }
+            .article-meta-top {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 0.5rem;
+            }
             .article-title {
               font-size: 1.5rem;
             }
@@ -4314,11 +4316,6 @@ class SalaGeekAdmin {
             .article-category {
               padding: 0.5rem 1rem;
               font-size: 0.7rem;
-            }
-            .article-meta-top {
-              flex-direction: column;
-              align-items: flex-start;
-              gap: 0.625rem;
             }
             .article-meta-bottom {
               flex-direction: column;

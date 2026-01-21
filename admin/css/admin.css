@@ -1931,25 +1931,39 @@ input, select, textarea {
   justify-content: center;
 }
 
-.confirm-actions button {
+.confirm-actions .btn-secondary,
+.confirm-actions .btn-danger {
   flex: 1;
-  max-width: 140px;
-}
-
-.btn-danger {
-  background: var(--admin-danger);
-  color: white;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
+  max-width: 130px;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  display: flex;
+  border-radius: 0.5rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.btn-danger:hover {
+.confirm-actions .btn-secondary {
+  background: var(--admin-surface-hover);
+  color: var(--admin-text);
+  border: 1px solid var(--admin-border);
+}
+
+.confirm-actions .btn-secondary:hover {
+  background: var(--admin-border);
+}
+
+.confirm-actions .btn-danger {
+  background: var(--admin-danger);
+  color: white;
+  border: none;
+}
+
+.confirm-actions .btn-danger:hover {
   background: #dc2626;
   transform: translateY(-1px);
 }
