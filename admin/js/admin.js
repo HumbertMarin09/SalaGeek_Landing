@@ -2499,6 +2499,15 @@ class SalaGeekAdmin {
         else if (alignment === 'float-right') wrapperClass += ' float-right';
         else wrapperClass += ' align-center'; // Default to center
 
+        console.log('[Image Insert] Building HTML with:', { 
+          imageUrlLength: imageUrl.length, 
+          alt, 
+          width, 
+          height, 
+          alignment,
+          wrapperClass
+        });
+
         // Generate HTML - agregar un marcador para posicionar el cursor después
         let html = '';
         const cursorMarker = '<span id="cursor-marker-temp"></span>';
@@ -2520,11 +2529,50 @@ class SalaGeekAdmin {
           return;
         }
         
+        // Asegurar que el editor tiene el foco y una selección válida
         editor.focus();
-        const insertSuccess = document.execCommand('insertHTML', false, html);
         
+        // Verificar si hay una selección válida, si no, crear una al final del editor
+        const selection = window.getSelection();
+        if (!selection.rangeCount || !editor.contains(selection.anchorNode)) {
+          // No hay selección válida dentro del editor, colocar cursor al final
+          const range = document.createRange();
+          range.selectNodeContents(editor);
+          range.collapse(false); // Colapsar al final
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        
+        // Intentar insertar con execCommand
+        let insertSuccess = false;
+        try {
+          insertSuccess = document.execCommand('insertHTML', false, html);
+        } catch (e) {
+          console.warn('[Image Insert] execCommand failed:', e);
+        }
+        
+        // Si execCommand falla, usar fallback manual
         if (!insertSuccess) {
-          console.warn('[Image Insert] execCommand returned false, attempting fallback');
+          console.warn('[Image Insert] execCommand failed, using fallback');
+          const range = selection.getRangeAt(0);
+          range.deleteContents();
+          
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+          const frag = document.createDocumentFragment();
+          let lastNode;
+          while (tempDiv.firstChild) {
+            lastNode = frag.appendChild(tempDiv.firstChild);
+          }
+          range.insertNode(frag);
+          
+          // Mover cursor después del contenido insertado
+          if (lastNode) {
+            range.setStartAfter(lastNode);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
         }
         
         // Mover el cursor al final del contenido insertado
