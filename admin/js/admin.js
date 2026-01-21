@@ -353,9 +353,11 @@ class SalaGeekAdmin {
     // Verificar si hay cambios
     if (!this.hasUnsavedChanges()) return;
     
-    // Verificar que haya contenido mínimo
+    // Verificar que haya algo de contenido (título o contenido del editor)
     const title = document.getElementById('article-title')?.value?.trim();
-    if (!title) return;
+    const content = document.getElementById('article-editor')?.innerHTML?.trim();
+    const hasContent = title || (content && content !== '' && content !== '<br>');
+    if (!hasContent) return;
     
     // Actualizar indicador a "guardando"
     this.updateAutoSaveIndicator('saving');
@@ -379,7 +381,7 @@ class SalaGeekAdmin {
    * Guarda silenciosamente como borrador (sin navegación ni toast)
    */
   async autoSaveAsDraft() {
-    const title = document.getElementById('article-title')?.value?.trim();
+    const title = document.getElementById('article-title')?.value?.trim() || 'Sin título';
     const content = document.getElementById('article-editor')?.innerHTML || '';
     const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
     const image = document.getElementById('image-url')?.value || document.getElementById('preview-img')?.src || '';
@@ -2488,21 +2490,35 @@ class SalaGeekAdmin {
       else if (alignment === 'float-right') wrapperClass += ' float-right';
       else if (alignment === 'center') wrapperClass += ' align-center';
 
-      // Generate HTML
+      // Generate HTML - agregar un marcador para posicionar el cursor después
       let html = '';
+      const cursorMarker = '<span id="cursor-marker-temp"></span>';
       if (addCaption && captionText) {
         html = `<figure class="${wrapperClass}" style="${style}">
   <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
   <figcaption>${captionText}</figcaption>
-</figure>`;
+</figure>${cursorMarker}`;
       } else {
         html = `<span class="${wrapperClass}" style="${style}">
   <img src="${imageUrl}" alt="${alt}" style="max-width: 100%;">
-</span>`;
+</span>${cursorMarker}`;
       }
 
-      document.getElementById('article-editor').focus();
+      const editor = document.getElementById('article-editor');
+      editor.focus();
       document.execCommand('insertHTML', false, html);
+      
+      // Mover el cursor al final del contenido insertado
+      const marker = document.getElementById('cursor-marker-temp');
+      if (marker) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.setStartAfter(marker);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        marker.remove();
+      }
       
       // Cerrar modal y resetear estado
       document.getElementById('image-modal').classList.add('hidden');
@@ -3593,18 +3609,21 @@ class SalaGeekAdmin {
     
     // Gather form data
     const id = document.getElementById('article-id').value || this.generateId();
-    const title = document.getElementById('article-title').value.trim();
-    const slug = document.getElementById('article-slug').value.trim() || this.generateSlug(title);
+    const rawTitle = document.getElementById('article-title').value.trim();
+    // Para borradores, usar "Sin título" si está vacío
+    const title = rawTitle || (asDraft ? 'Sin título' : '');
+    const slug = document.getElementById('article-slug').value.trim() || this.generateSlug(title || 'borrador');
     const excerpt = document.getElementById('article-excerpt').value.trim();
     const categories = this.getSelectedCategories();
     const category = this.getPrimaryCategory(); // Categoría principal para compatibilidad
     // Forzar status según el botón presionado
     const status = asDraft ? 'draft' : 'published';
-    const publishDate = new Date(document.getElementById('article-date').value).toISOString();
+    const dateInput = document.getElementById('article-date').value;
+    const publishDate = dateInput ? new Date(dateInput).toISOString() : new Date().toISOString();
     const featured = document.getElementById('article-featured').checked;
     const trending = document.getElementById('article-trending').checked;
     const readTime = document.getElementById('read-time').value;
-    const image = document.getElementById('image-url').value || document.getElementById('preview-img').src;
+    const image = document.getElementById('image-url').value || document.getElementById('preview-img')?.src || '';
     const content = document.getElementById('article-editor').innerHTML;
     
     // SEO fields
@@ -3617,14 +3636,14 @@ class SalaGeekAdmin {
     const isDraft = asDraft;
 
     // Validation - más flexible para borradores
-    if (!title) {
-      this.showToast('El título es requerido', 'error');
-      document.getElementById('article-title').focus();
-      return;
-    }
-    
-    // Solo validar estos campos si NO es borrador
+    // Para borradores, no se requiere nada (se puede guardar vacío)
+    // Para publicar, se requiere título, extracto y contenido
     if (!isDraft) {
+      if (!title) {
+        this.showToast('El título es requerido para publicar', 'error');
+        document.getElementById('article-title').focus();
+        return;
+      }
       if (!excerpt) {
         this.showToast('El extracto es requerido para publicar', 'error');
         document.getElementById('article-excerpt').focus();
@@ -4034,21 +4053,19 @@ class SalaGeekAdmin {
           .article-category { 
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.85rem;
-            border-radius: 2rem;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            color: var(--bg-primary);
             font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: capitalize;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            border-radius: 50px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 209, 102, 0.25);
           }
-          .article-category svg { width: 14px; height: 14px; }
-          .article-category.category-series { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-          .article-category.category-peliculas { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-          .article-category.category-gaming { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-          .article-category.category-anime { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
-          .article-category.category-tecnologia { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+          .article-category svg { width: 16px; height: 16px; }
           
           time {
             display: flex;
@@ -4207,7 +4224,22 @@ class SalaGeekAdmin {
           .image-grid-container.cols-4 { grid-template-columns: repeat(4, 1fr); }
           .image-grid-container img { width: 100%; height: auto; object-fit: cover; border-radius: 8px; }
           
-          figcaption { text-align: center; font-size: 0.85rem; color: var(--text-tertiary); margin-top: 0.5rem; font-style: italic; }
+          /* Figure and figcaption */
+          figure.resizable-image {
+            display: block;
+          }
+          figure.resizable-image img {
+            display: block;
+            width: 100%;
+          }
+          figcaption { 
+            display: block;
+            text-align: center; 
+            font-size: 0.85rem; 
+            color: var(--text-tertiary); 
+            margin-top: 0.5rem; 
+            font-style: italic; 
+          }
           
           /* Video containers */
           .video-container, .youtube-embed {
@@ -4267,10 +4299,14 @@ class SalaGeekAdmin {
             .article-excerpt {
               font-size: 1rem;
             }
+            .article-category {
+              padding: 0.5rem 1rem;
+              font-size: 0.7rem;
+            }
             .article-meta-top {
               flex-direction: column;
               align-items: flex-start;
-              gap: 0.5rem;
+              gap: 0.625rem;
             }
             .article-meta-bottom {
               flex-direction: column;

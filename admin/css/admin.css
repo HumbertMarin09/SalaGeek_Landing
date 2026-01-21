@@ -2924,8 +2924,19 @@ input, select, textarea {
   box-shadow: 0 0 0 4px rgba(0, 200, 255, 0.5);
 }
 
-/* Figcaption */
+/* Figure & Figcaption - images with captions */
+.article-editor figure.resizable-image {
+  display: block;
+  margin: 1rem 0;
+}
+
+.article-editor figure.resizable-image img {
+  display: block;
+  margin: 0 auto;
+}
+
 .article-editor figcaption {
+  display: block;
   text-align: center;
   font-size: 0.85rem;
   color: var(--admin-text-muted);
