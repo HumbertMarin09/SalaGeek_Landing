@@ -2439,15 +2439,18 @@ class SalaGeekAdmin {
     document.getElementById('insert-image-btn')?.addEventListener('click', () => {
       let imageUrl = '';
       
-      // Get image source
-      if (this.currentImageSource === 'url') {
+      // Get image source - priorizar imagen subida si existe
+      if (this.currentImageSource === 'upload' && this.uploadedImageData) {
+        imageUrl = this.uploadedImageData;
+      } else if (this.currentImageSource === 'url') {
         imageUrl = document.getElementById('modal-image-url')?.value.trim();
       } else if (this.uploadedImageData) {
+        // Fallback: si hay imagen subida pero el tab es url
         imageUrl = this.uploadedImageData;
       }
 
       if (!imageUrl) {
-        this.showToast('Selecciona o ingresa una imagen', 'error');
+        this.showToast('Selecciona o ingresa una imagen primero', 'error');
         return;
       }
 
@@ -2483,10 +2486,27 @@ class SalaGeekAdmin {
 
       document.getElementById('article-editor').focus();
       document.execCommand('insertHTML', false, html);
+      
+      // Cerrar modal y resetear estado
       document.getElementById('image-modal').classList.add('hidden');
+      
+      // Resetear completamente el estado del modal
+      this.uploadedImageData = null;
+      this.currentImageSource = 'url';
+      const dropZone = document.getElementById('drop-zone');
+      const uploadPreview = document.getElementById('upload-preview');
+      const fileInput = document.getElementById('modal-file-input');
+      if (dropZone) dropZone.style.display = 'block';
+      if (uploadPreview) uploadPreview.classList.add('hidden');
+      if (fileInput) fileInput.value = ''; // Resetear file input para permitir subir de nuevo
+      
+      // Guardar estado para Undo
+      this.saveEditorState();
       
       // Setup resize handles on new image
       this.setupEditorImageHandlers();
+      
+      this.showToast('Imagen insertada', 'success');
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -3902,6 +3922,11 @@ class SalaGeekAdmin {
   generateArticlePreviewHTML(title, excerpt, content, category, image) {
     // Get current origin for base URL
     const baseUrl = window.location.origin;
+    const categoryDisplay = category.charAt(0).toUpperCase() + category.slice(1);
+    const dateFormatted = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    
+    // Get reading time from form
+    const readingTime = document.getElementById('article-reading-time')?.value || '5';
     
     return `
       <!DOCTYPE html>
@@ -3915,71 +3940,366 @@ class SalaGeekAdmin {
         <link rel="stylesheet" href="${baseUrl}/src/css/style.min.css">
         <link rel="stylesheet" href="${baseUrl}/src/css/blog.css">
         <style>
-          body { 
-            padding: 2rem; 
-            background: var(--sg-bg-primary, #0a0a0f); 
-            color: var(--sg-text-primary, #e4e6eb);
+          /* Variables del sitio */
+          :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #0f1433;
+            --text-primary: #e4e6eb;
+            --text-secondary: #8b8fa3;
+            --text-tertiary: #6c7086;
+            --accent-primary: #ffd166;
+            --accent-secondary: #ff9f1c;
+            --border-color: rgba(255, 209, 102, 0.1);
           }
+          
+          body { 
+            background: var(--bg-primary); 
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+          }
+          
+          .preview-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+          }
+          
+          /* Breadcrumbs */
+          .breadcrumbs {
+            background: linear-gradient(180deg, rgba(10, 14, 39, 0.95) 0%, rgba(10, 14, 39, 0.7) 100%);
+            border-bottom: 1px solid rgba(255, 209, 102, 0.08);
+            padding: 0.875rem 2rem;
+            margin: -2rem -2rem 2rem -2rem;
+          }
+          .breadcrumbs ol {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 0.85rem;
+          }
+          .breadcrumbs li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+          }
+          .breadcrumbs li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+          }
+          .breadcrumbs li:not(:last-child)::after {
+            content: "›";
+            margin-left: 0.6rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+          }
+          .breadcrumbs li.active {
+            color: var(--accent-primary);
+            font-weight: 500;
+          }
+          
+          /* Article header */
           .article-full { max-width: 800px; margin: 0 auto; }
           .article-header { margin-bottom: 2rem; }
-          .article-meta-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+          
+          .article-meta-top { 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem; 
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+          }
+          
           .article-category { 
-            padding: 0.35rem 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.85rem;
             border-radius: 2rem;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: capitalize;
+            text-decoration: none;
+            transition: all 0.3s ease;
           }
+          .article-category svg { width: 14px; height: 14px; }
           .article-category.category-series { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
           .article-category.category-peliculas { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
           .article-category.category-gaming { background: rgba(16, 185, 129, 0.15); color: #10b981; }
           .article-category.category-anime { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
           .article-category.category-tecnologia { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
-          .article-title { font-size: 2rem; margin-bottom: 1rem; line-height: 1.3; }
-          .article-excerpt { color: #888; font-size: 1.1rem; line-height: 1.6; }
-          .article-featured-image { margin: 2rem 0; }
-          .article-featured-image img { width: 100%; border-radius: 0.75rem; }
-          .article-content { line-height: 1.8; }
-          .article-content h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
-          .article-content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
-          .article-content p { margin-bottom: 1rem; }
-          .article-content img { max-width: 100%; border-radius: 0.5rem; }
-          .article-content blockquote { 
-            border-left: 3px solid #7c3aed; 
-            padding-left: 1rem; 
-            margin: 1rem 0; 
-            color: #888; 
-            font-style: italic; 
+          
+          time {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
           }
+          time svg { width: 14px; height: 14px; opacity: 0.7; }
+          
+          .article-title { 
+            font-size: 2.25rem; 
+            font-weight: 800;
+            margin: 1rem 0 1.25rem;
+            line-height: 1.25;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+          }
+          
+          .article-excerpt { 
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+          }
+          
+          .article-meta-bottom {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+          }
+          .article-meta-bottom span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+          }
+          .article-meta-bottom svg { width: 16px; height: 16px; opacity: 0.7; }
+          
+          /* Featured image */
+          .article-featured-image { 
+            margin: 0 0 2rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-secondary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          }
+          .article-featured-image img { 
+            width: 100%; 
+            display: block;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+          }
+          .article-featured-image figcaption {
+            background: var(--bg-secondary);
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            font-style: italic;
+            text-align: center;
+          }
+          
+          /* Article content */
+          .article-content { 
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+          }
+          .article-content .lead {
+            font-size: 1.25rem;
+            line-height: 1.75;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+          }
+          .article-content p { margin-bottom: 1.5rem; }
+          .article-content strong { color: var(--accent-primary); font-weight: 600; }
+          
+          .article-content h2 { 
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 3rem 0 1.25rem;
+            padding: 1rem 0 1rem 1.25rem;
+            position: relative;
+            border-left: 3px solid var(--accent-primary);
+            background: linear-gradient(90deg, rgba(255, 209, 102, 0.08) 0%, transparent 50%);
+            border-radius: 0 8px 8px 0;
+          }
+          
+          .article-content h3 { 
+            font-size: 1.375rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            padding-left: 0.75rem;
+            border-left: 2px solid rgba(255, 209, 102, 0.4);
+          }
+          
+          .article-content ul, .article-content ol {
+            margin: 1.5rem 0;
+            padding-left: 0;
+            list-style: none;
+          }
+          .article-content li {
+            position: relative;
+            padding-left: 1.75rem;
+            margin-bottom: 0.75rem;
+          }
+          .article-content ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+          }
+          
+          .article-content blockquote { 
+            margin: 2rem 0;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(255, 209, 102, 0.05) 0%, rgba(255, 159, 28, 0.08) 100%);
+            border-left: 4px solid var(--accent-primary);
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+          }
+          .article-content blockquote p { margin-bottom: 0.75rem; font-size: 1.125rem; }
+          .article-content blockquote p:last-child { margin-bottom: 0; }
+          
+          .article-content a {
+            color: var(--accent-primary);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+          }
+          
+          .article-content img { 
+            max-width: 100%; 
+            border-radius: 8px;
+            margin: 1rem 0;
+          }
+          
+          /* Resizable images */
           .resizable-image, .resizable-image img { max-width: 100%; }
-          .resizable-image.float-left { float: left; margin: 0 1rem 1rem 0; }
-          .resizable-image.float-right { float: right; margin: 0 0 1rem 1rem; }
-          .resizable-image.align-center { display: block; margin: 1rem auto; text-align: center; }
-          .image-grid-container { display: grid; margin: 1rem 0; }
+          .resizable-image.float-left { float: left; margin: 0 1.5rem 1rem 0; }
+          .resizable-image.float-right { float: right; margin: 0 0 1rem 1.5rem; }
+          .resizable-image.align-center { display: block; margin: 1.5rem auto; text-align: center; }
+          
+          /* Image grids */
+          .image-grid-container { display: grid; gap: 0.75rem; margin: 1.5rem 0; }
           .image-grid-container.cols-2 { grid-template-columns: repeat(2, 1fr); }
           .image-grid-container.cols-3 { grid-template-columns: repeat(3, 1fr); }
           .image-grid-container.cols-4 { grid-template-columns: repeat(4, 1fr); }
-          .image-grid-container img { width: 100%; height: auto; object-fit: cover; border-radius: 0.375rem; }
-          figcaption { text-align: center; font-size: 0.85rem; color: #888; margin-top: 0.5rem; font-style: italic; }
-          time { color: #888; font-size: 0.9rem; }
+          .image-grid-container img { width: 100%; height: auto; object-fit: cover; border-radius: 8px; }
+          
+          figcaption { text-align: center; font-size: 0.85rem; color: var(--text-tertiary); margin-top: 0.5rem; font-style: italic; }
+          
+          /* Video containers */
+          .video-container, .youtube-embed {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            margin: 2rem 0;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+          }
+          .video-container iframe, .youtube-embed iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+          }
+          
+          /* Preview badge */
+          .preview-badge {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #0a0e27;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
+            z-index: 100;
+          }
         </style>
       </head>
       <body class="article-page">
-        <article class="article-full">
-          <header class="article-header">
-            <div class="article-meta-top">
-              <span class="article-category category-${category}">${category}</span>
-              <time>${new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
-            </div>
-            <h1 class="article-title">${this.escapeHtml(title)}</h1>
-            <p class="article-excerpt">${this.escapeHtml(excerpt)}</p>
-          </header>
-          ${image && image !== '' && !image.includes('data:,') ? `<figure class="article-featured-image"><img src="${image}" alt="" onerror="this.parentElement.style.display='none'"></figure>` : ''}
-          <div class="article-content">${content}</div>
-        </article>
+        <div class="preview-badge">Vista Previa</div>
+        
+        <div class="preview-wrapper">
+          <nav class="breadcrumbs">
+            <ol>
+              <li><a href="#">Inicio</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">${categoryDisplay}</a></li>
+              <li class="active">${this.escapeHtml(title).substring(0, 30)}${title.length > 30 ? '...' : ''}</li>
+            </ol>
+          </nav>
+          
+          <article class="article-full">
+            <header class="article-header">
+              <div class="article-meta-top">
+                <a class="article-category category-${category}">
+                  ${this.getCategoryIconForPreview(category)}
+                  ${categoryDisplay}
+                </a>
+                <time>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  ${dateFormatted}
+                </time>
+              </div>
+              
+              <h1 class="article-title">${this.escapeHtml(title)}</h1>
+              <p class="article-excerpt">${this.escapeHtml(excerpt)}</p>
+              
+              <div class="article-meta-bottom">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  ${readingTime} min de lectura
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  0 vistas
+                </span>
+              </div>
+            </header>
+            
+            ${image && image !== '' && !image.includes('data:,') ? `
+            <figure class="article-featured-image">
+              <img src="${image}" alt="${this.escapeHtml(title)}" onerror="this.parentElement.style.display='none'">
+            </figure>
+            ` : ''}
+            
+            <div class="article-content">${content}</div>
+          </article>
+        </div>
       </body>
       </html>
     `;
+  }
+
+  /**
+   * Obtiene el icono SVG de la categoría para la preview
+   */
+  getCategoryIconForPreview(category) {
+    const icons = {
+      series: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>',
+      peliculas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>',
+      gaming: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="18" y2="12"/></svg>',
+      anime: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 4 6 4 10c0 2.5 1 4.5 2.5 6l-1 4 3-2c1 .6 2.2 1 3.5 1s2.5-.4 3.5-1l3 2-1-4c1.5-1.5 2.5-3.5 2.5-6 0-4-4-8-8-8z"></path></svg>',
+      tecnologia: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>'
+    };
+    return icons[category] || icons.series;
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -4371,6 +4691,11 @@ class SalaGeekAdmin {
     const nameInput = document.getElementById('new-category-name');
     const confirmBtn = document.getElementById('confirm-new-category');
     const cancelBtn = document.getElementById('cancel-new-category');
+    const iconPicker = document.getElementById('category-icon-picker');
+    const iconDropdown = document.getElementById('icon-picker-dropdown');
+
+    // Variable para almacenar el icono seleccionado
+    this.selectedCategoryIcon = 'plus';
 
     addBtn?.addEventListener('click', () => {
       inputWrapper?.classList.remove('hidden');
@@ -4379,9 +4704,7 @@ class SalaGeekAdmin {
     });
 
     cancelBtn?.addEventListener('click', () => {
-      inputWrapper?.classList.add('hidden');
-      addBtn?.classList.remove('hidden');
-      if (nameInput) nameInput.value = '';
+      this.resetCategoryInput();
     });
 
     confirmBtn?.addEventListener('click', () => {
@@ -4393,9 +4716,61 @@ class SalaGeekAdmin {
         e.preventDefault();
         this.addNewCategory();
       } else if (e.key === 'Escape') {
-        cancelBtn?.click();
+        this.resetCategoryInput();
       }
     });
+
+    // Icon picker functionality
+    iconPicker?.addEventListener('click', () => {
+      iconDropdown?.classList.toggle('hidden');
+    });
+
+    // Selección de iconos
+    iconDropdown?.querySelectorAll('.icon-picker-option').forEach(option => {
+      option.addEventListener('click', () => {
+        iconDropdown.querySelectorAll('.icon-picker-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+        this.selectedCategoryIcon = option.dataset.icon;
+        
+        // Actualizar el icono del botón picker
+        const iconSvg = option.querySelector('svg').cloneNode(true);
+        iconSvg.setAttribute('width', '14');
+        iconSvg.setAttribute('height', '14');
+        iconPicker.innerHTML = '';
+        iconPicker.appendChild(iconSvg);
+      });
+    });
+
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (!iconPicker?.contains(e.target) && !iconDropdown?.contains(e.target)) {
+        iconDropdown?.classList.add('hidden');
+      }
+    });
+  }
+
+  /**
+   * Resetea el formulario de nueva categoría
+   */
+  resetCategoryInput() {
+    const inputWrapper = document.getElementById('new-category-input');
+    const addBtn = document.getElementById('add-category-btn');
+    const nameInput = document.getElementById('new-category-name');
+    const iconDropdown = document.getElementById('icon-picker-dropdown');
+    const iconPicker = document.getElementById('category-icon-picker');
+
+    inputWrapper?.classList.add('hidden');
+    addBtn?.classList.remove('hidden');
+    iconDropdown?.classList.add('hidden');
+    if (nameInput) nameInput.value = '';
+
+    // Reset icon picker
+    this.selectedCategoryIcon = 'plus';
+    iconDropdown?.querySelectorAll('.icon-picker-option').forEach(o => o.classList.remove('selected'));
+    iconDropdown?.querySelector('[data-icon="plus"]')?.classList.add('selected');
+    if (iconPicker) {
+      iconPicker.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`;
+    }
   }
 
   /**
@@ -4403,8 +4778,6 @@ class SalaGeekAdmin {
    */
   addNewCategory() {
     const nameInput = document.getElementById('new-category-name');
-    const inputWrapper = document.getElementById('new-category-input');
-    const addBtn = document.getElementById('add-category-btn');
     const categorySelector = document.querySelector('.category-selector.multi-select');
 
     const name = nameInput?.value?.trim();
@@ -4421,25 +4794,63 @@ class SalaGeekAdmin {
       return;
     }
 
-    // Crear nueva opción
+    // Obtener el SVG del icono seleccionado
+    const iconSvg = this.getCategoryIconSvg(this.selectedCategoryIcon || 'plus');
+
+    // Crear nueva opción con botón de eliminar
     const newOption = document.createElement('label');
-    newOption.className = 'category-option';
+    newOption.className = 'category-option custom-category';
     newOption.innerHTML = `
       <input type="checkbox" name="categories" value="${value}" checked>
       <span class="category-badge category-custom">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        ${iconSvg}
         ${this.escapeHtml(name)}
       </span>
+      <button type="button" class="category-delete-btn" title="Eliminar categoría">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     `;
+
+    // Event listener para eliminar
+    newOption.querySelector('.category-delete-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.deleteCategory(newOption, name);
+    });
 
     categorySelector?.appendChild(newOption);
 
-    // Limpiar y ocultar input
-    if (nameInput) nameInput.value = '';
-    inputWrapper?.classList.add('hidden');
-    addBtn?.classList.remove('hidden');
+    // Limpiar y resetear
+    this.resetCategoryInput();
 
     this.showToast(`Categoría "${name}" agregada`, 'success');
+  }
+
+  /**
+   * Obtiene el SVG del icono de categoría
+   */
+  getCategoryIconSvg(iconName) {
+    const icons = {
+      tag: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+      star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+      heart: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+      zap: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+      music: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+      book: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      globe: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+      plus: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>'
+    };
+    return icons[iconName] || icons.plus;
+  }
+
+  /**
+   * Elimina una categoría personalizada
+   */
+  deleteCategory(element, name) {
+    if (confirm(`¿Eliminar la categoría "${name}"?`)) {
+      element.remove();
+      this.showToast(`Categoría "${name}" eliminada`, 'success');
+    }
   }
 
   /**
