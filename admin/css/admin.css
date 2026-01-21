@@ -2946,29 +2946,43 @@ input, select, textarea {
 }
 
 /* Float Styles */
-.article-editor .resizable-image.float-left {
+.article-editor .resizable-image.float-left,
+.article-editor figure.float-left {
   float: left;
   margin: 0 1rem 1rem 0;
 }
 
-.article-editor .resizable-image.float-right {
+.article-editor .resizable-image.float-right,
+.article-editor figure.float-right {
   float: right;
   margin: 0 0 1rem 1rem;
 }
 
-.article-editor .resizable-image.align-left {
+.article-editor .resizable-image.align-left,
+.article-editor figure.align-left {
   display: block;
   margin: 1rem auto 1rem 0;
+  text-align: left;
 }
 
-.article-editor .resizable-image.align-right {
+.article-editor .resizable-image.align-right,
+.article-editor figure.align-right {
   display: block;
   margin: 1rem 0 1rem auto;
+  text-align: right;
 }
 
-.article-editor .resizable-image.align-center {
+.article-editor .resizable-image.align-center,
+.article-editor figure.align-center {
   display: block;
   margin: 1rem auto;
+  text-align: center;
+}
+
+/* Asegurar que figure tenga width fit-content para que la alineación funcione */
+.article-editor figure {
+  width: fit-content;
+  max-width: 100%;
 }
 
 /* Imagen seleccionada */
@@ -3062,6 +3076,18 @@ input, select, textarea {
 
 .article-editor .image-grid-container img.drop-zone-active {
   box-shadow: 0 0 0 4px rgba(0, 200, 255, 0.5);
+}
+
+/* Base styles para imágenes insertadas */
+.article-editor .resizable-image {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+.article-editor .resizable-image img {
+  display: block;
 }
 
 /* Figure & Figcaption - images with captions */
