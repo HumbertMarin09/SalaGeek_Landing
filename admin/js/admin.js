@@ -4682,20 +4682,20 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Configura la selección múltiple de categorías
+   * Configura el sistema de categorías y subcategorías
    */
   setupCategoryMultiSelect() {
-    // Botón para agregar nueva categoría
-    const addBtn = document.getElementById('add-category-btn');
-    const inputWrapper = document.getElementById('new-category-input');
-    const nameInput = document.getElementById('new-category-name');
-    const confirmBtn = document.getElementById('confirm-new-category');
-    const cancelBtn = document.getElementById('cancel-new-category');
-    const iconPicker = document.getElementById('category-icon-picker');
-    const iconDropdown = document.getElementById('icon-picker-dropdown');
+    // ===== SUBCATEGORÍAS =====
+    const addBtn = document.getElementById('add-subcategory-btn');
+    const inputWrapper = document.getElementById('new-subcategory-input');
+    const nameInput = document.getElementById('new-subcategory-name');
+    const confirmBtn = document.getElementById('confirm-new-subcategory');
+    const cancelBtn = document.getElementById('cancel-new-subcategory');
+    const iconPicker = document.getElementById('subcategory-icon-picker');
+    const iconDropdown = document.getElementById('subcategory-icon-dropdown');
 
     // Variable para almacenar el icono seleccionado
-    this.selectedCategoryIcon = 'plus';
+    this.selectedSubcategoryIcon = 'tag';
 
     addBtn?.addEventListener('click', () => {
       inputWrapper?.classList.remove('hidden');
@@ -4704,19 +4704,19 @@ class SalaGeekAdmin {
     });
 
     cancelBtn?.addEventListener('click', () => {
-      this.resetCategoryInput();
+      this.resetSubcategoryInput();
     });
 
     confirmBtn?.addEventListener('click', () => {
-      this.addNewCategory();
+      this.addNewSubcategory();
     });
 
     nameInput?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        this.addNewCategory();
+        this.addNewSubcategory();
       } else if (e.key === 'Escape') {
-        this.resetCategoryInput();
+        this.resetSubcategoryInput();
       }
     });
 
@@ -4730,7 +4730,7 @@ class SalaGeekAdmin {
       option.addEventListener('click', () => {
         iconDropdown.querySelectorAll('.icon-picker-option').forEach(o => o.classList.remove('selected'));
         option.classList.add('selected');
-        this.selectedCategoryIcon = option.dataset.icon;
+        this.selectedSubcategoryIcon = option.dataset.icon;
         
         // Actualizar el icono del botón picker
         const iconSvg = option.querySelector('svg').cloneNode(true);
@@ -4750,63 +4750,63 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Resetea el formulario de nueva categoría
+   * Resetea el formulario de nueva subcategoría
    */
-  resetCategoryInput() {
-    const inputWrapper = document.getElementById('new-category-input');
-    const addBtn = document.getElementById('add-category-btn');
-    const nameInput = document.getElementById('new-category-name');
-    const iconDropdown = document.getElementById('icon-picker-dropdown');
-    const iconPicker = document.getElementById('category-icon-picker');
+  resetSubcategoryInput() {
+    const inputWrapper = document.getElementById('new-subcategory-input');
+    const addBtn = document.getElementById('add-subcategory-btn');
+    const nameInput = document.getElementById('new-subcategory-name');
+    const iconDropdown = document.getElementById('subcategory-icon-dropdown');
+    const iconPicker = document.getElementById('subcategory-icon-picker');
 
     inputWrapper?.classList.add('hidden');
     addBtn?.classList.remove('hidden');
     iconDropdown?.classList.add('hidden');
     if (nameInput) nameInput.value = '';
 
-    // Reset icon picker
-    this.selectedCategoryIcon = 'plus';
+    // Reset icon picker to tag (default for subcategories)
+    this.selectedSubcategoryIcon = 'tag';
     iconDropdown?.querySelectorAll('.icon-picker-option').forEach(o => o.classList.remove('selected'));
-    iconDropdown?.querySelector('[data-icon="plus"]')?.classList.add('selected');
+    iconDropdown?.querySelector('[data-icon="tag"]')?.classList.add('selected');
     if (iconPicker) {
-      iconPicker.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`;
+      iconPicker.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>`;
     }
   }
 
   /**
-   * Agrega una nueva categoría personalizada
+   * Agrega una nueva subcategoría
    */
-  addNewCategory() {
-    const nameInput = document.getElementById('new-category-name');
-    const categorySelector = document.querySelector('.category-selector.multi-select');
+  addNewSubcategory() {
+    const nameInput = document.getElementById('new-subcategory-name');
+    const subcategoriesList = document.getElementById('subcategories-list');
 
     const name = nameInput?.value?.trim();
     if (!name) {
-      this.showToast('Ingresa un nombre para la categoría', 'warning');
+      this.showToast('Ingresa un nombre para la subcategoría', 'warning');
       return;
     }
 
     const value = this.generateSlug(name);
     
     // Verificar que no exista
-    if (document.querySelector(`input[name="categories"][value="${value}"]`)) {
-      this.showToast('Esta categoría ya existe', 'warning');
+    if (document.querySelector(`input[name="subcategories"][value="${value}"]`)) {
+      this.showToast('Esta subcategoría ya existe', 'warning');
       return;
     }
 
     // Obtener el SVG del icono seleccionado
-    const iconSvg = this.getCategoryIconSvg(this.selectedCategoryIcon || 'plus');
+    const iconSvg = this.getSubcategoryIconSvg(this.selectedSubcategoryIcon || 'tag');
 
     // Crear nueva opción con botón de eliminar
     const newOption = document.createElement('label');
-    newOption.className = 'category-option custom-category';
+    newOption.className = 'category-option subcategory-item';
     newOption.innerHTML = `
-      <input type="checkbox" name="categories" value="${value}" checked>
-      <span class="category-badge category-custom">
+      <input type="checkbox" name="subcategories" value="${value}" checked>
+      <span class="category-badge">
         ${iconSvg}
         ${this.escapeHtml(name)}
       </span>
-      <button type="button" class="category-delete-btn" title="Eliminar categoría">
+      <button type="button" class="category-delete-btn" title="Eliminar subcategoría">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     `;
@@ -4815,21 +4815,21 @@ class SalaGeekAdmin {
     newOption.querySelector('.category-delete-btn').addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      this.deleteCategory(newOption, name);
+      this.deleteSubcategory(newOption, name);
     });
 
-    categorySelector?.appendChild(newOption);
+    subcategoriesList?.appendChild(newOption);
 
     // Limpiar y resetear
-    this.resetCategoryInput();
+    this.resetSubcategoryInput();
 
-    this.showToast(`Categoría "${name}" agregada`, 'success');
+    this.showToast(`Subcategoría "${name}" agregada`, 'success');
   }
 
   /**
-   * Obtiene el SVG del icono de categoría
+   * Obtiene el SVG del icono de subcategoría
    */
-  getCategoryIconSvg(iconName) {
+  getSubcategoryIconSvg(iconName) {
     const icons = {
       tag: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
       star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
@@ -4840,35 +4840,33 @@ class SalaGeekAdmin {
       globe: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
       plus: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>'
     };
-    return icons[iconName] || icons.plus;
+    return icons[iconName] || icons.tag;
   }
 
   /**
-   * Elimina una categoría personalizada
+   * Elimina una subcategoría
    */
-  deleteCategory(element, name) {
-    if (confirm(`¿Eliminar la categoría "${name}"?`)) {
-      element.remove();
-      this.showToast(`Categoría "${name}" eliminada`, 'success');
-    }
+  deleteSubcategory(element, name) {
+    element.remove();
+    this.showToast(`Subcategoría "${name}" eliminada`, 'success');
   }
 
   /**
-   * Obtiene las categorías seleccionadas
-   * @returns {Array<string>} Array de valores de categorías seleccionadas
+   * Obtiene las subcategorías seleccionadas
+   * @returns {Array<string>} Array de valores de subcategorías seleccionadas
    */
-  getSelectedCategories() {
-    const checkboxes = document.querySelectorAll('input[name="categories"]:checked');
+  getSelectedSubcategories() {
+    const checkboxes = document.querySelectorAll('input[name="subcategories"]:checked');
     return Array.from(checkboxes).map(cb => cb.value);
   }
 
   /**
-   * Obtiene la categoría principal (primera seleccionada o 'series' por defecto)
-   * @returns {string} Valor de la categoría principal
+   * Obtiene la categoría principal seleccionada
+   * @returns {string} Valor de la categoría principal o 'series' por defecto
    */
   getPrimaryCategory() {
-    const selected = this.getSelectedCategories();
-    return selected.length > 0 ? selected[0] : 'series';
+    const selected = document.querySelector('input[name="category"]:checked');
+    return selected?.value || 'series';
   }
 }
 
