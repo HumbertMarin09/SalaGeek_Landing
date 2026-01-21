@@ -275,6 +275,28 @@ class SalaGeekAdmin {
   }
 
   /**
+   * Obtiene el token de acceso actualizado
+   * @returns {Promise<string>} Token JWT válido
+   * @throws {Error} Si no hay sesión o token
+   */
+  async getAccessToken() {
+    const currentUser = netlifyIdentity.currentUser();
+    if (!currentUser) {
+      throw new Error('Sin sesión activa');
+    }
+    
+    try {
+      return await currentUser.jwt();
+    } catch (e) {
+      const fallbackToken = currentUser.token?.access_token;
+      if (!fallbackToken) {
+        throw new Error('Token no disponible');
+      }
+      return fallbackToken;
+    }
+  }
+
+  /**
    * Inicia el flujo de cambio de contraseña
    * 
    * @description Cierra sesión y abre el widget para usar "Forgot password"
@@ -440,24 +462,8 @@ class SalaGeekAdmin {
       noIndex: document.getElementById('no-index')?.checked || false
     };
 
-    // Obtener token actualizado (refrescar si es necesario)
-    const currentUser = netlifyIdentity.currentUser();
-    if (!currentUser) {
-      throw new Error('Sin sesión activa');
-    }
-    
-    // Intentar refrescar el token
-    let accessToken;
-    try {
-      const jwt = await currentUser.jwt();
-      accessToken = jwt;
-    } catch (e) {
-      accessToken = currentUser.token?.access_token;
-    }
-    
-    if (!accessToken) {
-      throw new Error('Token no disponible');
-    }
+    // Obtener token de acceso
+    const accessToken = await this.getAccessToken();
 
     const response = await fetch('/.netlify/functions/save-article', {
       method: 'POST',
@@ -2978,11 +2984,12 @@ class SalaGeekAdmin {
     confirmBtn.innerHTML = '<span class="spinner"></span> Subiendo...';
 
     try {
+      const accessToken = await this.getAccessToken();
       const response = await fetch('/.netlify/functions/upload-image', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token.access_token}`
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(this.galleryUploadData)
       });
@@ -3073,23 +3080,8 @@ class SalaGeekAdmin {
     `;
 
     try {
-      // Obtener token actualizado
-      const currentUser = netlifyIdentity.currentUser();
-      if (!currentUser) {
-        throw new Error('Sesión expirada');
-      }
-      
-      // Intentar obtener token fresco
-      let accessToken;
-      try {
-        accessToken = await currentUser.jwt();
-      } catch (e) {
-        accessToken = currentUser.token?.access_token;
-      }
-      
-      if (!accessToken) {
-        throw new Error('Token no disponible');
-      }
+      // Obtener token de acceso
+      const accessToken = await this.getAccessToken();
       
       const response = await fetch('/.netlify/functions/list-images', {
         headers: {
@@ -3808,17 +3800,13 @@ class SalaGeekAdmin {
     btn.innerHTML = '<span class="spinner"></span> Guardando...';
 
     try {
-      // Obtener token actualizado
-      const currentUser = netlifyIdentity.currentUser();
-      if (!currentUser || !currentUser.token?.access_token) {
-        throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
-      }
+      const accessToken = await this.getAccessToken();
       
       const response = await fetch('/.netlify/functions/save-article', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token.access_token}`
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({
           article: articleData,
@@ -3906,17 +3894,13 @@ class SalaGeekAdmin {
     if (!confirmed) return;
 
     try {
-      // Obtener token actualizado
-      const currentUser = netlifyIdentity.currentUser();
-      if (!currentUser || !currentUser.token?.access_token) {
-        throw new Error('Sesión expirada');
-      }
+      const accessToken = await this.getAccessToken();
       
       const response = await fetch('/.netlify/functions/save-article', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token.access_token}`
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({ id, slug: article.slug })
       });
@@ -4896,9 +4880,10 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Calcula y actualiza el score SEO
+   * Calcula el score SEO sin actualizar el UI
+   * @returns {{ checks: Object, passed: number, total: number, percentage: number }}
    */
-  updateSEOScore() {
+  calculateSEOScore() {
     const checks = {
       title: false,
       description: false,
@@ -4937,8 +4922,7 @@ class SalaGeekAdmin {
     // 4. Imagen destacada
     const imageUrlInput = document.getElementById('image-url')?.value?.trim() || '';
     const previewImg = document.getElementById('preview-img');
-    const previewSrc = previewImg?.getAttribute('src') || ''; // Usar getAttribute para obtener el valor real
-    // Verificar que la imagen sea válida (URL http real, no vacía)
+    const previewSrc = previewImg?.getAttribute('src') || '';
     const hasValidImage = (imageUrlInput && imageUrlInput.startsWith('http')) || 
                          (previewSrc && previewSrc.startsWith('http') && previewSrc.length > 10);
     if (hasValidImage) {
@@ -4964,16 +4948,27 @@ class SalaGeekAdmin {
       checks.tags = 'warn';
     }
 
-    // Calculate score
+    // Calculate totals
     let passed = 0;
     let total = 0;
     Object.values(checks).forEach(val => {
       total++;
       if (val === 'pass') passed++;
     });
-    const percentage = Math.round((passed / total) * 100);
 
-    // Update UI
+    return {
+      checks,
+      passed,
+      total,
+      percentage: Math.round((passed / total) * 100)
+    };
+  }
+
+  /**
+   * Renderiza el score SEO en el UI
+   * @param {{ checks: Object, passed: number, total: number, percentage: number }} seoData
+   */
+  renderSEOScore({ checks, passed, total, percentage }) {
     const scoreCircle = document.getElementById('seo-score-circle');
     const scoreValue = document.getElementById('seo-score-value');
     const scoreLabel = document.getElementById('seo-score-label');
@@ -5021,6 +5016,14 @@ class SalaGeekAdmin {
         }
       }
     });
+  }
+
+  /**
+   * Calcula y actualiza el score SEO (método principal)
+   */
+  updateSEOScore() {
+    const seoData = this.calculateSEOScore();
+    this.renderSEOScore(seoData);
   }
 
   /**
