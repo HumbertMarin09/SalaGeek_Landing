@@ -276,8 +276,15 @@ class SalaGeekAdmin {
    * 
    * @description Cierra sesión y abre el widget para usar "Forgot password"
    */
-  changePassword() {
-    if (confirm('Para cambiar tu contraseña necesitas cerrar sesión. ¿Continuar?')) {
+  async changePassword() {
+    const confirmed = await this.showConfirmModal(
+      'Cambiar contraseña',
+      'Para cambiar tu contraseña necesitas cerrar sesión. ¿Deseas continuar?',
+      'Sí, continuar',
+      'info'
+    );
+    
+    if (confirmed) {
       // Cerrar sesión
       netlifyIdentity.logout();
       
@@ -3142,7 +3149,7 @@ class SalaGeekAdmin {
    * @description Verifica cambios sin guardar antes de navegar,
    * actualiza nav activa, título y visibilidad de secciones
    */
-  navigateTo(section) {
+  async navigateTo(section) {
     // Verificar si hay cambios sin guardar al salir del editor
     if (this.currentSection === 'new-article' && section !== 'new-article') {
       const editor = document.getElementById('article-editor');
@@ -3151,7 +3158,13 @@ class SalaGeekAdmin {
       
       // Solo mostrar advertencia si hay contenido Y no se ha guardado aún
       if ((title || hasContent) && !this.editingArticle && !this.contentSaved) {
-        if (!confirm('¿Tienes cambios sin guardar. ¿Estás seguro de que deseas salir?')) {
+        const confirmed = await this.showConfirmModal(
+          'Cambios sin guardar',
+          'Tienes cambios que no se han guardado. ¿Estás seguro de que deseas salir?',
+          'Salir sin guardar',
+          'warning'
+        );
+        if (!confirmed) {
           return;
         }
       }
@@ -3885,16 +3898,28 @@ class SalaGeekAdmin {
       // Configurar icono según tipo
       icon.className = 'confirm-icon' + (type !== 'danger' ? ` ${type}` : '');
       
+      // Mostrar/ocultar íconos según tipo
+      const iconDanger = icon.querySelector('.icon-danger');
+      const iconWarning = icon.querySelector('.icon-warning');
+      const iconInfo = icon.querySelector('.icon-info');
+      
+      if (iconDanger) iconDanger.style.display = type === 'danger' ? 'block' : 'none';
+      if (iconWarning) iconWarning.style.display = type === 'warning' ? 'block' : 'none';
+      if (iconInfo) iconInfo.style.display = type === 'info' ? 'block' : 'none';
+      
       // Configurar contenido
       titleEl.textContent = title;
       messageEl.textContent = message;
       acceptBtn.textContent = confirmText;
       
       // Configurar estilo del botón según tipo
-      acceptBtn.className = type === 'danger' ? 'btn btn-danger' : 'btn btn-primary';
+      acceptBtn.className = type === 'danger' ? 'btn-danger' : 'btn-primary';
       
       // Mostrar modal
       modal.classList.remove('hidden');
+      
+      // Focus en el botón de cancelar para evitar aceptar accidentalmente
+      setTimeout(() => cancelBtn.focus(), 100);
       
       // Handlers
       const cleanup = () => {
@@ -3902,6 +3927,7 @@ class SalaGeekAdmin {
         acceptBtn.removeEventListener('click', onAccept);
         cancelBtn.removeEventListener('click', onCancel);
         modal.removeEventListener('click', onBackdrop);
+        document.removeEventListener('keydown', onKeydown);
       };
       
       const onAccept = () => {
@@ -3921,9 +3947,20 @@ class SalaGeekAdmin {
         }
       };
       
+      const onKeydown = (e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          onCancel();
+        } else if (e.key === 'Enter' && document.activeElement === acceptBtn) {
+          e.preventDefault();
+          onAccept();
+        }
+      };
+      
       acceptBtn.addEventListener('click', onAccept);
       cancelBtn.addEventListener('click', onCancel);
       modal.addEventListener('click', onBackdrop);
+      document.addEventListener('keydown', onKeydown);
     });
   }
 
