@@ -127,15 +127,7 @@ class SalaGeekAdmin {
     /** @type {boolean} Indica si el contenido ha sido guardado */
     this.contentSaved = false;
     
-    // ─── Auto-guardado ───
-    /** @type {number|null} Timer para auto-guardado */
-    this.autoSaveTimer = null;
-    /** @type {number} Intervalo de auto-guardado en ms (30 segundos) */
-    this.autoSaveInterval = 30000;
-    /** @type {boolean} Auto-guardado habilitado */
-    this.autoSaveEnabled = true;
-    /** @type {string} Último contenido guardado (para detectar cambios) */
-    this.lastSavedContent = '';
+    // Auto-guardado eliminado - Se guarda manualmente
     
     // ─── Modal de Imagen Individual ───
     /** @type {string} Fuente actual: 'url' o 'upload' */
@@ -376,73 +368,16 @@ class SalaGeekAdmin {
     this.updateAutoSaveIndicator('active');
   }
 
-  /**
-   * Detiene el sistema de auto-guardado
-   */
-  stopAutoSave() {
-    if (this.autoSaveTimer) {
-      clearInterval(this.autoSaveTimer);
-      this.autoSaveTimer = null;
-    }
-    this.updateAutoSaveIndicator('inactive');
-  }
+  // stopAutoSave eliminado
 
-  /**
-   * Obtiene un snapshot del contenido actual del editor
-   */
-  getCurrentEditorSnapshot() {
-    const title = document.getElementById('article-title')?.value || '';
-    const content = document.getElementById('article-editor')?.innerHTML || '';
-    const excerpt = document.getElementById('article-excerpt')?.value || '';
-    return JSON.stringify({ title, content, excerpt });
-  }
+  // getCurrentEditorSnapshot eliminado
 
-  /**
-   * Verifica si hay cambios sin guardar
-   */
-  hasUnsavedChanges() {
-    const currentSnapshot = this.getCurrentEditorSnapshot();
-    return currentSnapshot !== this.lastSavedContent;
-  }
+  // hasUnsavedChanges eliminado
 
-  /**
-   * Ejecuta el auto-guardado si hay cambios
-   */
-  async performAutoSave() {
-    // Solo auto-guardar si estamos en la sección de editor
-    if (this.currentSection !== 'new-article') return;
-    
-    // Verificar si hay cambios
-    if (!this.hasUnsavedChanges()) return;
-    
-    // Verificar que haya algo de contenido (título o contenido del editor)
-    const title = document.getElementById('article-title')?.value?.trim();
-    const content = document.getElementById('article-editor')?.innerHTML?.trim();
-    const hasContent = title || (content && content !== '' && content !== '<br>');
-    if (!hasContent) return;
-    
-    // Actualizar indicador a "guardando"
-    this.updateAutoSaveIndicator('saving');
-    
-    try {
-      // Guardar como borrador silenciosamente
-      await this.autoSaveAsDraft();
-      
-      // Actualizar contenido guardado
-      this.lastSavedContent = this.getCurrentEditorSnapshot();
-      
-      // Actualizar indicador a "guardado"
-      this.updateAutoSaveIndicator('saved');
-    } catch (error) {
-      console.error('Error en auto-guardado:', error);
-      this.updateAutoSaveIndicator('error');
-    }
-  }
+  // performAutoSave eliminado
 
-  /**
-   * Guarda silenciosamente como borrador (sin navegación ni toast)
-   */
-  async autoSaveAsDraft() {
+  // autoSaveAsDraft eliminado
+  async _removedAutoSaveAsDraft() {
     const title = document.getElementById('article-title')?.value?.trim() || 'Sin título';
     const content = document.getElementById('article-editor')?.innerHTML || '';
     const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
@@ -522,11 +457,8 @@ class SalaGeekAdmin {
     await this.loadArticles();
   }
 
-  /**
-   * Actualiza el indicador visual de auto-guardado
-   * @param {string} state - 'active', 'saving', 'saved', 'error', 'inactive'
-   */
-  updateAutoSaveIndicator(state) {
+  // updateAutoSaveIndicator eliminado
+  _removedUpdateAutoSaveIndicator(state) {
     const indicator = document.getElementById('autosave-indicator');
     if (!indicator) return;
 
@@ -3305,11 +3237,7 @@ class SalaGeekAdmin {
       this.resetArticleForm();
     }
     
-    // Iniciar auto-guardado al entrar al editor
-    if (section === 'new-article') {
-      // Pequeño delay para asegurar que el formulario esté listo
-      setTimeout(() => this.startAutoSave(), 500);
-    }
+    // Auto-guardado eliminado - Se guarda manualmente
   }
 
   handleAction(action) {
