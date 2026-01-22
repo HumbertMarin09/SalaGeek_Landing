@@ -20,10 +20,10 @@
  * ============================================================================
  */
 
-const CACHE_VERSION = 'sg-cache-v1';
-const STATIC_CACHE = 'sg-static-v1';
-const DYNAMIC_CACHE = 'sg-dynamic-v1';
-const IMAGE_CACHE = 'sg-images-v1';
+const CACHE_VERSION = 'sg-cache-v2';
+const STATIC_CACHE = 'sg-static-v2';
+const DYNAMIC_CACHE = 'sg-dynamic-v2';
+const IMAGE_CACHE = 'sg-images-v2';
 
 // Recursos para pre-cachear (instalar inmediatamente)
 const PRECACHE_ASSETS = [
@@ -37,7 +37,8 @@ const PRECACHE_ASSETS = [
   '/src/js/performance-boost.min.js',
   '/src/images/SalaGeek_LOGO.webp',
   '/src/images/Icono_SG.ico',
-  '/manifest.json'
+  '/manifest.json',
+  '/blog/data/articles.json'
 ];
 
 // Recursos que siempre intentan network first

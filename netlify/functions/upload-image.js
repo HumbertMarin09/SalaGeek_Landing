@@ -11,6 +11,25 @@
 
 const fetch = require('node-fetch');
 
+// Rate limiting
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutos
+const MAX_UPLOADS = 10; // 10 subidas por 5 minutos
+
+function checkRateLimit(userId) {
+  const now = Date.now();
+  const userRequests = rateLimitMap.get(userId) || [];
+  const recentRequests = userRequests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
+  
+  if (recentRequests.length >= MAX_UPLOADS) {
+    return false;
+  }
+  
+  recentRequests.push(now);
+  rateLimitMap.set(userId, recentRequests);
+  return true;
+}
+
 // GitHub configuration
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = process.env.GITHUB_REPO || 'usuario/sala-geek';
@@ -88,6 +107,15 @@ exports.handler = async (event, context) => {
       statusCode: 401,
       headers,
       body: JSON.stringify({ error: 'Unauthorized' })
+    };
+  }
+
+  // Rate limiting por usuario
+  if (!checkRateLimit(user.sub)) {
+    return {
+      statusCode: 429,
+      headers,
+      body: JSON.stringify({ error: 'Demasiadas subidas. Intenta en 5 minutos.' })
     };
   }
 

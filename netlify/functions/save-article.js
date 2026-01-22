@@ -5,7 +5,7 @@
  * 
  * @description Gestión de artículos vía GitHub API
  * @author SalaGeek Team
- * @version 1.1.0
+ * @version 1.2.0
  * 
  * ENDPOINTS:
  * ──────────
@@ -32,6 +32,25 @@
  */
 
 const fetch = require('node-fetch');
+
+// Rate limiting para proteger contra abuso
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 10 * 60 * 1000; // 10 minutos
+const MAX_SAVES = 20; // 20 guardados por 10 minutos
+
+function checkRateLimit(userId) {
+  const now = Date.now();
+  const userRequests = rateLimitMap.get(userId) || [];
+  const recentRequests = userRequests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW);
+  
+  if (recentRequests.length >= MAX_SAVES) {
+    return false;
+  }
+  
+  recentRequests.push(now);
+  rateLimitMap.set(userId, recentRequests);
+  return true;
+}
 
 // ─── Configuración de GitHub ───
 // Establecer en Netlify Environment Variables
@@ -181,6 +200,16 @@ exports.handler = async (event, context) => {
       statusCode: 401,
       headers,
       body: JSON.stringify({ error: 'Unauthorized - No valid token provided' })
+    };
+  }
+
+  // Rate limiting por usuario autenticado
+  const user = context.clientContext?.user;
+  if (user && !checkRateLimit(user.sub)) {
+    return {
+      statusCode: 429,
+      headers,
+      body: JSON.stringify({ error: 'Demasiadas solicitudes. Intenta en 10 minutos.' })
     };
   }
 

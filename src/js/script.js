@@ -414,20 +414,17 @@ function updateSeasonalFavicon(isChristmasSeason) {
    ============================================ */
 
 /**
- * Carga un partial HTML con cache-busting y headers anti-cache
+ * Carga un partial HTML usando caché del navegador
  * @param {string} selector - Selector CSS donde inyectar el contenido
  * @param {string} path - Ruta relativa al archivo HTML
  * @returns {Promise<boolean>} True si la carga fue exitosa
  */
 async function loadPartial(selector, path) {
   try {
-    const timestamp = Date.now();
-    const response = await fetch(`${path}?v=${timestamp}`, {
-      cache: "no-store",
+    const response = await fetch(path, {
+      cache: "force-cache", // Usar caché del navegador
       headers: {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
+        "Cache-Control": "public, max-age=3600", // 1 hora
       },
     });
 
@@ -465,9 +462,9 @@ async function loadIncludes() {
       ? "#footer-placeholder" 
       : "#footer-container";
     
-    // Carga paralela para mejor performance
+    // Carga paralela para mejor performance (sin cache busters innecesarios)
     await Promise.all([
-      loadPartial(headerSelector, "/src/pages/partials/header.html?v=135"),
+      loadPartial(headerSelector, "/src/pages/partials/header.html"),
       loadPartial(footerSelector, "/src/pages/partials/footer.html"),
     ]);
 

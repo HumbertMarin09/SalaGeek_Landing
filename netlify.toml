@@ -29,8 +29,8 @@
   minify = true              # Minificación adicional sobre archivos .min.css
   
 [build.processing.js]
-  bundle = true              # Combinar JS cuando sea posible
-  minify = true              # Minificación adicional sobre archivos .min.js
+  bundle = false             # NO combinar JS - causa problemas con módulos
+  minify = false             # NO minificar - ya están pre-minificados
   
 [build.processing.html]
   pretty_urls = true         # URLs limpias sin .html
@@ -98,7 +98,7 @@
 # ============================================
 
 # Assets estáticos (CSS/JS/Images) - Cache agresivo de 1 año
-# immutable: El archivo nunca cambia (usamos cache busters ?v=135)
+# immutable: El archivo nunca cambia (usamos cache busters ?v=XXX solo cuando cambia)
 [[headers]]
   for = "/src/css/*"
   [headers.values]
@@ -114,17 +114,29 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# HTML - Sin cache, siempre validar (contenido dinámico)
+# Partials HTML - Cache de 1 hora (se actualizan poco)
+[[headers]]
+  for = "/src/pages/partials/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Blog data JSON - Cache de 5 minutos (se actualiza con artículos nuevos)
+[[headers]]
+  for = "/blog/data/*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+# HTML - Cache corto con revalidación
 [[headers]]
   for = "/*.html"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+    Cache-Control = "public, max-age=300, must-revalidate"
 
-# Index - Sin cache, siempre validar
+# Index - Cache corto con revalidación
 [[headers]]
   for = "/"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
+    Cache-Control = "public, max-age=300, must-revalidate"
 
 # ============================================
 # Pretty URLs - Redirects para URLs limpias
