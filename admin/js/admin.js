@@ -4741,6 +4741,7 @@ class SalaGeekAdmin {
   <div id="footer-container"></div>
 
   <script src="/src/js/script.min.js" defer></script>
+  <script src="/src/js/blog-engine.js"></script>
   <script>
     // Load header and footer
     fetch('/src/pages/partials/header.html')
@@ -4749,6 +4750,68 @@ class SalaGeekAdmin {
     fetch('/src/pages/partials/footer.html')
       .then(r => r.text())
       .then(html => document.getElementById('footer-container').innerHTML = html);
+
+    // Load related articles
+    (async function() {
+      const blogEngine = new BlogEngine();
+      await blogEngine.init();
+      
+      // Get article ID from URL or meta tag
+      const articleId = '${article.id}';
+      const relatedArticles = blogEngine.getRelatedArticles(articleId, 3);
+      
+      const relatedContainer = document.getElementById('related-articles');
+      if (relatedArticles.length === 0) {
+        relatedContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem 0;">No hay artículos relacionados disponibles.</p>';
+        return;
+      }
+      
+      relatedContainer.innerHTML = relatedArticles.map(article => {
+        const categoryIcons = {
+          series: '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline>',
+          peliculas: '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>',
+          gaming: '<rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="18" y2="12"/>',
+          anime: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+          tecnologia: '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'
+        };
+        
+        return \`
+          <article class="article-card">
+            <a href="\${article.content}" class="article-link">
+              <div class="article-image">
+                <img src="\${article.image}" alt="\${article.title}" loading="lazy" />
+                <span class="article-category category-\${article.category}">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\${categoryIcons[article.category]}</svg>
+                  \${article.categoryDisplay}
+                </span>
+              </div>
+              <div class="article-content">
+                <h3 class="article-title">\${article.title}</h3>
+                <p class="article-excerpt">\${article.excerpt}</p>
+                <div class="article-meta">
+                  <span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    \${article.readTime}
+                  </span>
+                  <time datetime="\${article.publishDate.split('T')[0]}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    \${new Date(article.publishDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </time>
+                </div>
+              </div>
+            </a>
+          </article>
+        \`;
+      }).join('');
+    })();
   </script>
 </body>
 </html>`;

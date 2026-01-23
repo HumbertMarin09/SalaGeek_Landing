@@ -2312,6 +2312,125 @@
   font-style: italic;
 }
 
+/* ============================================
+   RESIZABLE IMAGES - Alignment & Float
+   ============================================ */
+
+/* Base resizable image styles */
+.resizable-image, 
+.resizable-image img { 
+  max-width: 100%; 
+}
+
+/* Float styles (wrap text around image) */
+.resizable-image.float-left { 
+  float: left; 
+  margin: 0 1.5rem 1rem 0; 
+}
+
+.resizable-image.float-right { 
+  float: right; 
+  margin: 0 0 1rem 1.5rem; 
+}
+
+/* Block alignment styles (no text wrapping) */
+.resizable-image.align-left { 
+  display: block; 
+  margin: 1.5rem auto 1.5rem 0;
+  width: fit-content;
+}
+
+.resizable-image.align-center { 
+  display: block; 
+  margin: 1.5rem auto; 
+  text-align: center;
+  width: fit-content;
+}
+
+.resizable-image.align-right { 
+  display: block; 
+  margin: 1.5rem 0 1.5rem auto;
+  width: fit-content;
+}
+
+/* Figure alignment for images with captions */
+figure.align-left {
+  display: block;
+  margin: 1.5rem auto 1.5rem 0;
+  width: fit-content;
+}
+
+figure.align-center {
+  display: block;
+  margin: 1.5rem auto;
+  width: fit-content;
+}
+
+figure.align-right {
+  display: block;
+  margin: 1.5rem 0 1.5rem auto;
+  width: fit-content;
+}
+
+/* Figcaption for resizable images */
+figure.resizable-image {
+  display: block;
+}
+
+figure.resizable-image img {
+  display: block;
+  width: 100%;
+}
+
+/* Image grids */
+.image-grid-container { 
+  display: grid; 
+  gap: 0.75rem; 
+  margin: 1.5rem 0; 
+}
+
+.image-grid-container.cols-2 { 
+  grid-template-columns: repeat(2, 1fr); 
+}
+
+.image-grid-container.cols-3 { 
+  grid-template-columns: repeat(3, 1fr); 
+}
+
+.image-grid-container.cols-4 { 
+  grid-template-columns: repeat(4, 1fr); 
+}
+
+.image-grid-container img { 
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+  border-radius: 8px; 
+}
+
+/* Responsive adjustments for image grids */
+@media (max-width: 768px) {
+  .image-grid-container.cols-3,
+  .image-grid-container.cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .resizable-image.float-left,
+  .resizable-image.float-right {
+    float: none;
+    margin: 1.5rem auto;
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-grid-container.cols-2,
+  .image-grid-container.cols-3,
+  .image-grid-container.cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Blockquote */
 .article-quote {
   margin: 2rem 0;

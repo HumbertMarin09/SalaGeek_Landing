@@ -109,15 +109,16 @@
     <meta name="twitter:dnt" content="on" />
 
     <!-- Favicons Completos -->
-    <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
-    <link rel="icon" type="image/webp" sizes="512x512" href="/src/images/SalaGeek_LOGO.webp" />
-    <link rel="icon" type="image/webp" sizes="192x192" href="/src/images/SalaGeek_LOGO.webp" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/src/images/SalaGeek_LOGO.webp" />
-    <link rel="apple-touch-icon" href="/src/images/SalaGeek_LOGO.webp" />
+    <link rel="icon" href="src/images/Icono_SG.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="src/images/Icono_SG.ico" type="image/x-icon" />
+    <link rel="icon" type="image/webp" sizes="512x512" href="src/images/SalaGeek_LOGO.webp" />
+    <link rel="icon" type="image/webp" sizes="192x192" href="src/images/SalaGeek_LOGO.webp" />
+    <link rel="apple-touch-icon" sizes="180x180" href="src/images/SalaGeek_LOGO.webp" />
+    <link rel="apple-touch-icon" href="src/images/SalaGeek_LOGO.webp" />
     <meta name="theme-color" content="#1a1f3a" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="sitemap" type="application/xml" href="sitemap.xml" />
 
     <!-- Additional SEO Meta Tags -->
     <meta name="language" content="Spanish" />
@@ -1356,18 +1357,18 @@
           }
         }
         
-        // Cargar últimas noticias (trending) - máximo 4 para el grid
-        const trending = blogEngine.getTrendingArticles(4);
+        // Cargar últimas noticias - máximo 4 artículos más recientes
+        const latestArticles = blogEngine.articles.slice(0, 4);
         const latestGrid = document.querySelector('.latest-news-grid');
         const latestEmptyState = document.getElementById('latest-news-empty');
         
         if (latestGrid) {
-          if (trending && trending.length > 0) {
+          if (latestArticles && latestArticles.length > 0) {
             // Hay noticias: ocultar empty state y mostrar artículos
             if (latestEmptyState) latestEmptyState.style.display = 'none';
             
             // Insertar artículos antes del empty state
-            const articlesHTML = trending.slice(0, 4).map(article => `
+            const articlesHTML = latestArticles.slice(0, 4).map(article => `
               <article class="news-card">
                 <a href="${article.content}" class="news-card-link">
                   <div class="news-card-image">
