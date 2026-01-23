@@ -153,7 +153,29 @@ function handleCreateOrUpdate() {
     }
     
     try {
-        // Obtener articles.json actual
+        $isDraft = ($article['status'] ?? 'published') === 'draft';
+        
+        // MANEJO DE DRAFTS.JSON
+        $draftsFile = getGitHubFile('blog/data/drafts.json');
+        $draftsSha = null;
+        $drafts = ['drafts' => []];
+        
+        if ($draftsFile) {
+            $draftsContent = base64_decode($draftsFile['content']);
+            $drafts = json_decode($draftsContent, true);
+            $draftsSha = $draftsFile['sha'];
+        }
+        
+        // Buscar si existe en drafts
+        $draftIndex = -1;
+        foreach ($drafts['drafts'] as $index => $d) {
+            if ($d['id'] === $article['id']) {
+                $draftIndex = $index;
+                break;
+            }
+        }
+        
+        // MANEJO DE ARTICLES.JSON
         $articlesFile = getGitHubFile('blog/data/articles.json');
         $articlesSha = null;
         
@@ -165,7 +187,7 @@ function handleCreateOrUpdate() {
             $articles = ['articles' => [], 'categories' => []];
         }
         
-        // Buscar si el artículo ya existe
+        // Buscar si existe en articles
         $existingIndex = -1;
         foreach ($articles['articles'] as $index => $a) {
             if ($a['id'] === $article['id']) {
@@ -174,37 +196,78 @@ function handleCreateOrUpdate() {
             }
         }
         
-        // Actualizar o agregar artículo
-        if ($existingIndex >= 0) {
-            $articles['articles'][$existingIndex] = $article;
+        // LÓGICA DE GUARDADO
+        if ($isDraft) {
+            // Es borrador: guardar en drafts.json
+            if ($draftIndex >= 0) {
+                $drafts['drafts'][$draftIndex] = $article;
+            } else {
+                array_unshift($drafts['drafts'], $article);
+            }
+            
+            // Ordenar por fecha
+            usort($drafts['drafts'], function($a, $b) {
+                return strtotime($b['publishDate']) - strtotime($a['publishDate']);
+            });
+            
+            // Guardar drafts.json
+            saveGitHubFile(
+                'blog/data/drafts.json',
+                json_encode($drafts, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                "📝 " . ($draftIndex >= 0 ? "Update" : "Save") . " draft: {$article['title']}",
+                $draftsSha
+            );
+            
+            // Remover de articles.json si existía
+            if ($existingIndex >= 0) {
+                array_splice($articles['articles'], $existingIndex, 1);
+                saveGitHubFile(
+                    'blog/data/articles.json',
+                    json_encode($articles, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                    "📝 Move to draft: {$article['title']}",
+                    $articlesSha
+                );
+            }
         } else {
-            array_unshift($articles['articles'], $article);
+            // Es publicado: guardar en articles.json
+            if ($existingIndex >= 0) {
+                $articles['articles'][$existingIndex] = $article;
+            } else {
+                array_unshift($articles['articles'], $article);
+            }
+            
+            // Ordenar por fecha
+            usort($articles['articles'], function($a, $b) {
+                return strtotime($b['publishDate']) - strtotime($a['publishDate']);
+            });
+            
+            // Guardar articles.json
+            saveGitHubFile(
+                'blog/data/articles.json',
+                json_encode($articles, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                "📝 " . ($existingIndex >= 0 ? "Update" : "Publish") . " article: {$article['title']}",
+                $articlesSha
+            );
+            
+            // Remover de drafts.json si existía
+            if ($draftIndex >= 0) {
+                array_splice($drafts['drafts'], $draftIndex, 1);
+                saveGitHubFile(
+                    'blog/data/drafts.json',
+                    json_encode($drafts, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+                    "✅ Publish draft: {$article['title']}",
+                    $draftsSha
+                );
+            }
         }
         
-        // Ordenar por fecha (más reciente primero)
-        usort($articles['articles'], function($a, $b) {
-            return strtotime($b['publishDate']) - strtotime($a['publishDate']);
-        });
-        
-        // Guardar articles.json
-        $commitMessage = $isNew 
-            ? "📝 New article: {$article['title']}" 
-            : "✏️ Update article: {$article['title']}";
-        
-        saveGitHubFile(
-            'blog/data/articles.json',
-            json_encode($articles, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-            $commitMessage,
-            $articlesSha
-        );
-        
-        // Guardar archivo HTML
+        // Guardar archivo HTML (siempre, sea borrador o publicado)
         $htmlPath = "blog/articulos/{$article['slug']}.html";
         $existingHtml = getGitHubFile($htmlPath);
         
-        $htmlCommitMessage = $isNew
-            ? "📄 Create article HTML: {$article['slug']}"
-            : "📄 Update article HTML: {$article['slug']}";
+        $htmlCommitMessage = $isDraft
+            ? ($isNew ? "📝 Create draft: {$article['slug']}" : "📝 Update draft: {$article['slug']}")
+            : ($isNew ? "📄 Publish article: {$article['slug']}" : "📄 Update article: {$article['slug']}");
         
         saveGitHubFile(
             $htmlPath,
@@ -213,10 +276,13 @@ function handleCreateOrUpdate() {
             $existingHtml['sha'] ?? null
         );
         
+        $statusMsg = $isDraft ? 'guardado como borrador' : ($isNew ? 'publicado' : 'actualizado');
+        
         jsonResponse([
             'success' => true,
-            'message' => $isNew ? 'Artículo creado correctamente' : 'Artículo actualizado correctamente',
-            'article' => $article
+            'message' => "Artículo {$statusMsg} correctamente",
+            'article' => $article,
+            'isDraft' => $isDraft
         ]);
         
     } catch (Exception $e) {
@@ -237,36 +303,40 @@ function handleDelete() {
     
     $id = $body['id'] ?? null;
     $slug = $body['slug'] ?? null;
+    $isDraft = $body['isDraft'] ?? false;
     
     if (!$id || !$slug) {
         jsonResponse(['error' => 'ID y slug son requeridos'], 400);
     }
     
     try {
-        // Obtener articles.json
-        $articlesFile = getGitHubFile('blog/data/articles.json');
+        // Eliminar de articles.json O drafts.json según corresponda
+        $fileName = $isDraft ? 'blog/data/drafts.json' : 'blog/data/articles.json';
+        $dataFile = getGitHubFile($fileName);
         
-        if (!$articlesFile) {
-            jsonResponse(['error' => 'No se encontró el archivo de artículos'], 404);
+        if (!$dataFile) {
+            jsonResponse(['error' => 'No se encontró el archivo de datos'], 404);
         }
         
-        $articlesContent = base64_decode($articlesFile['content']);
-        $articles = json_decode($articlesContent, true);
+        $content = base64_decode($dataFile['content']);
+        $data = json_decode($content, true);
+        
+        $key = $isDraft ? 'drafts' : 'articles';
         
         // Filtrar el artículo a eliminar
-        $articles['articles'] = array_filter($articles['articles'], function($a) use ($id) {
+        $data[$key] = array_filter($data[$key], function($a) use ($id) {
             return $a['id'] !== $id;
         });
         
         // Reindexar array
-        $articles['articles'] = array_values($articles['articles']);
+        $data[$key] = array_values($data[$key]);
         
-        // Guardar articles.json actualizado
+        // Guardar JSON actualizado
         saveGitHubFile(
-            'blog/data/articles.json',
-            json_encode($articles, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
-            "🗑️ Delete article: {$slug}",
-            $articlesFile['sha']
+            $fileName,
+            json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE),
+            "🗑️ Delete " . ($isDraft ? "draft" : "article") . ": {$slug}",
+            $dataFile['sha']
         );
         
         // Eliminar archivo HTML
@@ -277,19 +347,20 @@ function handleDelete() {
             deleteGitHubFile(
                 $htmlPath,
                 $htmlFile['sha'],
-                "🗑️ Delete article HTML: {$slug}"
+                "🗑️ Delete HTML: {$slug}"
             );
         }
         
         jsonResponse([
             'success' => true,
-            'message' => 'Artículo eliminado correctamente'
+            'message' => ($isDraft ? 'Borrador' : 'Artículo') . ' eliminado correctamente'
         ]);
         
     } catch (Exception $e) {
         logError('Delete article failed', [
             'error' => $e->getMessage(),
-            'slug' => $slug
+            'slug' => $slug,
+            'isDraft' => $isDraft
         ]);
         
         jsonResponse(['error' => $e->getMessage()], 500);
