@@ -27,6 +27,14 @@ yarn-error.log*
 
 # === API Configuration (contains credentials) ===
 api/config.php
+DEPLOY_HOSTINGER/api/config.php
+
+# === Archivos con credenciales o info sensible ===
+CORRECCIONES_PHP_APIS.md
+**/config.php
+
+# === Carpeta de deploy local ===
+DEPLOY_HOSTINGER/
 
 # === Distribución ===
 dist/
