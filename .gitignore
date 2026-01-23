@@ -25,6 +25,9 @@ yarn-error.log*
 .env.local
 .env.production
 
+# === API Configuration (contains credentials) ===
+api/config.php
+
 # === Distribución ===
 dist/
 build/

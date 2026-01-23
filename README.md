@@ -1,6 +1,6 @@
 # 🎮 Sala Geek - Landing Page
 
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/HumbertMarin09/SalaGeek_Landing)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/HumbertMarin09/SalaGeek_Landing)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-production-success.svg)](https://salageek.com)
 
@@ -26,8 +26,9 @@ Landing page oficial de **Sala Geek**, tu espacio definitivo para mantenerte al 
 - **HTML5**: Semántico y accesible
 - **CSS3**: Variables CSS (Design Tokens), Grid, Flexbox
 - **JavaScript (Vanilla)**: ES6+, Web Audio API, localStorage
+- **PHP 7.4+**: APIs backend
 - **Mailchimp API**: Newsletter automation
-- **Netlify**: Hosting + Serverless Functions
+- **Hostinger**: Hosting compartido con PHP
 
 ---
 
@@ -37,6 +38,16 @@ Landing page oficial de **Sala Geek**, tu espacio definitivo para mantenerte al 
 SG_Landing/
 ├── index.html                    # Página principal
 ├── 404.html                      # Página de error
+├── .htaccess                     # Configuración Apache
+├── api/                          # APIs PHP
+│   ├── config.php                # Configuración centralizada
+│   ├── mailchimp-subscribe.php   # Suscripción newsletter
+│   ├── auth.php                  # Autenticación admin
+│   ├── save-article.php          # CRUD artículos
+│   ├── upload-image.php          # Subida de imágenes
+│   ├── list-images.php           # Listado de imágenes
+│   └── contact-form.php          # Formulario de contacto
+├── admin/                        # Panel de administración
 ├── blog/
 │   ├── index.html                # Blog principal
 │   ├── articulos/                # Artículos del blog
@@ -58,7 +69,6 @@ SG_Landing/
 │       └── partials/             # Header y Footer
 ├── email-templates/              # Templates de email
 ├── newsletter-templates/         # Newsletter semanal
-├── netlify/functions/            # Serverless (Mailchimp)
 └── assets/                       # Media Kit PDF
 ```
 
@@ -70,7 +80,7 @@ SG_Landing/
 # Clonar repositorio
 git clone https://github.com/HumbertMarin09/SalaGeek_Landing.git
 
-# Instalar dependencias
+# Instalar dependencias (desarrollo)
 npm install
 
 # Minificar CSS y JS
@@ -95,9 +105,14 @@ npm run format        # Formatear código con Prettier
 
 ## 🌐 Deployment
 
-El proyecto se despliega automáticamente en **Netlify** al hacer push a `main`.
+El proyecto se despliega en **Hostinger** (hosting compartido con PHP).
 
 **URL de producción:** [https://salageek.com](https://salageek.com)
+
+### Configuración requerida en Hostinger:
+1. Subir todos los archivos vía FTP o File Manager
+2. Configurar variables en `api/config.php`
+3. Apuntar DNS del dominio a Hostinger
 
 ---
 

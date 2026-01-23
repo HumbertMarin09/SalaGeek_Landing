@@ -1403,24 +1403,5 @@
         }
       });
     </script>
-    
-    <!-- Netlify Identity Redirect Handler -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script>
-      // Solo redirigir si el usuario viene de confirmar email/password/invitación
-      // NO redirigir automáticamente si ya está logueado (permite navegar el sitio normalmente)
-      if (window.netlifyIdentity) {
-        netlifyIdentity.on('init', user => {
-          const hash = window.location.hash;
-          // Solo redirigir si hay un token especial en la URL
-          if (hash && (hash.includes('confirmation_token') || hash.includes('recovery_token') || hash.includes('invite_token'))) {
-            // Esperar a que el widget procese el token
-            netlifyIdentity.on('login', () => {
-              window.location.href = '/admin';
-            });
-          }
-        });
-      }
-    </script>
   </body>
 </html>

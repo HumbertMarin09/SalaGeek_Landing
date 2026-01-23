@@ -991,11 +991,9 @@
                 class="form" 
                 name="media-kit-contact"
                 method="POST"
-                data-netlify="true"
-                netlify-honeypot="bot-field"
+                action="/api/contact-form.php"
               >
-                <!-- Honeypot anti-spam -->
-                <input type="hidden" name="form-name" value="media-kit-contact" />
+                <!-- Honeypot anti-spam (mantener para compatibilidad) -->
                 <p class="hidden" style="display:none;">
                   <label>No llenar si eres humano: <input name="bot-field" /></label>
                 </p>
@@ -1066,8 +1064,61 @@
                   ></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block">Enviar Solicitud</button>
+                <button type="submit" class="btn btn-primary btn-block" id="media-kit-submit">
+                  <span class="btn-text">Enviar Solicitud</span>
+                  <span class="btn-loader hidden">Enviando...</span>
+                </button>
+                <div id="form-message" class="form-message hidden"></div>
               </form>
+              
+              <script>
+                // Manejador AJAX para el formulario de Media Kit
+                document.getElementById('media-kit-form').addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                  
+                  const form = e.target;
+                  const submitBtn = document.getElementById('media-kit-submit');
+                  const btnText = submitBtn.querySelector('.btn-text');
+                  const btnLoader = submitBtn.querySelector('.btn-loader');
+                  const formMessage = document.getElementById('form-message');
+                  
+                  // UI: loading
+                  submitBtn.disabled = true;
+                  btnText.classList.add('hidden');
+                  btnLoader.classList.remove('hidden');
+                  formMessage.classList.add('hidden');
+                  
+                  // Recopilar datos del formulario
+                  const formData = new FormData(form);
+                  const data = Object.fromEntries(formData.entries());
+                  
+                  try {
+                    const response = await fetch('/api/contact-form.php', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(data)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                      formMessage.textContent = result.message || '¡Mensaje enviado correctamente!';
+                      formMessage.className = 'form-message success';
+                      form.reset();
+                    } else {
+                      throw new Error(result.error || 'Error al enviar el mensaje');
+                    }
+                  } catch (error) {
+                    formMessage.textContent = error.message;
+                    formMessage.className = 'form-message error';
+                  } finally {
+                    submitBtn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    btnLoader.classList.add('hidden');
+                    formMessage.classList.remove('hidden');
+                  }
+                });
+              </script>
             </div>
           </div>
         </div>

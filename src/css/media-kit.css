@@ -1143,6 +1143,36 @@
   justify-content: center;
 }
 
+/* Form Message */
+.form-message {
+  margin-top: 15px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.form-message.success {
+  background: rgba(72, 187, 120, 0.15);
+  border: 1px solid rgba(72, 187, 120, 0.4);
+  color: #48bb78;
+}
+
+.form-message.error {
+  background: rgba(245, 101, 101, 0.15);
+  border: 1px solid rgba(245, 101, 101, 0.4);
+  color: #f56565;
+}
+
+/* Button loader state */
+#media-kit-submit .btn-loader {
+  display: inline-block;
+}
+
+#media-kit-submit .hidden {
+  display: none;
+}
+
 /* Why Section */
 .why-section {
   background: linear-gradient(135deg, #1a1f3a 0%, #0a0e27 100%);

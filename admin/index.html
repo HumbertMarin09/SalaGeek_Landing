@@ -7,12 +7,6 @@
   <meta name="description" content="Panel de administración de Sala Geek">
   <title>Admin | Sala Geek</title>
   
-  <!-- Preconnect para Netlify Identity -->
-  <link rel="preconnect" href="https://identity.netlify.com">
-  
-  <!-- Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  
   <!-- Favicons -->
   <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon">
   
@@ -28,14 +22,32 @@
         <h1>Panel de Administración</h1>
         <p>Inicia sesión para continuar</p>
       </div>
-      <button id="login-btn" class="btn-primary btn-large">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-          <polyline points="10 17 15 12 10 7"/>
-          <line x1="15" y1="12" x2="3" y2="12"/>
-        </svg>
-        Iniciar Sesión
-      </button>
+      
+      <!-- Formulario de Login -->
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="login-email">Correo electrónico</label>
+          <input type="email" id="login-email" name="email" required autocomplete="email" placeholder="admin@salageek.com">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <div id="login-error" class="login-error hidden"></div>
+        <button type="submit" id="login-btn" class="btn-primary btn-large">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span class="btn-text">Iniciar Sesión</span>
+          <span class="btn-loader hidden">
+            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="30 70"/>
+            </svg>
+          </span>
+        </button>
+      </form>
     </div>
   </div>
 

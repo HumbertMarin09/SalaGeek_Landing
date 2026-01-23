@@ -1793,8 +1793,8 @@ function initNewsletterForm() {
         action: "newsletter_subscribe",
       });
 
-      // Enviar a Netlify Function que conecta con Mailchimp
-      const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
+      // Enviar a API PHP que conecta con Mailchimp
+      const response = await fetch("/api/mailchimp-subscribe.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -1894,7 +1894,7 @@ function initNewsSubscribeForm() {
           action: "newsletter_subscribe",
         });
 
-        const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
+        const response = await fetch("/api/mailchimp-subscribe.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, recaptchaToken }),
@@ -1973,7 +1973,7 @@ function initBlogSubscribeForm() {
           action: "newsletter_subscribe",
         });
 
-        const response = await fetch("/.netlify/functions/mailchimp-subscribe", {
+        const response = await fetch("/api/mailchimp-subscribe.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, recaptchaToken }),

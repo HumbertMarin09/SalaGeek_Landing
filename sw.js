@@ -44,8 +44,7 @@ const PRECACHE_ASSETS = [
 // Recursos que siempre intentan network first
 const NETWORK_FIRST_ROUTES = [
   '/blog/',
-  '/api/',
-  '/netlify/functions/'
+  '/api/'
 ];
 
 // Recursos que usan cache first

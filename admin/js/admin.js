@@ -5,12 +5,12 @@
  * 
  * @description Sistema de administración completo para SalaGeek
  * @author SalaGeek Team
- * @version 2.3.0
- * @lastUpdate 2026-01-20
+ * @version 2.4.0
+ * @lastUpdate 2026-01-22
  * 
  * CARACTERÍSTICAS PRINCIPALES:
  * ─────────────────────────────
- * • Autenticación segura con Netlify Identity
+ * • Autenticación segura con sesiones PHP
  * • Editor WYSIWYG con formato completo
  * • Drag & drop de imágenes con posicionamiento inteligente
  * • Sistema de grids/galerías (1-4 columnas)
@@ -106,7 +106,7 @@ class SalaGeekAdmin {
    */
   constructor() {
     // ─── Estado de Autenticación ───
-    /** @type {Object|null} Usuario autenticado de Netlify Identity */
+    /** @type {Object|null} Usuario autenticado vía sesión PHP */
     this.user = null;
     
     // ─── Datos Principales ───
@@ -190,7 +190,7 @@ class SalaGeekAdmin {
    * Inicializa todos los componentes de la aplicación
    */
   async init() {
-    this.initNetlifyIdentity();
+    this.initAuth();
     this.setupEventListeners();
     this.setupImageModals();
     this.setupImageResizeModal();
@@ -201,52 +201,94 @@ class SalaGeekAdmin {
     this.setupEditorImageHandlers(); // Delegación de eventos para imágenes
     
     // Verificar si hay sesión activa
-    const user = netlifyIdentity.currentUser();
-    if (user) {
-      this.handleLogin(user);
+    await this.checkSession();
+  }
+
+  /**
+   * Configura el sistema de autenticación PHP
+   * 
+   * @description Maneja el login/logout con el backend PHP
+   */
+  initAuth() {
+    // Setup login form
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.handleLoginSubmit(e);
+      });
     }
   }
 
   /**
-   * Configura Netlify Identity y sus eventos
-   * 
-   * @description Maneja los eventos del widget de autenticación:
-   * - init: Usuario ya autenticado al cargar
-   * - login: Login exitoso
-   * - logout: Cierre de sesión
-   * - error: Errores de autenticación
+   * Verifica si hay una sesión activa
    */
-  initNetlifyIdentity() {
-    netlifyIdentity.on('init', user => {
-      if (user) {
-        this.handleLogin(user);
+  async checkSession() {
+    try {
+      const response = await fetch('/api/auth.php?action=check', {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      
+      if (data.authenticated && data.user) {
+        this.user = data.user;
+        this.authToken = data.token;
+        this.handleLogin(data.user);
       }
-    });
+    } catch (error) {
+      console.log('No hay sesión activa');
+    }
+  }
 
-    netlifyIdentity.on('login', user => {
-      this.handleLogin(user);
-      netlifyIdentity.close();
-    });
-
-    netlifyIdentity.on('logout', () => {
-      this.handleLogout();
-    });
-
-    netlifyIdentity.on('error', err => {
-      console.error('Netlify Identity Error:', err);
-      this.showToast('Error de autenticación', 'error');
-    });
-
-    // Initialize the widget
-    netlifyIdentity.init({
-      locale: 'es'
-    });
+  /**
+   * Maneja el envío del formulario de login
+   */
+  async handleLoginSubmit(e) {
+    const form = e.target;
+    const email = form.querySelector('#login-email').value;
+    const password = form.querySelector('#login-password').value;
+    const submitBtn = form.querySelector('#login-btn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoader = submitBtn.querySelector('.btn-loader');
+    const errorDiv = document.getElementById('login-error');
+    
+    // UI: mostrar loading
+    submitBtn.disabled = true;
+    btnText.classList.add('hidden');
+    btnLoader.classList.remove('hidden');
+    errorDiv.classList.add('hidden');
+    
+    try {
+      const response = await fetch('/api/auth.php?action=login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        this.user = data.user;
+        this.authToken = data.token;
+        this.handleLogin(data.user);
+      } else {
+        throw new Error(data.error || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      errorDiv.textContent = error.message;
+      errorDiv.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      btnText.classList.remove('hidden');
+      btnLoader.classList.add('hidden');
+    }
   }
 
   /**
    * Maneja el login exitoso
    * 
-   * @param {Object} user - Objeto de usuario de Netlify Identity
+   * @param {Object} user - Objeto de usuario
    * @description Actualiza la UI, muestra info del usuario y carga datos
    */
   handleLogin(user) {
@@ -256,8 +298,8 @@ class SalaGeekAdmin {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('admin-dashboard').classList.remove('hidden');
     
-    // Update user info
-    const name = user.user_metadata?.full_name || user.email.split('@')[0];
+    // Update user info - compatible con el nuevo formato de usuario
+    const name = user.name || user.user_metadata?.full_name || user.email.split('@')[0];
     document.getElementById('user-name').textContent = name;
     document.getElementById('user-email').textContent = user.email;
     document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
@@ -273,12 +315,28 @@ class SalaGeekAdmin {
    * 
    * @description Limpia el estado y muestra la pantalla de login
    */
-  handleLogout() {
+  async handleLogout() {
+    try {
+      await fetch('/api/auth.php?action=logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+    
     this.user = null;
+    this.authToken = null;
     this.articles = [];
     
     document.getElementById('login-screen').classList.remove('hidden');
     document.getElementById('admin-dashboard').classList.add('hidden');
+    
+    // Limpiar formulario de login
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+      loginForm.reset();
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -286,61 +344,35 @@ class SalaGeekAdmin {
   // ═══════════════════════════════════════════════════════════════
 
   /**
-   * Obtiene el token de acceso actualizado para llamadas a la API
+   * Obtiene el token de acceso para llamadas a la API
    * 
-   * @description Método centralizado para obtener el JWT token.
-   * Primero intenta refrescar el token con jwt(), y si falla
-   * usa el token en caché como fallback.
+   * @description Con el sistema PHP, usamos cookies de sesión.
+   * Este método es para compatibilidad con el código existente.
    * 
-   * @returns {Promise<string>} Token JWT válido para Authorization header
-   * @throws {Error} Si no hay sesión activa o el token no está disponible
-   * 
-   * @example
-   * const token = await this.getAccessToken();
-   * fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+   * @returns {Promise<string>} Token de sesión
+   * @throws {Error} Si no hay sesión activa
    */
   async getAccessToken() {
-    const currentUser = netlifyIdentity.currentUser();
-    if (!currentUser) {
+    if (!this.user) {
       throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
     }
 
-    try {
-      // Intentar obtener token fresco (refresca si es necesario)
-      return await currentUser.jwt();
-    } catch (e) {
-      // Fallback: usar token en caché si jwt() falla
-      const fallbackToken = currentUser.token?.access_token;
-      if (!fallbackToken) {
-        throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
-      }
-      return fallbackToken;
-    }
+    // Con PHP usamos cookies de sesión, no tokens JWT
+    // Retornamos el token almacenado o un placeholder
+    return this.authToken || 'session-auth';
   }
 
   /**
    * Inicia el flujo de cambio de contraseña
    * 
-   * @description Cierra sesión y abre el widget para usar "Forgot password"
+   * @description Muestra un modal para cambiar la contraseña
    */
   async changePassword() {
-    const confirmed = await this.showConfirmModal(
-      'Cambiar contraseña',
-      'Para cambiar tu contraseña necesitas cerrar sesión. ¿Deseas continuar?',
-      'Sí, continuar',
+    // Mostrar información sobre cómo cambiar la contraseña
+    this.showToast(
+      'Para cambiar tu contraseña, contacta al administrador del sistema o actualiza las credenciales en el panel de Hostinger.',
       'info'
     );
-    
-    if (confirmed) {
-      // Cerrar sesión
-      netlifyIdentity.logout();
-      
-      // Esperar un momento y abrir el widget en modo login
-      setTimeout(() => {
-        netlifyIdentity.open('login');
-        this.showToast('Haz click en "Forgot password?" para cambiar tu contraseña', 'info');
-      }, 500);
-    }
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -430,12 +462,13 @@ class SalaGeekAdmin {
     // Obtener token de acceso
     const accessToken = await this.getAccessToken();
 
-    const response = await fetch('/.netlify/functions/save-article', {
+    const response = await fetch('/api/save-article.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${accessToken}`
       },
+      credentials: 'include',
       body: JSON.stringify({
         article: articleData,
         htmlContent: this.generateArticleHTML(articleData, content),
@@ -621,12 +654,10 @@ class SalaGeekAdmin {
    */
   setupEventListeners() {
     // ─── Autenticación ───
-    document.getElementById('login-btn')?.addEventListener('click', () => {
-      netlifyIdentity.open('login');
-    });
-
+    // El login ahora se maneja con el formulario en initAuth()
+    
     document.getElementById('logout-btn')?.addEventListener('click', () => {
-      netlifyIdentity.logout();
+      this.handleLogout();
     });
 
     document.getElementById('change-password-btn')?.addEventListener('click', () => {
@@ -2944,9 +2975,8 @@ class SalaGeekAdmin {
       return;
     }
 
-    // Obtener token actualizado
-    const currentUser = netlifyIdentity.currentUser();
-    if (!currentUser || !currentUser.token?.access_token) {
+    // Verificar sesión
+    if (!this.user) {
       this.showToast('Sesión expirada. Por favor, vuelve a iniciar sesión.', 'error');
       return;
     }
@@ -2957,12 +2987,13 @@ class SalaGeekAdmin {
 
     try {
       const accessToken = await this.getAccessToken();
-      const response = await fetch('/.netlify/functions/upload-image', {
+      const response = await fetch('/api/upload-image.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
+        credentials: 'include',
         body: JSON.stringify(this.galleryUploadData)
       });
 
@@ -3055,10 +3086,11 @@ class SalaGeekAdmin {
       // Obtener token de acceso
       const accessToken = await this.getAccessToken();
       
-      const response = await fetch('/.netlify/functions/list-images', {
+      const response = await fetch('/api/list-images.php', {
         headers: {
           'Authorization': `Bearer ${accessToken}`
-        }
+        },
+        credentials: 'include'
       });
 
       const result = await response.json();
@@ -3770,12 +3802,13 @@ class SalaGeekAdmin {
     try {
       const accessToken = await this.getAccessToken();
       
-      const response = await fetch('/.netlify/functions/save-article', {
+      const response = await fetch('/api/save-article.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
+        credentials: 'include',
         body: JSON.stringify({
           article: articleData,
           htmlContent: this.generateArticleHTML(articleData, content),
@@ -3864,12 +3897,13 @@ class SalaGeekAdmin {
     try {
       const accessToken = await this.getAccessToken();
       
-      const response = await fetch('/.netlify/functions/save-article', {
+      const response = await fetch('/api/save-article.php', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
+        credentials: 'include',
         body: JSON.stringify({ id, slug: article.slug })
       });
 
