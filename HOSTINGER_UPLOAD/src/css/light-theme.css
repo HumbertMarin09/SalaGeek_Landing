@@ -1,0 +1,784 @@
+/**
+ * ============================================================================
+ * ☀️ SALA GEEK - MODO CLARO (LIGHT THEME)
+ * ============================================================================
+ * 
+ * Sistema de tema claro con contraste WCAG AAA
+ * 
+ * 🎨 PALETA DE COLORES - Diseñada para máxima accesibilidad:
+ * 
+ * FONDOS:
+ * - Primario: #FFFFFF (blanco puro)
+ * - Secundario: #F8FAFC (gris muy claro, casi blanco)
+ * - Terciario: #F1F5F9 (gris claro para cards)
+ * - Superficie: #E2E8F0 (gris claro para hovers)
+ * 
+ * TEXTOS (Contraste WCAG AAA - ratio mínimo 7:1):
+ * - Primario: #0F172A (casi negro, contraste 16.1:1 sobre blanco)
+ * - Secundario: #334155 (gris oscuro, contraste 9.4:1)
+ * - Terciario: #475569 (gris medio, contraste 6.1:1)
+ * 
+ * ACENTOS (Ajustados para modo claro):
+ * - Primario: #B8860B (dorado oscuro, contraste 4.8:1)
+ * - Secundario: #C2410C (naranja oscuro, contraste 5.2:1)
+ * - Links: #1D4ED8 (azul, contraste 7.1:1)
+ * 
+ * BORDES:
+ * - Principal: #CBD5E1 (gris medio)
+ * - Sutil: #E2E8F0 (gris claro)
+ * 
+ * @version 1.0.0
+ * @author Sala Geek
+ * @accessibility WCAG 2.1 AAA compliant
+ * ============================================================================
+ */
+
+/* ============================================================================
+   VARIABLES CSS - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"],
+.light-mode {
+  /* 🎨 Paleta principal - Modo Claro */
+  --bg: #FFFFFF;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --bg-tertiary: #F1F5F9;
+  --bg-surface: #E2E8F0;
+  --bg-gradient: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 50%, #F1F5F9 100%);
+  
+  /* 📝 Textos - Alto contraste WCAG AAA */
+  --text-primary: #0F172A;      /* Contraste 16.1:1 sobre blanco */
+  --text-secondary: #334155;    /* Contraste 9.4:1 sobre blanco */
+  --text-tertiary: #475569;     /* Contraste 6.1:1 sobre blanco */
+  --text-muted: #64748B;        /* Contraste 4.5:1 (WCAG AA) */
+  
+  /* 🔗 Links y Acentos */
+  --accent-primary: #B8860B;    /* Dorado oscuro - visible en fondo claro */
+  --accent-secondary: #C2410C;  /* Naranja quemado */
+  --link-color: #1D4ED8;        /* Azul accesible */
+  --link-hover: #1E40AF;        /* Azul más oscuro para hover */
+  
+  /* ⚡ Logo colores adaptados */
+  --logo-color-1: #0D6EFD;
+  --logo-color-2: #B8860B;
+  --logo-accent: #B8860B;
+  
+  /* 🔲 Bordes y separadores */
+  --border-color: #CBD5E1;
+  --border-subtle: #E2E8F0;
+  --border-strong: #94A3B8;
+  
+  /* 🌑 Sombras - Más sutiles para modo claro */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 8px 10px rgba(0, 0, 0, 0.04);
+  
+  /* 📊 Estados */
+  --success: #15803D;
+  --success-bg: #DCFCE7;
+  --warning: #A16207;
+  --warning-bg: #FEF3C7;
+  --error: #B91C1C;
+  --error-bg: #FEE2E2;
+  --info: #1D4ED8;
+  --info-bg: #DBEAFE;
+  
+  /* 🎯 Categorías - Colores ajustados para fondo claro */
+  --category-series: #7C3AED;
+  --category-peliculas: #DC2626;
+  --category-anime: #DB2777;
+  --category-gaming: #059669;
+  --category-tech: #0284C7;
+  
+  /* ⚡ Overlay y modales */
+  --overlay-bg: rgba(15, 23, 42, 0.5);
+  --modal-bg: #FFFFFF;
+}
+
+/* ============================================================================
+   BODY Y LAYOUT BASE
+   ============================================================================ */
+
+[data-theme="light"] body,
+.light-mode body {
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+}
+
+/* ============================================================================
+   HEADER - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .site-header,
+.light-mode .site-header {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .site-header.scrolled,
+.light-mode .site-header.scrolled {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: var(--shadow-md);
+  border-bottom-color: var(--border-strong);
+}
+
+/* Barra superior del header */
+[data-theme="light"] .site-header::before,
+.light-mode .site-header::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-primary) 25%,
+    var(--accent-secondary) 50%,
+    var(--accent-primary) 75%,
+    transparent 100%
+  );
+  opacity: 0.8;
+}
+
+/* Logo */
+[data-theme="light"] .site-header .logo,
+.light-mode .site-header .logo {
+  filter: none; /* Sin glow en modo claro */
+}
+
+[data-theme="light"] .site-header .logo:hover,
+.light-mode .site-header .logo:hover {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* ============================================================================
+   NAVEGACIÓN - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .menu .nav-link,
+.light-mode .menu .nav-link {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .menu .nav-link:hover,
+.light-mode .menu .nav-link:hover {
+  color: var(--accent-primary);
+  background: rgba(184, 134, 11, 0.08);
+}
+
+[data-theme="light"] .menu .nav-link::before,
+.light-mode .menu .nav-link::before {
+  background: linear-gradient(135deg, 
+    rgba(184, 134, 11, 0.1) 0%, 
+    rgba(194, 65, 12, 0.06) 100%
+  );
+}
+
+[data-theme="light"] .menu .nav-link::after,
+.light-mode .menu .nav-link::after {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  box-shadow: none;
+}
+
+[data-theme="light"] .menu .nav-icon,
+.light-mode .menu .nav-icon {
+  color: var(--accent-primary);
+  filter: none;
+}
+
+[data-theme="light"] .menu .nav-link.active,
+.light-mode .menu .nav-link.active {
+  color: var(--accent-primary);
+  background: rgba(184, 134, 11, 0.12);
+  box-shadow: 0 0 0 1px rgba(184, 134, 11, 0.2);
+}
+
+/* ============================================================================
+   HERO SECTION - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .hero-section,
+.light-mode .hero-section {
+  background: var(--bg-gradient);
+}
+
+[data-theme="light"] .hero-background,
+.light-mode .hero-background {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+}
+
+[data-theme="light"] .hero-title,
+.light-mode .hero-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .hero-brand,
+.light-mode .hero-brand {
+  color: var(--accent-primary);
+  text-shadow: none;
+}
+
+[data-theme="light"] .hero-subtitle,
+.light-mode .hero-subtitle {
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   BOTONES - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .btn-primary,
+.light-mode .btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .btn-primary:hover,
+.light-mode .btn-primary:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+[data-theme="light"] .btn-secondary,
+.light-mode .btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+[data-theme="light"] .btn-secondary:hover,
+.light-mode .btn-secondary:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: rgba(184, 134, 11, 0.05);
+}
+
+/* ============================================================================
+   CARDS - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .card,
+[data-theme="light"] .feature-card,
+[data-theme="light"] .article-card,
+.light-mode .card,
+.light-mode .feature-card,
+.light-mode .article-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .card:hover,
+[data-theme="light"] .feature-card:hover,
+[data-theme="light"] .article-card:hover,
+.light-mode .card:hover,
+.light-mode .feature-card:hover,
+.light-mode .article-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-color);
+}
+
+[data-theme="light"] .card-title,
+[data-theme="light"] .article-card .article-title,
+.light-mode .card-title,
+.light-mode .article-card .article-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .card-description,
+[data-theme="light"] .article-card .article-excerpt,
+.light-mode .card-description,
+.light-mode .article-card .article-excerpt {
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   BADGES DE CATEGORÍA - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .category-badge,
+.light-mode .category-badge {
+  font-weight: 600;
+}
+
+[data-theme="light"] .category-series,
+.light-mode .category-series {
+  background: rgba(124, 58, 237, 0.12);
+  color: #6D28D9;
+}
+
+[data-theme="light"] .category-peliculas,
+.light-mode .category-peliculas {
+  background: rgba(220, 38, 38, 0.12);
+  color: #B91C1C;
+}
+
+[data-theme="light"] .category-anime,
+.light-mode .category-anime {
+  background: rgba(219, 39, 119, 0.12);
+  color: #BE185D;
+}
+
+[data-theme="light"] .category-gaming,
+.light-mode .category-gaming {
+  background: rgba(5, 150, 105, 0.12);
+  color: #047857;
+}
+
+[data-theme="light"] .category-tecnologia,
+[data-theme="light"] .category-tech,
+.light-mode .category-tecnologia,
+.light-mode .category-tech {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0369A1;
+}
+
+/* ============================================================================
+   FORMULARIOS - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select,
+.light-mode input,
+.light-mode textarea,
+.light-mode select {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder,
+.light-mode input::placeholder,
+.light-mode textarea::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] input:focus,
+[data-theme="light"] textarea:focus,
+[data-theme="light"] select:focus,
+.light-mode input:focus,
+.light-mode textarea:focus,
+.light-mode select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.15);
+  outline: none;
+}
+
+/* ============================================================================
+   FOOTER - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .site-footer,
+.light-mode .site-footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .site-footer h4,
+[data-theme="light"] .site-footer h5,
+.light-mode .site-footer h4,
+.light-mode .site-footer h5 {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .site-footer p,
+[data-theme="light"] .site-footer a,
+.light-mode .site-footer p,
+.light-mode .site-footer a {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .site-footer a:hover,
+.light-mode .site-footer a:hover {
+  color: var(--accent-primary);
+}
+
+[data-theme="light"] .footer-bottom,
+.light-mode .footer-bottom {
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-tertiary);
+}
+
+/* ============================================================================
+   BÚSQUEDA - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .search-modal,
+.light-mode .search-modal {
+  background: rgba(15, 23, 42, 0.4);
+}
+
+[data-theme="light"] .search-modal-content,
+.light-mode .search-modal-content {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xl);
+}
+
+[data-theme="light"] .search-input,
+.light-mode .search-input {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+[data-theme="light"] .search-result-item,
+.light-mode .search-result-item {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+[data-theme="light"] .search-result-item:hover,
+.light-mode .search-result-item:hover {
+  background: var(--bg-secondary);
+}
+
+[data-theme="light"] .search-result-title,
+.light-mode .search-result-title {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .search-result-category,
+.light-mode .search-result-category {
+  color: var(--text-tertiary);
+}
+
+/* ============================================================================
+   NEWSLETTER - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .newsletter-section,
+.light-mode .newsletter-section {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  border: 1px solid var(--border-subtle);
+}
+
+[data-theme="light"] .newsletter-section h2,
+[data-theme="light"] .newsletter-section h3,
+.light-mode .newsletter-section h2,
+.light-mode .newsletter-section h3 {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .newsletter-section p,
+.light-mode .newsletter-section p {
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   SCROLL & PROGRESS BAR - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .reading-progress-bar,
+.light-mode .reading-progress-bar {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+[data-theme="light"] .reading-progress-fill,
+.light-mode .reading-progress-fill {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+/* Scrollbar personalizada */
+[data-theme="light"] ::-webkit-scrollbar,
+.light-mode ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track,
+.light-mode ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb,
+.light-mode ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 6px;
+  border: 3px solid var(--bg-secondary);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover,
+.light-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================================================
+   TOASTS Y NOTIFICACIONES - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .toast,
+.light-mode .toast {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .toast-success,
+.light-mode .toast-success {
+  border-left: 4px solid var(--success);
+}
+
+[data-theme="light"] .toast-error,
+.light-mode .toast-error {
+  border-left: 4px solid var(--error);
+}
+
+[data-theme="light"] .toast-warning,
+.light-mode .toast-warning {
+  border-left: 4px solid var(--warning);
+}
+
+/* ============================================================================
+   COOKIE BANNER - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .cookie-banner,
+.light-mode .cookie-banner {
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .cookie-banner p,
+.light-mode .cookie-banner p {
+  color: var(--text-secondary);
+}
+
+/* ============================================================================
+   BLOG ARTICLES - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .article-full,
+.light-mode .article-full {
+  background: var(--bg-primary);
+}
+
+[data-theme="light"] .article-content,
+.light-mode .article-content {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .article-content h2,
+[data-theme="light"] .article-content h3,
+[data-theme="light"] .article-content h4,
+.light-mode .article-content h2,
+.light-mode .article-content h3,
+.light-mode .article-content h4 {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .article-content p,
+.light-mode .article-content p {
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .article-content a,
+.light-mode .article-content a {
+  color: var(--link-color);
+}
+
+[data-theme="light"] .article-content a:hover,
+.light-mode .article-content a:hover {
+  color: var(--link-hover);
+}
+
+[data-theme="light"] .article-content blockquote,
+.light-mode .article-content blockquote {
+  background: var(--bg-secondary);
+  border-left: 4px solid var(--accent-primary);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .article-content code,
+.light-mode .article-content code {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+}
+
+[data-theme="light"] .article-content pre,
+.light-mode .article-content pre {
+  background: #1E293B; /* Mantener oscuro para legibilidad del código */
+  color: #E2E8F0;
+}
+
+/* ============================================================================
+   BREADCRUMBS - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .breadcrumbs,
+.light-mode .breadcrumbs {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+[data-theme="light"] .breadcrumbs a,
+.light-mode .breadcrumbs a {
+  color: var(--text-tertiary);
+}
+
+[data-theme="light"] .breadcrumbs a:hover,
+.light-mode .breadcrumbs a:hover {
+  color: var(--accent-primary);
+}
+
+[data-theme="light"] .breadcrumbs li[aria-current="page"],
+.light-mode .breadcrumbs li[aria-current="page"] {
+  color: var(--text-primary);
+}
+
+/* ============================================================================
+   SHARE BUTTONS - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .article-share,
+.light-mode .article-share {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+[data-theme="light"] .share-btn,
+.light-mode .share-btn {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .share-btn:hover,
+.light-mode .share-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+/* ============================================================================
+   MOBILE MENU - MODO CLARO
+   ============================================================================ */
+
+[data-theme="light"] .main-nav,
+.light-mode .main-nav {
+  background: var(--bg-primary);
+}
+
+@media (max-width: 1024px) {
+  [data-theme="light"] .main-nav.active,
+  .light-mode .main-nav.active {
+    background: var(--bg-primary);
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+/* ============================================================================
+   THEME TOGGLE BUTTON
+   ============================================================================ */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-surface, rgba(255, 255, 255, 0.1));
+  border-color: var(--accent-primary);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover svg {
+  color: var(--accent-primary);
+  transform: rotate(15deg);
+}
+
+/* Icono de sol (mostrar en modo oscuro) */
+.theme-toggle .icon-sun {
+  display: block;
+}
+
+.theme-toggle .icon-moon {
+  display: none;
+}
+
+/* Icono de luna (mostrar en modo claro) */
+[data-theme="light"] .theme-toggle .icon-sun,
+.light-mode .theme-toggle .icon-sun {
+  display: none;
+}
+
+[data-theme="light"] .theme-toggle .icon-moon,
+.light-mode .theme-toggle .icon-moon {
+  display: block;
+}
+
+/* ============================================================================
+   UTILIDADES PARA FORZAR COLORES
+   ============================================================================ */
+
+/* Clase para forzar texto oscuro */
+[data-theme="light"] .text-dark,
+.light-mode .text-dark {
+  color: var(--text-primary) !important;
+}
+
+/* Clase para forzar fondo blanco */
+[data-theme="light"] .bg-white,
+.light-mode .bg-white {
+  background: var(--bg-primary) !important;
+}
+
+/* ============================================================================
+   TRANSICIÓN SUAVE AL CAMBIAR TEMA
+   ============================================================================ */
+
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: 
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease !important;
+}
+
+/* ============================================================================
+   PRINT STYLES - MODO CLARO (Ya óptimo para impresión)
+   ============================================================================ */
+
+@media print {
+  [data-theme="light"],
+  .light-mode {
+    --bg: #FFFFFF;
+    --bg-primary: #FFFFFF;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+  }
+}

@@ -28,7 +28,6 @@ const IMAGE_CACHE = 'sg-images-v2';
 // Recursos para pre-cachear (instalar inmediatamente)
 const PRECACHE_ASSETS = [
   '/',
-  '/index.html',
   '/404.html',
   '/src/css/normalize.css',
   '/src/css/style.min.css',

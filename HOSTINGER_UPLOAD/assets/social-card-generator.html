@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Card Generator - Sala Geek</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .instructions {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 209, 102, 0.2);
+      padding: 20px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .instructions h3 {
+      color: #ffd166;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .instructions p {
+      color: #a0aec0;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .instructions code {
+      background: rgba(255, 209, 102, 0.1);
+      color: #ffd166;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    /* Social Card - Exact dimensions 1200x630px (Facebook/Twitter optimal) */
+    .social-card {
+      width: 1200px;
+      height: 630px;
+      background: linear-gradient(135deg, #0a0e27 0%, #141b37 50%, #1a1f3a 100%);
+      position: relative;
+      overflow: hidden;
+      border-radius: 0; /* Sin bordes para captura exacta */
+    }
+
+    /* Animated gradient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.6;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.3) 0%, transparent 70%);
+      top: -100px;
+      right: -50px;
+    }
+
+    .orb-2 {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(231, 111, 81, 0.25) 0%, transparent 70%);
+      bottom: -80px;
+      left: -50px;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.2) 0%, transparent 70%);
+      top: 50%;
+      left: 30%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Grid pattern overlay */
+    .grid-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(255, 209, 102, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 209, 102, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.5;
+    }
+
+    /* Decorative line */
+    .deco-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, 
+        transparent 0%,
+        #ffd166 20%,
+        #e76f51 50%,
+        #ffd166 80%,
+        transparent 100%
+      );
+    }
+
+    /* Content container */
+    .card-content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 60px 80px;
+      gap: 60px;
+    }
+
+    /* Left side - Logo & Branding */
+    .card-left {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-logo {
+      width: 200px;
+      height: 200px;
+      border-radius: 24px;
+      filter: drop-shadow(0 10px 40px rgba(255, 209, 102, 0.3));
+      margin-bottom: 24px;
+    }
+
+    .logo-glow {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(255, 209, 102, 0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    /* Right side - Text content */
+    .card-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Badge */
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 209, 102, 0.1);
+      border: 1px solid rgba(255, 209, 102, 0.3);
+      border-radius: 30px;
+      color: #ffd166;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      width: fit-content;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background: #ffd166;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ffd166;
+    }
+
+    /* Title */
+    .card-title {
+      font-size: 72px;
+      font-weight: 800;
+      color: #f0f2f7;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .card-title span {
+      background: linear-gradient(135deg, #ffd166 0%, #e76f51 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Subtitle */
+    .card-subtitle {
+      font-size: 26px;
+      color: #a0aec0;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 32px;
+      max-width: 550px;
+    }
+
+    /* Tags */
+    .card-tags {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-tag {
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #f0f2f7;
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-tag-icon {
+      font-size: 18px;
+    }
+
+    /* URL Badge - Bottom right */
+    .card-url {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #ffd166 0%, #e5a84a 100%);
+      border-radius: 12px;
+      color: #0a0e27;
+      font-size: 20px;
+      font-weight: 700;
+      box-shadow: 0 8px 32px rgba(255, 209, 102, 0.3);
+    }
+
+    .card-url svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Year badge */
+    .card-year {
+      position: absolute;
+      top: 40px;
+      right: 60px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #a0aec0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Stats mini */
+    .card-stats {
+      position: absolute;
+      bottom: 40px;
+      left: 60px;
+      display: flex;
+      gap: 24px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #a0aec0;
+      font-size: 14px;
+    }
+
+    .stat-item svg {
+      width: 16px;
+      height: 16px;
+      color: #ffd166;
+    }
+
+    .stat-value {
+      font-weight: 700;
+      color: #f0f2f7;
+    }
+  </style>
+</head>
+<body>
+  <div class="instructions">
+    <h3>📸 Cómo capturar la Social Card</h3>
+    <p>
+      1. Presiona <code>F11</code> para pantalla completa<br>
+      2. Usa <code>Win + Shift + S</code> y selecciona SOLO la tarjeta<br>
+      3. Guarda como <code>social-card.png</code> en <code>/src/images/</code>
+    </p>
+  </div>
+
+  <div class="social-card">
+    <!-- Decorative elements -->
+    <div class="deco-line"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Year badge -->
+    <div class="card-year">🚀 Desde 2017</div>
+
+    <!-- URL Badge -->
+    <div class="card-url">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      salageek.com
+    </div>
+
+    <!-- Stats -->
+    <div class="card-stats">
+      <div class="stat-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span class="stat-value">+50K</span> Geeks
+      </div>
+      <div class="stat-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        Newsletter <span class="stat-value">Semanal</span>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="card-content">
+      <!-- Left: Logo -->
+      <div class="card-left">
+        <div class="logo-glow"></div>
+        <img 
+          src="../src/images/SalaGeek_LOGO.webp" 
+          alt="Sala Geek Logo" 
+          class="card-logo"
+        />
+      </div>
+
+      <!-- Right: Text -->
+      <div class="card-right">
+        <div class="card-badge">
+          <span class="badge-dot"></span>
+          Comunidad Geek #1 en Español
+        </div>
+
+        <h1 class="card-title">
+          Tu Espacio <span>Geek</span><br>Definitivo
+        </h1>
+
+        <p class="card-subtitle">
+          Noticias, reseñas y análisis de películas, series, anime, videojuegos y tecnología
+        </p>
+
+        <div class="card-tags">
+          <span class="card-tag">
+            <span class="card-tag-icon">🎬</span> Películas
+          </span>
+          <span class="card-tag">
+            <span class="card-tag-icon">📺</span> Series
+          </span>
+          <span class="card-tag">
+            <span class="card-tag-icon">🎮</span> Videojuegos
+          </span>
+          <span class="card-tag">
+            <span class="card-tag-icon">⚡</span> Anime
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

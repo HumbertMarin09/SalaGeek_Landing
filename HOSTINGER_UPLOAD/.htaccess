@@ -1,0 +1,148 @@
+# ==============================================================================
+# Cache Control & Force Refresh
+# ==============================================================================
+
+# Disable ETags
+<IfModule mod_headers.c>
+    Header unset ETag
+    FileETag None
+</IfModule>
+
+# Force browser to revalidate
+<IfModule mod_headers.c>
+    # For HTML files - always revalidate
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+
+    # For JavaScript files - short cache with revalidation
+    <FilesMatch "\.(js)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+
+    # For CSS files - short cache with revalidation
+    <FilesMatch "\.(css)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+
+    # For images - longer cache
+    <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|webp)$">
+        Header set Cache-Control "public, max-age=86400"
+    </FilesMatch>
+    
+    # For fonts - 1 year cache
+    <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# ==============================================================================
+# Compression (Enhanced)
+# ==============================================================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/json application/xml
+    AddOutputFilterByType DEFLATE application/rss+xml application/atom+xml
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/woff font/woff2
+</IfModule>
+
+# ==============================================================================
+# Security & SEO Headers
+# ==============================================================================
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "DENY"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Permissions Policy
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    
+    # DNS Prefetch
+    Header always set X-DNS-Prefetch-Control "on"
+    
+    # Content Security Policy (ajustada para servicios externos)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://pagead2.googlesyndication.com https://adservice.google.com https://*.google.com https://*.googleadservices.com https://*.googlesyndication.com https://*.doubleclick.net https://js-na1.hs-scripts.com https://js.hs-analytics.net https://js.hscollectedforms.net https://js.hs-banner.com https://js.hsadspixel.net https://connect.facebook.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://*.google.com https://*.googleapis.com https://*.googlesyndication.com https://*.googleadservices.com https://*.doubleclick.net https://*.hs-analytics.net https://*.hs-scripts.com https://*.hubspot.com https://*.hsforms.com https://*.hsadspixel.net https://forms.hscollectedforms.net https://*.hscollectedforms.net https://*.hubapi.com https://*.hsappstatic.net https://*.facebook.com https://*.facebook.net https://raw.githubusercontent.com https://api.github.com; frame-src 'self' https://www.google.com/recaptcha/ https://*.google.com https://*.googlesyndication.com https://*.doubleclick.net https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com"
+</IfModule>
+
+# ==============================================================================
+# Redirects for SEO (Canonical URLs)
+# ==============================================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect www to non-www (canonical)
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+    
+    # Force HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Remove trailing slash (prevent duplicate content)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [R=301,L]
+    
+    # ─── Pretty URLs (reemplazo de netlify.toml redirects) ───
+    
+    # Media Kit
+    RewriteRule ^media-kit/?$ /src/pages/media-kit.html [L]
+    
+    # Panel de Administración
+    RewriteRule ^admin/?$ /admin/index.html [L]
+    
+    # Páginas Legales
+    RewriteRule ^privacidad/?$ /src/pages/legal/privacy.html [L]
+    RewriteRule ^terminos/?$ /src/pages/legal/terms.html [L]
+    RewriteRule ^cookies/?$ /src/pages/legal/cookies.html [L]
+    
+    # Blog - Artículos sin extensión .html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^blog/articulos/([^/]+)/?$ /blog/articulos/$1.html [L]
+</IfModule>
+
+# ==============================================================================
+# Custom Error Pages
+# ==============================================================================
+ErrorDocument 404 /404.html
+
+# ==============================================================================
+# MIME Types for SEO & Performance
+# ==============================================================================
+<IfModule mod_mime.c>
+    AddType application/javascript js
+    AddType application/json json
+    AddType font/woff woff
+    AddType font/woff2 woff2
+    AddType image/webp webp
+    AddType image/svg+xml svg
+    AddType application/manifest+json webmanifest
+    AddCharset UTF-8 .html .css .js .xml .json .txt
+</IfModule>
+
+# ==============================================================================
+# Protect Sensitive Files
+# ==============================================================================
+<FilesMatch "(^\.htaccess|^\.git|^\.env|package\.json|package-lock\.json|composer\.(json|lock))">
+    Require all denied
+</FilesMatch>
+
+# Proteger carpeta de logs
+<IfModule mod_rewrite.c>
+    RewriteRule ^logs/ - [F,L]
+</IfModule>
+
+# No permitir listado de directorios
+Options -Indexes
