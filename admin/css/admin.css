@@ -29,16 +29,17 @@
    CSS Variables
    ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* Colors */
+  /* Colors - Sala Geek Brand */
   --admin-bg: #0f1117;
   --admin-surface: #1a1d27;
   --admin-surface-hover: #242836;
   --admin-border: #2d3142;
   --admin-text: #e4e6eb;
   --admin-text-muted: #8b8f9a;
-  --admin-primary: #7c3aed;
-  --admin-primary-hover: #6d28d9;
-  --admin-primary-dark: #5b21b6;
+  --admin-primary: #ffd166;          /* Amarillo dorado Sala Geek */
+  --admin-primary-hover: #ffdc85;    /* Amarillo claro hover */
+  --admin-primary-dark: #e6b84d;     /* Amarillo oscuro */
+  --admin-secondary: #e76f51;        /* Naranja coral */
   --admin-success: #10b981;
   --admin-warning: #f59e0b;
   --admin-danger: #ef4444;
@@ -124,9 +125,9 @@ input, select, textarea {
   width: 200%;
   height: 200%;
   background: 
-    radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
-    radial-gradient(circle at 40% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 30%);
+    radial-gradient(circle at 20% 20%, rgba(255, 209, 102, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(231, 111, 81, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 40% 70%, rgba(255, 209, 102, 0.06) 0%, transparent 30%);
   animation: loginBgPulse 15s ease-in-out infinite;
   pointer-events: none;
 }
@@ -135,7 +136,7 @@ input, select, textarea {
   content: '';
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237c3aed' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffd166' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   pointer-events: none;
   opacity: 0.5;
 }
@@ -153,11 +154,11 @@ input, select, textarea {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 1.5rem;
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  border: 1px solid rgba(255, 209, 102, 0.15);
   box-shadow: 
     0 25px 50px -12px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-    0 0 80px rgba(124, 58, 237, 0.1);
+    0 0 80px rgba(255, 209, 102, 0.08);
   max-width: 420px;
   width: 90%;
   position: relative;
@@ -184,10 +185,10 @@ input, select, textarea {
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(135deg, var(--admin-primary), transparent 40%, transparent 60%, rgba(168, 85, 247, 0.5));
+  background: linear-gradient(135deg, var(--admin-primary), transparent 40%, transparent 60%, var(--admin-secondary));
   border-radius: 1.6rem;
   z-index: -1;
-  opacity: 0.5;
+  opacity: 0.4;
   filter: blur(1px);
 }
 
@@ -198,7 +199,7 @@ input, select, textarea {
 .login-logo img {
   width: 110px;
   margin-bottom: 1.5rem;
-  filter: drop-shadow(0 8px 25px rgba(124, 58, 237, 0.4));
+  filter: drop-shadow(0 8px 25px rgba(255, 209, 102, 0.35));
   animation: logoFloat 4s ease-in-out infinite;
 }
 
@@ -211,7 +212,7 @@ input, select, textarea {
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, var(--admin-primary) 100%);
+  background: linear-gradient(135deg, #fff 0%, var(--admin-primary) 50%, var(--admin-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -256,7 +257,7 @@ input, select, textarea {
 }
 
 .login-form input:hover {
-  border-color: rgba(124, 58, 237, 0.4);
+  border-color: rgba(255, 209, 102, 0.4);
   background: rgba(15, 17, 23, 0.8);
 }
 
@@ -265,8 +266,8 @@ input, select, textarea {
   border-color: var(--admin-primary);
   background: rgba(15, 17, 23, 0.9);
   box-shadow: 
-    0 0 0 4px rgba(124, 58, 237, 0.15),
-    0 0 20px rgba(124, 58, 237, 0.1);
+    0 0 0 4px rgba(255, 209, 102, 0.15),
+    0 0 20px rgba(255, 209, 102, 0.1);
 }
 
 .login-form input::placeholder {
@@ -302,9 +303,10 @@ input, select, textarea {
   font-size: 1rem;
   font-weight: 600;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, var(--admin-primary) 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--admin-primary) 0%, var(--admin-secondary) 100%);
+  color: #1a1d27;
   box-shadow: 
-    0 4px 15px rgba(124, 58, 237, 0.4),
+    0 4px 15px rgba(255, 209, 102, 0.35),
     0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -315,7 +317,7 @@ input, select, textarea {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
   transform: translateX(-100%);
   transition: transform 0.5s ease;
 }
@@ -323,8 +325,8 @@ input, select, textarea {
 .login-form .btn-large:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 8px 25px rgba(124, 58, 237, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+    0 8px 25px rgba(255, 209, 102, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
 }
 
 .login-form .btn-large:hover::before {
@@ -334,7 +336,7 @@ input, select, textarea {
 .login-form .btn-large:active {
   transform: translateY(0);
   box-shadow: 
-    0 2px 10px rgba(124, 58, 237, 0.4),
+    0 2px 10px rgba(255, 209, 102, 0.35),
     0 0 0 1px rgba(255, 255, 255, 0.1) inset;
 }
 
