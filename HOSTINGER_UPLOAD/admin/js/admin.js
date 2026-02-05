@@ -3316,6 +3316,10 @@ class SalaGeekAdmin {
       this.renderDraftsTable();
       this.renderRecentArticles();
       this.renderRecentDrafts();
+      this.renderActivityLog();
+      this.renderPublishChart();
+      this.renderCategoriesBreakdown();
+      this.renderBlogHealth();
       this.updateDraftsCount();
     } catch (error) {
       console.error('Error loading articles:', error);
@@ -3535,6 +3539,233 @@ class SalaGeekAdmin {
         </div>
       </div>
     `).join('');
+  }
+
+  /**
+   * Render activity log with recent actions
+   */
+  renderActivityLog() {
+    const container = document.getElementById('activity-log-list');
+    if (!container) return;
+
+    // Collect activities from articles (published and drafts)
+    const activities = [];
+    
+    // Add published articles
+    this.articles.forEach(article => {
+      activities.push({
+        type: 'publish',
+        title: article.title,
+        date: new Date(article.publishDate),
+        icon: 'publish'
+      });
+      if (article.modifiedDate && article.modifiedDate !== article.publishDate) {
+        activities.push({
+          type: 'edit',
+          title: article.title,
+          date: new Date(article.modifiedDate),
+          icon: 'edit'
+        });
+      }
+    });
+    
+    // Add drafts
+    this.drafts.forEach(draft => {
+      activities.push({
+        type: 'draft',
+        title: draft.title,
+        date: new Date(draft.modifiedDate || draft.publishDate),
+        icon: 'draft'
+      });
+    });
+
+    // Sort by date descending and take top 8
+    activities.sort((a, b) => b.date - a.date);
+    const recentActivities = activities.slice(0, 8);
+
+    if (recentActivities.length === 0) {
+      container.innerHTML = '<p class="empty-state">No hay actividad reciente</p>';
+      return;
+    }
+
+    const icons = {
+      publish: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>`,
+      edit: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>`,
+      draft: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>`
+    };
+
+    const labels = {
+      publish: 'Publicado',
+      edit: 'Editado',
+      draft: 'Borrador guardado'
+    };
+
+    container.innerHTML = recentActivities.map(activity => `
+      <div class="activity-item">
+        <div class="activity-icon ${activity.icon}">${icons[activity.icon]}</div>
+        <div class="activity-info">
+          <span class="activity-title">${labels[activity.type]}: <strong>${this.escapeHtml(activity.title.substring(0, 40))}${activity.title.length > 40 ? '...' : ''}</strong></span>
+          <span class="activity-time">${this.getRelativeTime(activity.date)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /**
+   * Get relative time string (e.g., "hace 2 horas")
+   */
+  getRelativeTime(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Justo ahora';
+    if (diffMins < 60) return `Hace ${diffMins} min`;
+    if (diffHours < 24) return `Hace ${diffHours}h`;
+    if (diffDays < 7) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+    return this.formatDate(date);
+  }
+
+  /**
+   * Render publish chart showing articles per month
+   */
+  renderPublishChart() {
+    const chartContainer = document.getElementById('publish-chart');
+    const legendContainer = document.getElementById('chart-legend');
+    if (!chartContainer || !legendContainer) return;
+
+    // Get last 6 months
+    const months = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      months.push({
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        label: date.toLocaleDateString('es', { month: 'short' }),
+        count: 0
+      });
+    }
+
+    // Count articles per month
+    this.articles.forEach(article => {
+      const pubDate = new Date(article.publishDate);
+      const monthData = months.find(m => 
+        m.month === pubDate.getMonth() && m.year === pubDate.getFullYear()
+      );
+      if (monthData) monthData.count++;
+    });
+
+    const maxCount = Math.max(...months.map(m => m.count), 1);
+
+    // Render bars
+    chartContainer.innerHTML = months.map(m => {
+      const height = (m.count / maxCount) * 100;
+      return `<div class="chart-bar" style="height: ${Math.max(height, 4)}%" data-count="${m.count}"></div>`;
+    }).join('');
+
+    // Render legend
+    legendContainer.innerHTML = months.map(m => `<span>${m.label}</span>`).join('');
+  }
+
+  /**
+   * Render categories breakdown
+   */
+  renderCategoriesBreakdown() {
+    const container = document.getElementById('categories-breakdown');
+    if (!container) return;
+
+    // Count articles per category
+    const categoryCounts = {};
+    this.articles.forEach(article => {
+      const cat = article.category || 'sin-categoria';
+      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+
+    const entries = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
+    const total = this.articles.length || 1;
+
+    if (entries.length === 0) {
+      container.innerHTML = '<p class="empty-state">Sin datos de categorías</p>';
+      return;
+    }
+
+    // Category colors
+    const colors = ['#ffd166', '#e76f51', '#10b981', '#8b5cf6', '#06b6d4', '#f59e0b'];
+
+    container.innerHTML = entries.slice(0, 6).map(([ cat, count], i) => {
+      const percentage = Math.round((count / total) * 100);
+      const color = colors[i % colors.length];
+      return `
+        <div class="category-item">
+          <div class="category-info">
+            <span class="category-dot" style="background: ${color}"></span>
+            <span class="category-name">${cat.replace(/-/g, ' ')}</span>
+          </div>
+          <div class="category-bar">
+            <div class="category-bar-fill" style="width: ${percentage}%; background: ${color}"></div>
+          </div>
+          <span class="category-count">${count}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  /**
+   * Render blog health metrics
+   */
+  renderBlogHealth() {
+    const thisMonthEl = document.getElementById('health-this-month');
+    const avgWordsEl = document.getElementById('health-avg-words');
+    const lastPublishEl = document.getElementById('health-last-publish');
+    const categoriesEl = document.getElementById('health-categories');
+
+    if (!thisMonthEl) return;
+
+    // Articles this month
+    const now = new Date();
+    const thisMonth = this.articles.filter(a => {
+      const pubDate = new Date(a.publishDate);
+      return pubDate.getMonth() === now.getMonth() && pubDate.getFullYear() === now.getFullYear();
+    }).length;
+    thisMonthEl.textContent = thisMonth;
+    thisMonthEl.className = 'health-value ' + (thisMonth >= 4 ? 'good' : thisMonth >= 2 ? 'warning' : 'danger');
+
+    // Average read time (proxy for words)
+    if (this.articles.length > 0) {
+      const avgReadTime = this.articles.reduce((sum, a) => {
+        const mins = parseInt(a.readTime) || 3;
+        return sum + mins;
+      }, 0) / this.articles.length;
+      avgWordsEl.textContent = `~${Math.round(avgReadTime * 200)} palabras`;
+    } else {
+      avgWordsEl.textContent = '-';
+    }
+
+    // Last publish
+    if (this.articles.length > 0) {
+      const sorted = [...this.articles].sort((a, b) => 
+        new Date(b.publishDate) - new Date(a.publishDate)
+      );
+      lastPublishEl.textContent = this.getRelativeTime(new Date(sorted[0].publishDate));
+    } else {
+      lastPublishEl.textContent = 'Nunca';
+    }
+
+    // Active categories
+    const uniqueCategories = new Set(this.articles.map(a => a.category).filter(Boolean));
+    categoriesEl.textContent = uniqueCategories.size;
   }
 
   filterArticlesTable(searchQuery = '') {
