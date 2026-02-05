@@ -368,8 +368,31 @@ class SalaGeekAdmin {
    * @description Muestra un modal para cambiar la contraseña
    */
   async changePassword() {
-    this.openModal('change-password-modal');
-    this.setupChangePasswordModal();
+    const modal = document.getElementById('change-password-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      this.setupChangePasswordModal();
+    }
+  }
+
+  /**
+   * Cierra el modal de cambio de contraseña
+   */
+  closePasswordModal() {
+    const modal = document.getElementById('change-password-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+      document.getElementById('change-password-form')?.reset();
+      document.getElementById('password-error')?.classList.add('hidden');
+      // Reset strength indicator
+      const strengthFill = document.querySelector('.strength-fill');
+      const strengthText = document.querySelector('.strength-text');
+      if (strengthFill) strengthFill.className = 'strength-fill';
+      if (strengthText) {
+        strengthText.className = 'strength-text';
+        strengthText.textContent = 'Ingresa una contraseña';
+      }
+    }
   }
 
   /**
@@ -382,6 +405,25 @@ class SalaGeekAdmin {
     const strengthFill = document.querySelector('.strength-fill');
     const strengthText = document.querySelector('.strength-text');
     const errorDiv = document.getElementById('password-error');
+    const modal = document.getElementById('change-password-modal');
+
+    // Close button handler
+    modal.querySelector('[data-close="change-password-modal"]')?.addEventListener('click', () => {
+      this.closePasswordModal();
+    });
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) this.closePasswordModal();
+    });
+
+    // Close on Escape key
+    const escHandler = (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        this.closePasswordModal();
+      }
+    };
+    document.addEventListener('keydown', escHandler);
 
     // Toggle password visibility
     document.querySelectorAll('.toggle-password').forEach(btn => {
@@ -459,8 +501,7 @@ class SalaGeekAdmin {
         }
 
         // Success - show the hash and instructions
-        this.closeModal('change-password-modal');
-        form.reset();
+        this.closePasswordModal();
         
         // Show success modal with instructions
         this.showPasswordChangeSuccess(data.newHash);
