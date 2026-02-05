@@ -2410,13 +2410,20 @@ input, select, textarea {
 .recent-article-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 0;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
   border-bottom: 1px solid var(--admin-border);
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .recent-article-item:last-child {
   border-bottom: none;
+}
+
+.recent-article-item:hover {
+  background: rgba(255, 209, 102, 0.05);
 }
 
 .recent-article-item img {
@@ -2425,6 +2432,7 @@ input, select, textarea {
   object-fit: cover;
   border-radius: 0.25rem;
   background: var(--admin-border);
+  flex-shrink: 0;
 }
 
 .recent-article-info {
@@ -2434,15 +2442,77 @@ input, select, textarea {
 
 .recent-article-info strong {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
 }
 
-.recent-article-info span {
-  font-size: 0.8rem;
+.recent-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.recent-article-date {
   color: var(--admin-text-muted);
+}
+
+.recent-article-category {
+  background: rgba(255, 209, 102, 0.15);
+  color: var(--admin-primary);
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+}
+
+/* Action buttons for recent articles */
+.recent-article-actions {
+  display: flex;
+  gap: 0.25rem;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.2s ease;
+}
+
+.recent-article-item:hover .recent-article-actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.action-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 0.375rem;
+  color: var(--admin-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.action-icon:hover {
+  background: var(--admin-primary);
+  border-color: var(--admin-primary);
+  color: #1a1a1a;
+}
+
+.action-icon.danger:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.action-icon svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
