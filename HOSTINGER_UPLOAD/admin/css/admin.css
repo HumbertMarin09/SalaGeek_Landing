@@ -3142,10 +3142,139 @@ input, select, textarea {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Forgot & Reset Password Modals
+   Forgot & Reset Password Modals - Enhanced
    ═══════════════════════════════════════════════════════════════ */
 
-/* Recovery Instructions */
+/* Modal Header Enhanced */
+#forgot-password-modal .modal-header,
+#reset-password-modal .modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(255, 209, 102, 0.1);
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, rgba(255, 209, 102, 0.02) 100%);
+}
+
+.modal-header-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.2) 0%, rgba(255, 209, 102, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 209, 102, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+  animation: iconGlow 3s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.modal-header-icon svg {
+  color: var(--admin-primary);
+  filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.5));
+  z-index: 1;
+  position: relative;
+}
+
+.modal-header-text {
+  flex: 1;
+}
+
+.modal-header-text h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--admin-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.modal-header-text p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--admin-text-muted);
+  font-weight: 500;
+}
+
+/* Recovery Info Card */
+.recovery-info-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, rgba(255, 209, 102, 0.03) 100%);
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.recovery-info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--admin-primary) 0%, #f59e0b 100%);
+  box-shadow: 0 0 10px var(--admin-primary);
+}
+
+.info-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.75rem;
+  background: rgba(255, 209, 102, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 209, 102, 0.3);
+}
+
+.info-icon svg {
+  color: var(--admin-primary);
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-content h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--admin-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.info-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--admin-text-muted);
+}
+
+.info-content strong {
+  color: var(--admin-primary);
+  font-weight: 700;
+}
+
+/* Recovery Instructions (legacy fallback) */
 .recovery-instructions {
   color: var(--admin-text-muted);
   font-size: 0.9rem;
