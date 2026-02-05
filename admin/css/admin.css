@@ -317,6 +317,10 @@ input, select, textarea {
   stroke: #1a1a1a;
 }
 
+.login-form .btn-large span {
+  color: #1a1a1a;
+}
+
 .login-form .btn-large::before {
   content: '';
   position: absolute;
