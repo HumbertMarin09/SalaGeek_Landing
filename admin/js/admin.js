@@ -439,7 +439,7 @@ class SalaGeekAdmin {
       title,
       slug,
       excerpt,
-      content: `/blog/articulos/${slug}.html`,
+      content: `/blog/articulos/${slug}`,
       image,
       category,
       categoryDisplay: categoryNames[category],
@@ -3788,7 +3788,7 @@ class SalaGeekAdmin {
       title,
       slug,
       excerpt,
-      content: `/blog/articulos/${slug}.html`,
+      content: `/blog/articulos/${slug}`,
       image,
       category,
       categories, // Array de categorías múltiples
