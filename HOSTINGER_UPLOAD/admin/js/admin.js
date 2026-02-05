@@ -368,11 +368,204 @@ class SalaGeekAdmin {
    * @description Muestra un modal para cambiar la contraseña
    */
   async changePassword() {
-    // Mostrar información sobre cómo cambiar la contraseña
-    this.showToast(
-      'Para cambiar tu contraseña, contacta al administrador del sistema o actualiza las credenciales en el panel de Hostinger.',
-      'info'
-    );
+    this.openModal('change-password-modal');
+    this.setupChangePasswordModal();
+  }
+
+  /**
+   * Configura el modal de cambio de contraseña
+   */
+  setupChangePasswordModal() {
+    const form = document.getElementById('change-password-form');
+    const newPasswordInput = document.getElementById('new-password');
+    const confirmPasswordInput = document.getElementById('confirm-new-password');
+    const strengthFill = document.querySelector('.strength-fill');
+    const strengthText = document.querySelector('.strength-text');
+    const errorDiv = document.getElementById('password-error');
+
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+      btn.onclick = () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        const eyeOpen = btn.querySelector('.eye-open');
+        const eyeClosed = btn.querySelector('.eye-closed');
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          eyeOpen.style.display = 'none';
+          eyeClosed.style.display = 'block';
+        } else {
+          input.type = 'password';
+          eyeOpen.style.display = 'block';
+          eyeClosed.style.display = 'none';
+        }
+      };
+    });
+
+    // Password strength checker
+    newPasswordInput.oninput = () => {
+      const password = newPasswordInput.value;
+      const strength = this.checkPasswordStrength(password);
+      
+      strengthFill.className = 'strength-fill ' + strength.level;
+      strengthText.className = 'strength-text ' + strength.level;
+      strengthText.textContent = strength.text;
+    };
+
+    // Form submission
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      // Validations
+      if (newPassword !== confirmPassword) {
+        errorDiv.textContent = 'Las contraseñas no coinciden';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        errorDiv.textContent = 'La contraseña debe tener al menos 8 caracteres';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      errorDiv.classList.add('hidden');
+
+      // Show loading state
+      const saveBtn = document.getElementById('save-password-btn');
+      const btnText = saveBtn.querySelector('span:not(.btn-loader)');
+      const btnLoader = saveBtn.querySelector('.btn-loader');
+      btnText.style.display = 'none';
+      btnLoader.classList.remove('hidden');
+      saveBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api/auth.php?action=change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Error al cambiar la contraseña');
+        }
+
+        // Success - show the hash and instructions
+        this.closeModal('change-password-modal');
+        form.reset();
+        
+        // Show success modal with instructions
+        this.showPasswordChangeSuccess(data.newHash);
+        
+      } catch (error) {
+        errorDiv.textContent = error.message;
+        errorDiv.classList.remove('hidden');
+      } finally {
+        btnText.style.display = '';
+        btnLoader.classList.add('hidden');
+        saveBtn.disabled = false;
+      }
+    };
+  }
+
+  /**
+   * Check password strength
+   */
+  checkPasswordStrength(password) {
+    if (!password) return { level: '', text: 'Ingresa una contraseña' };
+    
+    let score = 0;
+    
+    // Length
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+    
+    // Character types
+    if (/[a-z]/.test(password)) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^a-zA-Z0-9]/.test(password)) score++;
+
+    if (score <= 2) return { level: 'weak', text: 'Débil - Agrega más caracteres' };
+    if (score <= 3) return { level: 'fair', text: 'Regular - Usa mayúsculas y números' };
+    if (score <= 4) return { level: 'good', text: 'Buena - Agrega símbolos' };
+    return { level: 'strong', text: 'Excelente' };
+  }
+
+  /**
+   * Show success modal with password hash instructions
+   */
+  showPasswordChangeSuccess(newHash) {
+    // Create a custom success modal
+    const modal = document.getElementById('confirm-modal');
+    if (!modal) {
+      alert('Contraseña verificada. Nuevo hash: ' + newHash);
+      return;
+    }
+
+    const icon = modal.querySelector('.confirm-icon');
+    const titleEl = modal.querySelector('h3');
+    const messageEl = modal.querySelector('p');
+    const acceptBtn = document.getElementById('confirm-accept');
+    const cancelBtn = document.getElementById('confirm-cancel');
+
+    // Configure icon
+    icon.className = 'confirm-icon info';
+    const iconDanger = icon.querySelector('.icon-danger');
+    const iconWarning = icon.querySelector('.icon-warning');
+    const iconInfo = icon.querySelector('.icon-info');
+    if (iconDanger) iconDanger.style.display = 'none';
+    if (iconWarning) iconWarning.style.display = 'none';
+    if (iconInfo) iconInfo.style.display = 'block';
+
+    // Set content
+    titleEl.textContent = '¡Contraseña verificada!';
+    messageEl.innerHTML = `
+      <p style="margin-bottom: 1rem; text-align: left;">Tu contraseña actual fue verificada. Para completar el cambio:</p>
+      <ol style="text-align: left; margin-bottom: 1rem; padding-left: 1.25rem; font-size: 0.85rem;">
+        <li>Ve al panel de Hostinger</li>
+        <li>Sitios → Tu sitio → Configuración avanzada</li>
+        <li>Variables de entorno → ADMIN_PASSWORD_HASH</li>
+        <li>Pega el nuevo hash (abajo)</li>
+      </ol>
+      <div style="background: var(--admin-bg); padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.7rem; word-break: break-all; margin-bottom: 1rem; text-align: left;">
+        ${newHash}
+      </div>
+      <button type="button" class="btn-secondary" style="width: 100%;" onclick="navigator.clipboard.writeText('${newHash}'); this.textContent='¡Copiado!';">
+        📋 Copiar Hash
+      </button>
+    `;
+
+    // Configure buttons
+    acceptBtn.textContent = 'Entendido';
+    acceptBtn.className = 'btn-primary';
+    cancelBtn.style.display = 'none';
+
+    // Show modal
+    modal.classList.remove('hidden');
+
+    // Handler
+    const cleanup = () => {
+      modal.classList.add('hidden');
+      cancelBtn.style.display = '';
+      messageEl.innerHTML = '';
+      acceptBtn.removeEventListener('click', onAccept);
+    };
+
+    const onAccept = () => {
+      cleanup();
+      this.showToast('Recuerda actualizar el hash en Hostinger', 'info');
+    };
+
+    acceptBtn.addEventListener('click', onAccept);
   }
 
   // ═══════════════════════════════════════════════════════════════
