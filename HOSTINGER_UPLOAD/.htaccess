@@ -10,26 +10,24 @@
 
 # Force browser to revalidate
 <IfModule mod_headers.c>
-    # For HTML files - always revalidate
+    # For HTML files - revalidate but allow caching
     <FilesMatch "\.(html|htm)$">
-        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
-        Header set Pragma "no-cache"
-        Header set Expires "0"
+        Header set Cache-Control "no-cache"
     </FilesMatch>
 
-    # For JavaScript files - short cache with revalidation
+    # For JavaScript files - 1 week (use cache busters ?v= for updates)
     <FilesMatch "\.(js)$">
-        Header set Cache-Control "public, max-age=3600, must-revalidate"
+        Header set Cache-Control "public, max-age=604800, immutable"
     </FilesMatch>
 
-    # For CSS files - short cache with revalidation
+    # For CSS files - 1 week (use cache busters ?v= for updates)
     <FilesMatch "\.(css)$">
-        Header set Cache-Control "public, max-age=3600, must-revalidate"
+        Header set Cache-Control "public, max-age=604800, immutable"
     </FilesMatch>
 
-    # For images - longer cache
+    # For images - 1 month
     <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg|webp)$">
-        Header set Cache-Control "public, max-age=86400"
+        Header set Cache-Control "public, max-age=2592000, immutable"
     </FilesMatch>
     
     # For fonts - 1 year cache

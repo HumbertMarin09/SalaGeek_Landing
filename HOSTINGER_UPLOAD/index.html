@@ -1,36 +1,6 @@
 ﻿<!doctype html>
 <html lang="es">
-  <!--
-  ---------------------------------------------------------------------------
-   🎮 SALA GEEK - TU ESPACIO GEEK DEFINITIVO
-  ---------------------------------------------------------------------------
-   
-   Desarrollado con 💜 por:
-   👨‍💻 Humberto Marin - Fundador & Lead Developer
-   🤖 GitHub Copilot - AI Assistant & Code Architect
-   
-   Fecha de lanzamiento: Noviembre 2025
-   Versión: 2.0.0
-   
-   Stack tecnológico:
-   • Vanilla JavaScript (ES6+)
-   • CSS3 con variables personalizadas
-   • HTML5 semántico
-   • Optimizado para SEO y Core Web Vitals
-   
-   Características especiales:
-   • 15 Easter Eggs ocultos (9 Desktop + 6 Mobile)
-   • Dark mode automático
-   • PWA (Progressive Web App)
-   • Animaciones fluidas y responsivas
-   • Achievement Tracker interactivo
-   
-   "Hecho por geeks, para geeks" 🚀
-   
-   ¿Encontraste todos los Easter Eggs? 🥚
-   Presiona Ctrl+Shift+G para descubrir más...
-  ---------------------------------------------------------------------------
-  -->
+  <!-- 🎮 Sala Geek v2.0 | Ctrl+Shift+G para Easter Eggs -->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -108,57 +78,26 @@
     <meta name="twitter:creator" content="@Sala_Geek" />
     <meta name="twitter:dnt" content="on" />
 
-    <!-- Favicons Completos -->
-    <link rel="icon" href="src/images/Icono_SG.ico" type="image/x-icon" />
-    <link rel="shortcut icon" href="src/images/Icono_SG.ico" type="image/x-icon" />
-    <link rel="icon" type="image/webp" sizes="512x512" href="src/images/SalaGeek_LOGO.webp" />
-    <link rel="icon" type="image/webp" sizes="192x192" href="src/images/SalaGeek_LOGO.webp" />
-    <link rel="apple-touch-icon" sizes="180x180" href="src/images/SalaGeek_LOGO.webp" />
-    <link rel="apple-touch-icon" href="src/images/SalaGeek_LOGO.webp" />
-    <meta name="theme-color" content="#1a1f3a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="sitemap" type="application/xml" href="sitemap.xml" />
+    <!-- Favicons -->
+    <link rel="icon" href="/src/images/Icono_SG.ico" sizes="any" />
+    <link rel="icon" type="image/webp" sizes="192x192" href="/src/images/SalaGeek_LOGO.webp" />
+    <link rel="apple-touch-icon" href="/src/images/SalaGeek_LOGO.webp" />
+    <meta name="theme-color" content="#0a0e27" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-    <!-- Additional SEO Meta Tags -->
-    <meta name="language" content="Spanish" />
-    <meta name="coverage" content="Worldwide" />
-    <meta name="distribution" content="Global" />
-    <meta name="rating" content="General" />
-    <meta name="revisit-after" content="1 days" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Sala Geek" />
-    <meta name="application-name" content="Sala Geek" />
-    <meta name="msapplication-TileColor" content="#1a1f3a" />
-    <meta name="msapplication-TileImage" content="/src/images/SalaGeek_LOGO.webp" />
 
-    <!-- 
-      DNS Prefetch y Preconnect para recursos externos 
-      - preconnect: Establece conexión temprana (DNS + TCP + TLS)
-      - dns-prefetch: Solo resuelve DNS (fallback para navegadores antiguos)
-      Reduce latencia en carga de scripts de terceros y redes sociales
-    -->
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="dns-prefetch" href="//www.googletagmanager.com" />
-    <link rel="dns-prefetch" href="//www.facebook.com" />
-    <link rel="dns-prefetch" href="//www.instagram.com" />
-    <link rel="dns-prefetch" href="//www.tiktok.com" />
+    <!-- Preconnect critical third parties -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+    <link rel="preconnect" href="https://js-na1.hs-scripts.com" crossorigin />
 
-    <!-- 
-      Preload recursos críticos para mejor performance
-      - fetchpriority="high": CSS crítico que bloquea render
-      - fetchpriority="low": JS diferido que no bloquea
-      - Cache busters (?v=202): Fuerza recarga cuando hay cambios
-      - performance-boost: Carga primero para optimizar event listeners
-    -->
-    <link rel="preload" href="/src/css/normalize.css" as="style" fetchpriority="high" />
-    <link rel="preload" href="/src/css/style.min.css?v=224" as="style" />
-    <link rel="preload" href="/src/js/script.min.js?v=145" as="script" />
-    <link rel="preload" href="/src/js/performance-boost.min.js" as="script" fetchpriority="high" />
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/src/css/style.min.css?v=225" as="style" />
+    <link rel="preload" href="/src/js/script.min.js?v=146" as="script" />
 
     <!-- 
       Critical CSS inline para above-the-fold
@@ -217,241 +156,83 @@
       }
     </style>
 
-    <!-- 
-      Stylesheets - Orden de carga optimizado
-      1. normalize.css: Reset de estilos base cross-browser
-      2. style.min.css: Estilos principales minificados
-      3. easter-eggs.css: Estilos para sistema de logros
-      noscript: Fallback para usuarios sin JavaScript
-    -->
+    <!-- CSS - Critical path optimized -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=224" />
-    <link rel="stylesheet" href="/src/css/easter-eggs.css" />
-    <!-- Stranger Things Event eliminado (evento finalizado 2026-01-01) -->
-    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=224" /></noscript>
+    <link rel="stylesheet" href="/src/css/style.min.css?v=225" />
+    <!-- Non-critical CSS: easter eggs loaded async -->
+    <link rel="stylesheet" href="/src/css/easter-eggs.min.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="/src/css/easter-eggs.min.css" /></noscript>
 
-    <script>
-      // Agregar clase 'js' inmediatamente para scroll animations
-      // Permite CSS diferenciado para usuarios con/sin JavaScript
-      // Mejora progressive enhancement y accesibilidad
-      document.documentElement.classList.add("js");
-    </script>
+    <script>document.documentElement.classList.add("js");</script>
 
     <!-- Schema.org Structured Data (SEO Avanzado) -->
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Sala Geek",
-        "alternateName": "SalaGeek",
-        "url": "https://salageek.com",
-        "logo": "https://salageek.com/src/images/social-card.png",
-        "description": "La comunidad geek de habla hispana más grande. Noticias, reseñas y análisis de películas, series, anime, videojuegos, cómics y tecnología.",
-        "foundingDate": "2017",
-        "slogan": "Tu espacio geek definitivo",
-        "keywords": "comunidad geek, noticias geek, películas, series, anime, videojuegos, tecnología, cómics, cultura pop",
-        "audience": {
-          "@type": "Audience",
-          "audienceType": "Geeks, gamers, otakus y entusiastas de la cultura pop",
-          "geographicArea": {
-            "@type": "Place",
-            "name": "Latinoamérica y España"
-          }
-        },
-        "sameAs": [
-          "https://facebook.com/SalaGeek19",
-          "https://x.com/Sala_Geek",
-          "https://instagram.com/sala_geek",
-          "https://tiktok.com/@salageek19"
-        ],
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "contactType": "Customer Service",
-          "email": "contacto@salageek.com",
-          "availableLanguage": ["Spanish", "es"]
-        }
-      }
+      {"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Sala Geek","alternateName":"SalaGeek","url":"https://salageek.com","logo":"https://salageek.com/src/images/social-card.png","description":"La comunidad geek de habla hispana más grande. Noticias, reseñas y análisis de películas, series, anime, videojuegos, cómics y tecnología.","foundingDate":"2017","slogan":"Tu espacio geek definitivo","sameAs":["https://facebook.com/SalaGeek19","https://x.com/Sala_Geek","https://instagram.com/sala_geek","https://tiktok.com/@salageek19"],"contactPoint":{"@type":"ContactPoint","contactType":"Customer Service","email":"contacto@salageek.com","availableLanguage":["Spanish","es"]}},{"@type":"WebSite","name":"Sala Geek","url":"https://salageek.com","description":"Portal de noticias y comunidad geek en español","inLanguage":"es","publisher":{"@type":"Organization","name":"Sala Geek","logo":{"@type":"ImageObject","url":"https://salageek.com/src/images/social-card.png"}}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://salageek.com/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué es Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"Sala Geek es la comunidad geek hispana más grande, donde encontrarás noticias diarias, reseñas exclusivas y análisis profundos de películas, series, anime, videojuegos, cómics y tecnología. Todo el contenido está 100% en español y es completamente gratuito."}},{"@type":"Question","name":"¿Qué tipo de contenido puedo encontrar en Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"En Sala Geek encontrarás contenido variado sobre cultura geek: noticias de estrenos de películas y series, análisis de temporadas de anime, reseñas de videojuegos para PC, PS5, Xbox y Nintendo Switch, cobertura de eventos como Comic-Con, guías de juegos, teorías de series, y todo sobre Marvel, DC, Star Wars, y más franquicias."}},{"@type":"Question","name":"¿Es gratis unirse a Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"Sí, todo el contenido de Sala Geek es completamente gratuito. Puedes acceder a todas las noticias, reseñas, análisis y artículos sin ningún costo. También puedes suscribirte a nuestra newsletter Geeky Weekly para recibir las mejores noticias directamente en tu correo."}},{"@type":"Question","name":"¿Con qué frecuencia se actualiza Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"Sala Geek se actualiza diariamente con las últimas noticias del mundo geek. Publicamos múltiples artículos al día sobre estrenos, rumores, trailers, análisis y reseñas. Nuestra newsletter semanal Geeky Weekly resume lo más destacado de cada semana."}}]}]}
     </script>
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Sala Geek",
-        "url": "https://salageek.com",
-        "description": "Portal de noticias y comunidad geek en español",
-        "inLanguage": "es",
-        "copyrightYear": 2017,
-        "publisher": {
-          "@type": "Organization",
-          "name": "Sala Geek",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://salageek.com/src/images/social-card.png"
-          }
-        }
-      }
-    </script>
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "name": "Categorías de Sala Geek",
-        "description": "Contenido disponible en Sala Geek",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Películas",
-            "description": "Noticias, críticas y análisis de películas"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Series",
-            "description": "Reseñas y noticias de series de TV y streaming"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Anime",
-            "description": "Noticias, reseñas y guías de anime y manga"
-          },
-          {
-            "@type": "ListItem",
-            "position": 4,
-            "name": "Videojuegos",
-            "description": "Reviews, noticias y guías de videojuegos"
-          }
-        ]
-      }
-    </script>
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Inicio",
-            "item": "https://salageek.com/"
-          }
-        ]
-      }
-    </script>
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "¿Qué es Sala Geek?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Sala Geek es la comunidad geek hispana más grande, donde encontrarás noticias diarias, reseñas exclusivas y análisis profundos de películas, series, anime, videojuegos, cómics y tecnología. Todo el contenido está 100% en español y es completamente gratuito."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "¿Qué tipo de contenido puedo encontrar en Sala Geek?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "En Sala Geek encontrarás contenido variado sobre cultura geek: noticias de estrenos de películas y series, análisis de temporadas de anime, reseñas de videojuegos para PC, PS5, Xbox y Nintendo Switch, cobertura de eventos como Comic-Con, guías de juegos, teorías de series, y todo sobre Marvel, DC, Star Wars, y más franquicias."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "¿Es gratis unirse a Sala Geek?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Sí, todo el contenido de Sala Geek es completamente gratuito. Puedes acceder a todas las noticias, reseñas, análisis y artículos sin ningún costo. También puedes suscribirte a nuestra newsletter Geeky Weekly para recibir las mejores noticias directamente en tu correo."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "¿Con qué frecuencia se actualiza Sala Geek?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Sala Geek se actualiza diariamente con las últimas noticias del mundo geek. Publicamos múltiples artículos al día sobre estrenos, rumores, trailers, análisis y reseñas. Nuestra newsletter semanal Geeky Weekly resume lo más destacado de cada semana."
-            }
-          }
-        ]
-      }
-    </script>
-
-    <!-- Start of HubSpot Embed Code -->
-    <script type="text/javascript" id="hs-script-loader" async defer src="//js-na1.hs-scripts.com/50792444.js"></script>
-    <!-- End of HubSpot Embed Code -->
-
-    <!-- 
-      Google Tag Manager - Analytics y tracking
-      Configurado con async para no bloquear el renderizado
-      ID: GTM-WBJXS2PX
-    -->
+    <!-- Third-party scripts: delayed until user interaction or idle -->
     <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-WBJXS2PX");
+      // Delay non-essential third-party scripts to improve TBT and TTI
+      (function() {
+        var thirdPartyLoaded = false;
+        function loadThirdParty() {
+          if (thirdPartyLoaded) return;
+          thirdPartyLoaded = true;
+
+          // HubSpot
+          var hs = document.createElement('script');
+          hs.src = '//js-na1.hs-scripts.com/50792444.js';
+          hs.async = true;
+          document.head.appendChild(hs);
+
+          // Google Tag Manager
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+          var gtm = document.createElement('script');
+          gtm.async = true;
+          gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-WBJXS2PX';
+          document.head.appendChild(gtm);
+
+          // AdSense
+          var ads = document.createElement('script');
+          ads.async = true;
+          ads.crossOrigin = 'anonymous';
+          ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435';
+          document.head.appendChild(ads);
+
+          // reCAPTCHA (only when needed for forms)
+          var rc = document.createElement('script');
+          rc.async = true;
+          rc.src = 'https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB';
+          document.head.appendChild(rc);
+        }
+
+        // Load on first user interaction or after 5 seconds
+        ['scroll', 'click', 'touchstart', 'keydown'].forEach(function(evt) {
+          window.addEventListener(evt, loadThirdParty, {once: true, passive: true});
+        });
+        setTimeout(loadThirdParty, 5000);
+      })();
     </script>
-    <!-- End Google Tag Manager -->
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435" crossorigin="anonymous"></script>
+    <!-- Performance Boost (1.2KB) - must load before main script -->
+    <script defer src="/src/js/performance-boost.min.js"></script>
 
-    <!-- 
-      Performance Boost - Optimizaciones de JavaScript
-      Carga ANTES del script principal para interceptar event listeners
-      - Convierte scroll/touch a passive automáticamente
-      - Provee helpers: debounce, throttle, rafThrottle
-      - Reduce Time to Interactive y Total Blocking Time
-    -->
-    <script src="/src/js/performance-boost.min.js"></script>
+    <!-- Main Script -->
+    <script defer src="/src/js/script.min.js?v=146"></script>
 
-    <!-- 
-      Script principal minificado (50% más ligero)
-      defer: Carga sin bloquear HTML parsing, ejecuta después del DOM
-      Contiene: navegación, animaciones, Easter Eggs, formularios
-    -->
-    <!-- Main Script - Deferred for non-blocking load -->
-    <script defer src="/src/js/script.min.js?v=145"></script>
-
-    <!-- Google reCAPTCHA v3 - Async para no bloquear carga -->
-    <script
-      src="https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB"
-      async
-      defer
-    ></script>
-
-    <!-- Features Plus: Skeleton, Progress Bar, Web Share, PWA Install, Print Styles -->
+    <!-- Features Plus -->
     <script defer src="/src/js/features-plus.min.js?v=100"></script>
     
-    <!-- Cookie Consent Banner - GDPR/LOPD Compliant -->
+    <!-- Cookie Consent -->
     <script defer src="/src/js/cookie-consent.min.js?v=100"></script>
     
-    <!-- Monetización - AdSense Integration -->
+    <!-- Monetization -->
     <script defer src="/src/js/monetization.min.js?v=100"></script>
 
-    <!-- Service Worker Registration -->
+    <!-- Service Worker -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('[🔧 SW] Service Worker registrado:', reg.scope))
-            .catch(err => console.error('[🔧 SW] Error al registrar SW:', err));
-        });
-      }
+      if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));
     </script>
   </head>
   <body class="home">
