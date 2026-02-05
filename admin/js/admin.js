@@ -199,6 +199,8 @@ class SalaGeekAdmin {
     this.setupCollapsibleSections();
     this.setupCategoryMultiSelect();
     this.setupEditorImageHandlers(); // Delegación de eventos para imágenes
+    this.setupForgotPasswordModal(); // Modal de recuperación de contraseña
+    this.setupResetPasswordModal(); // Modal de reseteo de contraseña
     
     // Verificar si hay sesión activa
     await this.checkSession();
@@ -607,6 +609,247 @@ class SalaGeekAdmin {
     };
 
     acceptBtn.addEventListener('click', onAccept);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // RECUPERACIÓN DE CONTRASEÑA
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Configura el modal de "Olvidaste tu contraseña"
+   */
+  setupForgotPasswordModal() {
+    const forgotLink = document.getElementById('forgot-password-link');
+    const modal = document.getElementById('forgot-password-modal');
+    const generateBtn = document.getElementById('generate-token-btn');
+    const tokenDisplay = document.getElementById('recovery-token-display');
+    const tokenCode = document.getElementById('recovery-token-code');
+    const copyBtn = document.getElementById('copy-recovery-token');
+
+    if (!forgotLink || !modal) return;
+
+    // Open modal cuando se hace clic en el enlace
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.remove('hidden');
+      // Reset modal state
+      tokenDisplay.classList.add('hidden');
+      tokenCode.textContent = '';
+      generateBtn.disabled = false;
+      generateBtn.querySelector('span').textContent = 'Generar Token';
+    });
+
+    // Close modal handlers
+    const closeButtons = modal.querySelectorAll('[data-close="forgot-password-modal"]');
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+      });
+    });
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+      }
+    });
+
+    // Generate token
+    generateBtn.addEventListener('click', async () => {
+      try {
+        generateBtn.disabled = true;
+        generateBtn.querySelector('span').textContent = 'Generando...';
+
+        const response = await fetch('/api/auth.php?action=forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Error al generar token');
+        }
+
+        // Show token
+        tokenCode.textContent = data.token;
+        tokenDisplay.classList.remove('hidden');
+        generateBtn.querySelector('span').textContent = '✓ Token Generado';
+
+        this.showToast('Token generado exitosamente', 'success');
+
+        // Setup copy button
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(data.token);
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!';
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+          }, 2000);
+        });
+
+        // Auto-open reset modal after 2 seconds
+        setTimeout(() => {
+          modal.classList.add('hidden');
+          document.getElementById('reset-password-modal').classList.remove('hidden');
+          document.getElementById('reset-token').value = data.token;
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error:', error);
+        this.showToast(error.message, 'error');
+        generateBtn.disabled = false;
+        generateBtn.querySelector('span').textContent = 'Generar Token';
+      }
+    });
+  }
+
+  /**
+   * Configura el modal de reseteo de contraseña con token
+   */
+  setupResetPasswordModal() {
+    const modal = document.getElementById('reset-password-modal');
+    const form = document.getElementById('reset-password-form');
+    const submitBtn = document.getElementById('reset-password-btn');
+    const errorDiv = document.getElementById('reset-error');
+    const newPasswordInput = document.getElementById('reset-new-password');
+    const confirmPasswordInput = document.getElementById('reset-confirm-password');
+    const strengthContainer = document.getElementById('reset-password-strength');
+
+    if (!modal || !form) return;
+
+    // Close modal handlers
+    const closeButtons = modal.querySelectorAll('[data-close="reset-password-modal"]');
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        form.reset();
+        errorDiv.classList.add('hidden');
+      });
+    });
+
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        form.reset();
+        errorDiv.classList.add('hidden');
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        form.reset();
+        errorDiv.classList.add('hidden');
+      }
+    });
+
+    // Toggle password visibility
+    modal.querySelectorAll('.toggle-password').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        const eyeOpen = btn.querySelector('.eye-open');
+        const eyeClosed = btn.querySelector('.eye-closed');
+
+        if (input.type === 'password') {
+          input.type = 'text';
+          eyeOpen.style.display = 'none';
+          eyeClosed.style.display = 'block';
+        } else {
+          input.type = 'password';
+          eyeOpen.style.display = 'block';
+          eyeClosed.style.display = 'none';
+        }
+      });
+    });
+
+    // Password strength indicator
+    newPasswordInput.addEventListener('input', () => {
+      const strength = this.checkPasswordStrength(newPasswordInput.value);
+      const strengthFill = strengthContainer.querySelector('.strength-fill');
+      const strengthText = strengthContainer.querySelector('.strength-text');
+
+      strengthFill.className = 'strength-fill ' + strength.level;
+      strengthText.className = 'strength-text ' + strength.level;
+      strengthText.textContent = strength.text;
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.classList.add('hidden');
+
+      const token = document.getElementById('reset-token').value.trim();
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      // Validations
+      if (!token) {
+        errorDiv.textContent = 'Ingresa el token de recuperación';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        errorDiv.textContent = 'La contraseña debe tener al menos 8 caracteres';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        errorDiv.textContent = 'Las contraseñas no coinciden';
+        errorDiv.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.querySelector('span').textContent = 'Reseteando...';
+
+        const response = await fetch('/api/auth.php?action=reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            token: token,
+            newPassword: newPassword
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Error al resetear contraseña');
+        }
+
+        // Close modal and show success
+        modal.classList.add('hidden');
+        form.reset();
+        this.showToast('Contraseña reseteada exitosamente', 'success');
+        
+        // Show hash instructions
+        this.showPasswordChangeSuccess(data.newHash);
+
+      } catch (error) {
+        console.error('Error:', error);
+        errorDiv.textContent = error.message;
+        errorDiv.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.querySelector('span').textContent = 'Resetear Contraseña';
+      }
+    });
   }
 
   // ═══════════════════════════════════════════════════════════════

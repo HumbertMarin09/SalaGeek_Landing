@@ -12,6 +12,8 @@
  * - POST /api/auth.php?action=logout
  * - GET  /api/auth.php?action=check
  * - POST /api/auth.php?action=change-password
+ * - POST /api/auth.php?action=forgot-password
+ * - POST /api/auth.php?action=reset-password
  * 
  * ═══════════════════════════════════════════════════════════════
  */
@@ -37,6 +39,12 @@ switch ($action) {
         break;
     case 'change-password':
         handleChangePassword();
+        break;
+    case 'forgot-password':
+        handleForgotPassword();
+        break;
+    case 'reset-password':
+        handleResetPassword();
         break;
     default:
         jsonResponse(['error' => 'Acción no válida'], 400);
@@ -190,6 +198,105 @@ function handleChangePassword() {
     jsonResponse([
         'success' => true,
         'message' => 'Para completar el cambio, actualiza ADMIN_PASSWORD_HASH en las variables de entorno de Hostinger.',
+        'newHash' => $newHash,
+        'instructions' => 'Copia este hash y pégalo en: Panel Hostinger > Sitios > Tu sitio > Configuración avanzada > Variables de entorno > ADMIN_PASSWORD_HASH'
+    ]);
+}
+
+/**
+ * Genera token de recuperación de contraseña
+ */
+function handleForgotPassword() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        jsonResponse(['error' => 'Método no permitido'], 405);
+    }
+    
+    // Rate limiting (3 intentos por hora)
+    if (!checkRateLimit(3600, 3, 'forgot-password')) {
+        jsonResponse([
+            'error' => 'Demasiados intentos de recuperación. Intenta en 1 hora.'
+        ], 429);
+    }
+    
+    // Generar token único y seguro
+    $token = bin2hex(random_bytes(32));
+    $expiresAt = time() + (15 * 60); // Expira en 15 minutos
+    
+    // Iniciar sesión para almacenar el token
+    initSecureSession();
+    
+    // Guardar token en sesión
+    $_SESSION['recovery_token'] = $token;
+    $_SESSION['recovery_expires'] = $expiresAt;
+    
+    jsonResponse([
+        'success' => true,
+        'token' => $token,
+        'expiresIn' => 900, // 15 minutos en segundos
+        'message' => 'Token generado exitosamente. Válido por 15 minutos.'
+    ]);
+}
+
+/**
+ * Resetea contraseña usando token de recuperación
+ */
+function handleResetPassword() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        jsonResponse(['error' => 'Método no permitido'], 405);
+    }
+    
+    // Rate limiting (5 intentos por 10 minutos)
+    if (!checkRateLimit(600, 5, 'reset-password')) {
+        jsonResponse([
+            'error' => 'Demasiados intentos de reseteo. Intenta en 10 minutos.'
+        ], 429);
+    }
+    
+    $body = getRequestBody();
+    $token = sanitize($body['token'] ?? '');
+    $newPassword = $body['newPassword'] ?? '';
+    
+    // Validaciones
+    if (empty($token) || empty($newPassword)) {
+        jsonResponse(['error' => 'Token y contraseña son requeridos'], 400);
+    }
+    
+    if (strlen($newPassword) < 8) {
+        jsonResponse(['error' => 'La contraseña debe tener al menos 8 caracteres'], 400);
+    }
+    
+    // Iniciar sesión para verificar el token
+    initSecureSession();
+    
+    // Verificar que existe un token de recuperación
+    if (!isset($_SESSION['recovery_token']) || !isset($_SESSION['recovery_expires'])) {
+        jsonResponse(['error' => 'Token inválido o no generado'], 400);
+    }
+    
+    // Verificar que el token coincide
+    if (!hash_equals($_SESSION['recovery_token'], $token)) {
+        jsonResponse(['error' => 'Token incorrecto'], 400);
+    }
+    
+    // Verificar que el token no ha expirado
+    if (time() > $_SESSION['recovery_expires']) {
+        // Limpiar token expirado
+        unset($_SESSION['recovery_token']);
+        unset($_SESSION['recovery_expires']);
+        jsonResponse(['error' => 'Token expirado. Genera uno nuevo.'], 400);
+    }
+    
+    // Generar nuevo hash de contraseña
+    $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
+    
+    // Limpiar token usado
+    unset($_SESSION['recovery_token']);
+    unset($_SESSION['recovery_expires']);
+    
+    // Instruir al usuario a actualizar manualmente
+    jsonResponse([
+        'success' => true,
+        'message' => 'Para completar el reseteo, actualiza ADMIN_PASSWORD_HASH en las variables de entorno de Hostinger.',
         'newHash' => $newHash,
         'instructions' => 'Copia este hash y pégalo en: Panel Hostinger > Sitios > Tu sitio > Configuración avanzada > Variables de entorno > ADMIN_PASSWORD_HASH'
     ]);

@@ -321,6 +321,54 @@ input, select, textarea {
   color: #1a1a1a;
 }
 
+/* Login Links - Forgot Password */
+.login-links {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.forgot-password-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--admin-text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.forgot-password-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 209, 102, 0.05);
+  border-radius: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.forgot-password-link:hover::before {
+  opacity: 1;
+}
+
+.forgot-password-link:hover {
+  color: var(--admin-primary);
+  transform: translateY(-2px);
+}
+
+.forgot-password-link svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.forgot-password-link:hover svg {
+  transform: scale(1.1);
+}
+
 .login-form .btn-large::before {
   content: '';
   position: absolute;
@@ -3091,6 +3139,155 @@ input, select, textarea {
 #change-password-modal .modal-actions .btn-primary:active {
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(255, 209, 102, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Forgot & Reset Password Modals
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Recovery Instructions */
+.recovery-instructions {
+  color: var(--admin-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: rgba(255, 209, 102, 0.05);
+  border: 1px solid rgba(255, 209, 102, 0.15);
+  border-radius: 0.75rem;
+}
+
+.recovery-instructions strong {
+  color: var(--admin-primary);
+  font-weight: 700;
+}
+
+/* Token Display */
+.token-display {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.1) 0%, rgba(255, 209, 102, 0.05) 100%);
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: 1rem;
+  margin-top: 1.5rem;
+  animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.token-display label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--admin-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.token-code-wrapper {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.token-code {
+  flex: 1;
+  display: block;
+  padding: 1rem 1.25rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  border-radius: 0.75rem;
+  color: var(--admin-primary);
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  word-break: break-all;
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.1) inset;
+}
+
+.btn-copy-token {
+  padding: 1rem;
+  background: rgba(255, 209, 102, 0.15);
+  border: 1px solid rgba(255, 209, 102, 0.3);
+  border-radius: 0.75rem;
+  color: var(--admin-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-copy-token:hover {
+  background: rgba(255, 209, 102, 0.25);
+  border-color: var(--admin-primary);
+  transform: scale(1.05);
+}
+
+.btn-copy-token:active {
+  transform: scale(0.95);
+}
+
+.btn-copy-token svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Token Warning */
+.token-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  margin: 0;
+}
+
+.token-warning svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+/* Form Hint */
+.form-hint {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--admin-text-muted);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Reset Password Modal Specific */
+#reset-password-modal .form-group input[type="text"] {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* Button Spacing for Generate Token */
+#generate-token-btn,
+#reset-password-btn {
+  min-width: 160px;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .health-value.warning {
