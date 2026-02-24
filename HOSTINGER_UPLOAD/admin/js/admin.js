@@ -1175,9 +1175,11 @@ class SalaGeekAdmin {
       document.querySelector('.admin-sidebar').classList.toggle('open');
     });
 
-    // Article form - Publicar
+    // Article form - Publicar (no si el foco está en tags-input u otros campos no-submit)
     document.getElementById('article-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
+      // No publicar si el usuario está escribiendo tags
+      if (document.activeElement?.id === 'tags-input') return;
       this.saveArticle(false); // false = no es borrador
     });
 
@@ -1239,26 +1241,39 @@ class SalaGeekAdmin {
     });
 
     // Tags input - soporta Enter y coma para separar tags
-    document.getElementById('tags-input')?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        const value = e.target.value;
-        // Separar por comas si hay múltiples tags
-        const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
-        tags.forEach(tag => this.addTag(tag));
-        e.target.value = '';
-      }
-    });
-    
-    // También procesar tags al perder el foco (blur)
-    document.getElementById('tags-input')?.addEventListener('blur', (e) => {
-      const value = e.target.value.trim();
-      if (value) {
-        const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
-        tags.forEach(tag => this.addTag(tag));
-        e.target.value = '';
-      }
-    });
+    const tagsInputEl = document.getElementById('tags-input');
+    if (tagsInputEl) {
+      tagsInputEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation(); // Evitar que el form haga submit
+          const value = e.target.value;
+          if (value.trim()) {
+            // Separar por comas si hay múltiples tags
+            const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+            tags.forEach(tag => this.addTag(tag));
+            e.target.value = '';
+          }
+        } else if (e.key === ',') {
+          e.preventDefault();
+          const value = e.target.value;
+          if (value.trim()) {
+            this.addTag(value.trim());
+            e.target.value = '';
+          }
+        }
+      });
+      
+      // También procesar tags al perder el foco (blur)
+      tagsInputEl.addEventListener('blur', (e) => {
+        const value = e.target.value.trim();
+        if (value) {
+          const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+          tags.forEach(tag => this.addTag(tag));
+          e.target.value = '';
+        }
+      });
+    }
 
     // Image upload
     this.setupImageUpload();

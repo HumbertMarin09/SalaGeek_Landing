@@ -36,9 +36,9 @@
   --admin-border: #2d3142;
   --admin-text: #e4e6eb;
   --admin-text-muted: #8b8f9a;
-  --admin-primary: #d4a843;          /* Dorado elegante - menos saturado */
-  --admin-primary-hover: #e0b850;    /* Dorado hover */
-  --admin-primary-dark: #b8922e;     /* Dorado oscuro */
+  --admin-primary: #ffd166;          /* Amarillo dorado Sala Geek (= --accent-primary) */
+  --admin-primary-hover: #ffdc85;    /* Amarillo claro hover */
+  --admin-primary-dark: #e6b84d;     /* Amarillo oscuro */
   --admin-secondary: #e76f51;        /* Naranja coral */
   --admin-success: #10b981;
   --admin-warning: #f59e0b;
