@@ -877,15 +877,13 @@ class SalaGeekAdmin {
     this.updateAutoSaveIndicator('active');
   }
 
-  // stopAutoSave eliminado
-
-  // getCurrentEditorSnapshot eliminado
-
-  // hasUnsavedChanges eliminado
-
-  // performAutoSave eliminado
-
-  // autoSaveAsDraft eliminado
+  // Auto-save system removed - manual save only
+  stopAutoSave() {
+    if (this.autoSaveTimer) {
+      clearInterval(this.autoSaveTimer);
+      this.autoSaveTimer = null;
+    }
+  }
   async _removedAutoSaveAsDraft() {
     const title = document.getElementById('article-title')?.value?.trim() || 'Sin título';
     const content = document.getElementById('article-editor')?.innerHTML || '';
@@ -3733,6 +3731,7 @@ class SalaGeekAdmin {
     const titles = {
       'dashboard': 'Dashboard',
       'articles': 'Artículos',
+      'drafts': 'Borradores',
       'new-article': this.editingArticle ? 'Editar Artículo' : 'Nuevo Artículo',
       'media': 'Multimedia'
     };
@@ -3776,6 +3775,7 @@ class SalaGeekAdmin {
    */
   async loadArticles() {
     try {
+      // Load published articles
       const response = await fetch('/blog/data/articles.json?t=' + Date.now());
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -3783,10 +3783,12 @@ class SalaGeekAdmin {
       const data = await response.json();
       const allArticles = data.articles || [];
       
-      // Separar artículos publicados de borradores
+      // Published articles from articles.json
       this.articles = allArticles.filter(a => a.status !== 'draft');
-      this.drafts = allArticles.filter(a => a.status === 'draft');
       this.categories = data.categories || [];
+      
+      // Load drafts from separate drafts.json
+      await this.loadDrafts();
       
       this.updateDashboardStats();
       this.renderArticlesTable();
@@ -3804,6 +3806,33 @@ class SalaGeekAdmin {
       this.articles = [];
       this.drafts = [];
       this.categories = [];
+    }
+  }
+
+  /**
+   * Carga los borradores desde drafts.json
+   */
+  async loadDrafts() {
+    try {
+      const response = await fetch('/api/get-drafts.php?t=' + Date.now(), {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        // If drafts endpoint fails, try direct file
+        const fallback = await fetch('/blog/data/drafts.json?t=' + Date.now());
+        if (fallback.ok) {
+          const data = await fallback.json();
+          this.drafts = data.drafts || [];
+        } else {
+          this.drafts = [];
+        }
+        return;
+      }
+      const data = await response.json();
+      this.drafts = data.drafts || [];
+    } catch (error) {
+      console.warn('Could not load drafts:', error);
+      this.drafts = [];
     }
   }
 
@@ -3977,7 +4006,7 @@ class SalaGeekAdmin {
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
           </button>
-          <button class="action-icon danger" title="Eliminar" onclick="admin.deleteArticle('${article.id}')">>
+          <button class="action-icon danger" title="Eliminar" onclick="admin.deleteArticle('${article.id}')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"/>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -4431,7 +4460,7 @@ class SalaGeekAdmin {
     document.getElementById('article-date').value = now.toISOString().slice(0, 16);
 
     // Default category
-    const firstCategory = document.querySelector('input[name="categories"]');
+    const firstCategory = document.querySelector('input[name="category"]');
     if (firstCategory) firstCategory.checked = true;
   }
 
@@ -5412,7 +5441,7 @@ class SalaGeekAdmin {
   generateArticleHTML(article, content) {
     const categoryIcons = {
       series: '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline>',
-      peliculas: '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>',
+      peliculas: '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>',
       gaming: '<rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="18" y2="12"/>',
       anime: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
       tecnologia: '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'
@@ -5423,6 +5452,23 @@ class SalaGeekAdmin {
       return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
     };
 
+    // Count words for schema
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    const wordCount = (tempDiv.textContent || '').trim().split(/\s+/).filter(w => w.length > 0).length;
+
+    // Conditional featured image
+    const featuredImageHTML = article.image ? `
+      <figure class="article-featured-image">
+        <img 
+          src="${article.image}" 
+          alt="${this.escapeHtml(article.title)}"
+          loading="eager"
+          width="1200"
+          height="630"
+        />
+      </figure>` : '';
+
     return `<!doctype html>
 <html lang="es">
 <head>
@@ -5430,14 +5476,13 @@ class SalaGeekAdmin {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="google-adsense-account" content="ca-pub-3884162231581435" />
   
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435" crossorigin="anonymous"><\/script>
   
   <title>${this.escapeHtml(article.title)} | Sala Geek</title>
   <meta name="description" content="${this.escapeHtml(article.metaDescription || article.excerpt)}" />
   <meta name="keywords" content="${article.metaKeywords || article.tags.join(', ')}" />
   <meta name="author" content="${this.escapeHtml(article.author || 'Sala Geek')}" />
   <meta name="robots" content="${article.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}" />
-  <!-- URL canónica SIN extensión .html para mejor SEO (Hostinger redirige automáticamente) -->
   <link rel="canonical" href="${article.canonicalUrl || `https://salageek.com/blog/articulos/${article.slug}`}" />
   
   <meta name="article:published_time" content="${article.publishDate}" />
@@ -5448,23 +5493,79 @@ class SalaGeekAdmin {
   <meta property="og:title" content="${this.escapeHtml(article.title)}" />
   <meta property="og:description" content="${this.escapeHtml(article.metaDescription || article.excerpt)}" />
   <meta property="og:image" content="${article.ogImage || article.image}" />
-  <!-- URL OG SIN extensión .html -->
   <meta property="og:url" content="https://salageek.com/blog/articulos/${article.slug}" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${this.escapeHtml(article.title)}" />
   <meta name="twitter:description" content="${this.escapeHtml(article.excerpt)}" />
-  <meta name="twitter:image" content="${article.image}" />
+  <meta name="twitter:image" content="${article.ogImage || article.image}" />
 
   <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
   <link rel="apple-touch-icon" href="/src/images/SalaGeek_LOGO.webp" />
   <meta name="theme-color" content="#1a1f3a" />
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "${this.escapeHtml(article.title)}",
+    "description": "${this.escapeHtml(article.metaDescription || article.excerpt)}",
+    "image": {
+      "@type": "ImageObject",
+      "url": "${article.ogImage || article.image}",
+      "width": 1200,
+      "height": 630
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Sala Geek",
+      "url": "https://salageek.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://salageek.com/src/images/SalaGeek_LOGO.webp"
+      }
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Sala Geek",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://salageek.com/src/images/SalaGeek_LOGO.webp",
+        "width": 512,
+        "height": 512
+      }
+    },
+    "datePublished": "${article.publishDate}",
+    "dateModified": "${article.modifiedDate}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://salageek.com/blog/articulos/${article.slug}"
+    },
+    "articleSection": "${article.categoryDisplay}",
+    "keywords": "${article.metaKeywords || article.tags.join(', ')}",
+    "wordCount": "${wordCount}",
+    "inLanguage": "es"
+  }
+  <\/script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://salageek.com"},
+      {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://salageek.com/blog"},
+      {"@type": "ListItem", "position": 3, "name": "${article.categoryDisplay}", "item": "https://salageek.com/blog/?categoria=${article.category}"},
+      {"@type": "ListItem", "position": 4, "name": "${this.escapeHtml(article.title.substring(0, 50))}"}
+    ]
+  }
+  <\/script>
+
   <link rel="stylesheet" href="/src/css/normalize.css" />
-  <link rel="stylesheet" href="/src/css/style.min.css" />
-  <link rel="stylesheet" href="/src/css/blog.css" />
+  <link rel="stylesheet" href="/src/css/style.min.css?v=226" />
+  <link rel="stylesheet" href="/src/css/blog.min.css?v=253" />
   
-  <script src="/src/js/blog-engine.js" defer></script>
+  <script src="/src/js/blog-engine.min.js?v=6" defer><\/script>
 </head>
 
 <body class="article-page">
@@ -5494,11 +5595,11 @@ class SalaGeekAdmin {
         </li>
         <li>
           <a href="/blog/?categoria=${article.category}">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">${categoryIcons[article.category]}</svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">${categoryIcons[article.category] || ''}</svg>
             ${article.categoryDisplay}
           </a>
         </li>
-        <li aria-current="page">${this.escapeHtml(article.title.substring(0, 30))}...</li>
+        <li aria-current="page">${this.escapeHtml(article.title.substring(0, 40))}${article.title.length > 40 ? '...' : ''}</li>
       </ol>
     </nav>
 
@@ -5506,7 +5607,7 @@ class SalaGeekAdmin {
       <header class="article-header">
         <div class="article-meta-top">
           <a href="/blog/?categoria=${article.category}" class="article-category category-${article.category}">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${categoryIcons[article.category]}</svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${categoryIcons[article.category] || ''}</svg>
             ${article.categoryDisplay}
           </a>
           <time datetime="${article.publishDate.split('T')[0]}">
@@ -5539,25 +5640,18 @@ class SalaGeekAdmin {
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <span id="view-count">${article.views}</span> vistas
+            <span id="view-count">${article.views || 0}</span> vistas
           </span>
         </div>
       </header>
 
-      <figure class="article-featured-image">
-        <img 
-          src="${article.image}" 
-          alt="${this.escapeHtml(article.title)}"
-          loading="eager"
-          width="1200"
-          height="630"
-        />
-      </figure>
+      ${featuredImageHTML}
 
       <div class="article-content">
         ${content}
       </div>
 
+      <!-- Share buttons -->
       <aside class="article-share">
         <h3>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5570,110 +5664,164 @@ class SalaGeekAdmin {
           Compartir artículo
         </h3>
         <div class="share-buttons">
-          <button class="share-btn share-twitter" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title), '_blank')" aria-label="Compartir en Twitter">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <button class="share-btn share-twitter" onclick="shareOnTwitter()" aria-label="Compartir en Twitter">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <span>Twitter</span>
           </button>
-          <button class="share-btn share-facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')" aria-label="Compartir en Facebook">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          <button class="share-btn share-facebook" onclick="shareOnFacebook()" aria-label="Compartir en Facebook">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
           </button>
-          <button class="share-btn share-whatsapp" onclick="window.open('https://wa.me/?text=' + encodeURIComponent(document.title + ' ' + window.location.href), '_blank')" aria-label="Compartir en WhatsApp">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <button class="share-btn share-whatsapp" onclick="shareOnWhatsApp()" aria-label="Compartir en WhatsApp">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span>WhatsApp</span>
           </button>
-          <button class="share-btn share-copy" onclick="navigator.clipboard.writeText(window.location.href).then(() => alert('¡Enlace copiado!'))" aria-label="Copiar enlace">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <button class="share-btn share-copy" onclick="copyLink(this)" aria-label="Copiar enlace">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+            <span>Copiar</span>
           </button>
         </div>
       </aside>
 
-      <section class="article-tags">
-        <h4>Tags:</h4>
-        <div class="tags-list">
-          ${article.tags.map(tag => `<a href="/blog/?tag=${tag}" class="tag">${tag}</a>`).join('')}
+      <!-- Tags -->
+      <div class="article-tags">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        ${article.tags.map(tag => `<a href="/blog/?tag=${encodeURIComponent(tag)}" class="article-tag">${tag}</a>`).join('\n        ')}
+      </div>
+
+      <!-- Related articles -->
+      <section class="related-articles">
+        <h2 class="related-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          También te puede interesar
+        </h2>
+        <div class="related-grid" id="related-articles">
+          <div class="loading-spinner">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comments with Giscus -->
+      <section class="comments-section">
+        <h2 class="comments-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          Comentarios
+        </h2>
+        <div class="giscus-container">
+          <script src="https://giscus.app/client.js"
+            data-repo="HumbertMarin09/SalaGeek_Landing"
+            data-repo-id="R_kgDOQN3OMw"
+            data-category="Announcements"
+            data-category-id="DIC_kwDOQN3OM84C1Dzm"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="dark"
+            data-lang="es"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async>
+          <\/script>
         </div>
       </section>
     </article>
-
-    <section class="related-articles">
-      <h2>Artículos Relacionados</h2>
-      <div class="related-grid" id="related-articles"></div>
-    </section>
   </main>
 
   <div id="footer-container"></div>
 
-  <script src="/src/js/script.min.js" defer></script>
-  <script src="/src/js/blog-engine.js"></script>
+  <script src="/src/js/script.min.js?v=146" defer><\/script>
+  
+  <!-- Share functions -->
   <script>
-    // Load header and footer
+    function shareOnTwitter() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title);
+      window.open('https://twitter.com/intent/tweet?url=' + url + '&text=' + text, '_blank', 'width=550,height=420');
+    }
+    function shareOnFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'width=550,height=420');
+    }
+    function shareOnWhatsApp() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title);
+      window.open('https://wa.me/?text=' + text + '%20' + url, '_blank');
+    }
+    function copyLink(btn) {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        btn.classList.add('copied');
+        var span = btn.querySelector('span');
+        var orig = span.textContent;
+        span.textContent = '¡Copiado!';
+        btn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+        setTimeout(function() {
+          btn.classList.remove('copied');
+          span.textContent = orig;
+          btn.querySelector('svg').innerHTML = '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
+        }, 2000);
+      });
+    }
+  <\/script>
+
+  <!-- Load header, footer and related articles -->
+  <script>
+    // Load header and footer partials
     fetch('/src/pages/partials/header.html')
-      .then(r => r.text())
-      .then(html => document.getElementById('header-container').innerHTML = html);
+      .then(function(r) { return r.text(); })
+      .then(function(html) { document.getElementById('header-container').innerHTML = html; });
     fetch('/src/pages/partials/footer.html')
-      .then(r => r.text())
-      .then(html => document.getElementById('footer-container').innerHTML = html);
+      .then(function(r) { return r.text(); })
+      .then(function(html) { document.getElementById('footer-container').innerHTML = html; });
 
     // Load related articles
-    (async function() {
+    document.addEventListener('DOMContentLoaded', async function() {
       const blogEngine = new BlogEngine();
       await blogEngine.init();
       
-      // Get article ID from URL or meta tag
-      const articleId = '${article.id}';
-      const relatedArticles = blogEngine.getRelatedArticles(articleId, 3);
+      const currentSlug = window.location.pathname.split('/').pop().replace('.html', '');
+      const currentArticle = blogEngine.articles.find(function(a) { return a.slug === currentSlug; });
       
-      const relatedContainer = document.getElementById('related-articles');
-      if (relatedArticles.length === 0) {
-        relatedContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem 0;">No hay artículos relacionados disponibles.</p>';
-        return;
-      }
-      
-      relatedContainer.innerHTML = relatedArticles.map(article => {
-        const categoryIcons = {
-          series: '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline>',
-          peliculas: '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/>',
-          gaming: '<rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="18" y2="12"/>',
-          anime: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
-          tecnologia: '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>'
-        };
+      if (currentArticle) {
+        const related = blogEngine.getRelatedArticles(currentArticle.id, 3);
+        const relatedContainer = document.getElementById('related-articles');
         
-        return \`
-          <article class="article-card">
-            <a href="\${article.content}" class="article-link">
-              <div class="article-image">
-                <img src="\${article.image}" alt="\${article.title}" loading="lazy" />
-                <span class="article-category category-\${article.category}">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">\${categoryIcons[article.category]}</svg>
-                  \${article.categoryDisplay}
-                </span>
-              </div>
-              <div class="article-content">
-                <h3 class="article-title">\${article.title}</h3>
-                <p class="article-excerpt">\${article.excerpt}</p>
-                <div class="article-meta">
-                  <span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    \${article.readTime}
-                  </span>
-                  <time datetime="\${article.publishDate.split('T')[0]}">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    \${new Date(article.publishDate).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </time>
-                </div>
-              </div>
-            </a>
-          </article>
-        \`;
-      }).join('');
-    })();
-  </script>
+        if (related.length > 0 && relatedContainer) {
+          relatedContainer.innerHTML = related.map(function(article) {
+            return '<article class="related-card">' +
+              '<a href="' + article.content + '" class="related-card-link">' +
+                '<div class="related-card-image">' +
+                  '<img src="' + article.image + '" alt="' + article.title + '" loading="lazy" />' +
+                  '<span class="related-card-category category-' + article.category + '">' + article.categoryDisplay + '</span>' +
+                '</div>' +
+                '<div class="related-card-content">' +
+                  '<h4 class="related-card-title">' + article.title + '</h4>' +
+                  '<span class="related-card-date">' + blogEngine.formatDate(article.publishDate) + '</span>' +
+                '</div>' +
+              '</a>' +
+            '</article>';
+          }).join('');
+        } else if (relatedContainer) {
+          relatedContainer.innerHTML = '<p class="no-related">No hay artículos relacionados disponibles.</p>';
+        }
+      }
+    });
+  <\/script>
 </body>
 </html>`;
   }
