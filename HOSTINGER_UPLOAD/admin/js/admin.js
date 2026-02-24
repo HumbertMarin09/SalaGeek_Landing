@@ -857,155 +857,13 @@ class SalaGeekAdmin {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  // AUTO-GUARDADO
+  // AUTO-GUARDADO (deshabilitado - guardado manual únicamente)
   // ═══════════════════════════════════════════════════════════════
 
-  /**
-   * Inicia el sistema de auto-guardado
-   */
-  startAutoSave() {
-    if (!this.autoSaveEnabled) return;
-    
-    // Detener timer existente
-    this.stopAutoSave();
-    
-    // Guardar contenido inicial para comparar cambios
-    this.lastSavedContent = this.getCurrentEditorSnapshot();
-    
-    // Iniciar timer
-    this.autoSaveTimer = setInterval(() => {
-      this.performAutoSave();
-    }, this.autoSaveInterval);
-    
-    // Actualizar indicador
-    this.updateAutoSaveIndicator('active');
-  }
-
-  // Auto-save system removed - manual save only
   stopAutoSave() {
     if (this.autoSaveTimer) {
       clearInterval(this.autoSaveTimer);
       this.autoSaveTimer = null;
-    }
-  }
-  async _removedAutoSaveAsDraft() {
-    const title = document.getElementById('article-title')?.value?.trim() || 'Sin título';
-    const content = document.getElementById('article-editor')?.innerHTML || '';
-    const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
-    const image = document.getElementById('image-url')?.value || document.getElementById('preview-img')?.src || '';
-    const categories = this.getSelectedCategories();
-    const category = this.getPrimaryCategory();
-    const publishDate = document.getElementById('article-date')?.value 
-      ? new Date(document.getElementById('article-date').value).toISOString()
-      : new Date().toISOString();
-    
-    const id = this.editingArticle?.id || this.generateId();
-    const slug = this.editingArticle?.slug || this.generateSlug(title);
-    // Usar tiempo de lectura del input o estimar basado en contenido
-    const readTimeInput = document.getElementById('read-time')?.value;
-    const readTime = readTimeInput || this.estimateReadTime(content);
-
-    const categoryNames = {
-      series: 'Series',
-      peliculas: 'Películas',
-      gaming: 'Gaming',
-      anime: 'Anime',
-      tecnologia: 'Tecnología'
-    };
-
-    const articleData = {
-      id,
-      title,
-      slug,
-      excerpt,
-      content: `/blog/articulos/${slug}`,
-      image,
-      category,
-      categoryDisplay: categoryNames[category],
-      tags: this.tags,
-      author: document.getElementById('article-author')?.value?.trim() || 'Sala Geek',
-      publishDate,
-      modifiedDate: new Date().toISOString(),
-      readTime,
-      views: this.editingArticle?.views || 0,
-      featured: document.getElementById('article-featured')?.checked || false,
-      trending: document.getElementById('article-trending')?.checked || false,
-      status: 'draft', // Siempre como borrador en auto-save
-      metaDescription: document.getElementById('meta-description')?.value || excerpt.substring(0, 160),
-      metaKeywords: document.getElementById('meta-keywords')?.value || '',
-      canonicalUrl: document.getElementById('canonical-url')?.value || '',
-      ogImage: document.getElementById('og-image')?.value || image,
-      noIndex: document.getElementById('no-index')?.checked || false
-    };
-
-    // Obtener token de acceso
-    const accessToken = await this.getAccessToken();
-
-    const response = await fetch('/api/save-article.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        article: articleData,
-        htmlContent: this.generateArticleHTML(articleData, content),
-        isNew: !this.editingArticle
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP ${response.status}`);
-    }
-
-    // Actualizar el editingArticle si era nuevo
-    if (!this.editingArticle) {
-      this.editingArticle = articleData;
-    }
-
-    // Recargar lista de borradores en segundo plano (sin toast)
-    await this.loadArticles();
-  }
-
-  // updateAutoSaveIndicator eliminado
-  _removedUpdateAutoSaveIndicator(state) {
-    const indicator = document.getElementById('autosave-indicator');
-    if (!indicator) return;
-
-    const textEl = indicator.querySelector('span');
-    
-    // Limpiar clases
-    indicator.classList.remove('saving', 'saved', 'error');
-    
-    switch (state) {
-      case 'active':
-        indicator.style.display = 'flex';
-        textEl.textContent = 'Auto-guardado activo';
-        break;
-      case 'saving':
-        indicator.classList.add('saving');
-        textEl.textContent = 'Guardando...';
-        break;
-      case 'saved':
-        indicator.classList.add('saved');
-        textEl.textContent = `Guardado ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
-        // Volver al estado normal después de 3 segundos
-        setTimeout(() => {
-          if (indicator.classList.contains('saved')) {
-            indicator.classList.remove('saved');
-            textEl.textContent = 'Auto-guardado activo';
-          }
-        }, 3000);
-        break;
-      case 'error':
-        indicator.classList.add('error');
-        textEl.textContent = 'Error al guardar';
-        break;
-      case 'inactive':
-        indicator.style.display = 'none';
-        break;
     }
   }
 
@@ -1193,7 +1051,7 @@ class SalaGeekAdmin {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         if (this.currentSection === 'new-article') {
           e.preventDefault();
-          this.saveArticle();
+          this.saveArticle(true); // Ctrl+S guarda como borrador
         }
       }
     });
@@ -3447,7 +3305,7 @@ class SalaGeekAdmin {
         break;
     }
     
-    this.showToast(`Imagen alineada a la ${alignment === 'left' ? 'izquierda' : alignment === 'right' ? 'derecha' : 'centro'}`, 'success');
+    this.showToast(`Imagen alineada ${alignment === 'left' ? 'a la izquierda' : alignment === 'right' ? 'a la derecha' : 'al centro'}`, 'success');
     this.saveEditorState();
   }
 
@@ -4437,6 +4295,12 @@ class SalaGeekAdmin {
     this.populateArticleForm(article);
     this.navigateTo('new-article');
     
+    // Re-render tags después de que la sección sea visible
+    requestAnimationFrame(() => {
+      this.renderTags();
+      this.updateSEOScore();
+    });
+
     const titleText = article.status === 'draft' ? 'Editar Borrador' : 'Editar Artículo';
     document.getElementById('section-title').textContent = titleText;
   }
@@ -5026,24 +4890,39 @@ class SalaGeekAdmin {
     if (tag && !this.tags.includes(tag)) {
       this.tags.push(tag);
       this.renderTags();
+      this.updateSEOScore();
     }
   }
 
   removeTag(tag) {
     this.tags = this.tags.filter(t => t !== tag);
     this.renderTags();
+    this.updateSEOScore();
   }
 
   renderTags() {
     const container = document.getElementById('tags-list');
     if (!container) return;
 
-    container.innerHTML = this.tags.map(tag => `
-      <span class="tag-item">
-        ${this.escapeHtml(tag)}
-        <button type="button" onclick="admin.removeTag('${tag}')">&times;</button>
-      </span>
-    `).join('');
+    container.innerHTML = '';
+    this.tags.forEach(tag => {
+      const span = document.createElement('span');
+      span.className = 'tag-item';
+      span.textContent = tag;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.innerHTML = '&times;';
+      btn.title = 'Eliminar tag';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.removeTag(tag);
+      });
+
+      span.appendChild(btn);
+      container.appendChild(span);
+    });
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -5057,7 +4936,8 @@ class SalaGeekAdmin {
     const category = this.getPrimaryCategory();
     const image = document.getElementById('image-url').value || document.getElementById('preview-img')?.src;
 
-    const previewHTML = this.generateArticlePreviewHTML(title, excerpt, content, category, image);
+    const tags = this.tags || [];
+    const previewHTML = this.generateArticlePreviewHTML(title, excerpt, content, category, image, tags);
     
     const iframe = document.getElementById('preview-frame');
     
@@ -5070,7 +4950,7 @@ class SalaGeekAdmin {
     this.setPreviewDevice('desktop');
   }
 
-  generateArticlePreviewHTML(title, excerpt, content, category, image) {
+  generateArticlePreviewHTML(title, excerpt, content, category, image, tags = []) {
     // Get current origin for base URL
     const baseUrl = window.location.origin;
     const categoryDisplay = category.charAt(0).toUpperCase() + category.slice(1);
@@ -5516,6 +5396,14 @@ class SalaGeekAdmin {
             ` : ''}
             
             <div class="article-content">${content}</div>
+
+            ${tags.length > 0 ? `
+            <section class="article-tags">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              <h4>Tags</h4>
+              ${tags.map(t => `<a class="article-tag">${this.escapeHtml(t)}</a>`).join('')}
+            </section>
+            ` : ''}
           </article>
         </div>
       </body>
@@ -5610,10 +5498,10 @@ class SalaGeekAdmin {
   
   <title>${this.escapeHtml(article.title)} | Sala Geek</title>
   <meta name="description" content="${this.escapeHtml(article.metaDescription || article.excerpt)}" />
-  <meta name="keywords" content="${article.metaKeywords || article.tags.join(', ')}" />
+  <meta name="keywords" content="${this.escapeHtml(article.metaKeywords || (article.tags || []).join(', '))}" />
   <meta name="author" content="${this.escapeHtml(article.author || 'Sala Geek')}" />
   <meta name="robots" content="${article.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'}" />
-  <link rel="canonical" href="${article.canonicalUrl || `https://salageek.com/blog/articulos/${article.slug}`}" />
+  <link rel="canonical" href="${this.escapeHtml(article.canonicalUrl || `https://salageek.com/blog/articulos/${article.slug}`)}" />
   
   <meta name="article:published_time" content="${article.publishDate}" />
   <meta name="article:modified_time" content="${article.modifiedDate}" />
@@ -5671,8 +5559,8 @@ class SalaGeekAdmin {
       "@type": "WebPage",
       "@id": "https://salageek.com/blog/articulos/${article.slug}"
     },
-    "articleSection": "${article.categoryDisplay}",
-    "keywords": "${article.metaKeywords || article.tags.join(', ')}",
+    "articleSection": "${this.escapeHtml(article.categoryDisplay)}",
+    "keywords": "${this.escapeHtml(article.metaKeywords || (article.tags || []).join(', '))}",
     "wordCount": "${wordCount}",
     "inLanguage": "es"
   }
@@ -5822,7 +5710,7 @@ class SalaGeekAdmin {
           <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
           <line x1="7" y1="7" x2="7.01" y2="7"></line>
         </svg>
-        ${article.tags.map(tag => `<a href="/blog/?tag=${encodeURIComponent(tag)}" class="article-tag">${tag}</a>`).join('\n        ')}
+        ${(article.tags || []).map(tag => `<a href="/blog/?tag=${encodeURIComponent(tag)}" class="article-tag">${tag}</a>`).join('\n        ')}
       </div>
 
       <!-- Related articles -->

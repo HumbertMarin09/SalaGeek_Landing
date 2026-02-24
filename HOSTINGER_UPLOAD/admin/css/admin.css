@@ -1992,22 +1992,37 @@ input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.75rem;
   background: var(--admin-primary);
-  color: white;
-  border-radius: 0.25rem;
+  color: var(--admin-bg);
+  border-radius: 2rem;
   font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  user-select: none;
 }
 
 .tag-item button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1rem;
+  margin-left: 0.125rem;
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 1.1rem;
   line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  transition: all var(--transition-fast);
 }
 
 .tag-item button:hover {
-  color: white;
+  color: var(--admin-bg);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .tags-input input {
