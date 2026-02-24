@@ -2654,7 +2654,7 @@ figure.resizable-image img {
   margin-bottom: 1rem;
 }
 
-/* NOTA: .share-buttons y .share-btn estilos premium están en línea ~3370 */
+/* Share buttons premium styles are in Section 5 (~line 2035) */
 
 /* Sidebar Newsletter */
 .sidebar-newsletter {
@@ -3556,15 +3556,10 @@ figure.resizable-image img {
     font-size: 1.5rem;
   }
   
-  /* Share buttons responsive */
-  .share-icons {
+  /* Share buttons responsive - handled in Section 5 */
+  .share-buttons {
     flex-wrap: wrap;
     justify-content: center;
-  }
-  
-  .share-btn {
-    width: 44px;
-    height: 44px;
   }
   
   /* Article quote responsive */
@@ -4079,67 +4074,8 @@ figure.resizable-image img {
   box-shadow: 0 6px 20px rgba(255, 209, 102, 0.5);
 }
 
-/* Share Buttons Premium */
-.share-buttons {
-  background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(22, 32, 56, 0.9) 100%);
-  border-radius: 16px;
-  padding: 1.5rem;
-  border: 1px solid rgba(255, 209, 102, 0.15);
-  margin-bottom: 1.5rem;
-}
-
-.share-icons {
-  display: flex;
-  gap: 0.875rem;
-}
-
-.share-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(7, 20, 40, 0.8);
-  color: var(--text-secondary);
-  border: 1px solid rgba(255, 209, 102, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.share-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-}
-
-.share-btn.twitter:hover {
-  background: #1da1f2;
-  color: white;
-  border-color: #1da1f2;
-}
-
-.share-btn.facebook:hover {
-  background: #1877f2;
-  color: white;
-  border-color: #1877f2;
-}
-
-.share-btn.whatsapp:hover {
-  background: #25d366;
-  color: white;
-  border-color: #25d366;
-}
-
-.share-btn.copy-link:hover {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-  color: var(--bg-primary);
-  border-color: var(--accent-primary);
-}
-
-.share-btn.copied {
-  background: #10b981;
-  color: white;
-  border-color: #10b981;
-}
+/* NOTE: Share buttons styles are defined in Section 5 (~line 2035) with premium treatment.
+   The .share-buttons container styling is inherited from the .article-share section above. */
 
 /* Article Quote Premium */
 .article-quote {

@@ -129,6 +129,10 @@ class SalaGeekAdmin {
     
     // Auto-guardado eliminado - Se guarda manualmente
     
+    // ─── Cursor Save/Restore para Modales ───
+    /** @type {Range|null} Rango guardado antes de abrir modal */
+    this.savedEditorRange = null;
+    
     // ─── Modal de Imagen Individual ───
     /** @type {string} Fuente actual: 'url' o 'upload' */
     this.currentImageSource = 'url';
@@ -1234,11 +1238,24 @@ class SalaGeekAdmin {
       }
     });
 
-    // Tags input
+    // Tags input - soporta Enter y coma para separar tags
     document.getElementById('tags-input')?.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault();
-        this.addTag(e.target.value);
+        const value = e.target.value;
+        // Separar por comas si hay múltiples tags
+        const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+        tags.forEach(tag => this.addTag(tag));
+        e.target.value = '';
+      }
+    });
+    
+    // También procesar tags al perder el foco (blur)
+    document.getElementById('tags-input')?.addEventListener('blur', (e) => {
+      const value = e.target.value.trim();
+      if (value) {
+        const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+        tags.forEach(tag => this.addTag(tag));
         e.target.value = '';
       }
     });
@@ -2454,10 +2471,94 @@ class SalaGeekAdmin {
   }
 
   // ═══════════════════════════════════════════════════════════════
+  // CURSOR SAVE/RESTORE - Para modales que roban el foco
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Guarda la selección/cursor actual del editor antes de abrir un modal
+   */
+  saveEditorSelection() {
+    const editor = document.getElementById('article-editor');
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      // Verificar que el cursor está dentro del editor
+      if (editor && editor.contains(range.commonAncestorContainer)) {
+        this.savedEditorRange = range.cloneRange();
+        return;
+      }
+    }
+    this.savedEditorRange = null;
+  }
+
+  /**
+   * Restaura la selección/cursor guardada e inserta HTML en esa posición
+   * @param {string} html - HTML a insertar en la posición guardada
+   * @returns {boolean} true si se insertó en la posición guardada, false si se usó fallback
+   */
+  insertAtSavedPosition(html) {
+    const editor = document.getElementById('article-editor');
+    if (!editor) return false;
+    
+    // Si hay un rango guardado y el editor contiene ese rango
+    if (this.savedEditorRange) {
+      editor.focus();
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(this.savedEditorRange);
+      
+      // Insertar HTML en la posición del cursor
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      const frag = document.createDocumentFragment();
+      let lastNode;
+      while (tempDiv.firstChild) {
+        lastNode = frag.appendChild(tempDiv.firstChild);
+      }
+      
+      this.savedEditorRange.deleteContents();
+      this.savedEditorRange.insertNode(frag);
+      
+      // Mover cursor después del contenido insertado
+      if (lastNode) {
+        const newRange = document.createRange();
+        newRange.setStartAfter(lastNode);
+        newRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+      }
+      
+      this.savedEditorRange = null;
+      return true;
+    }
+    
+    // Fallback: insertar al final
+    editor.focus();
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    while (tempDiv.firstChild) {
+      editor.appendChild(tempDiv.firstChild);
+    }
+    
+    // Mover cursor al final
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(editor);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    
+    return false;
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   // IMAGE MODALS - Enhanced
   // ═══════════════════════════════════════════════════════════════
 
   openImageModal() {
+    // Guardar posición del cursor antes de que el modal robe el foco
+    this.saveEditorSelection();
+    
     const modal = document.getElementById('image-modal');
     modal.classList.remove('hidden');
     
@@ -2503,6 +2604,9 @@ class SalaGeekAdmin {
   }
 
   openGridModal() {
+    // Guardar posición del cursor antes de que el modal robe el foco
+    this.saveEditorSelection();
+    
     const modal = document.getElementById('grid-modal');
     modal.classList.remove('hidden');
     
@@ -2537,6 +2641,9 @@ class SalaGeekAdmin {
    * - youtube.com/embed/VIDEO_ID
    */
   insertYouTube() {
+    // Guardar posición del cursor antes de que el modal robe el foco
+    this.saveEditorSelection();
+    
     // Abrir modal de YouTube
     const modal = document.getElementById('youtube-modal');
     const urlInput = document.getElementById('youtube-url');
@@ -2609,24 +2716,9 @@ class SalaGeekAdmin {
 </div>`;
     
     const editor = document.getElementById('article-editor');
-    editor.focus();
     
-    // Si el editor está vacío o solo tiene <br>, insertarlo directamente
-    const isEmpty = !editor.textContent.trim() || editor.innerHTML === '<br>';
-    
-    if (isEmpty) {
-      editor.innerHTML = embed + '<p><br></p>'; // Agregar párrafo después para continuar escribiendo
-      // Colocar cursor después del video
-      const range = document.createRange();
-      const sel = window.getSelection();
-      range.setStart(editor.lastChild, 0);
-      range.collapse(true);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    } else {
-      // Si hay contenido, usar execCommand
-      document.execCommand('insertHTML', false, embed + '<p><br></p>');
-    }
+    // Insertar en la posición guardada del cursor (o al final como fallback)
+    this.insertAtSavedPosition(embed + '<p><br></p>');
     
     // Guardar estado para Undo/Redo
     this.saveEditorState();
@@ -3020,28 +3112,8 @@ class SalaGeekAdmin {
           return;
         }
         
-        // SOLUCIÓN: Insertar directamente en el DOM del editor
-        // El modal roba el foco, así que execCommand no funciona correctamente
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-        
-        // Insertar cada nodo hijo al final del editor
-        while (tempDiv.firstChild) {
-          editor.appendChild(tempDiv.firstChild);
-        }
-        
-        // Agregar un salto de línea después para continuar escribiendo
-        const br = document.createElement('br');
-        editor.appendChild(br);
-        
-        // Mover el cursor al final
-        editor.focus();
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(editor);
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        // Insertar en la posición guardada del cursor (o al final como fallback)
+        this.insertAtSavedPosition(html + '<p><br></p>');
         
         // Cerrar modal y resetear estado
         document.getElementById('image-modal').classList.add('hidden');
@@ -3174,52 +3246,13 @@ class SalaGeekAdmin {
       // Cerrar el modal primero
       document.getElementById('grid-modal').classList.add('hidden');
       
-      // Obtener el editor y asegurarse de que tenga el foco
-      const editor = document.getElementById('article-editor');
-      editor.focus();
+      // Insertar en la posición guardada del cursor (o al final como fallback)
+      this.insertAtSavedPosition(grid);
       
-      // Usar un pequeño delay para asegurar que el foco está establecido
-      setTimeout(() => {
-        // Insertar el HTML
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0) || document.createRange();
-        
-        // Si el editor está vacío, insertar al inicio
-        if (!editor.innerHTML || editor.innerHTML === '<br>' || editor.innerHTML === '') {
-          editor.innerHTML = grid;
-        } else {
-          // Crear elemento temporal para insertar
-          const temp = document.createElement('div');
-          temp.innerHTML = grid;
-          
-          // Insertar en la posición del cursor o al final
-          try {
-            range.deleteContents();
-            const frag = document.createDocumentFragment();
-            let node, lastNode;
-            while ((node = temp.firstChild)) {
-              lastNode = frag.appendChild(node);
-            }
-            range.insertNode(frag);
-            
-            // Mover cursor después del contenido insertado
-            if (lastNode) {
-              range.setStartAfter(lastNode);
-              range.collapse(true);
-              selection.removeAllRanges();
-              selection.addRange(range);
-            }
-          } catch (e) {
-            // Fallback: agregar al final
-            editor.innerHTML += grid;
-          }
-        }
-        
-        // Guardar estado para Undo/Redo
-        this.saveEditorState();
-        
-        this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
-      }, 100);
+      // Guardar estado para Undo/Redo
+      this.saveEditorState();
+      
+      this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
     });
 
     // ═══════════════════════════════════════════════════════════════
@@ -5563,7 +5596,7 @@ class SalaGeekAdmin {
 
   <link rel="stylesheet" href="/src/css/normalize.css" />
   <link rel="stylesheet" href="/src/css/style.min.css?v=226" />
-  <link rel="stylesheet" href="/src/css/blog.min.css?v=253" />
+  <link rel="stylesheet" href="/src/css/blog.min.css?v=255" />
   
   <script src="/src/js/blog-engine.min.js?v=6" defer><\/script>
 </head>
@@ -6038,12 +6071,12 @@ class SalaGeekAdmin {
       checks.excerpt = 'warn';
     }
 
-    // 4. Imagen destacada
+    // 4. Imagen destacada - acepta http, data: URIs, y rutas relativas
     const imageUrlInput = document.getElementById('image-url')?.value?.trim() || '';
     const previewImg = document.getElementById('preview-img');
     const previewSrc = previewImg?.getAttribute('src') || '';
-    const hasValidImage = (imageUrlInput && imageUrlInput.startsWith('http')) || 
-                         (previewSrc && previewSrc.startsWith('http') && previewSrc.length > 10);
+    const hasValidImage = (imageUrlInput && (imageUrlInput.startsWith('http') || imageUrlInput.startsWith('data:image/') || imageUrlInput.startsWith('/'))) || 
+                         (previewSrc && (previewSrc.startsWith('http') || previewSrc.startsWith('data:image/') || previewSrc.startsWith('/')) && previewSrc.length > 10);
     if (hasValidImage) {
       checks.image = 'pass';
     }
@@ -6059,9 +6092,9 @@ class SalaGeekAdmin {
       checks.content = 'fail';
     }
 
-    // 6. Tags definidos
+    // 6. Tags definidos (2+ es pass, 1 es warn)
     const tagsCount = this.tags?.length || 0;
-    if (tagsCount >= 3) {
+    if (tagsCount >= 2) {
       checks.tags = 'pass';
     } else if (tagsCount > 0) {
       checks.tags = 'warn';
