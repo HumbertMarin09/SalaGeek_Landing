@@ -1290,7 +1290,7 @@ input, select, textarea {
 
 .editor-toolbar button.active {
   background: var(--admin-primary);
-  color: white;
+  color: var(--admin-bg);
 }
 
 .editor-toolbar button.disabled {
@@ -1584,7 +1584,7 @@ input, select, textarea {
   transform: translateX(-50%);
   padding: 0.25rem 0.75rem;
   background: var(--admin-primary);
-  color: white;
+  color: var(--admin-bg);
   font-size: 0.7rem;
   border-radius: 0.25rem;
   white-space: nowrap;
@@ -4466,7 +4466,7 @@ input, select, textarea {
   transform: translateX(-50%);
   padding: 0.25rem 0.75rem;
   background: var(--admin-primary);
-  color: white;
+  color: var(--admin-bg);
   font-size: 0.75rem;
   border-radius: 0.25rem;
   white-space: nowrap;

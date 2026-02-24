@@ -3238,10 +3238,10 @@ class SalaGeekAdmin {
       : 'center';
 
     const buttons = [
-      { align: 'left', icon: '<i class="fas fa-align-left"></i>', title: 'Alinear izquierda' },
-      { align: 'center', icon: '<i class="fas fa-align-center"></i>', title: 'Centrar' },
-      { align: 'right', icon: '<i class="fas fa-align-right"></i>', title: 'Alinear derecha' },
-      { align: 'delete', icon: '<i class="fas fa-trash-alt"></i>', title: 'Eliminar imagen' }
+      { align: 'left', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="17" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>', title: 'Alinear izquierda' },
+      { align: 'center', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="18" y1="14" x2="6" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>', title: 'Centrar' },
+      { align: 'right', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="7" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg>', title: 'Alinear derecha' },
+      { align: 'delete', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>', title: 'Eliminar imagen' }
     ];
 
     buttons.forEach(btn => {
