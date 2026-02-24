@@ -3324,18 +3324,24 @@ class SalaGeekAdmin {
 
     // Delegación de eventos para selección de imágenes
     editor.addEventListener('click', (e) => {
+      // Ignorar clicks en la toolbar de imagen para no deseleccionar
+      if (e.target.closest('.image-toolbar')) return;
+
       const wrapper = e.target.closest('.resizable-image, figure');
       
-      // Deseleccionar todas las imágenes primero
+      // Deseleccionar todas las imágenes y remover toolbars
       editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
         w.classList.remove('selected');
+        const oldToolbar = w.querySelector('.image-toolbar');
+        if (oldToolbar) oldToolbar.remove();
       });
       
-      // Si se hizo click en una imagen, seleccionarla
+      // Si se hizo click en una imagen, seleccionarla y agregar toolbar
       if (wrapper) {
         e.stopPropagation();
         wrapper.classList.add('selected');
         this.selectedImage = wrapper;
+        this.createImageToolbar(wrapper);
       } else {
         this.selectedImage = null;
       }
@@ -3351,6 +3357,70 @@ class SalaGeekAdmin {
         this.saveEditorState();
       }
     });
+  }
+
+  /**
+   * Crea la toolbar flotante de alineación sobre una imagen seleccionada
+   * @param {HTMLElement} wrapper - El wrapper .resizable-image o figure
+   */
+  createImageToolbar(wrapper) {
+    // Remover toolbar existente si hay
+    const existing = wrapper.querySelector('.image-toolbar');
+    if (existing) existing.remove();
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'image-toolbar';
+    toolbar.contentEditable = 'false';
+
+    // Determinar alineación actual
+    const currentAlign = wrapper.classList.contains('align-left') ? 'left'
+      : wrapper.classList.contains('align-right') ? 'right'
+      : wrapper.classList.contains('float-left') ? 'left'
+      : wrapper.classList.contains('float-right') ? 'right'
+      : 'center';
+
+    const buttons = [
+      { align: 'left', icon: '<i class="fas fa-align-left"></i>', title: 'Alinear izquierda' },
+      { align: 'center', icon: '<i class="fas fa-align-center"></i>', title: 'Centrar' },
+      { align: 'right', icon: '<i class="fas fa-align-right"></i>', title: 'Alinear derecha' },
+      { align: 'delete', icon: '<i class="fas fa-trash-alt"></i>', title: 'Eliminar imagen' }
+    ];
+
+    buttons.forEach(btn => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.innerHTML = btn.icon;
+      button.title = btn.title;
+      if (btn.align === currentAlign) button.classList.add('active');
+
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (btn.align === 'delete') {
+          wrapper.remove();
+          this.selectedImage = null;
+          this.showToast('Imagen eliminada', 'success');
+          this.saveEditorState();
+          return;
+        }
+
+        this.setImageAlignment(wrapper, btn.align);
+        // Actualizar estado activo de botones
+        toolbar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+      });
+
+      // Prevenir que mousedown deseleccione la imagen
+      button.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      toolbar.appendChild(button);
+    });
+
+    wrapper.appendChild(toolbar);
   }
 
   /**
@@ -5487,6 +5557,18 @@ class SalaGeekAdmin {
    * - Sección de artículos relacionados
    */
   generateArticleHTML(article, content) {
+    // Limpiar toolbars y clases de editor del contenido antes de generar HTML
+    const cleanDiv = document.createElement('div');
+    cleanDiv.innerHTML = content;
+    cleanDiv.querySelectorAll('.image-toolbar').forEach(el => el.remove());
+    cleanDiv.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+    cleanDiv.querySelectorAll('.image-resize-wrapper').forEach(wrapper => {
+      // Remover resize handles y dejar solo la imagen
+      wrapper.querySelectorAll('.resize-handle').forEach(h => h.remove());
+      wrapper.classList.remove('has-selected');
+    });
+    content = cleanDiv.innerHTML;
+
     const categoryIcons = {
       series: '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline>',
       peliculas: '<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>',
