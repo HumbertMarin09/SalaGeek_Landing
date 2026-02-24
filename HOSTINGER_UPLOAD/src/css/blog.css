@@ -4938,3 +4938,173 @@ figure.resizable-image img {
     flex-wrap: wrap;
   }
 }
+
+/* ============================================
+   ARTICLE PAGE - NARROW MOBILE (≤420px)
+   ============================================ */
+@media (max-width: 420px) {
+  /* Reduce overall padding */
+  .article-full {
+    padding: 0 0.75rem 1.5rem;
+  }
+  
+  .article-full .article-header {
+    padding: 1.25rem 0 1.5rem;
+  }
+
+  /* Breadcrumbs - tighter */
+  .breadcrumbs ol {
+    gap: 0.25rem;
+    font-size: 0.7rem;
+  }
+  
+  .breadcrumbs li svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  /* Category badge */
+  .article-full .article-category {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  /* Title - Key fix for 420px */
+  .article-full .article-title {
+    font-size: 1.35rem;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.015em;
+  }
+
+  /* Excerpt */
+  .article-full .article-excerpt {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+  }
+
+  /* Meta bottom */
+  .article-full .article-meta-bottom {
+    gap: 0.375rem 0.75rem;
+    font-size: 0.72rem;
+    padding: 0.625rem;
+  }
+  
+  .article-full .article-meta-bottom svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Featured image - more edge to edge */
+  .article-full .article-featured-image {
+    margin: 0 -0.75rem 1.25rem;
+  }
+
+  /* Content typography */
+  .article-full .article-content {
+    font-size: 0.925rem;
+    line-height: 1.7;
+  }
+
+  .article-full .article-content .lead {
+    font-size: 0.975rem;
+  }
+
+  .article-full .article-content h2 {
+    font-size: 1.15rem;
+    margin: 1.5rem 0 0.75rem;
+    padding: 0.625rem 0 0.625rem 0.875rem;
+  }
+
+  .article-full .article-content h3 {
+    font-size: 1rem;
+  }
+
+  .article-full .article-content blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1.25rem -0.125rem;
+    font-size: 0.875rem;
+  }
+
+  /* Share section - single column */
+  .article-share {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .article-share h3 {
+    font-size: 0.65rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .share-buttons {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.375rem;
+  }
+
+  .share-btn {
+    height: 38px;
+    padding: 0 0.5rem;
+    border-radius: 8px;
+  }
+
+  .share-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .share-btn span {
+    font-size: 0.65rem;
+  }
+
+  /* Tags */
+  .article-tags,
+  .article-full .article-tags {
+    gap: 0.375rem;
+    padding: 1rem 0;
+    margin-top: 1.25rem;
+  }
+
+  .article-tag,
+  .article-full .article-tags .article-tag,
+  .article-full .article-tags .tag {
+    padding: 0.3rem 0.625rem;
+    font-size: 0.7rem;
+  }
+
+  /* Related articles */
+  .related-articles {
+    padding: 1.25rem 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .related-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .related-card-content {
+    padding: 0.75rem;
+  }
+
+  .related-card-title {
+    font-size: 0.85rem;
+  }
+
+  /* Comments */
+  .comments-section {
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .comments-title {
+    font-size: 1rem;
+  }
+
+  .giscus-container {
+    padding: 0.5rem;
+    border-radius: 8px;
+    min-height: 120px;
+  }
+}
