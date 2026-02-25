@@ -3185,11 +3185,11 @@ class SalaGeekAdmin {
       // Ignorar clicks en la toolbar de imagen para no deseleccionar
       if (e.target.closest('.image-toolbar')) return;
 
-      const wrapper = e.target.closest('.resizable-image, figure');
+      const wrapper = e.target.closest('.resizable-image, .image-resize-wrapper, figure');
       
       // Deseleccionar todas las imágenes y remover toolbars
-      editor.querySelectorAll('.resizable-image.selected, figure.selected').forEach(w => {
-        w.classList.remove('selected');
+      editor.querySelectorAll('.resizable-image.selected, .image-resize-wrapper.selected, .image-resize-wrapper.has-selected, figure.selected').forEach(w => {
+        w.classList.remove('selected', 'has-selected');
         const oldToolbar = w.querySelector('.image-toolbar');
         if (oldToolbar) oldToolbar.remove();
       });
@@ -4291,11 +4291,16 @@ class SalaGeekAdmin {
       return;
     }
 
+    // 1. Marcar como editando ANTES de navegar (evita que navigateTo resetee el form)
     this.editingArticle = article;
-    this.populateArticleForm(article);
+    
+    // 2. Navegar primero para que la sección sea visible
     this.navigateTo('new-article');
     
-    // Re-render tags después de que la sección sea visible
+    // 3. Rellenar el formulario DESPUÉS de que la sección esté visible
+    this.populateArticleForm(article);
+    
+    // 4. Re-render tags y SEO después de que el DOM esté actualizado
     requestAnimationFrame(() => {
       this.renderTags();
       this.updateSEOScore();
@@ -4387,6 +4392,10 @@ class SalaGeekAdmin {
         this.clearEditorHistory();
         this.saveEditorState();
         this.setupEditorImages();
+        
+        // Actualizar word count y SEO score después de cargar contenido
+        this.updateWordCount();
+        this.updateSEOScore();
       }
     } catch (error) {
       console.error('Error loading article content:', error);
