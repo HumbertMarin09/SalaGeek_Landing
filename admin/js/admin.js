@@ -6367,6 +6367,26 @@ class SalaGeekAdmin {
       .then(function(r) { return r.text(); })
       .then(function(html) { document.getElementById('footer-container').innerHTML = html; });
 
+    // Track article view
+    (function() {
+      var slug = window.location.pathname.split('/').pop().replace('.html', '');
+      if (slug) {
+        fetch('/api/track-view.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: slug })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var el = document.getElementById('view-count');
+          if (el && data.views !== undefined) {
+            el.textContent = data.views;
+          }
+        })
+        .catch(function() {});
+      }
+    })();
+
     // Load related articles
     document.addEventListener('DOMContentLoaded', async function() {
       const blogEngine = new BlogEngine();

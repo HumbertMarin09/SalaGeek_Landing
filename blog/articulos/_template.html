@@ -241,7 +241,7 @@
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
               <circle cx="12" cy="12" r="3"></circle>
             </svg>
-            <span id="view-count">[0]</span> vistas
+            <span id="view-count">0</span> vistas
           </span>
         </div>
       </header>
@@ -436,8 +436,28 @@
     }
   </script>
 
-  <!-- Cargar artículos relacionados -->
+  <!-- Rastreo de vistas + artículos relacionados -->
   <script>
+    // Track article view
+    (function() {
+      var slug = window.location.pathname.split('/').pop().replace('.html', '');
+      if (slug) {
+        fetch('/api/track-view.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: slug })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var el = document.getElementById('view-count');
+          if (el && data.views !== undefined) {
+            el.textContent = data.views;
+          }
+        })
+        .catch(function() {});
+      }
+    })();
+
     document.addEventListener('DOMContentLoaded', async () => {
       const blogEngine = new BlogEngine();
       await blogEngine.init();
