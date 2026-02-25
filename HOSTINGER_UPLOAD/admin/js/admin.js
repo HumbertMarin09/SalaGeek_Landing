@@ -1990,8 +1990,9 @@ class SalaGeekAdmin {
     }
     
     // Crear handles de redimensionamiento si no existen (solo para imágenes fuera de grids)
+    let wrapper;
     if (!img.parentElement.classList.contains('image-resize-wrapper')) {
-      const wrapper = document.createElement('span');
+      wrapper = document.createElement('span');
       wrapper.className = 'image-resize-wrapper has-selected';
       wrapper.contentEditable = 'false';
       img.parentElement.insertBefore(wrapper, img);
@@ -2010,18 +2011,28 @@ class SalaGeekAdmin {
         });
       });
     } else {
-      img.parentElement.classList.add('has-selected');
+      wrapper = img.parentElement;
+      wrapper.classList.add('has-selected');
     }
+    
+    // Crear toolbar de alineación sobre la imagen
+    wrapper.classList.add('selected');
+    this.selectedImage = wrapper;
+    this.createImageToolbar(wrapper);
   }
 
   deselectEditorImages() {
     const editor = document.getElementById('article-editor');
+    // Remover toolbars y estado de selección de wrappers
+    editor?.querySelectorAll('.image-resize-wrapper.selected, .image-resize-wrapper.has-selected').forEach(w => {
+      w.classList.remove('selected', 'has-selected');
+      const toolbar = w.querySelector('.image-toolbar');
+      if (toolbar) toolbar.remove();
+    });
     editor?.querySelectorAll('img.selected').forEach(img => {
       img.classList.remove('selected');
-      if (img.parentElement.classList.contains('image-resize-wrapper')) {
-        img.parentElement.classList.remove('has-selected');
-      }
     });
+    this.selectedImage = null;
   }
 
   startImageResize(img, position, startEvent) {
