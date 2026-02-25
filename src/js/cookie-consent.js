@@ -174,7 +174,7 @@
 
   function enableGoogleAnalytics() {
     // Permitir que GA funcione normalmente
-    window['ga-disable-G-XXXXXXXXXX'] = false;
+    window['ga-disable-G-QCX3G9KSPC'] = false;
     
     // Si GA ya está cargado, habilitar
     if (window.gtag) {
@@ -186,7 +186,7 @@
 
   function disableGoogleAnalytics() {
     // Desactivar GA
-    window['ga-disable-G-XXXXXXXXXX'] = true;
+    window['ga-disable-G-QCX3G9KSPC'] = true;
     
     if (window.gtag) {
       gtag('consent', 'update', {
