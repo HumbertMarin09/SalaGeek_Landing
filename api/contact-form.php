@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Rate limiting (más estricto para formularios)
-if (!checkRateLimit('contact_form', 5, 300)) { // 5 solicitudes por 5 minutos
+if (!checkRateLimit(300, 5, 'contact_form')) { // 5 solicitudes por 5 minutos
     jsonResponse(['error' => 'Demasiadas solicitudes. Intenta en unos minutos.'], 429);
 }
 

@@ -1,139 +1,139 @@
 /**
- * ═══════════════════════════════════════════════════════════════
- * 🎛️ SALA GEEK ADMIN - Panel de Administración
- * ═══════════════════════════════════════════════════════════════
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+ * ðŸŽ›ï¸ SALA GEEK ADMIN - Panel de AdministraciÃ³n
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
  * 
- * @description Sistema de administración completo para SalaGeek
+ * @description Sistema de administraciÃ³n completo para SalaGeek
  * @author SalaGeek Team
  * @version 2.4.0
  * @lastUpdate 2026-01-22
  * 
- * CARACTERÍSTICAS PRINCIPALES:
- * ─────────────────────────────
- * • Autenticación segura con sesiones PHP
- * • Editor WYSIWYG con formato completo
- * • Drag & drop de imágenes con posicionamiento inteligente
- * • Sistema de grids/galerías (1-4 columnas)
- * • Redimensionamiento de imágenes (arrastre + modal)
- * • Sistema Undo/Redo (historial de 50 estados)
- * • Vista previa responsive (desktop/tablet/mobile)
- * • Gestión completa de artículos (CRUD)
- * • Inserción de videos de YouTube
- * • SEO avanzado (meta tags, canonical, Open Graph)
- * • Galería de imágenes subidas
+ * CARACTERÃSTICAS PRINCIPALES:
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * â€¢ AutenticaciÃ³n segura con sesiones PHP
+ * â€¢ Editor WYSIWYG con formato completo
+ * â€¢ Drag & drop de imÃ¡genes con posicionamiento inteligente
+ * â€¢ Sistema de grids/galerÃ­as (1-4 columnas)
+ * â€¢ Redimensionamiento de imÃ¡genes (arrastre + modal)
+ * â€¢ Sistema Undo/Redo (historial de 50 estados)
+ * â€¢ Vista previa responsive (desktop/tablet/mobile)
+ * â€¢ GestiÃ³n completa de artÃ­culos (CRUD)
+ * â€¢ InserciÃ³n de videos de YouTube
+ * â€¢ SEO avanzado (meta tags, canonical, Open Graph)
+ * â€¢ GalerÃ­a de imÃ¡genes subidas
  * 
  * ATAJOS DE TECLADO:
- * ──────────────────
- * Ctrl+S         → Guardar artículo
- * Ctrl+Z         → Deshacer última acción
- * Ctrl+Y/Shift+Z → Rehacer acción
- * Ctrl+B         → Negrita
- * Ctrl+I         → Cursiva
- * Ctrl+U         → Subrayado
- * Ctrl+K         → Insertar enlace
- * ESC            → Cerrar modales
- * Delete/Supr   → Eliminar imagen/grid seleccionado
- * Doble clic    → Abrir modal de redimensionamiento
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * Ctrl+S         â†’ Guardar artÃ­culo
+ * Ctrl+Z         â†’ Deshacer Ãºltima acciÃ³n
+ * Ctrl+Y/Shift+Z â†’ Rehacer acciÃ³n
+ * Ctrl+B         â†’ Negrita
+ * Ctrl+I         â†’ Cursiva
+ * Ctrl+U         â†’ Subrayado
+ * Ctrl+K         â†’ Insertar enlace
+ * ESC            â†’ Cerrar modales
+ * Delete/Supr   â†’ Eliminar imagen/grid seleccionado
+ * Doble clic    â†’ Abrir modal de redimensionamiento
  * 
- * ESTRUCTURA DEL CÓDIGO:
- * ──────────────────────
- * 1. Configuración Global (CONFIG)
+ * ESTRUCTURA DEL CÃ“DIGO:
+ * â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+ * 1. ConfiguraciÃ³n Global (CONFIG)
  * 2. Clase Principal (SalaGeekAdmin)
- *    - Inicialización y Autenticación
+ *    - InicializaciÃ³n y AutenticaciÃ³n
  *    - Sistema Undo/Redo
  *    - Event Listeners
  *    - Editor y Toolbar
- *    - Manejo de Imágenes y Grids
- *    - Modales (imagen, grid, galería, resize)
+ *    - Manejo de ImÃ¡genes y Grids
+ *    - Modales (imagen, grid, galerÃ­a, resize)
  *    - YouTube Embed
- *    - Navegación
- *    - CRUD de Artículos
+ *    - NavegaciÃ³n
+ *    - CRUD de ArtÃ­culos
  *    - Tags y SEO
  *    - Vista Previa
- *    - Generación de HTML
+ *    - GeneraciÃ³n de HTML
  *    - Utilidades
  * 
- * ═══════════════════════════════════════════════════════════════
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
  */
 
-// ═══════════════════════════════════════════════════════════════
-// CONFIGURACIÓN GLOBAL
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// CONFIGURACIÃ“N GLOBAL
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 const CONFIG = {
-  // ─── UI & Notificaciones ───
-  TOAST_DURATION: 5000,           // Duración de notificaciones (ms)
+  // â”€â”€â”€ UI & Notificaciones â”€â”€â”€
+  TOAST_DURATION: 5000,           // DuraciÃ³n de notificaciones (ms)
   
-  // ─── Imágenes ───
-  MIN_IMAGE_SIZE: 50,             // Tamaño mínimo de imagen (px)
-  MAX_GRID_COLUMNS: 4,            // Máximo columnas en grid
+  // â”€â”€â”€ ImÃ¡genes â”€â”€â”€
+  MIN_IMAGE_SIZE: 50,             // TamaÃ±o mÃ­nimo de imagen (px)
+  MAX_GRID_COLUMNS: 4,            // MÃ¡ximo columnas en grid
   DEFAULT_GRID_GAP: 8,            // Espaciado por defecto en grid (px)
   
-  // ─── Extracto del artículo ───
-  MAX_EXCERPT_LENGTH: 250,        // Máximo caracteres permitidos
+  // â”€â”€â”€ Extracto del artÃ­culo â”€â”€â”€
+  MAX_EXCERPT_LENGTH: 250,        // MÃ¡ximo caracteres permitidos
   EXCERPT_WARNING_LENGTH: 150,    // Umbral de advertencia (amarillo)
   EXCERPT_DANGER_LENGTH: 200,     // Umbral de peligro (rojo)
   
-  // ─── Meta Description (SEO) ───
-  META_DESC_OPTIMAL: 160,         // Longitud óptima para SEO
+  // â”€â”€â”€ Meta Description (SEO) â”€â”€â”€
+  META_DESC_OPTIMAL: 160,         // Longitud Ã³ptima para SEO
   META_DESC_WARNING: 140,         // Umbral de advertencia
   
-  // ─── URL/Slug ───
-  MAX_SLUG_LENGTH: 60,            // Máximo caracteres en slug
+  // â”€â”€â”€ URL/Slug â”€â”€â”€
+  MAX_SLUG_LENGTH: 60,            // MÃ¡ximo caracteres en slug
   
-  // ─── Editor - Undo/Redo ───
-  MAX_HISTORY_SIZE: 50,           // Estados máximos en historial
+  // â”€â”€â”€ Editor - Undo/Redo â”€â”€â”€
+  MAX_HISTORY_SIZE: 50,           // Estados mÃ¡ximos en historial
   DEBOUNCE_SAVE_STATE: 300,       // Delay para guardar estado (ms)
   
-  // ─── Artículos Recientes ───
-  RECENT_ARTICLES_LIMIT: 5        // Artículos mostrados en dashboard
+  // â”€â”€â”€ ArtÃ­culos Recientes â”€â”€â”€
+  RECENT_ARTICLES_LIMIT: 5        // ArtÃ­culos mostrados en dashboard
 };
 
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CLASE PRINCIPAL
-// ═══════════════════════════════════════════════════════════════
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class SalaGeekAdmin {
   /**
-   * Constructor - Inicializa el estado de la aplicación
+   * Constructor - Inicializa el estado de la aplicaciÃ³n
    * 
    * @description Configura todas las propiedades iniciales del admin:
-   * - Estado de autenticación (user)
-   * - Datos de artículos y categorías
-   * - Estado de navegación y edición
-   * - Configuración de modales
+   * - Estado de autenticaciÃ³n (user)
+   * - Datos de artÃ­culos y categorÃ­as
+   * - Estado de navegaciÃ³n y ediciÃ³n
+   * - ConfiguraciÃ³n de modales
    * - Sistema de historial para Undo/Redo
    */
   constructor() {
-    // ─── Estado de Autenticación ───
-    /** @type {Object|null} Usuario autenticado vía sesión PHP */
+    // â”€â”€â”€ Estado de AutenticaciÃ³n â”€â”€â”€
+    /** @type {Object|null} Usuario autenticado vÃ­a sesiÃ³n PHP */
     this.user = null;
     
-    // ─── Datos Principales ───
-    /** @type {Array} Lista de artículos publicados */
+    // â”€â”€â”€ Datos Principales â”€â”€â”€
+    /** @type {Array} Lista de artÃ­culos publicados */
     this.articles = [];
     /** @type {Array} Lista de borradores */
     this.drafts = [];
-    /** @type {Array} Categorías disponibles */
+    /** @type {Array} CategorÃ­as disponibles */
     this.categories = [];
-    /** @type {Array} Tags del artículo actual */
+    /** @type {Array} Tags del artÃ­culo actual */
     this.tags = [];
     
-    // ─── Estado de Navegación ───
-    /** @type {string} Sección actual del admin */
+    // â”€â”€â”€ Estado de NavegaciÃ³n â”€â”€â”€
+    /** @type {string} SecciÃ³n actual del admin */
     this.currentSection = 'dashboard';
-    /** @type {Object|null} Artículo en edición */
+    /** @type {Object|null} ArtÃ­culo en ediciÃ³n */
     this.editingArticle = null;
     /** @type {boolean} Indica si el contenido ha sido guardado */
     this.contentSaved = false;
     
     // Auto-guardado eliminado - Se guarda manualmente
     
-    // ─── Cursor Save/Restore para Modales ───
+    // â”€â”€â”€ Cursor Save/Restore para Modales â”€â”€â”€
     /** @type {Range|null} Rango guardado antes de abrir modal */
     this.savedEditorRange = null;
     
-    // ─── Modal de Imagen Individual ───
+    // â”€â”€â”€ Modal de Imagen Individual â”€â”€â”€
     /** @type {string} Fuente actual: 'url' o 'upload' */
     this.currentImageSource = 'url';
     /** @type {string|null} Datos de imagen subida (base64) */
@@ -143,35 +143,35 @@ class SalaGeekAdmin {
     /** @type {HTMLElement|null} Imagen seleccionada en el editor */
     this.selectedImage = null;
     
-    // ─── Modal de Grid/Galería ───
-    /** @type {Array} URLs de imágenes para el grid */
+    // â”€â”€â”€ Modal de Grid/GalerÃ­a â”€â”€â”€
+    /** @type {Array} URLs de imÃ¡genes para el grid */
     this.gridImages = [];
     /** @type {number} Columnas del grid (1-4) */
     this.gridCols = 2;
-    /** @type {number} Espaciado entre imágenes (px) */
+    /** @type {number} Espaciado entre imÃ¡genes (px) */
     this.gridGap = CONFIG.DEFAULT_GRID_GAP;
     
-    // ─── Galería de Imágenes Subidas ───
-    /** @type {Array} Imágenes disponibles en la galería */
+    // â”€â”€â”€ GalerÃ­a de ImÃ¡genes Subidas â”€â”€â”€
+    /** @type {Array} ImÃ¡genes disponibles en la galerÃ­a */
     this.galleryImages = [];
     /** @type {Object|null} Datos de imagen pendiente de subir */
     this.galleryUploadData = null;
-    /** @type {boolean} Modo selección de galería para grid */
+    /** @type {boolean} Modo selecciÃ³n de galerÃ­a para grid */
     this.gallerySelectMode = false;
     
-    // ─── Sistema Undo/Redo ───
+    // â”€â”€â”€ Sistema Undo/Redo â”€â”€â”€
     /** @type {Array} Historial de estados del editor */
     this.editorHistory = [];
-    /** @type {number} Índice actual en el historial */
+    /** @type {number} Ãndice actual en el historial */
     this.historyIndex = -1;
     /** @type {boolean} Flag para evitar guardar durante undo/redo */
     this.isUndoRedo = false;
     
-    // ─── Cache de elementos DOM ───
+    // â”€â”€â”€ Cache de elementos DOM â”€â”€â”€
     /** @type {HTMLElement|null} Referencia cacheada al editor */
     this._editorElement = null;
     
-    // ─── Inicializar Aplicación ───
+    // â”€â”€â”€ Inicializar AplicaciÃ³n â”€â”€â”€
     this.init();
   }
 
@@ -186,12 +186,12 @@ class SalaGeekAdmin {
     return this._editorElement;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // INICIALIZACIÓN
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // INICIALIZACIÃ“N
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   
   /**
-   * Inicializa todos los componentes de la aplicación
+   * Inicializa todos los componentes de la aplicaciÃ³n
    */
   async init() {
     this.initAuth();
@@ -202,16 +202,16 @@ class SalaGeekAdmin {
     this.setupSEOPreview();
     this.setupCollapsibleSections();
     this.setupCategoryMultiSelect();
-    this.setupEditorImageHandlers(); // Delegación de eventos para imágenes
-    this.setupForgotPasswordModal(); // Modal de recuperación de contraseña
-    this.setupResetPasswordModal(); // Modal de reseteo de contraseña
+    this.setupEditorImageHandlers(); // DelegaciÃ³n de eventos para imÃ¡genes
+    this.setupForgotPasswordModal(); // Modal de recuperaciÃ³n de contraseÃ±a
+    this.setupResetPasswordModal(); // Modal de reseteo de contraseÃ±a
     
-    // Verificar si hay sesión activa
+    // Verificar si hay sesiÃ³n activa
     await this.checkSession();
   }
 
   /**
-   * Configura el sistema de autenticación PHP
+   * Configura el sistema de autenticaciÃ³n PHP
    * 
    * @description Maneja el login/logout con el backend PHP
    */
@@ -227,7 +227,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Verifica si hay una sesión activa
+   * Verifica si hay una sesiÃ³n activa
    */
   async checkSession() {
     try {
@@ -242,12 +242,12 @@ class SalaGeekAdmin {
         this.handleLogin(data.user);
       }
     } catch (error) {
-      // Sesión no activa - comportamiento esperado en primer acceso
+      // SesiÃ³n no activa - comportamiento esperado en primer acceso
     }
   }
 
   /**
-   * Maneja el envío del formulario de login
+   * Maneja el envÃ­o del formulario de login
    */
   async handleLoginSubmit(e) {
     const form = e.target;
@@ -279,7 +279,7 @@ class SalaGeekAdmin {
         this.authToken = data.token;
         this.handleLogin(data.user);
       } else {
-        throw new Error(data.error || 'Error al iniciar sesión');
+        throw new Error(data.error || 'Error al iniciar sesiÃ³n');
       }
     } catch (error) {
       errorDiv.textContent = error.message;
@@ -313,11 +313,11 @@ class SalaGeekAdmin {
     // Load data
     this.loadArticles();
     
-    this.showToast(`¡Bienvenido, ${name}!`, 'success');
+    this.showToast(`Â¡Bienvenido, ${name}!`, 'success');
   }
 
   /**
-   * Maneja el cierre de sesión
+   * Maneja el cierre de sesiÃ³n
    * 
    * @description Limpia el estado y muestra la pantalla de login
    */
@@ -328,7 +328,7 @@ class SalaGeekAdmin {
         credentials: 'include'
       });
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error al cerrar sesiÃ³n:', error);
     }
     
     this.user = null;
@@ -345,33 +345,33 @@ class SalaGeekAdmin {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // AUTENTICACIÓN Y TOKENS
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // AUTENTICACIÃ“N Y TOKENS
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
    * Obtiene el token de acceso para llamadas a la API
    * 
-   * @description Con el sistema PHP, usamos cookies de sesión.
-   * Este método es para compatibilidad con el código existente.
+   * @description Con el sistema PHP, usamos cookies de sesiÃ³n.
+   * Este mÃ©todo es para compatibilidad con el cÃ³digo existente.
    * 
-   * @returns {Promise<string>} Token de sesión
-   * @throws {Error} Si no hay sesión activa
+   * @returns {Promise<string>} Token de sesiÃ³n
+   * @throws {Error} Si no hay sesiÃ³n activa
    */
   async getAccessToken() {
     if (!this.user) {
-      throw new Error('Sesión expirada. Por favor, vuelve a iniciar sesión.');
+      throw new Error('SesiÃ³n expirada. Por favor, vuelve a iniciar sesiÃ³n.');
     }
 
-    // Con PHP usamos cookies de sesión, no tokens JWT
+    // Con PHP usamos cookies de sesiÃ³n, no tokens JWT
     // Retornamos el token almacenado o un placeholder
     return this.authToken || 'session-auth';
   }
 
   /**
-   * Inicia el flujo de cambio de contraseña
+   * Inicia el flujo de cambio de contraseÃ±a
    * 
-   * @description Muestra un modal para cambiar la contraseña
+   * @description Muestra un modal para cambiar la contraseÃ±a
    */
   async changePassword() {
     const modal = document.getElementById('change-password-modal');
@@ -382,7 +382,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Cierra el modal de cambio de contraseña
+   * Cierra el modal de cambio de contraseÃ±a
    */
   closePasswordModal() {
     const modal = document.getElementById('change-password-modal');
@@ -396,13 +396,13 @@ class SalaGeekAdmin {
       if (strengthFill) strengthFill.className = 'strength-fill';
       if (strengthText) {
         strengthText.className = 'strength-text';
-        strengthText.textContent = 'Ingresa una contraseña';
+        strengthText.textContent = 'Ingresa una contraseÃ±a';
       }
     }
   }
 
   /**
-   * Configura el modal de cambio de contraseña
+   * Configura el modal de cambio de contraseÃ±a
    */
   setupChangePasswordModal() {
     const form = document.getElementById('change-password-form');
@@ -471,13 +471,13 @@ class SalaGeekAdmin {
 
       // Validations
       if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'Las contraseñas no coinciden';
+        errorDiv.textContent = 'Las contraseÃ±as no coinciden';
         errorDiv.classList.remove('hidden');
         return;
       }
 
       if (newPassword.length < 8) {
-        errorDiv.textContent = 'La contraseña debe tener al menos 8 caracteres';
+        errorDiv.textContent = 'La contraseÃ±a debe tener al menos 8 caracteres';
         errorDiv.classList.remove('hidden');
         return;
       }
@@ -503,7 +503,7 @@ class SalaGeekAdmin {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || 'Error al cambiar la contraseña');
+          throw new Error(data.error || 'Error al cambiar la contraseÃ±a');
         }
 
         // Success - show the hash and instructions
@@ -527,7 +527,7 @@ class SalaGeekAdmin {
    * Check password strength
    */
   checkPasswordStrength(password) {
-    if (!password) return { level: '', text: 'Ingresa una contraseña' };
+    if (!password) return { level: '', text: 'Ingresa una contraseÃ±a' };
     
     let score = 0;
     
@@ -541,9 +541,9 @@ class SalaGeekAdmin {
     if (/[0-9]/.test(password)) score++;
     if (/[^a-zA-Z0-9]/.test(password)) score++;
 
-    if (score <= 2) return { level: 'weak', text: 'Débil - Agrega más caracteres' };
-    if (score <= 3) return { level: 'fair', text: 'Regular - Usa mayúsculas y números' };
-    if (score <= 4) return { level: 'good', text: 'Buena - Agrega símbolos' };
+    if (score <= 2) return { level: 'weak', text: 'DÃ©bil - Agrega mÃ¡s caracteres' };
+    if (score <= 3) return { level: 'fair', text: 'Regular - Usa mayÃºsculas y nÃºmeros' };
+    if (score <= 4) return { level: 'good', text: 'Buena - Agrega sÃ­mbolos' };
     return { level: 'strong', text: 'Excelente' };
   }
 
@@ -554,7 +554,7 @@ class SalaGeekAdmin {
     // Create a custom success modal
     const modal = document.getElementById('confirm-modal');
     if (!modal) {
-      alert('Contraseña verificada. Nuevo hash: ' + newHash);
+      alert('ContraseÃ±a verificada. Nuevo hash: ' + newHash);
       return;
     }
 
@@ -574,20 +574,20 @@ class SalaGeekAdmin {
     if (iconInfo) iconInfo.style.display = 'block';
 
     // Set content
-    titleEl.textContent = '¡Contraseña verificada!';
+    titleEl.textContent = 'Â¡ContraseÃ±a verificada!';
     messageEl.innerHTML = `
-      <p style="margin-bottom: 1rem; text-align: left;">Tu contraseña actual fue verificada. Para completar el cambio:</p>
+      <p style="margin-bottom: 1rem; text-align: left;">Tu contraseÃ±a actual fue verificada. Para completar el cambio:</p>
       <ol style="text-align: left; margin-bottom: 1rem; padding-left: 1.25rem; font-size: 0.85rem;">
         <li>Ve al panel de Hostinger</li>
-        <li>Sitios → Tu sitio → Configuración avanzada</li>
-        <li>Variables de entorno → ADMIN_PASSWORD_HASH</li>
+        <li>Sitios â†’ Tu sitio â†’ ConfiguraciÃ³n avanzada</li>
+        <li>Variables de entorno â†’ ADMIN_PASSWORD_HASH</li>
         <li>Pega el nuevo hash (abajo)</li>
       </ol>
       <div style="background: var(--admin-bg); padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.7rem; word-break: break-all; margin-bottom: 1rem; text-align: left;">
         ${newHash}
       </div>
-      <button type="button" class="btn-secondary" style="width: 100%;" onclick="navigator.clipboard.writeText('${newHash}'); this.textContent='¡Copiado!';">
-        📋 Copiar Hash
+      <button type="button" class="btn-secondary" style="width: 100%;" onclick="navigator.clipboard.writeText('${newHash}'); this.textContent='Â¡Copiado!';">
+        ðŸ“‹ Copiar Hash
       </button>
     `;
 
@@ -615,12 +615,12 @@ class SalaGeekAdmin {
     acceptBtn.addEventListener('click', onAccept);
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // RECUPERACIÓN DE CONTRASEÑA
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // RECUPERACIÃ“N DE CONTRASEÃ‘A
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Configura el modal de "Olvidaste tu contraseña"
+   * Configura el modal de "Olvidaste tu contraseÃ±a"
    */
   setupForgotPasswordModal() {
     const forgotLink = document.getElementById('forgot-password-link');
@@ -686,7 +686,7 @@ class SalaGeekAdmin {
         // Show token
         tokenCode.textContent = data.token;
         tokenDisplay.classList.remove('hidden');
-        generateBtn.querySelector('span').textContent = '✓ Token Generado';
+        generateBtn.querySelector('span').textContent = 'âœ“ Token Generado';
 
         this.showToast('Token generado exitosamente', 'success');
 
@@ -694,7 +694,7 @@ class SalaGeekAdmin {
         copyBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(data.token);
           const originalText = copyBtn.innerHTML;
-          copyBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!';
+          copyBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Â¡Copiado!';
           setTimeout(() => {
             copyBtn.innerHTML = originalText;
           }, 2000);
@@ -717,7 +717,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Configura el modal de reseteo de contraseña con token
+   * Configura el modal de reseteo de contraseÃ±a con token
    */
   setupResetPasswordModal() {
     const modal = document.getElementById('reset-password-modal');
@@ -800,19 +800,19 @@ class SalaGeekAdmin {
 
       // Validations
       if (!token) {
-        errorDiv.textContent = 'Ingresa el token de recuperación';
+        errorDiv.textContent = 'Ingresa el token de recuperaciÃ³n';
         errorDiv.classList.remove('hidden');
         return;
       }
 
       if (newPassword.length < 8) {
-        errorDiv.textContent = 'La contraseña debe tener al menos 8 caracteres';
+        errorDiv.textContent = 'La contraseÃ±a debe tener al menos 8 caracteres';
         errorDiv.classList.remove('hidden');
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'Las contraseñas no coinciden';
+        errorDiv.textContent = 'Las contraseÃ±as no coinciden';
         errorDiv.classList.remove('hidden');
         return;
       }
@@ -834,13 +834,13 @@ class SalaGeekAdmin {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || 'Error al resetear contraseña');
+          throw new Error(data.error || 'Error al resetear contraseÃ±a');
         }
 
         // Close modal and show success
         modal.classList.add('hidden');
         form.reset();
-        this.showToast('Contraseña reseteada exitosamente', 'success');
+        this.showToast('ContraseÃ±a reseteada exitosamente', 'success');
         
         // Show hash instructions
         this.showPasswordChangeSuccess(data.newHash);
@@ -851,14 +851,14 @@ class SalaGeekAdmin {
         errorDiv.classList.remove('hidden');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.querySelector('span').textContent = 'Resetear Contraseña';
+        submitBtn.querySelector('span').textContent = 'Resetear ContraseÃ±a';
       }
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // AUTO-GUARDADO (deshabilitado - guardado manual únicamente)
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // AUTO-GUARDADO (deshabilitado - guardado manual Ãºnicamente)
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   stopAutoSave() {
     if (this.autoSaveTimer) {
@@ -867,9 +867,9 @@ class SalaGeekAdmin {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // UNDO/REDO SYSTEM
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
    * Guarda el estado actual del editor en el historial
@@ -893,7 +893,7 @@ class SalaGeekAdmin {
     // Agregar nuevo estado
     this.editorHistory.push(currentState);
     
-    // Limitar tamaño del historial
+    // Limitar tamaÃ±o del historial
     if (this.editorHistory.length > CONFIG.MAX_HISTORY_SIZE) {
       this.editorHistory.shift();
     } else {
@@ -904,11 +904,11 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Deshace la última acción (Ctrl+Z)
+   * Deshace la Ãºltima acciÃ³n (Ctrl+Z)
    */
   undo() {
     if (this.historyIndex <= 0) {
-      this.showToast('No hay más acciones para deshacer', 'info');
+      this.showToast('No hay mÃ¡s acciones para deshacer', 'info');
       return;
     }
     
@@ -927,11 +927,11 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Rehace la última acción deshecha (Ctrl+Y)
+   * Rehace la Ãºltima acciÃ³n deshecha (Ctrl+Y)
    */
   redo() {
     if (this.historyIndex >= this.editorHistory.length - 1) {
-      this.showToast('No hay más acciones para rehacer', 'info');
+      this.showToast('No hay mÃ¡s acciones para rehacer', 'info');
       return;
     }
     
@@ -981,16 +981,16 @@ class SalaGeekAdmin {
     this.updateUndoRedoButtons();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // EVENT LISTENERS - Configuración de eventos globales
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // EVENT LISTENERS - ConfiguraciÃ³n de eventos globales
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Configura todos los event listeners de la aplicación
-   * Incluye: navegación, formularios, atajos de teclado, etc.
+   * Configura todos los event listeners de la aplicaciÃ³n
+   * Incluye: navegaciÃ³n, formularios, atajos de teclado, etc.
    */
   setupEventListeners() {
-    // ─── Autenticación ───
+    // â”€â”€â”€ AutenticaciÃ³n â”€â”€â”€
     // El login ahora se maneja con el formulario en initAuth()
     
     document.getElementById('logout-btn')?.addEventListener('click', () => {
@@ -1001,7 +1001,7 @@ class SalaGeekAdmin {
       this.changePassword();
     });
 
-    // ─── Navegación ───
+    // â”€â”€â”€ NavegaciÃ³n â”€â”€â”€
     document.querySelectorAll('.nav-item').forEach(item => {
       item.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1033,20 +1033,20 @@ class SalaGeekAdmin {
       document.querySelector('.admin-sidebar').classList.toggle('open');
     });
 
-    // Article form - Publicar (no si el foco está en tags-input u otros campos no-submit)
+    // Article form - Publicar (no si el foco estÃ¡ en tags-input u otros campos no-submit)
     document.getElementById('article-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
-      // No publicar si el usuario está escribiendo tags
+      // No publicar si el usuario estÃ¡ escribiendo tags
       if (document.activeElement?.id === 'tags-input') return;
       this.saveArticle(false); // false = no es borrador
     });
 
-    // Botón Guardar Borrador
+    // BotÃ³n Guardar Borrador
     document.getElementById('btn-draft')?.addEventListener('click', () => {
       this.saveArticle(true); // true = es borrador
     });
 
-    // Atajo Ctrl+S para guardar artículo
+    // Atajo Ctrl+S para guardar artÃ­culo
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         if (this.currentSection === 'new-article') {
@@ -1069,7 +1069,7 @@ class SalaGeekAdmin {
       const charCount = countEl.parentElement;
       countEl.textContent = count;
       
-      // Cambiar color según límite
+      // Cambiar color segÃºn lÃ­mite
       if (count > CONFIG.EXCERPT_DANGER_LENGTH) {
         charCount.style.color = 'var(--admin-danger)';
       } else if (count > CONFIG.EXCERPT_WARNING_LENGTH) {
@@ -1087,7 +1087,7 @@ class SalaGeekAdmin {
         const charCount = countEl.parentElement;
         countEl.textContent = count;
         
-        // Cambiar color según límite óptimo para SEO
+        // Cambiar color segÃºn lÃ­mite Ã³ptimo para SEO
         if (count > CONFIG.META_DESC_OPTIMAL) {
           charCount.style.color = 'var(--admin-danger)';
         } else if (count > CONFIG.META_DESC_WARNING) {
@@ -1107,7 +1107,7 @@ class SalaGeekAdmin {
           e.stopPropagation(); // Evitar que el form haga submit
           const value = e.target.value;
           if (value.trim()) {
-            // Separar por comas si hay múltiples tags
+            // Separar por comas si hay mÃºltiples tags
             const tags = value.split(',').map(t => t.trim()).filter(t => t.length > 0);
             tags.forEach(tag => this.addTag(tag));
             e.target.value = '';
@@ -1122,7 +1122,7 @@ class SalaGeekAdmin {
         }
       });
       
-      // También procesar tags al perder el foco (blur)
+      // TambiÃ©n procesar tags al perder el foco (blur)
       tagsInputEl.addEventListener('blur', (e) => {
         const value = e.target.value.trim();
         if (value) {
@@ -1212,7 +1212,7 @@ class SalaGeekAdmin {
     urlInput?.addEventListener('input', (e) => {
       const url = e.target.value.trim();
       if (url) {
-        // Validar que sea una URL válida de imagen
+        // Validar que sea una URL vÃ¡lida de imagen
         const isValidUrl = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url) || 
                           /^https?:\/\/.+/i.test(url);
         if (isValidUrl) {
@@ -1259,7 +1259,7 @@ class SalaGeekAdmin {
     editor?.addEventListener('input', () => {
       this.updateWordCount();
       
-      // Limpiar completamente el editor si está vacío (sin texto NI imágenes)
+      // Limpiar completamente el editor si estÃ¡ vacÃ­o (sin texto NI imÃ¡genes)
       // para que el placeholder vuelva a aparecer
       const text = editor.innerText.trim();
       const hasImages = editor.querySelector('img, .resizable-image, figure, .image-grid-container');
@@ -1276,7 +1276,7 @@ class SalaGeekAdmin {
       }, CONFIG.DEBOUNCE_SAVE_STATE);
     });
 
-    // Actualizar estado del toolbar al cambiar selección
+    // Actualizar estado del toolbar al cambiar selecciÃ³n
     editor?.addEventListener('mouseup', () => {
       this.updateToolbarState();
       // Mostrar floating toolbar si hay texto seleccionado
@@ -1284,7 +1284,7 @@ class SalaGeekAdmin {
     });
     editor?.addEventListener('keyup', (e) => {
       this.updateToolbarState();
-      // Mostrar en selección con Shift+flechas
+      // Mostrar en selecciÃ³n con Shift+flechas
       if (e.shiftKey) {
         setTimeout(() => this.showFloatingToolbar(), 10);
       } else {
@@ -1292,11 +1292,11 @@ class SalaGeekAdmin {
       }
     });
 
-    // Ocultar floating toolbar al hacer clic fuera o al perder selección
+    // Ocultar floating toolbar al hacer clic fuera o al perder selecciÃ³n
     document.addEventListener('mousedown', (e) => {
       const floatingToolbar = document.getElementById('floating-toolbar');
       if (floatingToolbar && !floatingToolbar.contains(e.target)) {
-        // Dar tiempo por si se hizo clic en el editor (nueva selección)
+        // Dar tiempo por si se hizo clic en el editor (nueva selecciÃ³n)
         setTimeout(() => {
           const sel = window.getSelection();
           if (!sel || sel.isCollapsed) {
@@ -1342,7 +1342,7 @@ class SalaGeekAdmin {
         }
       }
       
-      // Delete/Backspace para eliminar imágenes seleccionadas
+      // Delete/Backspace para eliminar imÃ¡genes seleccionadas
       if (e.key === 'Delete' || e.key === 'Backspace') {
         const selectedImg = editor.querySelector('img.selected');
         if (selectedImg) {
@@ -1350,7 +1350,7 @@ class SalaGeekAdmin {
           this.deleteSelectedImage(selectedImg);
         }
         
-        // También eliminar grids seleccionados
+        // TambiÃ©n eliminar grids seleccionados
         const selectedGrid = editor.querySelector('.image-grid-container.selected');
         if (selectedGrid) {
           e.preventDefault();
@@ -1359,11 +1359,11 @@ class SalaGeekAdmin {
       }
     });
 
-    // ═══════════════════════════════════════════════════════════════
-    // Drag & Drop de imágenes directamente en el editor
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // Drag & Drop de imÃ¡genes directamente en el editor
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     
-    // Hacer imágenes del editor arrastrables
+    // Hacer imÃ¡genes del editor arrastrables
     editor?.addEventListener('dragstart', (e) => {
       if (e.target.tagName === 'IMG') {
         e.dataTransfer.setData('text/editor-image', 'true');
@@ -1395,10 +1395,10 @@ class SalaGeekAdmin {
         editor.querySelectorAll('.drop-zone-active').forEach(el => el.classList.remove('drop-zone-active'));
         
         if (target && target !== this.draggedEditorImage) {
-          // Mostrar indicador de que se puede soltar aquí
+          // Mostrar indicador de que se puede soltar aquÃ­
           target.classList.add('drop-zone-active');
           
-          // Crear indicador visual de posición (horizontal Y vertical)
+          // Crear indicador visual de posiciÃ³n (horizontal Y vertical)
           const rect = target.getBoundingClientRect();
           const editorRect = editor.getBoundingClientRect();
           const dropX = e.clientX;
@@ -1422,7 +1422,7 @@ class SalaGeekAdmin {
             const isLeft = dropX < midX;
             const isTop = dropY < midY;
             
-            // Calcular posición relativa dentro de la imagen (0-1)
+            // Calcular posiciÃ³n relativa dentro de la imagen (0-1)
             // Zonas: si estamos en el 25% superior o inferior, usar posicionamiento vertical
             const relativeY = (dropY - rect.top) / rect.height;
             const relativeX = (dropX - rect.left) / rect.width;
@@ -1526,7 +1526,7 @@ class SalaGeekAdmin {
       }
     });
 
-    // Click en imágenes del editor para seleccionar/redimensionar
+    // Click en imÃ¡genes del editor para seleccionar/redimensionar
     editor?.addEventListener('click', (e) => {
       const target = e.target;
       
@@ -1557,11 +1557,11 @@ class SalaGeekAdmin {
   }
 
   deleteSelectedImage(img) {
-    // Verificar si la imagen está dentro de un grid
+    // Verificar si la imagen estÃ¡ dentro de un grid
     const parentGrid = img.closest('.image-grid-container');
     
     if (parentGrid) {
-      // La imagen está en un grid - eliminar solo esta imagen
+      // La imagen estÃ¡ en un grid - eliminar solo esta imagen
       let elementToRemove = img;
       
       // Buscar el contenedor inmediato de la imagen dentro del grid
@@ -1578,13 +1578,13 @@ class SalaGeekAdmin {
       
       elementToRemove.remove();
       
-      // Contar imágenes restantes en el grid
+      // Contar imÃ¡genes restantes en el grid
       const remainingImages = parentGrid.querySelectorAll('img');
       
       if (remainingImages.length === 0) {
-        // No quedan imágenes - eliminar el grid completo
+        // No quedan imÃ¡genes - eliminar el grid completo
         parentGrid.remove();
-        this.showToast('Galería eliminada', 'success');
+        this.showToast('GalerÃ­a eliminada', 'success');
       } else if (remainingImages.length === 1) {
         // Solo queda 1 imagen - deshacer el grid y dejar la imagen suelta
         const lastImg = remainingImages[0];
@@ -1597,26 +1597,26 @@ class SalaGeekAdmin {
         newImg.draggable = true;
         newImg.style.maxWidth = '100%';
         newImg.style.height = 'auto';
-        // Preservar dimensiones si las tenía
+        // Preservar dimensiones si las tenÃ­a
         if (lastImg.style.width) {
           newImg.style.width = lastImg.style.width;
         }
         
-        // Crear nuevo párrafo con la imagen
+        // Crear nuevo pÃ¡rrafo con la imagen
         const newP = document.createElement('p');
         newP.appendChild(newImg);
         parentGrid.parentElement.insertBefore(newP, parentGrid);
         parentGrid.remove();
         
-        this.showToast('Imagen eliminada, galería deshecha', 'success');
+        this.showToast('Imagen eliminada, galerÃ­a deshecha', 'success');
       } else {
-        // Quedan varias imágenes - ajustar columnas si es necesario
+        // Quedan varias imÃ¡genes - ajustar columnas si es necesario
         const currentCols = parseInt(parentGrid.className.match(/cols-(\d+)/)?.[1] || 2);
         if (remainingImages.length < currentCols) {
           // Reducir columnas
           parentGrid.className = parentGrid.className.replace(/cols-\d+/, `cols-${remainingImages.length}`);
         }
-        this.showToast('Imagen eliminada de la galería', 'success');
+        this.showToast('Imagen eliminada de la galerÃ­a', 'success');
       }
     } else {
       // Imagen suelta - eliminar normalmente
@@ -1642,19 +1642,19 @@ class SalaGeekAdmin {
 
   deleteSelectedGrid(grid) {
     grid.remove();
-    this.showToast('Galería eliminada', 'success');
+    this.showToast('GalerÃ­a eliminada', 'success');
     
     // Guardar estado para Undo/Redo
     this.saveEditorState();
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // Manejar cuando se arrastra una imagen sobre otra
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   handleImageDropOnImage(draggedImg, targetImg, event) {
     const editor = document.getElementById('article-editor');
     
-    // Obtener información del indicador antes de que se elimine
+    // Obtener informaciÃ³n del indicador antes de que se elimine
     const indicator = editor.querySelector('.drop-indicator');
     const indicatorPosition = indicator?.dataset.position || 'after';
     const indicatorAxis = indicator?.dataset.axis || 'horizontal';
@@ -1673,10 +1673,10 @@ class SalaGeekAdmin {
     }
     const targetParentGrid = targetImg.closest('.image-grid-container');
     
-    // Usar la posición del indicador
+    // Usar la posiciÃ³n del indicador
     const insertBefore = indicatorPosition === 'before';
     
-    // CASO 1: Ambas imágenes están en el mismo grid - reordenar
+    // CASO 1: Ambas imÃ¡genes estÃ¡n en el mismo grid - reordenar
     if (draggedParentGrid && targetParentGrid && draggedParentGrid === targetParentGrid) {
       if (insertBefore) {
         targetParentGrid.insertBefore(draggedElement, targetElement);
@@ -1688,20 +1688,20 @@ class SalaGeekAdmin {
       return;
     }
     
-    // CASO 2: Imagen arrastrada está en un grid, target está fuera - sacarla del grid
+    // CASO 2: Imagen arrastrada estÃ¡ en un grid, target estÃ¡ fuera - sacarla del grid
     if (draggedParentGrid && !targetParentGrid) {
       // Crear imagen limpia para insertar fuera
       const newImg = this.createCleanImage(draggedImg);
       const newP = document.createElement('p');
       newP.appendChild(newImg);
       
-      // Encontrar el párrafo/contenedor del target
+      // Encontrar el pÃ¡rrafo/contenedor del target
       let targetContainer = targetElement;
       while (targetContainer.parentElement && targetContainer.parentElement !== editor) {
         targetContainer = targetContainer.parentElement;
       }
       
-      // Insertar antes o después
+      // Insertar antes o despuÃ©s
       if (insertBefore) {
         targetContainer.parentElement.insertBefore(newP, targetContainer);
       } else {
@@ -1732,11 +1732,11 @@ class SalaGeekAdmin {
       }
       
       this.saveEditorState();
-      this.showToast('Imagen sacada de la galería', 'success');
+      this.showToast('Imagen sacada de la galerÃ­a', 'success');
       return;
     }
     
-    // CASO 3: Imagen arrastrada está fuera, target está en un grid - agregarla al grid
+    // CASO 3: Imagen arrastrada estÃ¡ fuera, target estÃ¡ en un grid - agregarla al grid
     if (!draggedParentGrid && targetParentGrid) {
       // Crear imagen limpia para agregar al grid
       const newImg = this.createCleanImage(draggedImg);
@@ -1748,7 +1748,7 @@ class SalaGeekAdmin {
         targetParentGrid.insertBefore(newImg, targetElement.nextSibling);
       }
       
-      // Ajustar columnas del grid (máximo 4)
+      // Ajustar columnas del grid (mÃ¡ximo 4)
       const newTotal = targetParentGrid.querySelectorAll('img').length;
       const newCols = Math.min(newTotal, 4);
       targetParentGrid.className = targetParentGrid.className.replace(/cols-\d+/, `cols-${newCols}`);
@@ -1765,11 +1765,11 @@ class SalaGeekAdmin {
       originalContainer.remove();
       
       this.saveEditorState();
-      this.showToast('Imagen agregada a la galería', 'success');
+      this.showToast('Imagen agregada a la galerÃ­a', 'success');
       return;
     }
     
-    // CASO 4: Ambas imágenes están fuera de grids
+    // CASO 4: Ambas imÃ¡genes estÃ¡n fuera de grids
     if (!draggedParentGrid && !targetParentGrid) {
       // Encontrar el contenedor del target
       let targetContainer = targetElement;
@@ -1788,7 +1788,7 @@ class SalaGeekAdmin {
       }
       
       if (indicatorAxis === 'vertical') {
-        // VERTICAL: Poner imágenes en párrafos separados (una encima de otra)
+        // VERTICAL: Poner imÃ¡genes en pÃ¡rrafos separados (una encima de otra)
         const newImg = this.createCleanImage(draggedImg);
         const newP = document.createElement('p');
         newP.appendChild(newImg);
@@ -1810,11 +1810,11 @@ class SalaGeekAdmin {
         grid.className = 'image-grid-container cols-2';
         grid.style.gap = '8px';
         
-        // Crear imágenes limpias
+        // Crear imÃ¡genes limpias
         const img1 = this.createCleanImage(targetImg);
         const img2 = this.createCleanImage(draggedImg);
         
-        // Ordenar según posición
+        // Ordenar segÃºn posiciÃ³n
         if (insertBefore) {
           grid.appendChild(img2);
           grid.appendChild(img1);
@@ -1826,17 +1826,17 @@ class SalaGeekAdmin {
         // Insertar el grid
         targetContainer.parentElement.insertBefore(grid, targetContainer);
         
-        // Eliminar las imágenes originales
+        // Eliminar las imÃ¡genes originales
         targetContainer.remove();
         draggedContainer.remove();
         
         this.saveEditorState();
-        this.showToast('Galería creada con 2 imágenes', 'success');
+        this.showToast('GalerÃ­a creada con 2 imÃ¡genes', 'success');
       }
       return;
     }
     
-    // CASO 5: Ambas están en grids diferentes - mover de un grid a otro
+    // CASO 5: Ambas estÃ¡n en grids diferentes - mover de un grid a otro
     if (draggedParentGrid && targetParentGrid && draggedParentGrid !== targetParentGrid) {
       // Crear imagen limpia para agregar al grid destino
       const newImg = this.createCleanImage(draggedImg);
@@ -1859,7 +1859,7 @@ class SalaGeekAdmin {
       if (remainingImages.length === 0) {
         draggedParentGrid.remove();
       } else if (remainingImages.length === 1) {
-        // Crear imagen limpia para la última imagen
+        // Crear imagen limpia para la Ãºltima imagen
         const lastImg = remainingImages[0];
         const newLastImg = this.createCleanImage(lastImg);
         const newPara = document.createElement('p');
@@ -1874,7 +1874,7 @@ class SalaGeekAdmin {
       }
       
       this.saveEditorState();
-      this.showToast('Imagen movida entre galerías', 'success');
+      this.showToast('Imagen movida entre galerÃ­as', 'success');
     }
   }
 
@@ -1883,7 +1883,7 @@ class SalaGeekAdmin {
    * 
    * @param {HTMLImageElement} sourceImg - Imagen fuente
    * @returns {HTMLImageElement} Nueva imagen con clases y atributos correctos
-   * @description Usado al mover imágenes entre grids o al editor.
+   * @description Usado al mover imÃ¡genes entre grids o al editor.
    * Preserva src, alt, y dimensiones si existen.
    */
   createCleanImage(sourceImg) {
@@ -1903,14 +1903,14 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Reconfigura las imágenes del editor después de restaurar el HTML
+   * Reconfigura las imÃ¡genes del editor despuÃ©s de restaurar el HTML
    * (necesario para Undo/Redo y cargar contenido)
    */
   setupEditorImages() {
     const editor = document.getElementById('article-editor');
     if (!editor) return;
     
-    // Asegurar que todas las imágenes sean arrastrables
+    // Asegurar que todas las imÃ¡genes sean arrastrables
     editor.querySelectorAll('img').forEach(img => {
       img.draggable = true;
       if (!img.classList.contains('editor-image')) {
@@ -1921,7 +1921,7 @@ class SalaGeekAdmin {
       }
     });
     
-    // Limpiar cualquier estado de selección o wrapper de resize huérfano
+    // Limpiar cualquier estado de selecciÃ³n o wrapper de resize huÃ©rfano
     editor.querySelectorAll('.image-resize-wrapper').forEach(wrapper => {
       const img = wrapper.querySelector('img');
       if (img) {
@@ -1971,18 +1971,18 @@ class SalaGeekAdmin {
     img.className = 'editor-image resizable';
     img.draggable = true; // Hacer la imagen arrastrable
     
-    // Insertar en la posición del cursor
+    // Insertar en la posiciÃ³n del cursor
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       range.deleteContents();
       
-      // Envolver en un párrafo si es necesario
+      // Envolver en un pÃ¡rrafo si es necesario
       const wrapper = document.createElement('p');
       wrapper.appendChild(img);
       range.insertNode(wrapper);
       
-      // Mover cursor después de la imagen
+      // Mover cursor despuÃ©s de la imagen
       range.setStartAfter(wrapper);
       range.collapse(true);
       selection.removeAllRanges();
@@ -2005,17 +2005,17 @@ class SalaGeekAdmin {
     // Marcar como seleccionada
     img.classList.add('selected');
     
-    // Verificar si la imagen está dentro de un grid
+    // Verificar si la imagen estÃ¡ dentro de un grid
     const isInGrid = img.closest('.image-grid-container') !== null;
     
-    // NO crear handles de redimensionamiento para imágenes en grids
-    // El grid CSS maneja el tamaño automáticamente
+    // NO crear handles de redimensionamiento para imÃ¡genes en grids
+    // El grid CSS maneja el tamaÃ±o automÃ¡ticamente
     if (isInGrid) {
       // Solo marcar como seleccionada, sin wrapper
       return;
     }
     
-    // Crear handles de redimensionamiento si no existen (solo para imágenes fuera de grids)
+    // Crear handles de redimensionamiento si no existen (solo para imÃ¡genes fuera de grids)
     let wrapper;
     if (!img.parentElement.classList.contains('image-resize-wrapper')) {
       wrapper = document.createElement('span');
@@ -2041,7 +2041,7 @@ class SalaGeekAdmin {
       wrapper.classList.add('has-selected');
     }
     
-    // Crear toolbar de alineación sobre la imagen
+    // Crear toolbar de alineaciÃ³n sobre la imagen
     wrapper.classList.add('selected');
     this.selectedImage = wrapper;
     this.createImageToolbar(wrapper);
@@ -2049,7 +2049,7 @@ class SalaGeekAdmin {
 
   deselectEditorImages() {
     const editor = document.getElementById('article-editor');
-    // Remover toolbars y estado de selección de wrappers
+    // Remover toolbars y estado de selecciÃ³n de wrappers
     editor?.querySelectorAll('.image-resize-wrapper.selected, .image-resize-wrapper.has-selected').forEach(w => {
       w.classList.remove('selected', 'has-selected');
       const toolbar = w.querySelector('.image-toolbar');
@@ -2083,7 +2083,7 @@ class SalaGeekAdmin {
       // Mantener aspect ratio
       newHeight = newWidth / aspectRatio;
       
-      // Mínimo 50px
+      // MÃ­nimo 50px
       if (newWidth >= 50) {
         img.style.width = newWidth + 'px';
         img.style.height = 'auto';
@@ -2099,9 +2099,9 @@ class SalaGeekAdmin {
     document.addEventListener('mouseup', onMouseUp);
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MODAL DE REDIMENSIONAMIENTO MANUAL
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   openImageResizeModal(img) {
     const modal = document.getElementById('image-resize-modal');
@@ -2131,7 +2131,7 @@ class SalaGeekAdmin {
     widthInput.value = Math.round(currentWidth);
     heightInput.value = Math.round(currentHeight);
     
-    // Asegurar que el botón de lock esté activo
+    // Asegurar que el botÃ³n de lock estÃ© activo
     document.getElementById('lock-aspect-ratio').classList.add('active');
     
     // Mostrar modal
@@ -2160,7 +2160,7 @@ class SalaGeekAdmin {
       }
     });
     
-    // Cambio de ancho - actualizar altura si está bloqueado
+    // Cambio de ancho - actualizar altura si estÃ¡ bloqueado
     widthInput?.addEventListener('input', () => {
       if (this.lockAspectRatio && widthInput.value) {
         const newWidth = parseInt(widthInput.value);
@@ -2170,7 +2170,7 @@ class SalaGeekAdmin {
       }
     });
     
-    // Cambio de altura - actualizar ancho si está bloqueado
+    // Cambio de altura - actualizar ancho si estÃ¡ bloqueado
     heightInput?.addEventListener('input', () => {
       if (this.lockAspectRatio && heightInput.value) {
         const newHeight = parseInt(heightInput.value);
@@ -2180,7 +2180,7 @@ class SalaGeekAdmin {
       }
     });
     
-    // Restablecer tamaño original
+    // Restablecer tamaÃ±o original
     resetBtn?.addEventListener('click', () => {
       widthInput.value = this.originalImageWidth;
       heightInput.value = this.originalImageHeight;
@@ -2215,12 +2215,12 @@ class SalaGeekAdmin {
     
     // Validar dimensiones
     if (!newWidth || newWidth < CONFIG.MIN_IMAGE_SIZE) {
-      this.showToast(`El ancho mínimo es ${CONFIG.MIN_IMAGE_SIZE}px`, 'warning');
+      this.showToast(`El ancho mÃ­nimo es ${CONFIG.MIN_IMAGE_SIZE}px`, 'warning');
       return;
     }
     
     if (!newHeight || newHeight < CONFIG.MIN_IMAGE_SIZE) {
-      this.showToast(`El alto mínimo es ${CONFIG.MIN_IMAGE_SIZE}px`, 'warning');
+      this.showToast(`El alto mÃ­nimo es ${CONFIG.MIN_IMAGE_SIZE}px`, 'warning');
       return;
     }
     
@@ -2240,7 +2240,7 @@ class SalaGeekAdmin {
   executeEditorCommand(command) {
     const editor = document.getElementById('article-editor');
     
-    // Guardar selección antes de focus para no perderla
+    // Guardar selecciÃ³n antes de focus para no perderla
     const sel = window.getSelection();
     let savedRange = null;
     if (sel && sel.rangeCount > 0) {
@@ -2249,7 +2249,7 @@ class SalaGeekAdmin {
     
     editor.focus();
     
-    // Restaurar la selección si se perdió (ej: desde floating toolbar)
+    // Restaurar la selecciÃ³n si se perdiÃ³ (ej: desde floating toolbar)
     if (savedRange && editor.contains(savedRange.commonAncestorContainer)) {
       sel.removeAllRanges();
       sel.addRange(savedRange);
@@ -2258,10 +2258,10 @@ class SalaGeekAdmin {
     switch (command) {
       case 'undo':
         this.undo();
-        return; // No guardar estado después de undo
+        return; // No guardar estado despuÃ©s de undo
       case 'redo':
         this.redo();
-        return; // No guardar estado después de redo
+        return; // No guardar estado despuÃ©s de redo
       case 'bold':
         document.execCommand('bold', false, null);
         break;
@@ -2290,7 +2290,7 @@ class SalaGeekAdmin {
           if (node.nodeType === 3) node = node.parentNode;
           const bq = node.closest('blockquote');
           if (bq) {
-            // Ya está en blockquote → sacar el contenido
+            // Ya estÃ¡ en blockquote â†’ sacar el contenido
             const parent = bq.parentNode;
             while (bq.firstChild) {
               parent.insertBefore(bq.firstChild, bq);
@@ -2305,7 +2305,7 @@ class SalaGeekAdmin {
       case 'link':
         this.saveEditorSelection();
         this.showLinkModal();
-        return; // No guardar estado aquí, se guarda al insertar
+        return; // No guardar estado aquÃ­, se guarda al insertar
       case 'justifyLeft':
         if (this.selectedImage) {
           this.setImageAlignment(this.selectedImage, 'left');
@@ -2332,16 +2332,16 @@ class SalaGeekAdmin {
         break;
       case 'image':
         this.openImageModal();
-        return; // No guardar estado aquí, se guarda al insertar la imagen
+        return; // No guardar estado aquÃ­, se guarda al insertar la imagen
       case 'image-grid':
         this.openGridModal();
-        return; // No guardar estado aquí, se guarda al insertar el grid
+        return; // No guardar estado aquÃ­, se guarda al insertar el grid
       case 'gallery':
         this.openGalleryModal();
-        return; // Solo abre la galería para ver/copiar URLs
+        return; // Solo abre la galerÃ­a para ver/copiar URLs
       case 'youtube':
         this.insertYouTube();
-        return; // Maneja su propia lógica
+        return; // Maneja su propia lÃ³gica
       case 'hr':
         document.execCommand('insertHTML', false, '<hr>');
         break;
@@ -2361,7 +2361,7 @@ class SalaGeekAdmin {
             }
             parent.removeChild(bq);
           }
-          // Convertir headings a párrafo
+          // Convertir headings a pÃ¡rrafo
           const heading = node.closest('h1, h2, h3, h4, h5, h6');
           if (heading) {
             document.execCommand('formatBlock', false, 'p');
@@ -2371,7 +2371,7 @@ class SalaGeekAdmin {
         break;
     }
     
-    // Guardar estado después de comandos de formato
+    // Guardar estado despuÃ©s de comandos de formato
     this.saveEditorState();
     
     // Actualizar estado de botones del toolbar
@@ -2379,7 +2379,7 @@ class SalaGeekAdmin {
   }
 
   updateToolbarState() {
-    // Actualizar botones de formato según estado actual
+    // Actualizar botones de formato segÃºn estado actual
     const toolbarBtns = document.querySelectorAll('.editor-toolbar button[data-command]');
     
     toolbarBtns.forEach(btn => {
@@ -2414,9 +2414,9 @@ class SalaGeekAdmin {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // FLOATING TOOLBAR - Mini toolbar al seleccionar texto
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
    * Crea el floating toolbar HTML si no existe
@@ -2427,67 +2427,69 @@ class SalaGeekAdmin {
     const toolbar = document.createElement('div');
     toolbar.id = 'floating-toolbar';
     toolbar.className = 'floating-toolbar';
+    toolbar.setAttribute('role', 'toolbar');
+    toolbar.setAttribute('aria-label', 'Herramientas de formato de texto');
     toolbar.innerHTML = `
-      <button data-cmd="bold" title="Negrita (Ctrl+B)">
+      <button data-cmd="bold" title="Negrita (Ctrl+B)" aria-label="Negrita">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
           <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
         </svg>
       </button>
-      <button data-cmd="italic" title="Cursiva (Ctrl+I)">
+      <button data-cmd="italic" title="Cursiva (Ctrl+I)" aria-label="Cursiva">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/>
         </svg>
       </button>
-      <button data-cmd="underline" title="Subrayado (Ctrl+U)">
+      <button data-cmd="underline" title="Subrayado (Ctrl+U)" aria-label="Subrayado">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/><line x1="4" y1="21" x2="20" y2="21"/>
         </svg>
       </button>
       <span class="floating-toolbar-divider"></span>
-      <button data-cmd="h2" title="Título H2">
+      <button data-cmd="h2" title="Título H2" aria-label="Título H2">
         <span class="ft-text">H2</span>
       </button>
-      <button data-cmd="h3" title="Subtítulo H3">
+      <button data-cmd="h3" title="Subtítulo H3" aria-label="Subtítulo H3">
         <span class="ft-text">H3</span>
       </button>
-      <button data-cmd="p" title="Párrafo">
+      <button data-cmd="p" title="Párrafo" aria-label="Párrafo">
         <span class="ft-text">P</span>
       </button>
       <span class="floating-toolbar-divider"></span>
-      <button data-cmd="justifyLeft" title="Alinear izquierda">
+      <button data-cmd="justifyLeft" title="Alinear izquierda" aria-label="Alinear izquierda">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/>
         </svg>
       </button>
-      <button data-cmd="justifyCenter" title="Centrar">
+      <button data-cmd="justifyCenter" title="Centrar" aria-label="Centrar">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/>
         </svg>
       </button>
-      <button data-cmd="justifyRight" title="Alinear derecha">
+      <button data-cmd="justifyRight" title="Alinear derecha" aria-label="Alinear derecha">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/>
         </svg>
       </button>
-      <button data-cmd="justifyFull" title="Justificar">
+      <button data-cmd="justifyFull" title="Justificar" aria-label="Justificar">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/>
         </svg>
       </button>
       <span class="floating-toolbar-divider"></span>
-      <button data-cmd="link" title="Enlace (Ctrl+K)">
+      <button data-cmd="link" title="Enlace (Ctrl+K)" aria-label="Enlace">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
         </svg>
       </button>
-      <button data-cmd="quote" title="Cita">
+      <button data-cmd="quote" title="Cita" aria-label="Cita">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
           <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/>
         </svg>
       </button>
-      <button data-cmd="clear" title="Limpiar formato">
+      <button data-cmd="clear" title="Limpiar formato" aria-label="Limpiar formato">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
@@ -2498,7 +2500,7 @@ class SalaGeekAdmin {
     // Event listeners para los botones
     toolbar.querySelectorAll('button[data-cmd]').forEach(btn => {
       btn.addEventListener('mousedown', (e) => {
-        e.preventDefault(); // Evitar que pierda la selección del texto
+        e.preventDefault(); // Evitar que pierda la selecciÃ³n del texto
         e.stopPropagation();
         const cmd = btn.dataset.cmd;
         this.executeEditorCommand(cmd);
@@ -2526,7 +2528,7 @@ class SalaGeekAdmin {
       return;
     }
 
-    // Verificar que la selección está dentro del editor
+    // Verificar que la selecciÃ³n estÃ¡ dentro del editor
     if (!editor.contains(selection.anchorNode) || !editor.contains(selection.focusNode)) {
       this.hideFloatingToolbar();
       return;
@@ -2537,14 +2539,14 @@ class SalaGeekAdmin {
     const toolbar = document.getElementById('floating-toolbar');
     if (!toolbar) return;
 
-    // Obtener posición de la selección
+    // Obtener posiciÃ³n de la selecciÃ³n
     const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
     
-    // Calcular posición centrada sobre la selección
+    // Calcular posiciÃ³n centrada sobre la selecciÃ³n
     const toolbarWidth = 360;
     let left = rect.left + (rect.width / 2) - (toolbarWidth / 2);
-    let top = rect.top - 52; // Encima de la selección
+    let top = rect.top - 52; // Encima de la selecciÃ³n
 
     // Ajustar si se sale de pantalla por los lados
     const margin = 8;
@@ -2604,9 +2606,9 @@ class SalaGeekAdmin {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // LINK MODAL - Modal personalizado para insertar enlaces
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
    * Muestra un modal personalizado para insertar un enlace
@@ -2644,7 +2646,7 @@ class SalaGeekAdmin {
         </div>
         <label class="link-modal-checkbox">
           <input type="checkbox" id="link-new-tab" checked />
-          <span>Abrir en nueva pestaña</span>
+          <span>Abrir en nueva pestaÃ±a</span>
         </label>
         <div class="link-modal-actions">
           <button type="button" class="link-modal-btn cancel" id="link-cancel">Cancelar</button>
@@ -2661,7 +2663,7 @@ class SalaGeekAdmin {
 
     document.body.appendChild(modal);
 
-    // Animación de entrada
+    // AnimaciÃ³n de entrada
     requestAnimationFrame(() => modal.classList.add('visible'));
 
     const urlInput = document.getElementById('link-url-input');
@@ -2686,24 +2688,24 @@ class SalaGeekAdmin {
         return;
       }
       if (!/^https?:\/\//i.test(url) && !url.startsWith('/') && !url.startsWith('#') && !url.startsWith('mailto:')) {
-        this.showToast('URL inválida. Usa http://, https://, / o mailto:', 'warning');
+        this.showToast('URL invÃ¡lida. Usa http://, https://, / o mailto:', 'warning');
         urlInput.focus();
         return;
       }
 
       closeLinkModal();
 
-      // Restaurar selección del editor
+      // Restaurar selecciÃ³n del editor
       this.restoreEditorSelection();
 
       const linkText = textInput.value.trim() || selectedText || url;
       const target = newTabCheck.checked ? ' target="_blank" rel="noopener noreferrer"' : '';
       
-      // Si hay texto seleccionado, crear link sobre él
+      // Si hay texto seleccionado, crear link sobre Ã©l
       const sel2 = window.getSelection();
       if (sel2 && !sel2.isCollapsed) {
         document.execCommand('createLink', false, url);
-        // Añadir target si es nueva pestaña
+        // AÃ±adir target si es nueva pestaÃ±a
         if (newTabCheck.checked) {
           const links = document.getElementById('article-editor').querySelectorAll(`a[href="${url}"]`);
           links.forEach(link => {
@@ -2712,7 +2714,7 @@ class SalaGeekAdmin {
           });
         }
       } else {
-        // Insertar como HTML si no hay selección
+        // Insertar como HTML si no hay selecciÃ³n
         document.execCommand('insertHTML', false, `<a href="${this.escapeHtml(url)}"${target}>${this.escapeHtml(linkText)}</a>`);
       }
 
@@ -2740,19 +2742,19 @@ class SalaGeekAdmin {
     textInput.addEventListener('keydown', handleKeydown);
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // CURSOR SAVE/RESTORE - Para modales que roban el foco
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Guarda la selección/cursor actual del editor antes de abrir un modal
+   * Guarda la selecciÃ³n/cursor actual del editor antes de abrir un modal
    */
   saveEditorSelection() {
     const editor = document.getElementById('article-editor');
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
-      // Verificar que el cursor está dentro del editor
+      // Verificar que el cursor estÃ¡ dentro del editor
       if (editor && editor.contains(range.commonAncestorContainer)) {
         this.savedEditorRange = range.cloneRange();
         return;
@@ -2762,9 +2764,9 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Restaura la selección/cursor guardada e inserta HTML en esa posición
-   * @param {string} html - HTML a insertar en la posición guardada
-   * @returns {boolean} true si se insertó en la posición guardada, false si se usó fallback
+   * Restaura la selecciÃ³n/cursor guardada e inserta HTML en esa posiciÃ³n
+   * @param {string} html - HTML a insertar en la posiciÃ³n guardada
+   * @returns {boolean} true si se insertÃ³ en la posiciÃ³n guardada, false si se usÃ³ fallback
    */
   insertAtSavedPosition(html) {
     const editor = document.getElementById('article-editor');
@@ -2777,7 +2779,7 @@ class SalaGeekAdmin {
       selection.removeAllRanges();
       selection.addRange(this.savedEditorRange);
       
-      // Insertar HTML en la posición del cursor
+      // Insertar HTML en la posiciÃ³n del cursor
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
       const frag = document.createDocumentFragment();
@@ -2789,7 +2791,7 @@ class SalaGeekAdmin {
       this.savedEditorRange.deleteContents();
       this.savedEditorRange.insertNode(frag);
       
-      // Mover cursor después del contenido insertado
+      // Mover cursor despuÃ©s del contenido insertado
       if (lastNode) {
         const newRange = document.createRange();
         newRange.setStartAfter(lastNode);
@@ -2821,12 +2823,12 @@ class SalaGeekAdmin {
     return false;
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // IMAGE MODALS - Enhanced
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   openImageModal() {
-    // Guardar posición del cursor antes de que el modal robe el foco
+    // Guardar posiciÃ³n del cursor antes de que el modal robe el foco
     this.saveEditorSelection();
     
     const modal = document.getElementById('image-modal');
@@ -2874,7 +2876,7 @@ class SalaGeekAdmin {
   }
 
   openGridModal() {
-    // Guardar posición del cursor antes de que el modal robe el foco
+    // Guardar posiciÃ³n del cursor antes de que el modal robe el foco
     this.saveEditorSelection();
     
     const modal = document.getElementById('grid-modal');
@@ -2911,7 +2913,7 @@ class SalaGeekAdmin {
    * - youtube.com/embed/VIDEO_ID
    */
   insertYouTube() {
-    // Guardar posición del cursor antes de que el modal robe el foco
+    // Guardar posiciÃ³n del cursor antes de que el modal robe el foco
     this.saveEditorSelection();
     
     // Abrir modal de YouTube
@@ -2967,7 +2969,7 @@ class SalaGeekAdmin {
     const videoId = this.extractYouTubeId(url);
     
     if (!videoId) {
-      this.showToast('URL de YouTube no válida', 'error');
+      this.showToast('URL de YouTube no vÃ¡lida', 'error');
       return;
     }
     
@@ -2987,7 +2989,7 @@ class SalaGeekAdmin {
     
     const editor = document.getElementById('article-editor');
     
-    // Insertar en la posición guardada del cursor (o al final como fallback)
+    // Insertar en la posiciÃ³n guardada del cursor (o al final como fallback)
     this.insertAtSavedPosition(embed + '<p><br></p>');
     
     // Guardar estado para Undo/Redo
@@ -3005,7 +3007,7 @@ class SalaGeekAdmin {
    * Extrae el ID de un video de YouTube de varios formatos de URL
    * 
    * @param {string} url - URL de YouTube o ID directo
-   * @returns {string|null} ID de 11 caracteres o null si no es válido
+   * @returns {string|null} ID de 11 caracteres o null si no es vÃ¡lido
    */
   extractYouTubeId(url) {
     if (!url) return null;
@@ -3034,7 +3036,7 @@ class SalaGeekAdmin {
     
     if (this.gridImages.length === 0) {
       list.innerHTML = '';
-      if (countEl) countEl.textContent = '0 imágenes';
+      if (countEl) countEl.textContent = '0 imÃ¡genes';
       return;
     }
     
@@ -3081,7 +3083,7 @@ class SalaGeekAdmin {
             <rect x="3" y="14" width="7" height="7" rx="1"/>
             <rect x="14" y="14" width="7" height="7" rx="1"/>
           </svg>
-          <span>Agrega imágenes para ver la vista previa</span>
+          <span>Agrega imÃ¡genes para ver la vista previa</span>
         </div>
       `;
       return;
@@ -3100,17 +3102,17 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Parsea el contenido del textarea de URLs de imágenes
+   * Parsea el contenido del textarea de URLs de imÃ¡genes
    * 
    * @description Usa regex para extraer URLs (http/https y data:image)
-   * de forma robusta, incluso si están en la misma línea.
-   * Elimina duplicados automáticamente.
+   * de forma robusta, incluso si estÃ¡n en la misma lÃ­nea.
+   * Elimina duplicados automÃ¡ticamente.
    */
   parseGridTextarea() {
     const textarea = document.getElementById('grid-images');
     if (!textarea) return;
     
-    // Obtener texto y dividir por líneas
+    // Obtener texto y dividir por lÃ­neas
     let text = textarea.value;
     
     // Primero, separar por URLs http/https claramente
@@ -3123,13 +3125,13 @@ class SalaGeekAdmin {
       urls.push(match[1].trim());
     }
     
-    // También buscar data URLs (pueden ser muy largas, en una sola línea)
+    // TambiÃ©n buscar data URLs (pueden ser muy largas, en una sola lÃ­nea)
     const dataRegex = /(data:image\/[^;]+;base64,[A-Za-z0-9+/=]+)/gi;
     while ((match = dataRegex.exec(text)) !== null) {
       urls.push(match[1].trim());
     }
     
-    // Si no encontramos nada con regex, intentar el método tradicional de líneas
+    // Si no encontramos nada con regex, intentar el mÃ©todo tradicional de lÃ­neas
     if (urls.length === 0) {
       const lines = text.split('\n')
         .map(u => u.trim())
@@ -3188,12 +3190,30 @@ class SalaGeekAdmin {
       });
     });
 
-    // Close modals with ESC key
+    // Close modals with ESC key + Focus trapping con Tab
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
           modal.classList.add('hidden');
         });
+      }
+      // Focus trapping: mantener el foco dentro del modal abierto
+      if (e.key === 'Tab') {
+        const openModal = document.querySelector('.modal:not(.hidden):not(.modal-confirm)');
+        if (openModal) {
+          const focusable = openModal.querySelectorAll(
+            'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), a[href]'
+          );
+          if (focusable.length) {
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+              if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+            } else {
+              if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+          }
+        }
       }
     });
     
@@ -3214,18 +3234,18 @@ class SalaGeekAdmin {
       });
     }
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Image Modal - Tabs
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this.switchImageTab(btn.dataset.tab);
       });
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Image Modal - Drag & Drop
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('modal-file-input');
     const uploadPreview = document.getElementById('upload-preview');
@@ -3265,9 +3285,9 @@ class SalaGeekAdmin {
       this.uploadedImageData = null;
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Image Modal - Preset Sizes
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.querySelectorAll('.preset-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const widthInput = document.getElementById('image-width');
@@ -3295,9 +3315,9 @@ class SalaGeekAdmin {
       });
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Image Modal - Alignment Buttons
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.querySelectorAll('.align-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
@@ -3305,9 +3325,9 @@ class SalaGeekAdmin {
       });
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Image Modal - Caption Toggle
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     const captionCheckbox = document.getElementById('image-caption');
     const captionTextInput = document.getElementById('image-caption-text');
     captionCheckbox?.addEventListener('change', () => {
@@ -3319,9 +3339,9 @@ class SalaGeekAdmin {
       }
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Insert Image - Enhanced
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.getElementById('insert-image-btn')?.addEventListener('click', () => {
       try {
         let imageUrl = '';
@@ -3349,7 +3369,7 @@ class SalaGeekAdmin {
         const alignment = document.querySelector('.align-btn.active')?.dataset.align || 'center';
 
         // Build style para la imagen (no el wrapper)
-        // Usar max-width para que sea redimensionable después
+        // Usar max-width para que sea redimensionable despuÃ©s
         let imgStyle = 'max-width: 100%;';
         if (width) imgStyle += ` width: ${width}px;`;
         if (height) imgStyle += ` height: ${height}px;`;
@@ -3377,12 +3397,12 @@ class SalaGeekAdmin {
 
         const editor = document.getElementById('article-editor');
         if (!editor) {
-          this.showToast('Error: No se encontró el editor', 'error');
+          this.showToast('Error: No se encontrÃ³ el editor', 'error');
           console.error('[Image Insert] Editor element not found');
           return;
         }
         
-        // Insertar en la posición guardada del cursor (o al final como fallback)
+        // Insertar en la posiciÃ³n guardada del cursor (o al final como fallback)
         this.insertAtSavedPosition(html + '<p><br></p>');
         
         // Cerrar modal y resetear estado
@@ -3411,9 +3431,9 @@ class SalaGeekAdmin {
       }
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Grid Modal v2 - Improved
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     
     // Drop zone for grid
     const gridDropZone = document.getElementById('grid-drop-zone');
@@ -3470,7 +3490,7 @@ class SalaGeekAdmin {
         textarea.value = currentValue ? `${currentValue}\n${url.trim()}` : url.trim();
         this.parseGridTextarea();
       } else if (url) {
-        this.showToast('URL inválida. Debe comenzar con http o https', 'error');
+        this.showToast('URL invÃ¡lida. Debe comenzar con http o https', 'error');
       }
     });
 
@@ -3499,9 +3519,9 @@ class SalaGeekAdmin {
       });
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Insert Grid - Enhanced
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.getElementById('insert-grid-btn')?.addEventListener('click', () => {
       if (this.gridImages.length === 0) {
         this.showToast('Agrega al menos una imagen', 'error');
@@ -3516,18 +3536,18 @@ class SalaGeekAdmin {
       // Cerrar el modal primero
       document.getElementById('grid-modal').classList.add('hidden');
       
-      // Insertar en la posición guardada del cursor (o al final como fallback)
+      // Insertar en la posiciÃ³n guardada del cursor (o al final como fallback)
       this.insertAtSavedPosition(grid);
       
       // Guardar estado para Undo/Redo
       this.saveEditorState();
       
-      this.showToast(`Galería de ${this.gridImages.length} imágenes insertada`, 'success');
+      this.showToast(`GalerÃ­a de ${this.gridImages.length} imÃ¡genes insertada`, 'success');
     });
 
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     // Preview Modal - Device Selector
-    // ═══════════════════════════════════════════════════════════════
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
     document.querySelectorAll('.device-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         this.setPreviewDevice(btn.dataset.device);
@@ -3545,7 +3565,7 @@ class SalaGeekAdmin {
     const uploadedImg = document.getElementById('uploaded-img');
 
     if (!file || !file.type.startsWith('image/')) {
-      this.showToast('Por favor selecciona una imagen válida', 'error');
+      this.showToast('Por favor selecciona una imagen vÃ¡lida', 'error');
       return;
     }
 
@@ -3566,25 +3586,25 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Configura handlers para imágenes en el editor
-   * Usa delegación de eventos para manejar imágenes dinámicas
+   * Configura handlers para imÃ¡genes en el editor
+   * Usa delegaciÃ³n de eventos para manejar imÃ¡genes dinÃ¡micas
    */
   setupEditorImageHandlers() {
     const editor = document.getElementById('article-editor');
     if (!editor) return;
     
-    // Solo configurar una vez usando delegación de eventos
+    // Solo configurar una vez usando delegaciÃ³n de eventos
     if (editor.dataset.imageHandlersSetup) return;
     editor.dataset.imageHandlersSetup = 'true';
 
-    // Delegación de eventos para selección de imágenes
+    // DelegaciÃ³n de eventos para selecciÃ³n de imÃ¡genes
     editor.addEventListener('click', (e) => {
       // Ignorar clicks en la toolbar de imagen para no deseleccionar
       if (e.target.closest('.image-toolbar')) return;
 
       const wrapper = e.target.closest('.resizable-image, .image-resize-wrapper, figure');
       
-      // Deseleccionar todas las imágenes y remover toolbars
+      // Deseleccionar todas las imÃ¡genes y remover toolbars
       editor.querySelectorAll('.resizable-image.selected, .image-resize-wrapper.selected, .image-resize-wrapper.has-selected, figure.selected').forEach(w => {
         w.classList.remove('selected', 'has-selected');
         const oldToolbar = w.querySelector('.image-toolbar');
@@ -3615,7 +3635,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Crea la toolbar flotante de alineación sobre una imagen seleccionada
+   * Crea la toolbar flotante de alineaciÃ³n sobre una imagen seleccionada
    * @param {HTMLElement} wrapper - El wrapper .resizable-image o figure
    */
   createImageToolbar(wrapper) {
@@ -3627,7 +3647,7 @@ class SalaGeekAdmin {
     toolbar.className = 'image-toolbar';
     toolbar.contentEditable = 'false';
 
-    // Determinar alineación actual
+    // Determinar alineaciÃ³n actual
     const currentAlign = wrapper.classList.contains('align-left') ? 'left'
       : wrapper.classList.contains('align-right') ? 'right'
       : wrapper.classList.contains('float-left') ? 'left'
@@ -3679,17 +3699,17 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Cambia la alineación de una imagen en el editor
+   * Cambia la alineaciÃ³n de una imagen en el editor
    * @param {HTMLElement} imageWrapper - El wrapper de la imagen (.resizable-image o figure)
-   * @param {string} alignment - La alineación: 'left', 'center', 'right'
+   * @param {string} alignment - La alineaciÃ³n: 'left', 'center', 'right'
    */
   setImageAlignment(imageWrapper, alignment) {
     if (!imageWrapper) return;
     
-    // Remover todas las clases de alineación existentes
+    // Remover todas las clases de alineaciÃ³n existentes
     imageWrapper.classList.remove('align-left', 'align-center', 'align-right', 'float-left', 'float-right');
     
-    // Agregar la nueva clase de alineación
+    // Agregar la nueva clase de alineaciÃ³n
     switch (alignment) {
       case 'left':
         imageWrapper.classList.add('align-left');
@@ -3706,12 +3726,12 @@ class SalaGeekAdmin {
     this.saveEditorState();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  // GALERÍA DE IMÁGENES SUBIDAS
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // GALERÃA DE IMÃGENES SUBIDAS
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Configura el modal de galería y sus eventos
+   * Configura el modal de galerÃ­a y sus eventos
    */
   setupGalleryModal() {
     // Search input
@@ -3734,7 +3754,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Configura el modal de subida de imágenes
+   * Configura el modal de subida de imÃ¡genes
    */
   setupGalleryUploadModal() {
     const dropzone = document.getElementById('gallery-dropzone');
@@ -3790,7 +3810,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Maneja la previsualización de imagen antes de subir
+   * Maneja la previsualizaciÃ³n de imagen antes de subir
    */
   handleGalleryUploadPreview(file) {
     const dropzone = document.getElementById('gallery-dropzone');
@@ -3815,7 +3835,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Sube una imagen a la galería via GitHub
+   * Sube una imagen a la galerÃ­a via GitHub
    */
   async uploadImageToGallery() {
     if (!this.galleryUploadData) {
@@ -3823,9 +3843,9 @@ class SalaGeekAdmin {
       return;
     }
 
-    // Verificar sesión
+    // Verificar sesiÃ³n
     if (!this.user) {
-      this.showToast('Sesión expirada. Por favor, vuelve a iniciar sesión.', 'error');
+      this.showToast('SesiÃ³n expirada. Por favor, vuelve a iniciar sesiÃ³n.', 'error');
       return;
     }
 
@@ -3889,7 +3909,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Abre el modal de galería
+   * Abre el modal de galerÃ­a
    */
   openGalleryModal() {
     document.getElementById('gallery-modal').classList.remove('hidden');
@@ -3899,17 +3919,17 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Abre el modal de galería en modo selección para el grid
+   * Abre el modal de galerÃ­a en modo selecciÃ³n para el grid
    */
   openGalleryForGrid() {
     document.getElementById('gallery-modal').classList.remove('hidden');
     document.getElementById('gallery-search').value = '';
-    this.gallerySelectMode = true; // Modo selección
+    this.gallerySelectMode = true; // Modo selecciÃ³n
     this.loadGalleryImages();
   }
 
   /**
-   * Abre el modal de subida de imágenes
+   * Abre el modal de subida de imÃ¡genes
    */
   openGalleryUploadModal() {
     this.resetGalleryUploadModal();
@@ -3917,7 +3937,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Carga las imágenes de la galería desde GitHub
+   * Carga las imÃ¡genes de la galerÃ­a desde GitHub
    */
   async loadGalleryImages() {
     const grid = document.getElementById('gallery-grid');
@@ -3926,7 +3946,7 @@ class SalaGeekAdmin {
     grid.innerHTML = `
       <div class="gallery-loading">
         <span class="spinner"></span>
-        <span>Cargando imágenes...</span>
+        <span>Cargando imÃ¡genes...</span>
       </div>
     `;
 
@@ -3944,14 +3964,14 @@ class SalaGeekAdmin {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Error al cargar imágenes');
+        throw new Error(result.error || 'Error al cargar imÃ¡genes');
       }
 
       this.galleryImages = result.images || [];
       this.renderGalleryImages(this.galleryImages);
       
       if (countEl) {
-        const modeText = this.gallerySelectMode ? ' • Modo selección (clic para agregar)' : '';
+        const modeText = this.gallerySelectMode ? ' â€¢ Modo selecciÃ³n (clic para agregar)' : '';
         countEl.textContent = `${this.galleryImages.length} imagen${this.galleryImages.length !== 1 ? 'es' : ''}${modeText}`;
       }
 
@@ -3964,7 +3984,7 @@ class SalaGeekAdmin {
             <line x1="12" y1="8" x2="12" y2="12"/>
             <line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
-          <p>Error al cargar imágenes</p>
+          <p>Error al cargar imÃ¡genes</p>
           <span>${error.message}</span>
         </div>
       `;
@@ -3972,7 +3992,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Renderiza las imágenes en la galería
+   * Renderiza las imÃ¡genes en la galerÃ­a
    */
   renderGalleryImages(images) {
     const grid = document.getElementById('gallery-grid');
@@ -3985,7 +4005,7 @@ class SalaGeekAdmin {
             <circle cx="8.5" cy="8.5" r="1.5"/>
             <path d="M21 15l-5-5L5 21"/>
           </svg>
-          <p>No hay imágenes</p>
+          <p>No hay imÃ¡genes</p>
           <span>Sube tu primera imagen para empezar</span>
         </div>
       `;
@@ -3998,7 +4018,7 @@ class SalaGeekAdmin {
         <div class="item-overlay">
           <span class="item-name">${img.name}</span>
         </div>
-        <span class="copy-indicator">¡URL Copiada!</span>
+        <span class="copy-indicator">Â¡URL Copiada!</span>
       </div>
     `).join('');
 
@@ -4008,7 +4028,7 @@ class SalaGeekAdmin {
         const url = item.dataset.url;
         
         if (this.gallerySelectMode) {
-          // Modo selección: agregar al grid
+          // Modo selecciÃ³n: agregar al grid
           this.gridImages.push(url);
           this.syncGridTextarea();
           this.updateGridImagesList();
@@ -4033,7 +4053,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Filtra las imágenes de la galería por nombre
+   * Filtra las imÃ¡genes de la galerÃ­a por nombre
    */
   filterGalleryImages(query) {
     const normalizedQuery = query.toLowerCase().trim();
@@ -4050,16 +4070,16 @@ class SalaGeekAdmin {
     this.renderGalleryImages(filtered);
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // NAVIGATION
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Navega a una sección del admin
+   * Navega a una secciÃ³n del admin
    * 
-   * @param {string} section - ID de sección: 'dashboard', 'articles', 'new-article'
+   * @param {string} section - ID de secciÃ³n: 'dashboard', 'articles', 'new-article'
    * @description Verifica cambios sin guardar antes de navegar,
-   * actualiza nav activa, título y visibilidad de secciones
+   * actualiza nav activa, tÃ­tulo y visibilidad de secciones
    */
   async navigateTo(section) {
     // Verificar si hay cambios sin guardar al salir del editor
@@ -4068,11 +4088,11 @@ class SalaGeekAdmin {
       const title = document.getElementById('article-title')?.value;
       const hasContent = editor && editor.innerHTML.trim() !== '' && editor.innerHTML !== '<br>';
       
-      // Solo mostrar advertencia si hay contenido Y no se ha guardado aún
+      // Solo mostrar advertencia si hay contenido Y no se ha guardado aÃºn
       if ((title || hasContent) && !this.editingArticle && !this.contentSaved) {
         const confirmed = await this.showConfirmModal(
           'Cambios sin guardar',
-          'Tienes cambios que no se han guardado. ¿Estás seguro de que deseas salir?',
+          'Tienes cambios que no se han guardado. Â¿EstÃ¡s seguro de que deseas salir?',
           'Salir sin guardar',
           'warning'
         );
@@ -4103,9 +4123,9 @@ class SalaGeekAdmin {
     // Update title
     const titles = {
       'dashboard': 'Dashboard',
-      'articles': 'Artículos',
+      'articles': 'ArtÃ­culos',
       'drafts': 'Borradores',
-      'new-article': this.editingArticle ? 'Editar Artículo' : 'Nuevo Artículo',
+      'new-article': this.editingArticle ? 'Editar ArtÃ­culo' : 'Nuevo ArtÃ­culo',
       'media': 'Multimedia'
     };
     document.getElementById('section-title').textContent = titles[section] || 'Dashboard';
@@ -4135,12 +4155,12 @@ class SalaGeekAdmin {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // ARTICLES MANAGEMENT
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Carga los artículos desde el archivo JSON
+   * Carga los artÃ­culos desde el archivo JSON
    * 
    * @async
    * @description Obtiene articles.json con cache-busting,
@@ -4175,7 +4195,7 @@ class SalaGeekAdmin {
       this.updateDraftsCount();
     } catch (error) {
       console.error('Error loading articles:', error);
-      this.showToast('Error al cargar artículos. Verifica tu conexión.', 'error');
+      this.showToast('Error al cargar artÃ­culos. Verifica tu conexiÃ³n.', 'error');
       this.articles = [];
       this.drafts = [];
       this.categories = [];
@@ -4234,7 +4254,7 @@ class SalaGeekAdmin {
     if (!tbody) return;
 
     if (this.articles.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No hay artículos</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No hay artÃ­culos</td></tr>';
       return;
     }
 
@@ -4289,7 +4309,7 @@ class SalaGeekAdmin {
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
             <p>No hay borradores</p>
-            <span>Los artículos que guardes como borrador aparecerán aquí</span>
+            <span>Los artÃ­culos que guardes como borrador aparecerÃ¡n aquÃ­</span>
           </td>
         </tr>`;
       return;
@@ -4350,7 +4370,7 @@ class SalaGeekAdmin {
     const recent = this.articles.slice(0, CONFIG.RECENT_ARTICLES_LIMIT);
 
     if (recent.length === 0) {
-      container.innerHTML = '<p class="empty-state">No hay artículos aún</p>';
+      container.innerHTML = '<p class="empty-state">No hay artÃ­culos aÃºn</p>';
       return;
     }
 
@@ -4362,11 +4382,11 @@ class SalaGeekAdmin {
           <strong>${this.escapeHtml(article.title)}</strong>
           <div class="recent-article-meta">
             <span class="recent-article-date">${this.formatDate(article.publishDate)}</span>
-            <span class="recent-article-category">${article.category || 'Sin categoría'}</span>
+            <span class="recent-article-category">${article.category || 'Sin categorÃ­a'}</span>
           </div>
         </div>
         <div class="recent-article-actions">
-          <a href="${article.content}" target="_blank" class="action-icon" title="Ver artículo">
+          <a href="${article.content}" target="_blank" class="action-icon" title="Ver artÃ­culo">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
               <polyline points="15 3 21 3 21 9"/>
@@ -4512,7 +4532,7 @@ class SalaGeekAdmin {
     if (diffMins < 1) return 'Justo ahora';
     if (diffMins < 60) return `Hace ${diffMins} min`;
     if (diffHours < 24) return `Hace ${diffHours}h`;
-    if (diffDays < 7) return `Hace ${diffDays} día${diffDays > 1 ? 's' : ''}`;
+    if (diffDays < 7) return `Hace ${diffDays} dÃ­a${diffDays > 1 ? 's' : ''}`;
     return this.formatDate(date);
   }
 
@@ -4576,7 +4596,7 @@ class SalaGeekAdmin {
     const total = this.articles.length || 1;
 
     if (entries.length === 0) {
-      container.innerHTML = '<p class="empty-state">Sin datos de categorías</p>';
+      container.innerHTML = '<p class="empty-state">Sin datos de categorÃ­as</p>';
       return;
     }
 
@@ -4663,7 +4683,7 @@ class SalaGeekAdmin {
 
     const tbody = document.getElementById('articles-table-body');
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No se encontraron artículos</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No se encontraron artÃ­culos</td></tr>';
     } else {
       // Temporarily replace articles and render
       const original = this.articles;
@@ -4673,37 +4693,37 @@ class SalaGeekAdmin {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // ARTICLE CRUD
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   editArticle(id) {
-    // Buscar en artículos publicados y en borradores
+    // Buscar en artÃ­culos publicados y en borradores
     let article = this.articles.find(a => a.id === id);
     if (!article) {
       article = this.drafts.find(a => a.id === id);
     }
     if (!article) {
-      this.showToast('Artículo no encontrado', 'error');
+      this.showToast('ArtÃ­culo no encontrado', 'error');
       return;
     }
 
     // 1. Marcar como editando ANTES de navegar (evita que navigateTo resetee el form)
     this.editingArticle = article;
     
-    // 2. Navegar primero para que la sección sea visible
+    // 2. Navegar primero para que la secciÃ³n sea visible
     this.navigateTo('new-article');
     
-    // 3. Rellenar el formulario DESPUÉS de que la sección esté visible
+    // 3. Rellenar el formulario DESPUÃ‰S de que la secciÃ³n estÃ© visible
     this.populateArticleForm(article);
     
-    // 4. Re-render tags y SEO después de que el DOM esté actualizado
+    // 4. Re-render tags y SEO despuÃ©s de que el DOM estÃ© actualizado
     requestAnimationFrame(() => {
       this.renderTags();
       this.updateSEOScore();
     });
 
-    const titleText = article.status === 'draft' ? 'Editar Borrador' : 'Editar Artículo';
+    const titleText = article.status === 'draft' ? 'Editar Borrador' : 'Editar ArtÃ­culo';
     document.getElementById('section-title').textContent = titleText;
   }
 
@@ -4790,7 +4810,7 @@ class SalaGeekAdmin {
         this.saveEditorState();
         this.setupEditorImages();
         
-        // Actualizar word count y SEO score después de cargar contenido
+        // Actualizar word count y SEO score despuÃ©s de cargar contenido
         this.updateWordCount();
         this.updateSEOScore();
       }
@@ -4853,17 +4873,17 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Guarda el artículo actual (crear o actualizar)
+   * Guarda el artÃ­culo actual (crear o actualizar)
    * 
    * @async
    * @param {boolean} asDraft - Si true, guarda como borrador
    * @description Flujo completo de guardado:
    * 1. Recopila datos del formulario
-   * 2. Valida campos requeridos (más flexible para borradores)
+   * 2. Valida campos requeridos (mÃ¡s flexible para borradores)
    * 3. Construye objeto articleData con SEO
-   * 4. Envía a la API PHP del servidor
-   * 5. Genera HTML del artículo
-   * 6. Actualiza articles.json vía GitHub API + escritura local
+   * 4. EnvÃ­a a la API PHP del servidor
+   * 5. Genera HTML del artÃ­culo
+   * 6. Actualiza articles.json vÃ­a GitHub API + escritura local
    */
   async saveArticle(asDraft = false) {
     const form = document.getElementById('article-form');
@@ -4872,13 +4892,13 @@ class SalaGeekAdmin {
     // Gather form data
     const id = document.getElementById('article-id').value || this.generateId();
     const rawTitle = document.getElementById('article-title').value.trim();
-    // Para borradores, usar "Sin título" si está vacío
-    const title = rawTitle || (asDraft ? 'Sin título' : '');
+    // Para borradores, usar "Sin tÃ­tulo" si estÃ¡ vacÃ­o
+    const title = rawTitle || (asDraft ? 'Sin tÃ­tulo' : '');
     const slug = document.getElementById('article-slug').value.trim() || this.generateSlug(title || 'borrador');
     const excerpt = document.getElementById('article-excerpt').value.trim();
     const categories = this.getSelectedCategories();
-    const category = this.getPrimaryCategory(); // Categoría principal para compatibilidad
-    // Forzar status según el botón presionado
+    const category = this.getPrimaryCategory(); // CategorÃ­a principal para compatibilidad
+    // Forzar status segÃºn el botÃ³n presionado
     const status = asDraft ? 'draft' : 'published';
     const dateInput = document.getElementById('article-date').value;
     const publishDate = dateInput ? new Date(dateInput).toISOString() : new Date().toISOString();
@@ -4897,12 +4917,12 @@ class SalaGeekAdmin {
 
     const isDraft = asDraft;
 
-    // Validation - más flexible para borradores
-    // Para borradores, no se requiere nada (se puede guardar vacío)
-    // Para publicar, se requiere título, extracto y contenido
+    // Validation - mÃ¡s flexible para borradores
+    // Para borradores, no se requiere nada (se puede guardar vacÃ­o)
+    // Para publicar, se requiere tÃ­tulo, extracto y contenido
     if (!isDraft) {
       if (!title) {
-        this.showToast('El título es requerido para publicar', 'error');
+        this.showToast('El tÃ­tulo es requerido para publicar', 'error');
         document.getElementById('article-title').focus();
         return;
       }
@@ -4912,24 +4932,24 @@ class SalaGeekAdmin {
         return;
       }
       if (!content || content.trim() === '' || content === '<br>') {
-        this.showToast('El contenido del artículo es requerido para publicar', 'error');
+        this.showToast('El contenido del artÃ­culo es requerido para publicar', 'error');
         document.getElementById('article-editor').focus();
         return;
       }
     }
     
     if (excerpt.length > CONFIG.MAX_EXCERPT_LENGTH) {
-      this.showToast(`El extracto es demasiado largo (máx ${CONFIG.MAX_EXCERPT_LENGTH} caracteres)`, 'warning');
+      this.showToast(`El extracto es demasiado largo (mÃ¡x ${CONFIG.MAX_EXCERPT_LENGTH} caracteres)`, 'warning');
       return;
     }
 
     // Category display names
     const categoryNames = {
       series: 'Series',
-      peliculas: 'Películas',
+      peliculas: 'PelÃ­culas',
       gaming: 'Gaming',
       anime: 'Anime',
-      tecnologia: 'Tecnología'
+      tecnologia: 'TecnologÃ­a'
     };
 
     const articleData = {
@@ -4940,7 +4960,7 @@ class SalaGeekAdmin {
       content: `/blog/articulos/${slug}`,
       image,
       category,
-      categories, // Array de categorías múltiples
+      categories, // Array de categorÃ­as mÃºltiples
       categoryDisplay: categoryNames[category] || category,
       tags: this.tags,
       author: document.getElementById('article-author')?.value?.trim() || 'Sala Geek',
@@ -4990,19 +5010,19 @@ class SalaGeekAdmin {
       const result = await response.json();
 
       const successMsg = isDraft 
-        ? '¡Borrador guardado exitosamente!'
-        : this.editingArticle ? '¡Artículo actualizado exitosamente!' : '¡Artículo publicado exitosamente!';
+        ? 'Â¡Borrador guardado exitosamente!'
+        : this.editingArticle ? 'Â¡ArtÃ­culo actualizado exitosamente!' : 'Â¡ArtÃ­culo publicado exitosamente!';
       this.showToast(successMsg, 'success');
       
       // Marcar como guardado para evitar mensaje de cambios sin guardar
       this.contentSaved = true;
       
-      // ═══════════════════════════════════════════════════════════
+      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       // ACTUALIZAR ESTADO LOCAL INMEDIATAMENTE
       // El PHP guarda en GitHub pero el servidor local puede tardar
       // en sincronizar. Actualizamos arrays locales para que la UI
       // refleje los cambios al instante sin depender del servidor.
-      // ═══════════════════════════════════════════════════════════
+      // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
       if (isDraft) {
         // Actualizar/agregar en borradores
         const draftIdx = this.drafts.findIndex(d => d.id === articleData.id);
@@ -5011,7 +5031,7 @@ class SalaGeekAdmin {
         } else {
           this.drafts.unshift(articleData);
         }
-        // Remover de publicados si existía ahí
+        // Remover de publicados si existÃ­a ahÃ­
         this.articles = this.articles.filter(a => a.id !== articleData.id);
       } else {
         // Actualizar/agregar en publicados
@@ -5021,7 +5041,7 @@ class SalaGeekAdmin {
         } else {
           this.articles.unshift(articleData);
         }
-        // Remover de borradores si existía ahí
+        // Remover de borradores si existÃ­a ahÃ­
         this.drafts = this.drafts.filter(d => d.id !== articleData.id);
       }
 
@@ -5042,7 +5062,7 @@ class SalaGeekAdmin {
       this.navigateTo(isDraft ? 'drafts' : 'articles');
       
       // Recargar desde servidor en background (por si hay otros cambios)
-      // Se ejecuta después de navegar para no bloquear la UI
+      // Se ejecuta despuÃ©s de navegar para no bloquear la UI
       setTimeout(() => this.loadArticles().catch(() => {}), 8000);
 
     } catch (error) {
@@ -5066,41 +5086,41 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Elimina un artículo
+   * Elimina un artÃ­culo
    * 
    * @async
-   * @param {string} id - ID del artículo a eliminar
-   * @description Solicita confirmación, elimina de articles.json
+   * @param {string} id - ID del artÃ­culo a eliminar
+   * @description Solicita confirmaciÃ³n, elimina de articles.json
    * y borra el archivo HTML correspondiente
    */
   /**
-   * Elimina un artículo o borrador
+   * Elimina un artÃ­culo o borrador
    * 
    * @async
-   * @param {string} id - ID del artículo/borrador a eliminar
-   * @description Solicita confirmación, elimina del JSON correspondiente
+   * @param {string} id - ID del artÃ­culo/borrador a eliminar
+   * @description Solicita confirmaciÃ³n, elimina del JSON correspondiente
    * (articles.json o drafts.json) y borra el archivo HTML
    * 
-   * @bugfix v2.1.0 - Ahora envía isDraft al API para eliminar del archivo correcto
+   * @bugfix v2.1.0 - Ahora envÃ­a isDraft al API para eliminar del archivo correcto
    */
   async deleteArticle(id) {
-    // Buscar en artículos publicados y en borradores
+    // Buscar en artÃ­culos publicados y en borradores
     let article = this.articles.find(a => a.id === id);
     const isDraft = !article;
     if (!article) {
       article = this.drafts.find(a => a.id === id);
     }
     if (!article) {
-      this.showToast('Artículo no encontrado', 'error');
+      this.showToast('ArtÃ­culo no encontrado', 'error');
       return;
     }
 
-    const itemType = isDraft ? 'borrador' : 'artículo';
+    const itemType = isDraft ? 'borrador' : 'artÃ­culo';
     
-    // Usar modal de confirmación personalizado
+    // Usar modal de confirmaciÃ³n personalizado
     const confirmed = await this.showConfirmModal(
-      `¿Eliminar ${itemType}?`,
-      `"${article.title}" será eliminado permanentemente. Esta acción no se puede deshacer.`,
+      `Â¿Eliminar ${itemType}?`,
+      `"${article.title}" serÃ¡ eliminado permanentemente. Esta acciÃ³n no se puede deshacer.`,
       'Eliminar',
       'danger'
     );
@@ -5130,8 +5150,8 @@ class SalaGeekAdmin {
         throw new Error(errorData.error || 'Error al eliminar');
       }
 
-      // Mostrar toast con el título
-      const type = isDraft ? 'Borrador' : 'Artículo';
+      // Mostrar toast con el tÃ­tulo
+      const type = isDraft ? 'Borrador' : 'ArtÃ­culo';
       this.showToast(`${type} "${article.title}" eliminado correctamente`, 'success');
       
       // Actualizar estado local inmediatamente
@@ -5176,16 +5196,16 @@ class SalaGeekAdmin {
       return;
     }
 
-    // Validar que tenga los campos mínimos para publicar
+    // Validar que tenga los campos mÃ­nimos para publicar
     if (!draft.title || !draft.slug || !draft.excerpt) {
-      this.showToast('El borrador necesita título, slug y extracto para publicar. Edítalo primero.', 'warning');
+      this.showToast('El borrador necesita tÃ­tulo, slug y extracto para publicar. EdÃ­talo primero.', 'warning');
       this.editArticle(id);
       return;
     }
 
     const confirmed = await this.showConfirmModal(
-      '¿Publicar borrador?',
-      `"${draft.title}" será publicado y visible para todos los visitantes.`,
+      'Â¿Publicar borrador?',
+      `"${draft.title}" serÃ¡ publicado y visible para todos los visitantes.`,
       'Publicar',
       'info'
     );
@@ -5201,16 +5221,16 @@ class SalaGeekAdmin {
       
       const htmlContent = await htmlResponse.text();
       
-      // Extraer el contenido del artículo del HTML
+      // Extraer el contenido del artÃ­culo del HTML
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlContent, 'text/html');
       const articleContent = doc.querySelector('.article-content');
       
       if (!articleContent) {
-        throw new Error('Estructura del artículo inválida');
+        throw new Error('Estructura del artÃ­culo invÃ¡lida');
       }
 
-      // Actualizar datos del borrador para publicación
+      // Actualizar datos del borrador para publicaciÃ³n
       const articleData = {
         ...draft,
         status: 'published',
@@ -5239,7 +5259,7 @@ class SalaGeekAdmin {
         throw new Error(errorData.error || 'Error al publicar');
       }
 
-      this.showToast(`¡"${draft.title}" publicado exitosamente!`, 'success');
+      this.showToast(`Â¡"${draft.title}" publicado exitosamente!`, 'success');
       
       // Actualizar estado local inmediatamente
       this.articles.unshift(articleData);
@@ -5267,10 +5287,10 @@ class SalaGeekAdmin {
   }
   
   /**
-   * Muestra un modal de confirmación personalizado
-   * @param {string} title - Título del modal
+   * Muestra un modal de confirmaciÃ³n personalizado
+   * @param {string} title - TÃ­tulo del modal
    * @param {string} message - Mensaje descriptivo
-   * @param {string} confirmText - Texto del botón de confirmar
+   * @param {string} confirmText - Texto del botÃ³n de confirmar
    * @param {string} type - Tipo: 'danger', 'warning', 'info'
    * @returns {Promise<boolean>} - True si confirma, false si cancela
    */
@@ -5289,10 +5309,10 @@ class SalaGeekAdmin {
       const acceptBtn = document.getElementById('confirm-accept');
       const cancelBtn = document.getElementById('confirm-cancel');
       
-      // Configurar icono según tipo
+      // Configurar icono segÃºn tipo
       icon.className = 'confirm-icon' + (type !== 'danger' ? ` ${type}` : '');
       
-      // Mostrar/ocultar íconos según tipo
+      // Mostrar/ocultar Ã­conos segÃºn tipo
       const iconDanger = icon.querySelector('.icon-danger');
       const iconWarning = icon.querySelector('.icon-warning');
       const iconInfo = icon.querySelector('.icon-info');
@@ -5306,13 +5326,13 @@ class SalaGeekAdmin {
       messageEl.textContent = message;
       acceptBtn.textContent = confirmText;
       
-      // Configurar estilo del botón según tipo
+      // Configurar estilo del botÃ³n segÃºn tipo
       acceptBtn.className = type === 'danger' ? 'btn-danger' : 'btn-primary';
       
       // Mostrar modal
       modal.classList.remove('hidden');
       
-      // Focus en el botón de cancelar para evitar aceptar accidentalmente
+      // Focus en el botÃ³n de cancelar para evitar aceptar accidentalmente
       setTimeout(() => cancelBtn.focus(), 100);
       
       // Handlers
@@ -5348,6 +5368,16 @@ class SalaGeekAdmin {
         } else if (e.key === 'Enter' && document.activeElement === acceptBtn) {
           e.preventDefault();
           onAccept();
+        } else if (e.key === 'Tab') {
+          // Focus trapping dentro del modal
+          const focusable = modal.querySelectorAll('button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+          } else {
+            if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+          }
         }
       };
       
@@ -5358,9 +5388,9 @@ class SalaGeekAdmin {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // TAGS
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   addTag(tag) {
     tag = tag.trim().toLowerCase();
@@ -5402,12 +5432,12 @@ class SalaGeekAdmin {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // PREVIEW
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   showPreview() {
-    const title = document.getElementById('article-title').value || 'Sin título';
+    const title = document.getElementById('article-title').value || 'Sin tÃ­tulo';
     const excerpt = document.getElementById('article-excerpt').value || '';
     const content = document.getElementById('article-editor').innerHTML;
     const category = this.getPrimaryCategory();
@@ -5500,7 +5530,7 @@ class SalaGeekAdmin {
             text-decoration: none;
           }
           .breadcrumbs li:not(:last-child)::after {
-            content: "›";
+            content: "â€º";
             margin-left: 0.6rem;
             color: var(--accent-primary);
             font-weight: 600;
@@ -5781,7 +5811,7 @@ class SalaGeekAdmin {
             white-space: nowrap;
           }
           
-          /* Responsive para móvil */
+          /* Responsive para mÃ³vil */
           @media (max-width: 500px) {
             .preview-wrapper {
               padding: 1rem;
@@ -5889,7 +5919,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Obtiene el icono SVG de la categoría para la preview
+   * Obtiene el icono SVG de la categorÃ­a para la preview
    */
   getCategoryIconForPreview(category) {
     const icons = {
@@ -5902,26 +5932,76 @@ class SalaGeekAdmin {
     return icons[category] || icons.series;
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // HTML GENERATION
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
-   * Genera el HTML completo del artículo para guardar
+   * Genera el HTML completo del artÃ­culo para guardar
    * 
-   * @param {Object} article - Datos del artículo (metadata)
+   * @param {Object} article - Datos del artÃ­culo (metadata)
    * @param {string} content - Contenido HTML del editor
    * @returns {string} HTML completo listo para guardar como archivo
    * 
-   * @description Genera una página HTML completa con:
+   * @description Genera una pÃ¡gina HTML completa con:
    * - Meta tags SEO (description, keywords, robots, canonical)
    * - Open Graph para redes sociales
    * - Twitter Cards
-   * - Estructura de artículo con breadcrumbs
+   * - Estructura de artÃ­culo con breadcrumbs
    * - Botones de compartir
-   * - Sección de artículos relacionados
+   * - SecciÃ³n de artÃ­culos relacionados
    */
+  /**
+   * Sanitiza HTML eliminando tags y atributos peligrosos.
+   * Whitelist de tags seguros para contenido de artículos.
+   */
+  sanitizeHTML(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+
+    // Tags peligrosos a eliminar completamente (incluyendo su contenido)
+    const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'select', 'button', 'link', 'meta', 'style', 'applet', 'base', 'basefont'];
+    dangerousTags.forEach(tag => {
+      div.querySelectorAll(tag).forEach(el => el.remove());
+    });
+
+    // Eliminar atributos peligrosos de TODOS los elementos
+    div.querySelectorAll('*').forEach(el => {
+      const attrsToRemove = [];
+      for (const attr of el.attributes) {
+        const name = attr.name.toLowerCase();
+        // Eliminar event handlers (on*)
+        if (name.startsWith('on')) {
+          attrsToRemove.push(attr.name);
+        }
+        // Eliminar javascript: URLs
+        if ((name === 'href' || name === 'src' || name === 'action') &&
+            attr.value.replace(/\s/g, '').toLowerCase().startsWith('javascript:')) {
+          attrsToRemove.push(attr.name);
+        }
+        // Eliminar data: URLs en src (excepto imágenes data: legítimas)
+        if (name === 'src' && attr.value.replace(/\s/g, '').toLowerCase().startsWith('data:') &&
+            !attr.value.replace(/\s/g, '').toLowerCase().startsWith('data:image/')) {
+          attrsToRemove.push(attr.name);
+        }
+      }
+      attrsToRemove.forEach(a => el.removeAttribute(a));
+    });
+
+    // Añadir loading="lazy" a todas las imágenes que no lo tengan
+    div.querySelectorAll('img').forEach(img => {
+      if (!img.hasAttribute('loading')) {
+        img.setAttribute('loading', 'lazy');
+      }
+    });
+
+    return div.innerHTML;
+  }
+
   generateArticleHTML(article, content) {
+    // Sanitizar HTML: eliminar tags/atributos peligrosos
+    content = this.sanitizeHTML(content);
+
     // Limpiar toolbars y clases de editor del contenido antes de generar HTML
     const cleanDiv = document.createElement('div');
     cleanDiv.innerHTML = content;
@@ -6057,10 +6137,10 @@ class SalaGeekAdmin {
   <\/script>
 
   <link rel="stylesheet" href="/src/css/normalize.css" />
-  <link rel="stylesheet" href="/src/css/style.min.css?v=226" />
-  <link rel="stylesheet" href="/src/css/blog.min.css?v=255" />
+  <link rel="stylesheet" href="/src/css/style.min.css?v=300" />
+  <link rel="stylesheet" href="/src/css/blog.min.css?v=300" />
   
-  <script src="/src/js/blog-engine.min.js?v=6" defer><\/script>
+  <script src="/src/js/blog-engine.min.js?v=300" defer><\/script>
 </head>
 
 <body class="article-page">
@@ -6156,7 +6236,7 @@ class SalaGeekAdmin {
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
           </svg>
-          Compartir artículo
+          Compartir artÃ­culo
         </h3>
         <div class="share-buttons">
           <button class="share-btn share-twitter" onclick="shareOnTwitter()" aria-label="Compartir en Twitter">
@@ -6197,7 +6277,7 @@ class SalaGeekAdmin {
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
-          También te puede interesar
+          TambiÃ©n te puede interesar
         </h2>
         <div class="related-grid" id="related-articles">
           <div class="loading-spinner">
@@ -6240,7 +6320,7 @@ class SalaGeekAdmin {
 
   <div id="footer-container"></div>
 
-  <script src="/src/js/script.min.js?v=146" defer><\/script>
+  <script src="/src/js/script.min.js?v=300" defer><\/script>
   
   <!-- Share functions -->
   <script>
@@ -6263,7 +6343,7 @@ class SalaGeekAdmin {
         btn.classList.add('copied');
         var span = btn.querySelector('span');
         var orig = span.textContent;
-        span.textContent = '¡Copiado!';
+        span.textContent = 'Â¡Copiado!';
         btn.querySelector('svg').innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
         setTimeout(function() {
           btn.classList.remove('copied');
@@ -6312,7 +6392,7 @@ class SalaGeekAdmin {
             '</article>';
           }).join('');
         } else if (relatedContainer) {
-          relatedContainer.innerHTML = '<p class="no-related">No hay artículos relacionados disponibles.</p>';
+          relatedContainer.innerHTML = '<p class="no-related">No hay artÃ­culos relacionados disponibles.</p>';
         }
       }
     });
@@ -6321,9 +6401,9 @@ class SalaGeekAdmin {
 </html>`;
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // UTILITIES
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   generateId() {
     const timestamp = Date.now().toString(36);
@@ -6344,9 +6424,9 @@ class SalaGeekAdmin {
   /**
    * Genera un slug URL-friendly a partir de texto
    * 
-   * @param {string} text - Título o texto fuente
+   * @param {string} text - TÃ­tulo o texto fuente
    * @returns {string} Slug normalizado (max 60 chars)
-   * @description Convierte a minúsculas, remueve acentos,
+   * @description Convierte a minÃºsculas, remueve acentos,
    * reemplaza espacios por guiones, elimina caracteres especiales
    */
   generateSlug(text) {
@@ -6354,10 +6434,10 @@ class SalaGeekAdmin {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '') // Remover acentos
-      .replace(/ñ/g, 'n') // Manejar ñ
-      .replace(/[^a-z0-9\s-]/g, '') // Solo alfanuméricos, espacios y guiones
+      .replace(/Ã±/g, 'n') // Manejar Ã±
+      .replace(/[^a-z0-9\s-]/g, '') // Solo alfanumÃ©ricos, espacios y guiones
       .replace(/\s+/g, '-') // Espacios a guiones
-      .replace(/-+/g, '-') // Múltiples guiones a uno
+      .replace(/-+/g, '-') // MÃºltiples guiones a uno
       .replace(/(^-|-$)/g, '') // Eliminar guiones al inicio/final
       .substring(0, 60);
   }
@@ -6365,7 +6445,7 @@ class SalaGeekAdmin {
   /**
    * Estima el tiempo de lectura basado en el contenido
    * 
-   * @param {string} content - Contenido HTML del artículo
+   * @param {string} content - Contenido HTML del artÃ­culo
    * @returns {string} Tiempo estimado (ej: "5 min")
    */
   estimateReadTime(content) {
@@ -6399,12 +6479,12 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Muestra una notificación toast
+   * Muestra una notificaciÃ³n toast
    * 
    * @param {string} message - Mensaje a mostrar
    * @param {string} type - Tipo: 'success', 'error', 'warning', 'info'
    * @description Crea un toast animado que se auto-elimina
-   * después de CONFIG.TOAST_DURATION milisegundos
+   * despuÃ©s de CONFIG.TOAST_DURATION milisegundos
    */
   showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
@@ -6438,9 +6518,9 @@ class SalaGeekAdmin {
     }, CONFIG.TOAST_DURATION);
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // SEO PREVIEW & COLLAPSIBLE SECTIONS
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
    * Configura la vista previa SEO en tiempo real
@@ -6452,16 +6532,16 @@ class SalaGeekAdmin {
     const excerptInput = document.getElementById('article-excerpt');
 
     const updateSEOPreview = () => {
-      const title = titleInput?.value?.trim() || 'Título del artículo';
+      const title = titleInput?.value?.trim() || 'TÃ­tulo del artÃ­culo';
       const slug = slugInput?.value?.trim() || this.generateSlug(title);
-      const metaDesc = metaDescInput?.value?.trim() || excerptInput?.value?.trim() || 'La meta descripción aparecerá aquí. Escribe una descripción atractiva de 150-160 caracteres...';
+      const metaDesc = metaDescInput?.value?.trim() || excerptInput?.value?.trim() || 'La meta descripciÃ³n aparecerÃ¡ aquÃ­. Escribe una descripciÃ³n atractiva de 150-160 caracteres...';
 
       const previewTitle = document.getElementById('seo-preview-title');
       const previewUrl = document.getElementById('seo-preview-url');
       const previewDesc = document.getElementById('seo-preview-desc');
 
       if (previewTitle) previewTitle.textContent = `${title} | Sala Geek`;
-      if (previewUrl) previewUrl.textContent = `salageek.com › blog › ${slug || 'articulos'}`;
+      if (previewUrl) previewUrl.textContent = `salageek.com â€º blog â€º ${slug || 'articulos'}`;
       if (previewDesc) previewDesc.textContent = metaDesc;
       
       // Update SEO Score
@@ -6482,20 +6562,20 @@ class SalaGeekAdmin {
     updateSEOPreview();
   }
 
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // SISTEMA SEO
-  // ═══════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   /**
    * Calcula el score SEO sin actualizar el UI
    * 
-   * @description Evalúa 6 criterios SEO:
-   * 1. Título (50-60 chars ideal)
-   * 2. Meta descripción (150-160 chars ideal)
-   * 3. Extracto (mín 50 chars)
-   * 4. Imagen destacada (URL válida)
+   * @description EvalÃºa 6 criterios SEO:
+   * 1. TÃ­tulo (50-60 chars ideal)
+   * 2. Meta descripciÃ³n (150-160 chars ideal)
+   * 3. Extracto (mÃ­n 50 chars)
+   * 4. Imagen destacada (URL vÃ¡lida)
    * 5. Contenido (+300 palabras)
-   * 6. Tags (mín 3)
+   * 6. Tags (mÃ­n 3)
    * 
    * @returns {{ checks: Object, passed: number, total: number, percentage: number }}
    */
@@ -6509,7 +6589,7 @@ class SalaGeekAdmin {
       tags: false
     };
 
-    // 1. Título (50-60 caracteres ideal)
+    // 1. TÃ­tulo (50-60 caracteres ideal)
     const title = document.getElementById('article-title')?.value?.trim() || '';
     const titleLen = title.length;
     if (titleLen >= 30 && titleLen <= 70) {
@@ -6518,7 +6598,7 @@ class SalaGeekAdmin {
       checks.title = 'fail';
     }
 
-    // 2. Meta descripción (150-160 caracteres ideal)
+    // 2. Meta descripciÃ³n (150-160 caracteres ideal)
     const metaDesc = document.getElementById('meta-description')?.value?.trim() || '';
     const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
     const descLen = metaDesc.length || excerpt.length;
@@ -6583,15 +6663,15 @@ class SalaGeekAdmin {
   /**
    * Renderiza el score SEO en el UI
    * 
-   * @description Actualiza el círculo de score, etiqueta y checks individuales.
+   * @description Actualiza el cÃ­rculo de score, etiqueta y checks individuales.
    * Clases CSS aplicadas:
    * - score-good (>=80%): Verde
    * - score-medium (>=50%): Amarillo  
    * - score-bad (<50%): Rojo
    * 
-   * @param {Object} seoData - Datos del cálculo SEO
+   * @param {Object} seoData - Datos del cÃ¡lculo SEO
    * @param {Object} seoData.checks - Estado de cada check (pass/warn/fail/false)
-   * @param {number} seoData.passed - Número de checks pasados
+   * @param {number} seoData.passed - NÃºmero de checks pasados
    * @param {number} seoData.total - Total de checks
    * @param {number} seoData.percentage - Porcentaje de score (0-100)
    */
@@ -6639,14 +6719,14 @@ class SalaGeekAdmin {
           checkEl.classList.add('check-fail');
           if (icon) icon.textContent = '';
         } else {
-          if (icon) icon.textContent = '○';
+          if (icon) icon.textContent = 'â—‹';
         }
       }
     });
   }
 
   /**
-   * Calcula y actualiza el score SEO (método principal)
+   * Calcula y actualiza el score SEO (mÃ©todo principal)
    */
   updateSEOScore() {
     const seoData = this.calculateSEOScore();
@@ -6666,10 +6746,10 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Configura el sistema de categorías y subcategorías
+   * Configura el sistema de categorÃ­as y subcategorÃ­as
    */
   setupCategoryMultiSelect() {
-    // ===== SUBCATEGORÍAS =====
+    // ===== SUBCATEGORÃAS =====
     const addBtn = document.getElementById('add-subcategory-btn');
     const inputWrapper = document.getElementById('new-subcategory-input');
     const nameInput = document.getElementById('new-subcategory-name');
@@ -6709,14 +6789,14 @@ class SalaGeekAdmin {
       iconDropdown?.classList.toggle('hidden');
     });
 
-    // Selección de iconos
+    // SelecciÃ³n de iconos
     iconDropdown?.querySelectorAll('.icon-picker-option').forEach(option => {
       option.addEventListener('click', () => {
         iconDropdown.querySelectorAll('.icon-picker-option').forEach(o => o.classList.remove('selected'));
         option.classList.add('selected');
         this.selectedSubcategoryIcon = option.dataset.icon;
         
-        // Actualizar el icono del botón picker
+        // Actualizar el icono del botÃ³n picker
         const iconSvg = option.querySelector('svg').cloneNode(true);
         iconSvg.setAttribute('width', '14');
         iconSvg.setAttribute('height', '14');
@@ -6734,7 +6814,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Resetea el formulario de nueva subcategoría
+   * Resetea el formulario de nueva subcategorÃ­a
    */
   resetSubcategoryInput() {
     const inputWrapper = document.getElementById('new-subcategory-input');
@@ -6758,7 +6838,7 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Agrega una nueva subcategoría
+   * Agrega una nueva subcategorÃ­a
    */
   addNewSubcategory() {
     const nameInput = document.getElementById('new-subcategory-name');
@@ -6766,7 +6846,7 @@ class SalaGeekAdmin {
 
     const name = nameInput?.value?.trim();
     if (!name) {
-      this.showToast('Ingresa un nombre para la subcategoría', 'warning');
+      this.showToast('Ingresa un nombre para la subcategorÃ­a', 'warning');
       return;
     }
 
@@ -6774,14 +6854,14 @@ class SalaGeekAdmin {
     
     // Verificar que no exista
     if (document.querySelector(`input[name="subcategories"][value="${value}"]`)) {
-      this.showToast('Esta subcategoría ya existe', 'warning');
+      this.showToast('Esta subcategorÃ­a ya existe', 'warning');
       return;
     }
 
     // Obtener el SVG del icono seleccionado
     const iconSvg = this.getSubcategoryIconSvg(this.selectedSubcategoryIcon || 'tag');
 
-    // Crear nueva opción con botón de eliminar
+    // Crear nueva opciÃ³n con botÃ³n de eliminar
     const newOption = document.createElement('label');
     newOption.className = 'category-option subcategory-item';
     newOption.innerHTML = `
@@ -6790,7 +6870,7 @@ class SalaGeekAdmin {
         ${iconSvg}
         ${this.escapeHtml(name)}
       </span>
-      <button type="button" class="category-delete-btn" title="Eliminar subcategoría">
+      <button type="button" class="category-delete-btn" title="Eliminar subcategorÃ­a">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     `;
@@ -6807,11 +6887,11 @@ class SalaGeekAdmin {
     // Limpiar y resetear
     this.resetSubcategoryInput();
 
-    this.showToast(`Subcategoría "${name}" agregada`, 'success');
+    this.showToast(`SubcategorÃ­a "${name}" agregada`, 'success');
   }
 
   /**
-   * Obtiene el SVG del icono de subcategoría
+   * Obtiene el SVG del icono de subcategorÃ­a
    */
   getSubcategoryIconSvg(iconName) {
     const icons = {
@@ -6828,16 +6908,16 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Elimina una subcategoría
+   * Elimina una subcategorÃ­a
    */
   deleteSubcategory(element, name) {
     element.remove();
-    this.showToast(`Subcategoría "${name}" eliminada`, 'success');
+    this.showToast(`SubcategorÃ­a "${name}" eliminada`, 'success');
   }
 
   /**
-   * Obtiene las subcategorías seleccionadas
-   * @returns {Array<string>} Array de valores de subcategorías seleccionadas
+   * Obtiene las subcategorÃ­as seleccionadas
+   * @returns {Array<string>} Array de valores de subcategorÃ­as seleccionadas
    */
   getSelectedSubcategories() {
     const checkboxes = document.querySelectorAll('input[name="subcategories"]:checked');
@@ -6845,8 +6925,8 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Obtiene la categoría principal seleccionada
-   * @returns {string} Valor de la categoría principal o 'series' por defecto
+   * Obtiene la categorÃ­a principal seleccionada
+   * @returns {string} Valor de la categorÃ­a principal o 'series' por defecto
    */
   getPrimaryCategory() {
     const selected = document.querySelector('input[name="category"]:checked');
@@ -6854,14 +6934,14 @@ class SalaGeekAdmin {
   }
 
   /**
-   * Obtiene las categorías seleccionadas (categoría principal + tags)
-   * @returns {string[]} Array de categorías
+   * Obtiene las categorÃ­as seleccionadas (categorÃ­a principal + tags)
+   * @returns {string[]} Array de categorÃ­as
    */
   getSelectedCategories() {
     const primaryCategory = this.getPrimaryCategory();
     const categories = [primaryCategory];
     
-    // Los tags ahora funcionan como subcategorías
+    // Los tags ahora funcionan como subcategorÃ­as
     if (this.tags && this.tags.length > 0) {
       categories.push(...this.tags);
     }

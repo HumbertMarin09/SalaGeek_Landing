@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>404 - Página no encontrada | Sala Geek</title>
+    <title>404 - PÃ¡gina no encontrada | Sala Geek</title>
 
     <!-- Favicons -->
     <link rel="icon" href="/src/images/Icono_SG.ico" type="image/x-icon" />
@@ -13,7 +13,7 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/src/css/normalize.css" />
-    <link rel="stylesheet" href="/src/css/style.min.css?v=224" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=300" />
 
     <style>
       :root {
@@ -489,12 +489,12 @@
         </div>
 
         <!-- Animated icon -->
-        <span class="error-icon">🎮</span>
+        <span class="error-icon">ðŸŽ®</span>
 
         <!-- Title and subtitle -->
-        <h2 class="error-title">¡Nivel no encontrado!</h2>
+        <h2 class="error-title">Â¡Nivel no encontrado!</h2>
         <p class="error-subtitle">
-          Parece que esta página se fue a otra dimensión. No te preocupes, el respawn está disponible.
+          Parece que esta pÃ¡gina se fue a otra dimensiÃ³n. No te preocupes, el respawn estÃ¡ disponible.
         </p>
 
         <!-- Action buttons -->
@@ -505,24 +505,24 @@
           </a>
           <button onclick="window.history.back()" class="error-btn error-btn-secondary">
             <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Página Anterior</span>
+            <span>PÃ¡gina Anterior</span>
           </button>
         </div>
 
         <!-- Fun fact section -->
         <div class="error-fun">
-          <span class="fun-icon">💡</span>
+          <span class="fun-icon">ðŸ’¡</span>
           <div class="fun-text">
-            <div class="fun-label">¿Sabías que?</div>
-            <div class="fun-fact" id="funFact">El código 404 fue nombrado por la habitación 404 del CERN, donde se ubicaban los servidores originales.</div>
+            <div class="fun-label">Â¿SabÃ­as que?</div>
+            <div class="fun-fact" id="funFact">El cÃ³digo 404 fue nombrado por la habitaciÃ³n 404 del CERN, donde se ubicaban los servidores originales.</div>
           </div>
         </div>
 
-        <!-- Quick links al Blog (usando filtros de categoría) -->
+        <!-- Quick links al Blog (usando filtros de categorÃ­a) -->
         <div class="quick-links">
           <a href="/blog/?categoria=peliculas" class="quick-link">
             <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
-            <span>Películas</span>
+            <span>PelÃ­culas</span>
           </a>
           <a href="/blog/?categoria=series" class="quick-link">
             <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
@@ -547,13 +547,13 @@
 
       // Fun facts aleatorios
       const funFacts = [
-        "El código 404 fue nombrado por la habitación 404 del CERN, donde se ubicaban los servidores originales.",
+        "El cÃ³digo 404 fue nombrado por la habitaciÃ³n 404 del CERN, donde se ubicaban los servidores originales.",
         "El primer videojuego de la historia fue 'Tennis for Two', creado en 1958.",
-        "Netflix empezó como un servicio de alquiler de DVDs por correo en 1997.",
-        "El emoji 🎮 fue agregado a Unicode en 2010 como parte de la versión 6.0.",
-        "La saga Star Wars ha generado más de $10 mil millones solo en taquilla.",
+        "Netflix empezÃ³ como un servicio de alquiler de DVDs por correo en 1997.",
+        "El emoji ðŸŽ® fue agregado a Unicode en 2010 como parte de la versiÃ³n 6.0.",
+        "La saga Star Wars ha generado mÃ¡s de $10 mil millones solo en taquilla.",
         "El primer anime de la historia fue 'Namakura Gatana' de 1917, de solo 2 minutos.",
-        "Minecraft es el videojuego más vendido de la historia con más de 300 millones de copias."
+        "Minecraft es el videojuego mÃ¡s vendido de la historia con mÃ¡s de 300 millones de copias."
       ];
 
       // Cambiar fun fact cada 10 segundos
@@ -578,7 +578,7 @@
 
       // Cambiar emoji cada vez que se hace clic
       const errorIcon = document.querySelector('.error-icon');
-      const emojis = ['🎮', '🎬', '🎌', '📺', '🕹️', '🎭', '🎪', '🚀'];
+      const emojis = ['ðŸŽ®', 'ðŸŽ¬', 'ðŸŽŒ', 'ðŸ“º', 'ðŸ•¹ï¸', 'ðŸŽ­', 'ðŸŽª', 'ðŸš€'];
       let currentEmoji = 0;
 
       errorIcon.addEventListener('click', () => {

@@ -92,7 +92,7 @@
     <meta name="apple-mobile-web-app-title" content="Sala Geek" />
 
     <!-- Preload critical CSS only (JS uses defer, no preload needed) -->
-    <link rel="preload" href="/src/css/style.min.css?v=226" as="style" />
+    <link rel="preload" href="/src/css/style.min.css?v=300" as="style" />
 
     <!-- 
       Critical CSS inline para above-the-fold
@@ -156,7 +156,7 @@
     </style>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/src/css/style.min.css?v=226" />
+    <link rel="stylesheet" href="/src/css/style.min.css?v=300" />
     <!-- Non-critical CSS: easter eggs loaded async -->
     <link rel="stylesheet" href="/src/css/easter-eggs.min.css" media="print" onload="this.media='all';document.getElementById('easter-egg-tracker').style.display=''" />
     <noscript><link rel="stylesheet" href="/src/css/easter-eggs.min.css" /></noscript>
@@ -217,7 +217,7 @@
     <script defer src="/src/js/performance-boost.min.js"></script>
 
     <!-- Main Script -->
-    <script defer src="/src/js/script.min.js?v=146"></script>
+    <script defer src="/src/js/script.min.js?v=300"></script>
 
     <!-- Non-critical JS: lazy-loaded after page is interactive -->
     <script>
@@ -251,6 +251,9 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Skip to content (Accesibilidad) -->
+    <a href="#inicio" class="skip-to-content">Saltar al contenido</a>
 
     <!-- Header inyectado -->
     <div id="header-placeholder"></div>
@@ -1033,7 +1036,7 @@
     </div>
 
     <!-- Blog Engine para News Hub -->
-    <script src="/src/js/blog-engine.min.js?v=6"></script>
+    <script src="/src/js/blog-engine.min.js?v=300"></script>
     <script>
       // Cargar noticias dinámicamente en News Hub
       window.addEventListener('load', async () => {

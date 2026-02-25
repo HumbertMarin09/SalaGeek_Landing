@@ -20,10 +20,10 @@
  * ============================================================================
  */
 
-const CACHE_VERSION = 'sg-cache-v3';
-const STATIC_CACHE = 'sg-static-v3';
-const DYNAMIC_CACHE = 'sg-dynamic-v3';
-const IMAGE_CACHE = 'sg-images-v3';
+const CACHE_VERSION = 'sg-cache-v4';
+const STATIC_CACHE = 'sg-static-v4';
+const DYNAMIC_CACHE = 'sg-dynamic-v4';
+const IMAGE_CACHE = 'sg-images-v4';
 
 // Recursos para pre-cachear (instalar inmediatamente)
 const PRECACHE_ASSETS = [

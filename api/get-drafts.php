@@ -26,6 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 // Requiere autenticación
 requireAuth();
 
+// Rate limiting para endpoints admin
+if (!checkRateLimit(ADMIN_RATE_LIMIT_WINDOW, ADMIN_RATE_LIMIT_MAX, 'get_drafts')) {
+    jsonResponse(['error' => 'Demasiadas solicitudes'], 429);
+}
+
 try {
     // Obtener drafts.json de GitHub
     $url = 'https://api.github.com/repos/' . GITHUB_REPO . '/contents/blog/data/drafts.json?ref=' . GITHUB_BRANCH;

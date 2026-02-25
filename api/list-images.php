@@ -27,6 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 // Requiere autenticación
 requireAuth();
 
+// Rate limiting para endpoints admin
+if (!checkRateLimit(ADMIN_RATE_LIMIT_WINDOW, ADMIN_RATE_LIMIT_MAX, 'list_images')) {
+    jsonResponse(['error' => 'Demasiadas solicitudes'], 429);
+}
+
 // Verificar configuración de GitHub
 if (GITHUB_TOKEN === 'TU_GITHUB_TOKEN_AQUI' || empty(GITHUB_TOKEN)) {
     jsonResponse([
