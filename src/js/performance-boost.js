@@ -106,4 +106,4 @@ window.deferTask = function (task, priority = "low") {
   }
 };
 
-console.log("⚡ Performance Boost loaded");
+// Performance Boost loaded

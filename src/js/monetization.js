@@ -91,8 +91,14 @@
   }
 
   function checkCookieConsent() {
-    const consent = localStorage.getItem('sg_cookie_consent');
-    return consent === 'accepted' || consent === 'all';
+    try {
+      const raw = localStorage.getItem('sg_cookie_consent');
+      if (!raw) return false;
+      const consent = JSON.parse(raw);
+      return consent?.categories?.marketing === true;
+    } catch {
+      return false;
+    }
   }
 
   // ============================================================================

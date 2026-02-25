@@ -21,6 +21,9 @@ class BlogEngine {
   async init() {
     try {
       const response = await fetch("/blog/data/articles.json");
+      if (!response.ok) {
+        throw new Error(`Error cargando artículos: ${response.status}`);
+      }
       const data = await response.json();
       
       // Validar estructura de datos

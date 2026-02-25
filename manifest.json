@@ -13,13 +13,19 @@
       "src": "/src/images/SalaGeek_LOGO.webp",
       "sizes": "512x512",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/src/images/SalaGeek_LOGO.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "maskable"
     },
     {
       "src": "/src/images/SalaGeek_LOGO.webp",
       "sizes": "192x192",
       "type": "image/webp",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/src/images/Icono_SG.ico",

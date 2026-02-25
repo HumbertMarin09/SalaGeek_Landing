@@ -54,7 +54,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435" crossorigin="anonymous"></script>
 
     <!-- Blog Engine -->
-    <script src="/src/js/blog-engine.min.js?v=300"></script>
+    <script defer src="/src/js/blog-engine.min.js?v=300"></script>
 
     <!-- Schema.org - Blog -->
     <script type="application/ld+json">
@@ -502,7 +502,6 @@
                 // Calcular posiciÃ³n exacta del tÃ­tulo con mÃ¡s offset arriba
                 const titleRect = targetTitle.getBoundingClientRect();
                 const absoluteTop = window.pageYOffset + titleRect.top - 150; // 150px de margen arriba
-                console.log('Scroll to:', absoluteTop, 'Title:', targetTitle.textContent.trim());
                 window.scrollTo({ top: absoluteTop, behavior: 'smooth' });
               }
             }, 350); // MÃ¡s tiempo para que las animaciones terminen

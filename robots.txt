@@ -1,6 +1,6 @@
 # Sala Geek - Robots.txt
 # https://salageek.com/robots.txt
-# Updated: 2025-11-28
+# Updated: 2026-02-25
 
 # ==============================================================================
 # SEARCH ENGINE CRAWLERS - Allow all major search engines

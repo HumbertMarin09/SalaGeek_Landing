@@ -86,7 +86,7 @@ const responsiveState = {
     console.log("%c   Humberto Marin - Fundador & Lead Developer", highlightStyle);
     console.log("%c   GitHub Copilot - AI Assistant & Code Architect", highlightStyle);
     console.log("%c ", "");
-    console.log("%c📦 Versión: 2.0.0 | Noviembre 2025", subtleStyle);
+    console.log("%c📦 Versión: 2.0.3 | Febrero 2026", subtleStyle);
     console.log("%c⚡ Stack: Vanilla JS + CSS3 + HTML5", subtleStyle);
     console.log("%c🎯 Easter Eggs: 15 ocultos (9 Desktop + 6 Mobile)", subtleStyle);
     console.log("%c ", "");
@@ -294,7 +294,7 @@ function chooseAvailableLogo(candidates) {
         }
       };
       img.onerror = () => tryLoad(index + 1);
-      img.src = candidates[index] + `?v=${Date.now()}`; // evitar cache
+      img.src = candidates[index] + '?v=300'; // versión fija para aprovechar cache
     };
 
     tryLoad(0);

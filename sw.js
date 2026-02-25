@@ -20,7 +20,6 @@
  * ============================================================================
  */
 
-const CACHE_VERSION = 'sg-cache-v4';
 const STATIC_CACHE = 'sg-static-v4';
 const DYNAMIC_CACHE = 'sg-dynamic-v4';
 const IMAGE_CACHE = 'sg-images-v4';
@@ -31,7 +30,6 @@ const PRECACHE_ASSETS = [
   '/404.html',
   '/src/css/normalize.css',
   '/src/css/style.min.css',
-  '/src/css/easter-eggs.css',
   '/src/js/script.min.js',
   '/src/js/performance-boost.min.js',
   '/src/images/SalaGeek_LOGO.webp',
@@ -272,9 +270,29 @@ async function updateCache(request, cacheName) {
     if (networkResponse.ok) {
       const cache = await caches.open(cacheName);
       await cache.put(request, networkResponse);
+      // Limitar tamaño de caches dinámicas
+      if (cacheName === DYNAMIC_CACHE) {
+        await trimCache(cacheName, 50);
+      } else if (cacheName === IMAGE_CACHE) {
+        await trimCache(cacheName, 80);
+      }
     }
   } catch (error) {
     // Silently fail - el recurso se actualizará en el próximo request
+  }
+}
+
+/**
+ * Limita el número de entradas en un cache
+ */
+async function trimCache(cacheName, maxItems) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  if (keys.length > maxItems) {
+    await cache.delete(keys[0]);
+    if (keys.length - 1 > maxItems) {
+      await trimCache(cacheName, maxItems);
+    }
   }
 }
 

@@ -119,7 +119,6 @@
       
       this.createBar();
       this.setupListener();
-      console.log('[📖 Progress] Reading progress bar inicializado');
     },
     
     createBar() {
@@ -207,12 +206,11 @@
       if (this.isSupported()) {
         try {
           await navigator.share(shareData);
-          console.log('[📤 Share] Contenido compartido exitosamente');
           this.trackShare('native');
           return true;
         } catch (err) {
           if (err.name !== 'AbortError') {
-            console.error('[📤 Share] Error al compartir:', err);
+            // Share error silenced in production
           }
           return false;
         }
@@ -324,7 +322,7 @@
           setTimeout(() => btn.textContent = 'Copiar enlace', 2000);
           this.trackShare('copy');
         } catch (err) {
-          console.error('Error al copiar:', err);
+          // Copy error silenced
         }
       });
       
@@ -369,15 +367,12 @@
         if (!this.isInstalled()) {
           this.showInstallButton();
         }
-        
-        console.log('[📱 PWA] Install prompt disponible');
       });
       
       // Detectar si se instaló
       window.addEventListener('appinstalled', () => {
         this.deferredPrompt = null;
         this.hideInstallButton();
-        console.log('[📱 PWA] App instalada exitosamente');
       });
     },
     
@@ -440,7 +435,6 @@
       this.deferredPrompt.prompt();
       const { outcome } = await this.deferredPrompt.userChoice;
       
-      console.log('[📱 PWA] Usuario eligió:', outcome);
       this.deferredPrompt = null;
       this.hideInstallButton();
     }
@@ -959,8 +953,6 @@
       WebShare,
       PWAInstall
     };
-    
-    console.log('[✨ Features] Sistema de features Plus inicializado');
   }
 
   // Auto-inicializar

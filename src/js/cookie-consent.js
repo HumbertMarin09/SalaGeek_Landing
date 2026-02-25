@@ -170,8 +170,6 @@
     } else {
       disableMarketing();
     }
-    
-    console.log('[🍪 Cookies] Consentimiento aplicado:', consent.categories);
   }
 
   function enableGoogleAnalytics() {
@@ -445,8 +443,6 @@
     
     saveConsent(categories);
     applyConsent({ categories });
-    
-    console.log('[🍪 Cookies] Todas las cookies aceptadas');
   }
 
   function rejectAll() {
@@ -458,7 +454,6 @@
     saveConsent(categories);
     applyConsent({ categories });
     
-    console.log('[🍪 Cookies] Solo cookies necesarias aceptadas');
   }
 
   function savePreferences() {
@@ -471,8 +466,6 @@
     
     saveConsent(categories);
     applyConsent({ categories });
-    
-    console.log('[🍪 Cookies] Preferencias guardadas:', categories);
   }
 
   // ============================================================================
@@ -983,11 +976,9 @@
     
     if (state.consent) {
       // Ya tiene consentimiento guardado
-      console.log('[🍪 Cookies] Consentimiento encontrado:', state.consent.categories);
       applyConsent(state.consent);
     } else {
       // Mostrar banner
-      console.log('[🍪 Cookies] Sin consentimiento, mostrando banner');
       
       // Esperar un momento para no interferir con la carga inicial
       setTimeout(showBanner, 1500);
