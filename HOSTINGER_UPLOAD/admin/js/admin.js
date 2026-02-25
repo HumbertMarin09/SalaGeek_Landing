@@ -4645,6 +4645,10 @@ class SalaGeekAdmin {
       this.renderDraftsTable();
       this.renderRecentArticles();
       this.renderRecentDrafts();
+      this.renderActivityLog();
+      this.renderPublishChart();
+      this.renderCategoriesBreakdown();
+      this.renderBlogHealth();
       this.updateDraftsCount();
       
       // Navigate to appropriate section
@@ -4756,6 +4760,10 @@ class SalaGeekAdmin {
       this.renderDraftsTable();
       this.renderRecentArticles();
       this.renderRecentDrafts();
+      this.renderActivityLog();
+      this.renderPublishChart();
+      this.renderCategoriesBreakdown();
+      this.renderBlogHealth();
       this.updateDraftsCount();
 
       // Recargar desde servidor en background
@@ -4856,6 +4864,10 @@ class SalaGeekAdmin {
       this.renderDraftsTable();
       this.renderRecentArticles();
       this.renderRecentDrafts();
+      this.renderActivityLog();
+      this.renderPublishChart();
+      this.renderCategoriesBreakdown();
+      this.renderBlogHealth();
       this.updateDraftsCount();
       this.navigateTo('articles');
 

@@ -276,6 +276,43 @@ function handleCreateOrUpdate() {
             $existingHtml['sha'] ?? null
         );
         
+        // ═══════════════════════════════════════════════════════════
+        // GUARDAR ARCHIVOS LOCALMENTE EN HOSTINGER
+        // El deploy desde GitHub puede tardar. Escribimos los archivos
+        // directamente en el servidor para que los cambios sean
+        // visibles al instante en el sitio publicado.
+        // ═══════════════════════════════════════════════════════════
+        try {
+            $baseDir = realpath(__DIR__ . '/..');
+            
+            // Guardar HTML del artículo localmente
+            $localHtmlPath = $baseDir . '/blog/articulos/' . $article['slug'] . '.html';
+            $htmlDir = dirname($localHtmlPath);
+            if (!is_dir($htmlDir)) {
+                mkdir($htmlDir, 0755, true);
+            }
+            file_put_contents($localHtmlPath, $htmlContent);
+            
+            // Guardar articles.json localmente
+            $localArticlesPath = $baseDir . '/blog/data/articles.json';
+            $articlesDir = dirname($localArticlesPath);
+            if (!is_dir($articlesDir)) {
+                mkdir($articlesDir, 0755, true);
+            }
+            file_put_contents($localArticlesPath, json_encode($articles, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            
+            // Guardar drafts.json localmente (si se modificó)
+            if ($isDraft || $draftIndex >= 0) {
+                $localDraftsPath = $baseDir . '/blog/data/drafts.json';
+                file_put_contents($localDraftsPath, json_encode($drafts, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+            }
+        } catch (Exception $localErr) {
+            // No fallar si la escritura local falla - GitHub es la fuente de verdad
+            logError('Local file write failed (non-critical)', [
+                'error' => $localErr->getMessage()
+            ]);
+        }
+        
         $statusMsg = $isDraft ? 'guardado como borrador' : ($isNew ? 'publicado' : 'actualizado');
         
         jsonResponse([
@@ -349,6 +386,23 @@ function handleDelete() {
                 $htmlFile['sha'],
                 "🗑️ Delete HTML: {$slug}"
             );
+        }
+        
+        // Eliminar archivos locales en Hostinger para reflejo inmediato
+        try {
+            $baseDir = realpath(__DIR__ . '/..');
+            
+            // Eliminar HTML local
+            $localHtmlPath = $baseDir . '/blog/articulos/' . $slug . '.html';
+            if (file_exists($localHtmlPath)) {
+                unlink($localHtmlPath);
+            }
+            
+            // Actualizar JSON local
+            $localJsonPath = $baseDir . '/' . $fileName;
+            file_put_contents($localJsonPath, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        } catch (Exception $localErr) {
+            logError('Local delete failed (non-critical)', ['error' => $localErr->getMessage()]);
         }
         
         jsonResponse([
