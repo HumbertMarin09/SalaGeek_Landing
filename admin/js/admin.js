@@ -4794,7 +4794,10 @@ class SalaGeekAdmin {
 
   async loadArticleContent(contentPath) {
     try {
-      const response = await fetch(contentPath);
+      // Asegurar extensión .html en la ruta
+      const url = contentPath.endsWith('.html') ? contentPath : contentPath + '.html';
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const html = await response.text();
       
       // Extract content from article HTML
