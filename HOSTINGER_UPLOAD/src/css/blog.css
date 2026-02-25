@@ -2774,6 +2774,7 @@ figure.resizable-image img {
 .related-title {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   font-size: 1.35rem;
   font-weight: 700;
