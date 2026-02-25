@@ -2239,7 +2239,21 @@ class SalaGeekAdmin {
 
   executeEditorCommand(command) {
     const editor = document.getElementById('article-editor');
+    
+    // Guardar selección antes de focus para no perderla
+    const sel = window.getSelection();
+    let savedRange = null;
+    if (sel && sel.rangeCount > 0) {
+      savedRange = sel.getRangeAt(0).cloneRange();
+    }
+    
     editor.focus();
+    
+    // Restaurar la selección si se perdió (ej: desde floating toolbar)
+    if (savedRange && editor.contains(savedRange.commonAncestorContainer)) {
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
 
     switch (command) {
       case 'undo':
@@ -2273,16 +2287,9 @@ class SalaGeekAdmin {
         document.execCommand('formatBlock', false, 'blockquote');
         break;
       case 'link':
-        const url = prompt('URL del enlace:');
-        if (url) {
-          // Validar URL
-          if (!/^https?:\/\//i.test(url)) {
-            this.showToast('La URL debe comenzar con http:// o https://', 'warning');
-            return;
-          }
-          document.execCommand('createLink', false, url);
-        }
-        break;
+        this.saveEditorSelection();
+        this.showLinkModal();
+        return; // No guardar estado aquí, se guarda al insertar
       case 'justifyLeft':
         if (this.selectedImage) {
           this.setImageAlignment(this.selectedImage, 'left');
@@ -2421,6 +2428,22 @@ class SalaGeekAdmin {
         <span class="ft-text">P</span>
       </button>
       <span class="floating-toolbar-divider"></span>
+      <button data-cmd="justifyLeft" title="Alinear izquierda">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/>
+        </svg>
+      </button>
+      <button data-cmd="justifyCenter" title="Centrar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/>
+        </svg>
+      </button>
+      <button data-cmd="justifyRight" title="Alinear derecha">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/>
+        </svg>
+      </button>
+      <span class="floating-toolbar-divider"></span>
       <button data-cmd="link" title="Enlace (Ctrl+K)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
@@ -2540,9 +2563,148 @@ class SalaGeekAdmin {
         case 'bold': isActive = document.queryCommandState('bold'); break;
         case 'italic': isActive = document.queryCommandState('italic'); break;
         case 'underline': isActive = document.queryCommandState('underline'); break;
+        case 'justifyLeft': isActive = document.queryCommandState('justifyLeft'); break;
+        case 'justifyCenter': isActive = document.queryCommandState('justifyCenter'); break;
+        case 'justifyRight': isActive = document.queryCommandState('justifyRight'); break;
       }
       btn.classList.toggle('active', isActive);
     });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // LINK MODAL - Modal personalizado para insertar enlaces
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Muestra un modal personalizado para insertar un enlace
+   */
+  showLinkModal() {
+    this.hideFloatingToolbar();
+
+    // Remover modal anterior si existe
+    const existing = document.getElementById('link-modal');
+    if (existing) existing.remove();
+
+    // Obtener texto seleccionado como texto por defecto del enlace
+    const sel = window.getSelection();
+    const selectedText = sel ? sel.toString().trim() : '';
+
+    const modal = document.createElement('div');
+    modal.id = 'link-modal';
+    modal.className = 'link-modal-overlay';
+    modal.innerHTML = `
+      <div class="link-modal-content">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Insertar enlace
+        </h3>
+        <div class="link-modal-field">
+          <label for="link-url-input">URL</label>
+          <input type="url" id="link-url-input" placeholder="https://ejemplo.com" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="link-modal-field">
+          <label for="link-text-input">Texto del enlace</label>
+          <input type="text" id="link-text-input" placeholder="${selectedText || 'Texto visible'}" value="${this.escapeHtml(selectedText)}" />
+        </div>
+        <label class="link-modal-checkbox">
+          <input type="checkbox" id="link-new-tab" checked />
+          <span>Abrir en nueva pestaña</span>
+        </label>
+        <div class="link-modal-actions">
+          <button type="button" class="link-modal-btn cancel" id="link-cancel">Cancelar</button>
+          <button type="button" class="link-modal-btn confirm" id="link-confirm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            Insertar
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Animación de entrada
+    requestAnimationFrame(() => modal.classList.add('visible'));
+
+    const urlInput = document.getElementById('link-url-input');
+    const textInput = document.getElementById('link-text-input');
+    const newTabCheck = document.getElementById('link-new-tab');
+    const confirmBtn = document.getElementById('link-confirm');
+    const cancelBtn = document.getElementById('link-cancel');
+
+    // Focus en URL input
+    setTimeout(() => urlInput.focus(), 100);
+
+    const closeLinkModal = () => {
+      modal.classList.remove('visible');
+      setTimeout(() => modal.remove(), 200);
+    };
+
+    const insertLink = () => {
+      const url = urlInput.value.trim();
+      if (!url) {
+        this.showToast('La URL es requerida', 'warning');
+        urlInput.focus();
+        return;
+      }
+      if (!/^https?:\/\//i.test(url) && !url.startsWith('/') && !url.startsWith('#') && !url.startsWith('mailto:')) {
+        this.showToast('URL inválida. Usa http://, https://, / o mailto:', 'warning');
+        urlInput.focus();
+        return;
+      }
+
+      closeLinkModal();
+
+      // Restaurar selección del editor
+      this.restoreEditorSelection();
+
+      const linkText = textInput.value.trim() || selectedText || url;
+      const target = newTabCheck.checked ? ' target="_blank" rel="noopener noreferrer"' : '';
+      
+      // Si hay texto seleccionado, crear link sobre él
+      const sel2 = window.getSelection();
+      if (sel2 && !sel2.isCollapsed) {
+        document.execCommand('createLink', false, url);
+        // Añadir target si es nueva pestaña
+        if (newTabCheck.checked) {
+          const links = document.getElementById('article-editor').querySelectorAll(`a[href="${url}"]`);
+          links.forEach(link => {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+          });
+        }
+      } else {
+        // Insertar como HTML si no hay selección
+        document.execCommand('insertHTML', false, `<a href="${this.escapeHtml(url)}"${target}>${this.escapeHtml(linkText)}</a>`);
+      }
+
+      this.showToast('Enlace insertado', 'success');
+      this.saveEditorState();
+    };
+
+    confirmBtn.addEventListener('click', insertLink);
+    cancelBtn.addEventListener('click', closeLinkModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeLinkModal();
+    });
+
+    // Enter para confirmar, Escape para cancelar
+    const handleKeydown = (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        insertLink();
+      }
+      if (e.key === 'Escape') {
+        closeLinkModal();
+      }
+    };
+    urlInput.addEventListener('keydown', handleKeydown);
+    textInput.addEventListener('keydown', handleKeydown);
   }
 
   // ═══════════════════════════════════════════════════════════════
