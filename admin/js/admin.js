@@ -4605,20 +4605,55 @@ class SalaGeekAdmin {
 
       const successMsg = isDraft 
         ? '¡Borrador guardado exitosamente!'
-        : '¡Artículo publicado exitosamente! Recargando lista...';
+        : this.editingArticle ? '¡Artículo actualizado exitosamente!' : '¡Artículo publicado exitosamente!';
       this.showToast(successMsg, 'success');
       
       // Marcar como guardado para evitar mensaje de cambios sin guardar
       this.contentSaved = true;
       
-      // Esperar un momento para que GitHub procese el commit, luego recargar
-      // GitHub/Netlify puede tardar unos segundos en reflejar los cambios
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      await this.loadArticles();
+      // ═══════════════════════════════════════════════════════════
+      // ACTUALIZAR ESTADO LOCAL INMEDIATAMENTE
+      // El PHP guarda en GitHub pero el servidor local puede tardar
+      // en sincronizar. Actualizamos arrays locales para que la UI
+      // refleje los cambios al instante sin depender del servidor.
+      // ═══════════════════════════════════════════════════════════
+      if (isDraft) {
+        // Actualizar/agregar en borradores
+        const draftIdx = this.drafts.findIndex(d => d.id === articleData.id);
+        if (draftIdx >= 0) {
+          this.drafts[draftIdx] = articleData;
+        } else {
+          this.drafts.unshift(articleData);
+        }
+        // Remover de publicados si existía ahí
+        this.articles = this.articles.filter(a => a.id !== articleData.id);
+      } else {
+        // Actualizar/agregar en publicados
+        const artIdx = this.articles.findIndex(a => a.id === articleData.id);
+        if (artIdx >= 0) {
+          this.articles[artIdx] = articleData;
+        } else {
+          this.articles.unshift(articleData);
+        }
+        // Remover de borradores si existía ahí
+        this.drafts = this.drafts.filter(d => d.id !== articleData.id);
+      }
+
+      // Re-renderizar toda la UI con los datos actualizados
+      this.updateDashboardStats();
+      this.renderArticlesTable();
+      this.renderDraftsTable();
+      this.renderRecentArticles();
+      this.renderRecentDrafts();
+      this.updateDraftsCount();
       
       // Navigate to appropriate section
       this.editingArticle = null;
       this.navigateTo(isDraft ? 'drafts' : 'articles');
+      
+      // Recargar desde servidor en background (por si hay otros cambios)
+      // Se ejecuta después de navegar para no bloquear la UI
+      setTimeout(() => this.loadArticles().catch(() => {}), 8000);
 
     } catch (error) {
       console.error('Error saving article:', error);
@@ -4709,9 +4744,22 @@ class SalaGeekAdmin {
       const type = isDraft ? 'Borrador' : 'Artículo';
       this.showToast(`${type} "${article.title}" eliminado correctamente`, 'success');
       
-      // Esperar un momento para que GitHub procese el commit
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      await this.loadArticles();
+      // Actualizar estado local inmediatamente
+      if (isDraft) {
+        this.drafts = this.drafts.filter(d => d.id !== id);
+      } else {
+        this.articles = this.articles.filter(a => a.id !== id);
+      }
+      
+      this.updateDashboardStats();
+      this.renderArticlesTable();
+      this.renderDraftsTable();
+      this.renderRecentArticles();
+      this.renderRecentDrafts();
+      this.updateDraftsCount();
+
+      // Recargar desde servidor en background
+      setTimeout(() => this.loadArticles().catch(() => {}), 8000);
 
     } catch (error) {
       console.error('Error deleting article:', error);
@@ -4799,9 +4847,20 @@ class SalaGeekAdmin {
 
       this.showToast(`¡"${draft.title}" publicado exitosamente!`, 'success');
       
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      await this.loadArticles();
+      // Actualizar estado local inmediatamente
+      this.articles.unshift(articleData);
+      this.drafts = this.drafts.filter(d => d.id !== articleData.id);
+      
+      this.updateDashboardStats();
+      this.renderArticlesTable();
+      this.renderDraftsTable();
+      this.renderRecentArticles();
+      this.renderRecentDrafts();
+      this.updateDraftsCount();
       this.navigateTo('articles');
+
+      // Recargar desde servidor en background
+      setTimeout(() => this.loadArticles().catch(() => {}), 8000);
 
     } catch (error) {
       console.error('Error publishing draft:', error);
