@@ -1277,8 +1277,34 @@ class SalaGeekAdmin {
     });
 
     // Actualizar estado del toolbar al cambiar selección
-    editor?.addEventListener('mouseup', () => this.updateToolbarState());
-    editor?.addEventListener('keyup', () => this.updateToolbarState());
+    editor?.addEventListener('mouseup', () => {
+      this.updateToolbarState();
+      // Mostrar floating toolbar si hay texto seleccionado
+      setTimeout(() => this.showFloatingToolbar(), 10);
+    });
+    editor?.addEventListener('keyup', (e) => {
+      this.updateToolbarState();
+      // Mostrar en selección con Shift+flechas
+      if (e.shiftKey) {
+        setTimeout(() => this.showFloatingToolbar(), 10);
+      } else {
+        this.hideFloatingToolbar();
+      }
+    });
+
+    // Ocultar floating toolbar al hacer clic fuera o al perder selección
+    document.addEventListener('mousedown', (e) => {
+      const floatingToolbar = document.getElementById('floating-toolbar');
+      if (floatingToolbar && !floatingToolbar.contains(e.target)) {
+        // Dar tiempo por si se hizo clic en el editor (nueva selección)
+        setTimeout(() => {
+          const sel = window.getSelection();
+          if (!sel || sel.isCollapsed) {
+            this.hideFloatingToolbar();
+          }
+        }, 200);
+      }
+    });
 
     // Keyboard shortcuts
     editor?.addEventListener('keydown', (e) => {
@@ -2350,6 +2376,171 @@ class SalaGeekAdmin {
           break;
       }
       
+      btn.classList.toggle('active', isActive);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // FLOATING TOOLBAR - Mini toolbar al seleccionar texto
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Crea el floating toolbar HTML si no existe
+   */
+  createFloatingToolbar() {
+    if (document.getElementById('floating-toolbar')) return;
+
+    const toolbar = document.createElement('div');
+    toolbar.id = 'floating-toolbar';
+    toolbar.className = 'floating-toolbar';
+    toolbar.innerHTML = `
+      <button data-cmd="bold" title="Negrita (Ctrl+B)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+          <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+        </svg>
+      </button>
+      <button data-cmd="italic" title="Cursiva (Ctrl+I)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/>
+        </svg>
+      </button>
+      <button data-cmd="underline" title="Subrayado (Ctrl+U)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"/><line x1="4" y1="21" x2="20" y2="21"/>
+        </svg>
+      </button>
+      <span class="floating-toolbar-divider"></span>
+      <button data-cmd="h2" title="Título H2">
+        <span class="ft-text">H2</span>
+      </button>
+      <button data-cmd="h3" title="Subtítulo H3">
+        <span class="ft-text">H3</span>
+      </button>
+      <button data-cmd="p" title="Párrafo">
+        <span class="ft-text">P</span>
+      </button>
+      <span class="floating-toolbar-divider"></span>
+      <button data-cmd="link" title="Enlace (Ctrl+K)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </button>
+      <button data-cmd="quote" title="Cita">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/>
+        </svg>
+      </button>
+      <button data-cmd="clear" title="Limpiar formato">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="floating-toolbar-arrow"></div>
+    `;
+
+    // Event listeners para los botones
+    toolbar.querySelectorAll('button[data-cmd]').forEach(btn => {
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault(); // Evitar que pierda la selección del texto
+        e.stopPropagation();
+        const cmd = btn.dataset.cmd;
+        this.executeEditorCommand(cmd);
+        // Actualizar estado activo de los botones del floating toolbar
+        this.updateFloatingToolbarState();
+        // Ocultar si fue un comando de bloque o link
+        if (['h2', 'h3', 'p', 'quote', 'clear'].includes(cmd)) {
+          this.hideFloatingToolbar();
+        }
+      });
+    });
+
+    document.body.appendChild(toolbar);
+  }
+
+  /**
+   * Muestra el floating toolbar sobre el texto seleccionado
+   */
+  showFloatingToolbar() {
+    const editor = document.getElementById('article-editor');
+    const selection = window.getSelection();
+    
+    if (!editor || !selection || selection.isCollapsed || selection.toString().trim() === '') {
+      this.hideFloatingToolbar();
+      return;
+    }
+
+    // Verificar que la selección está dentro del editor
+    if (!editor.contains(selection.anchorNode) || !editor.contains(selection.focusNode)) {
+      this.hideFloatingToolbar();
+      return;
+    }
+
+    // Crear toolbar si no existe
+    this.createFloatingToolbar();
+    const toolbar = document.getElementById('floating-toolbar');
+    if (!toolbar) return;
+
+    // Obtener posición de la selección
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    
+    // Calcular posición centrada sobre la selección
+    const toolbarWidth = 360;
+    let left = rect.left + (rect.width / 2) - (toolbarWidth / 2);
+    let top = rect.top - 52; // Encima de la selección
+
+    // Ajustar si se sale de pantalla por los lados
+    const margin = 8;
+    if (left < margin) left = margin;
+    if (left + toolbarWidth > window.innerWidth - margin) {
+      left = window.innerWidth - toolbarWidth - margin;
+    }
+
+    // Si no hay espacio arriba, mostrar debajo
+    if (top < margin) {
+      top = rect.bottom + 10;
+      toolbar.classList.add('arrow-top');
+      toolbar.classList.remove('arrow-bottom');
+    } else {
+      toolbar.classList.add('arrow-bottom');
+      toolbar.classList.remove('arrow-top');
+    }
+
+    toolbar.style.left = `${left}px`;
+    toolbar.style.top = `${top + window.scrollY}px`;
+    toolbar.classList.add('visible');
+    
+    // Actualizar estado activo
+    this.updateFloatingToolbarState();
+  }
+
+  /**
+   * Oculta el floating toolbar
+   */
+  hideFloatingToolbar() {
+    const toolbar = document.getElementById('floating-toolbar');
+    if (toolbar) {
+      toolbar.classList.remove('visible');
+    }
+  }
+
+  /**
+   * Actualiza el estado activo/inactivo de los botones del floating toolbar
+   */
+  updateFloatingToolbarState() {
+    const toolbar = document.getElementById('floating-toolbar');
+    if (!toolbar || !toolbar.classList.contains('visible')) return;
+
+    toolbar.querySelectorAll('button[data-cmd]').forEach(btn => {
+      const cmd = btn.dataset.cmd;
+      let isActive = false;
+      switch (cmd) {
+        case 'bold': isActive = document.queryCommandState('bold'); break;
+        case 'italic': isActive = document.queryCommandState('italic'); break;
+        case 'underline': isActive = document.queryCommandState('underline'); break;
+      }
       btn.classList.toggle('active', isActive);
     });
   }

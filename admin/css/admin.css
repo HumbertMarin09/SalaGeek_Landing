@@ -4484,6 +4484,102 @@ input, select, textarea {
   color: white;
 }
 
+/* ═══════════════════════════════════════════
+   FLOATING TEXT TOOLBAR
+   Mini toolbar que aparece al seleccionar texto
+   ═══════════════════════════════════════════ */
+
+.floating-toolbar {
+  position: absolute;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  background: linear-gradient(135deg, #1e2340 0%, #252a4a 100%);
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 209, 102, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px) scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.floating-toolbar.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.floating-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.floating-toolbar button:hover {
+  background: rgba(255, 209, 102, 0.15);
+  color: #ffd166;
+}
+
+.floating-toolbar button.active {
+  background: rgba(255, 209, 102, 0.2);
+  color: #ffd166;
+  box-shadow: inset 0 0 0 1px rgba(255, 209, 102, 0.25);
+}
+
+.floating-toolbar .ft-text {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1;
+}
+
+.floating-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* Arrow indicator */
+.floating-toolbar-arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #1e2340;
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  transform: rotate(45deg);
+  left: 50%;
+  margin-left: -5px;
+}
+
+.floating-toolbar.arrow-bottom .floating-toolbar-arrow {
+  bottom: -6px;
+  border-top: none;
+  border-left: none;
+}
+
+.floating-toolbar.arrow-top .floating-toolbar-arrow {
+  top: -6px;
+  border-bottom: none;
+  border-right: none;
+}
+
 /* Float Styles */
 .article-editor .resizable-image.float-left,
 .article-editor .image-resize-wrapper.float-left,
