@@ -2443,6 +2443,11 @@ class SalaGeekAdmin {
           <line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/>
         </svg>
       </button>
+      <button data-cmd="justifyFull" title="Justificar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/>
+        </svg>
+      </button>
       <span class="floating-toolbar-divider"></span>
       <button data-cmd="link" title="Enlace (Ctrl+K)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -2566,6 +2571,7 @@ class SalaGeekAdmin {
         case 'justifyLeft': isActive = document.queryCommandState('justifyLeft'); break;
         case 'justifyCenter': isActive = document.queryCommandState('justifyCenter'); break;
         case 'justifyRight': isActive = document.queryCommandState('justifyRight'); break;
+        case 'justifyFull': isActive = document.queryCommandState('justifyFull'); break;
       }
       btn.classList.toggle('active', isActive);
     });
