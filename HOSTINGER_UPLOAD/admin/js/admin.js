@@ -2283,9 +2283,25 @@ class SalaGeekAdmin {
       case 'ul':
         document.execCommand('insertUnorderedList', false, null);
         break;
-      case 'quote':
-        document.execCommand('formatBlock', false, 'blockquote');
+      case 'quote': {
+        const sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+          let node = sel.getRangeAt(0).commonAncestorContainer;
+          if (node.nodeType === 3) node = node.parentNode;
+          const bq = node.closest('blockquote');
+          if (bq) {
+            // Ya está en blockquote → sacar el contenido
+            const parent = bq.parentNode;
+            while (bq.firstChild) {
+              parent.insertBefore(bq.firstChild, bq);
+            }
+            parent.removeChild(bq);
+          } else {
+            document.execCommand('formatBlock', false, 'blockquote');
+          }
+        }
         break;
+      }
       case 'link':
         this.saveEditorSelection();
         this.showLinkModal();
@@ -2331,14 +2347,25 @@ class SalaGeekAdmin {
         break;
       case 'clear':
         document.execCommand('removeFormat', false, null);
-        // También limpiar estilos inline
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          const content = range.cloneContents();
-          const text = content.textContent;
-          range.deleteContents();
-          range.insertNode(document.createTextNode(text));
+        // Limpiar estilos inline y bloques (blockquote, headings)
+        const clearSel = window.getSelection();
+        if (clearSel.rangeCount > 0) {
+          let node = clearSel.getRangeAt(0).commonAncestorContainer;
+          if (node.nodeType === 3) node = node.parentNode;
+          // Sacar de blockquote si aplica
+          const bq = node.closest('blockquote');
+          if (bq) {
+            const parent = bq.parentNode;
+            while (bq.firstChild) {
+              parent.insertBefore(bq.firstChild, bq);
+            }
+            parent.removeChild(bq);
+          }
+          // Convertir headings a párrafo
+          const heading = node.closest('h1, h2, h3, h4, h5, h6');
+          if (heading) {
+            document.execCommand('formatBlock', false, 'p');
+          }
         }
         this.showToast('Formato limpiado', 'success');
         break;
