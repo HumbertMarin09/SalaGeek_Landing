@@ -1378,14 +1378,73 @@ input, select, textarea {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Image Resize Modal
+   Image Resize Modal - Premium Design
    ═══════════════════════════════════════════════════════════════ */
 .modal-small .modal-content {
   max-width: 400px;
 }
 
-.resize-modal-content {
-  max-width: 460px !important;
+#image-resize-modal .modal-content {
+  max-width: 460px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+              0 0 30px rgba(255, 209, 102, 0.06);
+}
+
+#image-resize-modal .modal-header {
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: none;
+}
+
+#image-resize-modal .modal-header h3 {
+  font-size: 1.15rem;
+  color: var(--admin-primary);
+}
+
+#image-resize-modal .modal-body {
+  padding: 0.75rem 2rem 1.25rem;
+}
+
+#image-resize-modal .modal-actions {
+  padding: 1rem 2rem 1.75rem;
+  margin-top: 0.5rem;
+  border-top: none;
+  gap: 0.75rem;
+}
+
+#image-resize-modal .modal-actions .btn-secondary {
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#image-resize-modal .modal-actions .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+#image-resize-modal .modal-actions .btn-primary {
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ffd166, #e6b84d);
+  color: #1a1a2e;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#image-resize-modal .modal-actions .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 209, 102, 0.3);
 }
 
 .resize-preview {
