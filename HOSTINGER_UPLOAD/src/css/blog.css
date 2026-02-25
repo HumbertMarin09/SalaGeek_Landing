@@ -2884,15 +2884,10 @@ figure.resizable-image img {
 .no-related {
   text-align: center;
   color: var(--text-tertiary);
-  padding: 3rem 2rem;
+  padding: 3.5rem 2rem;
   font-size: 0.95rem;
   font-style: italic;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  border: 1px dashed rgba(255, 209, 102, 0.1);
   grid-column: 1 / -1;
-  max-width: 480px;
-  margin: 0 auto;
 }
 
 .loading-spinner {
