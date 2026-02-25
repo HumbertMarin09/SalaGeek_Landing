@@ -242,7 +242,7 @@ class SalaGeekAdmin {
         this.handleLogin(data.user);
       }
     } catch (error) {
-      console.log('No hay sesión activa');
+      // Sesión no activa - comportamiento esperado en primer acceso
     }
   }
 
@@ -4861,9 +4861,9 @@ class SalaGeekAdmin {
    * 1. Recopila datos del formulario
    * 2. Valida campos requeridos (más flexible para borradores)
    * 3. Construye objeto articleData con SEO
-   * 4. Envía a Netlify Function con token actualizado
+   * 4. Envía a la API PHP del servidor
    * 5. Genera HTML del artículo
-   * 6. Actualiza articles.json en GitHub
+   * 6. Actualiza articles.json vía GitHub API + escritura local
    */
   async saveArticle(asDraft = false) {
     const form = document.getElementById('article-form');
@@ -6326,7 +6326,9 @@ class SalaGeekAdmin {
   // ═══════════════════════════════════════════════════════════════
 
   generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    const timestamp = Date.now().toString(36);
+    const randomPart = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+    return timestamp + randomPart;
   }
 
   updateWordCount() {

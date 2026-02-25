@@ -22,8 +22,14 @@ class BlogEngine {
     try {
       const response = await fetch("/blog/data/articles.json");
       const data = await response.json();
+      
+      // Validar estructura de datos
+      if (!data?.articles || !Array.isArray(data.articles)) {
+        throw new Error('Formato de datos inválido en articles.json');
+      }
+      
       this.articles = data.articles;
-      this.categories = data.categories;
+      this.categories = data.categories || {};
       this.filteredArticles = [...this.articles];
       return true;
     } catch (error) {
@@ -176,7 +182,9 @@ class BlogEngine {
    * Formatea fecha para mostrar
    */
   formatDate(dateString) {
+    if (!dateString) return '';
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
     const day = date.getDate();
     const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     const month = months[date.getMonth()];

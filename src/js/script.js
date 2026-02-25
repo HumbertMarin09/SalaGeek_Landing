@@ -664,8 +664,6 @@ function initSearch() {
       return;
     }
 
-    console.log("✅ Búsqueda inicializada");
-
     // ═══════════════════════════════════════════════════════════
     // 🔄 CARGA DINÁMICA DE ARTÍCULOS DESDE articles.json
     // ═══════════════════════════════════════════════════════════
@@ -683,9 +681,7 @@ function initSearch() {
           excerpt: article.excerpt,
           tags: article.tags || []
         }));
-        console.log(`✅ Búsqueda: ${articles.length} artículos cargados`);
       } catch (error) {
-        console.error("❌ Error cargando artículos para búsqueda:", error);
         articles = [];
       }
     };
@@ -1733,9 +1729,7 @@ function initNewsletterForm() {
       const checkRecaptcha = () => {
         // Verificar si grecaptcha existe y está listo
         if (typeof grecaptcha !== "undefined" && grecaptcha.ready) {
-          console.log("✅ reCAPTCHA detectado, esperando ready()...");
           grecaptcha.ready(() => {
-            console.log("✅ reCAPTCHA ready!");
             resolve();
           });
         } else if (attempts >= maxAttempts) {
@@ -1747,7 +1741,6 @@ function initNewsletterForm() {
           );
         } else {
           attempts++;
-          console.log(`⏳ Esperando reCAPTCHA... intento ${attempts}/${maxAttempts}`);
           setTimeout(checkRecaptcha, 500);
         }
       };

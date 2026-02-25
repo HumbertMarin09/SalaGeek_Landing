@@ -148,6 +148,11 @@ function handleCreateOrUpdate() {
         jsonResponse(['error' => 'Título y slug son requeridos'], 400);
     }
     
+    // Validar formato de slug (solo alfanuméricos, guiones y puntos)
+    if (!preg_match('/^[a-z0-9][a-z0-9\-\.]*[a-z0-9]$/', $article['slug'])) {
+        jsonResponse(['error' => 'Formato de slug inválido. Solo letras minúsculas, números y guiones.'], 400);
+    }
+    
     if (!$htmlContent) {
         jsonResponse(['error' => 'Contenido HTML requerido'], 400);
     }
@@ -344,6 +349,11 @@ function handleDelete() {
     
     if (!$id || !$slug) {
         jsonResponse(['error' => 'ID y slug son requeridos'], 400);
+    }
+    
+    // Validar formato de slug para prevenir path traversal
+    if (!preg_match('/^[a-z0-9][a-z0-9\-\.]*[a-z0-9]$/', $slug)) {
+        jsonResponse(['error' => 'Formato de slug inválido'], 400);
     }
     
     try {
