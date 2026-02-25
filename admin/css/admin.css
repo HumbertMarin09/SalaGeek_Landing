@@ -4486,18 +4486,21 @@ input, select, textarea {
 
 /* Float Styles */
 .article-editor .resizable-image.float-left,
+.article-editor .image-resize-wrapper.float-left,
 .article-editor figure.float-left {
   float: left;
   margin: 0 1rem 1rem 0;
 }
 
 .article-editor .resizable-image.float-right,
+.article-editor .image-resize-wrapper.float-right,
 .article-editor figure.float-right {
   float: right;
   margin: 0 0 1rem 1rem;
 }
 
 .article-editor .resizable-image.align-left,
+.article-editor .image-resize-wrapper.align-left,
 .article-editor figure.align-left {
   display: block;
   margin: 1rem auto 1rem 0;
@@ -4505,6 +4508,7 @@ input, select, textarea {
 }
 
 .article-editor .resizable-image.align-right,
+.article-editor .image-resize-wrapper.align-right,
 .article-editor figure.align-right {
   display: block;
   margin: 1rem 0 1rem auto;
@@ -4512,14 +4516,16 @@ input, select, textarea {
 }
 
 .article-editor .resizable-image.align-center,
+.article-editor .image-resize-wrapper.align-center,
 .article-editor figure.align-center {
   display: block;
   margin: 1rem auto;
   text-align: center;
 }
 
-/* Asegurar que figure tenga width fit-content para que la alineación funcione */
-.article-editor figure {
+/* Asegurar que figure/wrapper tenga width fit-content para que la alineación funcione */
+.article-editor figure,
+.article-editor .image-resize-wrapper {
   width: fit-content;
   max-width: 100%;
 }
