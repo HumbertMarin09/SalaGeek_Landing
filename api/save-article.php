@@ -28,9 +28,19 @@ if (!checkRateLimit(ADMIN_RATE_LIMIT_WINDOW, ADMIN_RATE_LIMIT_MAX, 'save_article
     jsonResponse(['error' => 'Demasiadas solicitudes. Intenta en 10 minutos.'], 429);
 }
 
+// Verificar que cURL está disponible
+if (!function_exists('curl_init')) {
+    logError('cURL extension not available');
+    jsonResponse([
+        'error' => 'Error de configuración: extensión cURL no disponible en el servidor',
+        'hint' => 'Habilita la extensión cURL en php.ini (extension=curl)'
+    ], 500);
+}
+
 // Verificar que GitHub está configurado
-if (GITHUB_TOKEN === 'TU_GITHUB_TOKEN_AQUI' || empty(GITHUB_TOKEN)) {
-    logError('GITHUB_TOKEN not configured');
+$invalidTokens = ['TU_GITHUB_TOKEN_AQUI', 'CONFIGURE_IN_ENV', '', 'your_token_here'];
+if (in_array(GITHUB_TOKEN, $invalidTokens, true)) {
+    logError('GITHUB_TOKEN not configured', ['value' => substr(GITHUB_TOKEN, 0, 5) . '...']);
     jsonResponse([
         'error' => 'Error de configuración: GitHub token no configurado',
         'hint' => 'Configura GITHUB_TOKEN en las variables de entorno de Hostinger'
@@ -166,9 +176,24 @@ function handleCreateOrUpdate() {
         $drafts = ['drafts' => []];
         
         if ($draftsFile) {
-            $draftsContent = base64_decode($draftsFile['content']);
-            $drafts = json_decode($draftsContent, true);
+            // GitHub API retorna base64 con saltos de línea, limpiar antes de decodificar
+            $draftsContent = base64_decode(str_replace("\n", '', $draftsFile['content']));
+            $decoded = json_decode($draftsContent, true);
+            if (!is_array($decoded)) {
+                // ABORTAR: no continuar con datos vacíos para evitar sobrescribir
+                logError('drafts.json json_decode failed - ABORTING to prevent data loss', [
+                    'error' => json_last_error_msg(),
+                    'content_preview' => substr($draftsContent, 0, 200)
+                ]);
+                throw new Exception('Error crítico: no se pudo leer drafts.json del repositorio. Guardado abortado para proteger datos existentes.');
+            }
+            $drafts = $decoded;
             $draftsSha = $draftsFile['sha'];
+        }
+        
+        // Asegurar que la estructura tiene la clave esperada
+        if (!isset($drafts['drafts']) || !is_array($drafts['drafts'])) {
+            $drafts['drafts'] = [];
         }
         
         // Buscar si existe en drafts
@@ -183,13 +208,30 @@ function handleCreateOrUpdate() {
         // MANEJO DE ARTICLES.JSON
         $articlesFile = getGitHubFile('blog/data/articles.json');
         $articlesSha = null;
+        $articles = ['articles' => [], 'categories' => []];
         
         if ($articlesFile) {
-            $articlesContent = base64_decode($articlesFile['content']);
-            $articles = json_decode($articlesContent, true);
+            // GitHub API retorna base64 con saltos de línea, limpiar antes de decodificar
+            $articlesContent = base64_decode(str_replace("\n", '', $articlesFile['content']));
+            $decoded = json_decode($articlesContent, true);
+            if (!is_array($decoded)) {
+                // ABORTAR: no continuar con datos vacíos para evitar sobrescribir
+                logError('articles.json json_decode failed - ABORTING to prevent data loss', [
+                    'error' => json_last_error_msg(),
+                    'content_preview' => substr($articlesContent, 0, 200)
+                ]);
+                throw new Exception('Error crítico: no se pudo leer articles.json del repositorio. Guardado abortado para proteger datos existentes.');
+            }
+            $articles = $decoded;
             $articlesSha = $articlesFile['sha'];
-        } else {
-            $articles = ['articles' => [], 'categories' => []];
+        }
+        
+        // Asegurar que la estructura tiene las claves esperadas
+        if (!isset($articles['articles']) || !is_array($articles['articles'])) {
+            $articles['articles'] = [];
+        }
+        if (!isset($articles['categories']) || !is_array($articles['categories'])) {
+            $articles['categories'] = [];
         }
         
         // Buscar si existe en articles
@@ -365,10 +407,21 @@ function handleDelete() {
             jsonResponse(['error' => 'No se encontró el archivo de datos'], 404);
         }
         
-        $content = base64_decode($dataFile['content']);
+        $content = base64_decode(str_replace("\n", '', $dataFile['content']));
         $data = json_decode($content, true);
         
+        if (!is_array($data)) {
+            logError('Delete: json_decode failed for ' . $fileName, [
+                'error' => json_last_error_msg()
+            ]);
+            jsonResponse(['error' => 'Error al leer datos del archivo'], 500);
+        }
+        
         $key = $isDraft ? 'drafts' : 'articles';
+        
+        if (!isset($data[$key]) || !is_array($data[$key])) {
+            $data[$key] = [];
+        }
         
         // Filtrar el artículo a eliminar
         $data[$key] = array_filter($data[$key], function($a) use ($id) {

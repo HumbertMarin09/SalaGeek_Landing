@@ -5135,10 +5135,19 @@ class SalaGeekAdmin {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        let errorData = {};
+        let rawText = '';
+        try {
+          rawText = await response.text();
+          errorData = JSON.parse(rawText);
+        } catch (parseErr) {
+          console.error('Save error: non-JSON response body:', rawText);
+        }
         const errorMsg = errorData.error || `HTTP ${response.status}`;
-        console.error('Save error:', errorMsg, errorData);
-        throw new Error(errorMsg);
+        const hint = errorData.hint ? ` (${errorData.hint})` : '';
+        const fileInfo = errorData.file ? ` [${errorData.file}:${errorData.line}]` : '';
+        console.error('Save error:', errorMsg + hint + fileInfo, errorData);
+        throw new Error(errorMsg + hint);
       }
 
       const result = await response.json();
