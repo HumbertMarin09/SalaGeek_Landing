@@ -1845,12 +1845,30 @@
   width: 100%;
   max-width: 100%;
   padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  margin: 2rem 0;
+  margin: 2rem auto;
   background: var(--bg-secondary);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
+
+/* Video size variants */
+.article-full .article-content .video-container.video-small,
+.article-full .article-content .youtube-embed.video-small,
+.video-container.video-small,
+.youtube-embed.video-small { max-width: 400px; }
+.article-full .article-content .video-container.video-medium,
+.article-full .article-content .youtube-embed.video-medium,
+.video-container.video-medium,
+.youtube-embed.video-medium { max-width: 560px; }
+.article-full .article-content .video-container.video-large,
+.article-full .article-content .youtube-embed.video-large,
+.video-container.video-large,
+.youtube-embed.video-large { max-width: 750px; }
+.article-full .article-content .video-container.video-full,
+.article-full .article-content .youtube-embed.video-full,
+.video-container.video-full,
+.youtube-embed.video-full { max-width: 100%; }
 
 .article-full .article-content .video-container iframe,
 .article-full .article-content .youtube-embed iframe,

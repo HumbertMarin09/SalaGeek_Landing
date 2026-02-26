@@ -1356,6 +1356,15 @@ class SalaGeekAdmin {
           e.preventDefault();
           this.deleteSelectedGrid(selectedGrid);
         }
+
+        // También eliminar contenedores de video seleccionados
+        const selectedVideo = editor.querySelector('.video-container.selected, .youtube-embed.selected');
+        if (selectedVideo) {
+          e.preventDefault();
+          selectedVideo.remove();
+          this.showToast('Video eliminado', 'success');
+          this.saveEditorState();
+        }
       }
     });
 
@@ -1539,10 +1548,36 @@ class SalaGeekAdmin {
       else if (target.classList.contains('image-grid-container')) {
         this.selectEditorGrid(target);
       }
+      // Click en video container (para poder seleccionarlo y eliminarlo)
+      else if (target.closest('.video-container') || target.closest('.youtube-embed')) {
+        const videoContainer = target.closest('.video-container') || target.closest('.youtube-embed');
+        // No actuar si se hizo clic en el toolbar
+        if (target.closest('.video-toolbar')) return;
+        this.deselectEditorImages();
+        this.deselectEditorGrids();
+        editor.querySelectorAll('.video-container.selected, .youtube-embed.selected').forEach(el => {
+          el.classList.remove('selected');
+          el.style.outline = '';
+          el.style.outlineOffset = '';
+          const tb = el.querySelector('.video-toolbar');
+          if (tb) tb.remove();
+        });
+        videoContainer.classList.add('selected');
+        videoContainer.style.outline = '2px solid var(--admin-primary, #ffd166)';
+        videoContainer.style.outlineOffset = '-2px';
+        this.createVideoToolbar(videoContainer);
+      }
       // Click fuera - deseleccionar
       else {
         this.deselectEditorImages();
         this.deselectEditorGrids();
+        editor.querySelectorAll('.video-container.selected, .youtube-embed.selected').forEach(el => {
+          el.classList.remove('selected');
+          el.style.outline = '';
+          el.style.outlineOffset = '';
+          const tb = el.querySelector('.video-toolbar');
+          if (tb) tb.remove();
+        });
       }
     });
 
@@ -1930,6 +1965,13 @@ class SalaGeekAdmin {
       wrapper.remove();
     });
     
+    // Limpiar contenedores de video vacíos (iframes eliminados por sanitización anterior)
+    editor.querySelectorAll('.video-container, .youtube-embed').forEach(container => {
+      if (!container.querySelector('iframe')) {
+        container.remove();
+      }
+    });
+
     // Deseleccionar todo
     this.deselectEditorImages();
     this.deselectEditorGrids();
@@ -2954,6 +2996,17 @@ class SalaGeekAdmin {
     urlInput.removeEventListener('input', urlInput._handler);
     urlInput._handler = handleInput;
     urlInput.addEventListener('input', handleInput);
+
+    // Configurar botones de tamaño
+    this.selectedVideoSize = 'large'; // default
+    document.querySelectorAll('.video-size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === 'large');
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.video-size-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.selectedVideoSize = btn.dataset.size;
+      });
+    });
   }
   
   confirmYouTubeInsert() {
@@ -2976,8 +3029,11 @@ class SalaGeekAdmin {
     // Cerrar modal
     modal.classList.add('hidden');
     
+    // Determinar clase de tamaño
+    const sizeClass = this.selectedVideoSize ? `video-${this.selectedVideoSize}` : 'video-large';
+    
     // Crear el embed responsivo
-    const embed = `<div class="video-container youtube-embed">
+    const embed = `<div class="video-container youtube-embed ${sizeClass}">
   <iframe 
     src="https://www.youtube.com/embed/${videoId}" 
     title="YouTube video" 
@@ -3001,6 +3057,81 @@ class SalaGeekAdmin {
   closeYouTubeModal() {
     const modal = document.getElementById('youtube-modal');
     if (modal) modal.classList.add('hidden');
+  }
+
+  /**
+   * Crea una barra de herramientas flotante sobre un contenedor de video seleccionado
+   * Permite cambiar el tamaño y eliminar el video
+   */
+  createVideoToolbar(container) {
+    // Remover toolbar anterior si existe
+    const existing = container.querySelector('.video-toolbar');
+    if (existing) existing.remove();
+
+    const toolbar = document.createElement('div');
+    toolbar.className = 'video-toolbar';
+    toolbar.contentEditable = 'false';
+
+    // Detectar tamaño actual
+    const currentSize = container.classList.contains('video-small') ? 'small' :
+                        container.classList.contains('video-medium') ? 'medium' :
+                        container.classList.contains('video-large') ? 'large' : 'full';
+
+    const sizes = [
+      { size: 'small', label: 'S', title: 'Pequeño (400px)' },
+      { size: 'medium', label: 'M', title: 'Mediano (560px)' },
+      { size: 'large', label: 'L', title: 'Grande (750px)' },
+      { size: 'full', label: '▢', title: 'Completo (100%)' }
+    ];
+
+    sizes.forEach(({ size, label, title }) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = label;
+      btn.title = title;
+      if (size === currentSize) btn.classList.add('active');
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.classList.remove('video-small', 'video-medium', 'video-large', 'video-full');
+        container.classList.add(`video-${size}`);
+        toolbar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.saveEditorState();
+        const sizeLabels = { small: 'pequeño', medium: 'mediano', large: 'grande', full: 'completo' };
+        this.showToast(`Video: tamaño ${sizeLabels[size]}`, 'success');
+      });
+      toolbar.appendChild(btn);
+    });
+
+    // Divider
+    const divider = document.createElement('span');
+    divider.className = 'vt-divider';
+    toolbar.appendChild(divider);
+
+    // Delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.title = 'Eliminar video';
+    deleteBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+    deleteBtn.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    deleteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      container.remove();
+      this.showToast('Video eliminado', 'success');
+      this.saveEditorState();
+    });
+    toolbar.appendChild(deleteBtn);
+
+    container.appendChild(toolbar);
   }
 
   /**
@@ -5783,11 +5914,15 @@ class SalaGeekAdmin {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
-            margin: 2rem 0;
+            margin: 2rem auto;
             background: var(--bg-secondary);
             border-radius: 12px;
             overflow: hidden;
           }
+          .video-container.video-small, .youtube-embed.video-small { max-width: 400px; }
+          .video-container.video-medium, .youtube-embed.video-medium { max-width: 560px; }
+          .video-container.video-large, .youtube-embed.video-large { max-width: 750px; }
+          .video-container.video-full, .youtube-embed.video-full { max-width: 100%; }
           .video-container iframe, .youtube-embed iframe {
             position: absolute;
             top: 0; left: 0;
@@ -5963,9 +6098,21 @@ class SalaGeekAdmin {
     div.innerHTML = html;
 
     // Tags peligrosos a eliminar completamente (incluyendo su contenido)
-    const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form', 'input', 'textarea', 'select', 'button', 'link', 'meta', 'style', 'applet', 'base', 'basefont'];
+    // NOTA: 'iframe' se maneja por separado para preservar embeds de YouTube
+    const dangerousTags = ['script', 'object', 'embed', 'form', 'input', 'textarea', 'select', 'button', 'link', 'meta', 'style', 'applet', 'base', 'basefont'];
     dangerousTags.forEach(tag => {
       div.querySelectorAll(tag).forEach(el => el.remove());
+    });
+
+    // Manejar iframes: preservar solo YouTube embeds legítimos, eliminar el resto
+    div.querySelectorAll('iframe').forEach(iframe => {
+      const src = (iframe.getAttribute('src') || '').toLowerCase().replace(/\s/g, '');
+      const isYouTube = src.startsWith('https://www.youtube.com/embed/') || 
+                        src.startsWith('https://youtube.com/embed/') ||
+                        src.startsWith('https://www.youtube-nocookie.com/embed/');
+      if (!isYouTube) {
+        iframe.remove();
+      }
     });
 
     // Eliminar atributos peligrosos de TODOS los elementos
@@ -6010,6 +6157,19 @@ class SalaGeekAdmin {
     cleanDiv.innerHTML = content;
     cleanDiv.querySelectorAll('.image-toolbar').forEach(el => el.remove());
     cleanDiv.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+    // Eliminar contenedores de video vacíos (sin iframe) y limpiar toolbars de video
+    cleanDiv.querySelectorAll('.video-container, .youtube-embed').forEach(container => {
+      if (!container.querySelector('iframe')) {
+        container.remove();
+        return;
+      }
+      // Limpiar toolbars de video del editor
+      const vtb = container.querySelector('.video-toolbar');
+      if (vtb) vtb.remove();
+      // Limpiar estilos de selección del editor
+      container.style.outline = '';
+      container.style.outlineOffset = '';
+    });
     cleanDiv.querySelectorAll('.image-resize-wrapper').forEach(wrapper => {
       // Remover resize handles y dejar solo la imagen
       wrapper.querySelectorAll('.resize-handle').forEach(h => h.remove());
