@@ -4926,6 +4926,7 @@ class SalaGeekAdmin {
   }
 
   async loadArticleContent(contentPath) {
+    this.contentLoadedSuccessfully = false;
     try {
       // Asegurar extensión .html en la ruta
       const url = contentPath.endsWith('.html') ? contentPath : contentPath + '.html';
@@ -4940,6 +4941,7 @@ class SalaGeekAdmin {
       
       if (content) {
         document.getElementById('article-editor').innerHTML = content.innerHTML;
+        this.contentLoadedSuccessfully = true;
         
         // Guardar estado inicial del editor para Undo/Redo
         this.clearEditorHistory();
@@ -4949,9 +4951,12 @@ class SalaGeekAdmin {
         // Actualizar word count y SEO score después de cargar contenido
         this.updateWordCount();
         this.updateSEOScore();
+      } else {
+        this.showToast('⚠️ No se encontró el contenido del artículo en el HTML', 'error');
       }
     } catch (error) {
       console.error('Error loading article content:', error);
+      this.showToast('⚠️ Error al cargar el contenido del artículo. NO guardes sin verificar.', 'error');
     }
   }
 
@@ -5070,6 +5075,20 @@ class SalaGeekAdmin {
       if (!content || content.trim() === '' || content === '<br>') {
         this.showToast('El contenido del artículo es requerido para publicar', 'error');
         document.getElementById('article-editor').focus();
+        return;
+      }
+    }
+
+    // 🛡️ Protección contra sobreescritura vacía al editar artículos existentes
+    const contentText = (content || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (this.editingArticle && contentText.length < 50) {
+      const confirmEmpty = confirm(
+        '⚠️ ADVERTENCIA: El contenido del artículo parece estar vacío o muy corto.\n\n' +
+        'Si el contenido no cargó correctamente, guardar SOBREESCRIBIRÁ el artículo original.\n\n' +
+        '¿Estás seguro de que deseas continuar?'
+      );
+      if (!confirmEmpty) {
+        this.showToast('Guardado cancelado. Verifica que el contenido se haya cargado correctamente.', 'warning');
         return;
       }
     }
