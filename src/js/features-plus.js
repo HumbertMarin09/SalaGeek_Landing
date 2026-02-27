@@ -2,43 +2,43 @@
  * ============================================================================
  * ✨ SALA GEEK - FEATURES PLUS
  * ============================================================================
- * 
+ *
  * Características adicionales premium:
- * 
+ *
  * 1. Skeleton Loaders - Placeholders animados mientras carga contenido
  * 2. Reading Progress Bar - Barra de progreso de lectura en artículos
  * 3. Web Share API - Compartir nativo en móviles
  * 4. Print Styles - Estilos optimizados para impresión
  * 5. PWA Install Prompt - Banner para instalar la app
- * 
+ *
  * @version 1.0.0
  * @author Sala Geek
  * ============================================================================
  */
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
   // ============================================================================
   // 1. SKELETON LOADERS
   // ============================================================================
-  
+
   const SkeletonLoader = {
     /**
      * Crea un skeleton loader para diferentes tipos de contenido
      * @param {string} type - card, text, avatar, image
      * @param {number} count - Número de skeletons a crear
      */
-    create(type = 'card', count = 1) {
-      const container = document.createElement('div');
-      container.className = 'skeleton-container';
-      
+    create(type = "card", count = 1) {
+      const container = document.createElement("div");
+      container.className = "skeleton-container";
+
       for (let i = 0; i < count; i++) {
-        const skeleton = document.createElement('div');
+        const skeleton = document.createElement("div");
         skeleton.className = `skeleton skeleton-${type}`;
-        
+
         switch (type) {
-          case 'card':
+          case "card":
             skeleton.innerHTML = `
               <div class="skeleton-image"></div>
               <div class="skeleton-content">
@@ -48,14 +48,14 @@
               </div>
             `;
             break;
-          case 'text':
+          case "text":
             skeleton.innerHTML = `
               <div class="skeleton-line"></div>
               <div class="skeleton-line"></div>
               <div class="skeleton-line short"></div>
             `;
             break;
-          case 'avatar':
+          case "avatar":
             skeleton.innerHTML = `
               <div class="skeleton-avatar"></div>
               <div class="skeleton-info">
@@ -64,152 +64,156 @@
               </div>
             `;
             break;
-          case 'image':
+          case "image":
             skeleton.innerHTML = `<div class="skeleton-img"></div>`;
             break;
         }
-        
+
         container.appendChild(skeleton);
       }
-      
+
       return container;
     },
-    
+
     /**
      * Reemplaza un elemento con su skeleton mientras carga
      */
     show(element) {
       if (!element) return;
-      
-      const skeleton = document.createElement('div');
-      skeleton.className = 'skeleton-wrapper';
+
+      const skeleton = document.createElement("div");
+      skeleton.className = "skeleton-wrapper";
       skeleton.innerHTML = element.innerHTML;
-      skeleton.querySelectorAll('*').forEach(el => {
-        el.classList.add('skeleton-loading');
+      skeleton.querySelectorAll("*").forEach((el) => {
+        el.classList.add("skeleton-loading");
       });
-      
+
       element.dataset.originalContent = element.innerHTML;
-      element.innerHTML = '';
+      element.innerHTML = "";
       element.appendChild(skeleton);
     },
-    
+
     /**
      * Restaura el contenido original
      */
     hide(element) {
       if (!element || !element.dataset.originalContent) return;
-      
+
       element.innerHTML = element.dataset.originalContent;
       delete element.dataset.originalContent;
-    }
+    },
   };
 
   // ============================================================================
   // 2. READING PROGRESS BAR
   // ============================================================================
-  
+
   const ReadingProgress = {
     bar: null,
-    
+
     init() {
       // Solo en páginas de artículos/blog
-      if (!document.querySelector('article, .blog-article, .article-content')) {
+      if (!document.querySelector("article, .blog-article, .article-content")) {
         return;
       }
-      
+
       this.createBar();
       this.setupListener();
     },
-    
+
     createBar() {
-      this.bar = document.createElement('div');
-      this.bar.className = 'reading-progress-bar';
+      this.bar = document.createElement("div");
+      this.bar.className = "reading-progress-bar";
       this.bar.innerHTML = '<div class="reading-progress-fill"></div>';
-      this.bar.setAttribute('role', 'progressbar');
-      this.bar.setAttribute('aria-valuemin', '0');
-      this.bar.setAttribute('aria-valuemax', '100');
-      this.bar.setAttribute('aria-valuenow', '0');
-      this.bar.setAttribute('aria-label', 'Progreso de lectura');
-      
+      this.bar.setAttribute("role", "progressbar");
+      this.bar.setAttribute("aria-valuemin", "0");
+      this.bar.setAttribute("aria-valuemax", "100");
+      this.bar.setAttribute("aria-valuenow", "0");
+      this.bar.setAttribute("aria-label", "Progreso de lectura");
+
       document.body.appendChild(this.bar);
     },
-    
+
     setupListener() {
       let ticking = false;
-      
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            this.updateProgress();
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }, { passive: true });
+
+      window.addEventListener(
+        "scroll",
+        () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              this.updateProgress();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        },
+        { passive: true }
+      );
     },
-    
+
     updateProgress() {
-      const article = document.querySelector('article, .blog-article, .article-content');
+      const article = document.querySelector("article, .blog-article, .article-content");
       if (!article || !this.bar) return;
-      
+
       const articleTop = article.offsetTop;
       const articleHeight = article.offsetHeight;
       const windowHeight = window.innerHeight;
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
+
       // Calcular progreso solo dentro del artículo
       const scrollableHeight = articleHeight - windowHeight;
       const articleScrollStart = articleTop;
       const currentScroll = scrollTop - articleScrollStart;
-      
+
       let progress = 0;
-      
+
       if (currentScroll > 0 && scrollableHeight > 0) {
         progress = Math.min(100, Math.max(0, (currentScroll / scrollableHeight) * 100));
       }
-      
-      const fill = this.bar.querySelector('.reading-progress-fill');
+
+      const fill = this.bar.querySelector(".reading-progress-fill");
       if (fill) {
         fill.style.width = `${progress}%`;
       }
-      
-      this.bar.setAttribute('aria-valuenow', Math.round(progress));
-      
+
+      this.bar.setAttribute("aria-valuenow", Math.round(progress));
+
       // Mostrar/ocultar basado en posición
       if (scrollTop > articleTop - 100) {
-        this.bar.classList.add('visible');
+        this.bar.classList.add("visible");
       } else {
-        this.bar.classList.remove('visible');
+        this.bar.classList.remove("visible");
       }
-    }
+    },
   };
 
   // ============================================================================
   // 3. WEB SHARE API
   // ============================================================================
-  
+
   const WebShare = {
     isSupported() {
       return navigator.share !== undefined;
     },
-    
+
     /**
      * Comparte contenido usando la API nativa
      */
     async share(data = {}) {
       const shareData = {
         title: data.title || document.title,
-        text: data.text || document.querySelector('meta[name="description"]')?.content || '',
-        url: data.url || window.location.href
+        text: data.text || document.querySelector('meta[name="description"]')?.content || "",
+        url: data.url || window.location.href,
       };
-      
+
       if (this.isSupported()) {
         try {
           await navigator.share(shareData);
-          this.trackShare('native');
+          this.trackShare("native");
           return true;
         } catch (err) {
-          if (err.name !== 'AbortError') {
+          if (err.name !== "AbortError") {
             // Share error silenced in production
           }
           return false;
@@ -220,14 +224,14 @@
         return false;
       }
     },
-    
+
     /**
      * Crear botón de compartir
      */
     createButton(options = {}) {
-      const button = document.createElement('button');
-      button.className = `share-button ${options.className || ''}`;
-      button.setAttribute('aria-label', 'Compartir');
+      const button = document.createElement("button");
+      button.className = `share-button ${options.className || ""}`;
+      button.setAttribute("aria-label", "Compartir");
       button.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="18" cy="5" r="3"></circle>
@@ -236,30 +240,30 @@
           <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
           <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
         </svg>
-        <span>${options.text || 'Compartir'}</span>
+        <span>${options.text || "Compartir"}</span>
       `;
-      
-      button.addEventListener('click', () => {
+
+      button.addEventListener("click", () => {
         this.share(options.data);
       });
-      
+
       return button;
     },
-    
+
     /**
      * Modal de fallback para navegadores sin Web Share API
      */
     showFallbackModal(data) {
-      const existingModal = document.getElementById('share-fallback-modal');
+      const existingModal = document.getElementById("share-fallback-modal");
       if (existingModal) existingModal.remove();
-      
+
       const encodedUrl = encodeURIComponent(data.url);
       const encodedTitle = encodeURIComponent(data.title);
       const encodedText = encodeURIComponent(data.text);
-      
-      const modal = document.createElement('div');
-      modal.id = 'share-fallback-modal';
-      modal.className = 'share-modal';
+
+      const modal = document.createElement("div");
+      modal.id = "share-fallback-modal";
+      modal.className = "share-modal";
       modal.innerHTML = `
         <div class="share-modal-backdrop"></div>
         <div class="share-modal-content">
@@ -302,92 +306,98 @@
           </div>
         </div>
       `;
-      
+
       document.body.appendChild(modal);
-      
+
       // Animación
       requestAnimationFrame(() => {
-        modal.classList.add('visible');
+        modal.classList.add("visible");
       });
-      
+
       // Event listeners
-      modal.querySelector('.share-modal-close').addEventListener('click', () => this.hideModal(modal));
-      modal.querySelector('.share-modal-backdrop').addEventListener('click', () => this.hideModal(modal));
-      
-      modal.querySelector('.copy-link').addEventListener('click', async () => {
+      modal
+        .querySelector(".share-modal-close")
+        .addEventListener("click", () => this.hideModal(modal));
+      modal
+        .querySelector(".share-modal-backdrop")
+        .addEventListener("click", () => this.hideModal(modal));
+
+      modal.querySelector(".copy-link").addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(data.url);
-          const btn = modal.querySelector('.copy-link span');
-          btn.textContent = '¡Copiado!';
-          setTimeout(() => btn.textContent = 'Copiar enlace', 2000);
-          this.trackShare('copy');
+          const btn = modal.querySelector(".copy-link span");
+          btn.textContent = "¡Copiado!";
+          setTimeout(() => (btn.textContent = "Copiar enlace"), 2000);
+          this.trackShare("copy");
         } catch (err) {
           // Copy error silenced
         }
       });
-      
+
       // Track clicks en opciones
-      modal.querySelectorAll('.share-option[data-platform]').forEach(option => {
-        option.addEventListener('click', () => {
+      modal.querySelectorAll(".share-option[data-platform]").forEach((option) => {
+        option.addEventListener("click", () => {
           this.trackShare(option.dataset.platform);
         });
       });
     },
-    
+
     hideModal(modal) {
-      modal.classList.remove('visible');
+      modal.classList.remove("visible");
       setTimeout(() => modal.remove(), 300);
     },
-    
+
     trackShare(platform) {
       if (window.gtag) {
-        gtag('event', 'share', {
+        gtag("event", "share", {
           method: platform,
-          content_type: 'article',
-          item_id: window.location.pathname
+          content_type: "article",
+          item_id: window.location.pathname,
         });
       }
-    }
+    },
   };
 
   // ============================================================================
   // 4. PWA INSTALL PROMPT
   // ============================================================================
-  
+
   const PWAInstall = {
     deferredPrompt: null,
-    
+
     init() {
       // Capturar el evento beforeinstallprompt
-      window.addEventListener('beforeinstallprompt', (e) => {
+      window.addEventListener("beforeinstallprompt", (e) => {
         e.preventDefault();
         this.deferredPrompt = e;
-        
+
         // Mostrar botón de instalación si no se ha instalado
         if (!this.isInstalled()) {
           this.showInstallButton();
         }
       });
-      
+
       // Detectar si se instaló
-      window.addEventListener('appinstalled', () => {
+      window.addEventListener("appinstalled", () => {
         this.deferredPrompt = null;
         this.hideInstallButton();
       });
     },
-    
+
     isInstalled() {
-      return window.matchMedia('(display-mode: standalone)').matches ||
-             window.navigator.standalone === true;
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+      );
     },
-    
+
     showInstallButton() {
       // No mostrar si ya se mostró y el usuario lo cerró
-      if (sessionStorage.getItem('sg_pwa_banner_dismissed')) return;
-      
-      const banner = document.createElement('div');
-      banner.id = 'pwa-install-banner';
-      banner.className = 'pwa-install-banner';
+      if (sessionStorage.getItem("sg_pwa_banner_dismissed")) return;
+
+      const banner = document.createElement("div");
+      banner.id = "pwa-install-banner";
+      banner.className = "pwa-install-banner";
       banner.innerHTML = `
         <div class="pwa-install-content">
           <div class="pwa-install-icon">
@@ -406,46 +416,46 @@
           </button>
         </div>
       `;
-      
+
       document.body.appendChild(banner);
-      
-      setTimeout(() => banner.classList.add('visible'), 3000);
-      
-      document.getElementById('pwa-install-btn').addEventListener('click', () => {
+
+      setTimeout(() => banner.classList.add("visible"), 3000);
+
+      document.getElementById("pwa-install-btn").addEventListener("click", () => {
         this.promptInstall();
       });
-      
-      document.getElementById('pwa-install-close').addEventListener('click', () => {
+
+      document.getElementById("pwa-install-close").addEventListener("click", () => {
         this.hideInstallButton();
-        sessionStorage.setItem('sg_pwa_banner_dismissed', 'true');
+        sessionStorage.setItem("sg_pwa_banner_dismissed", "true");
       });
     },
-    
+
     hideInstallButton() {
-      const banner = document.getElementById('pwa-install-banner');
+      const banner = document.getElementById("pwa-install-banner");
       if (banner) {
-        banner.classList.remove('visible');
+        banner.classList.remove("visible");
         setTimeout(() => banner.remove(), 300);
       }
     },
-    
+
     async promptInstall() {
       if (!this.deferredPrompt) return;
-      
+
       this.deferredPrompt.prompt();
       const { outcome } = await this.deferredPrompt.userChoice;
-      
+
       this.deferredPrompt = null;
       this.hideInstallButton();
-    }
+    },
   };
 
   // ============================================================================
   // 5. INYECTAR ESTILOS CSS
   // ============================================================================
-  
+
   function injectStyles() {
-    const styles = document.createElement('style');
+    const styles = document.createElement("style");
     styles.textContent = `
       /* ============================================
          SKELETON LOADERS
@@ -929,37 +939,36 @@
         }
       }
     `;
-    
+
     document.head.appendChild(styles);
   }
 
   // ============================================================================
   // INICIALIZACIÓN
   // ============================================================================
-  
+
   function init() {
     injectStyles();
-    
+
     // Reading Progress - solo en artículos
     ReadingProgress.init();
-    
+
     // PWA Install Prompt
     PWAInstall.init();
-    
+
     // Exponer APIs públicas
     window.SalaGeekFeatures = {
       SkeletonLoader,
       ReadingProgress,
       WebShare,
-      PWAInstall
+      PWAInstall,
     };
   }
 
   // Auto-inicializar
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }
-
 })();

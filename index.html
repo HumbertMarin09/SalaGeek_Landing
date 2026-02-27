@@ -66,10 +66,7 @@
       name="twitter:description"
       content="🎮 Noticias, reseñas y análisis de #Películas #Series #Anime #Videojuegos y #Tech. Contenido diario premium en español. ¡Únete a +50K geeks! 🚀 #ComunidadGeek"
     />
-    <meta
-      name="twitter:image"
-      content="https://salageek.com/src/images/social-card.png"
-    />
+    <meta name="twitter:image" content="https://salageek.com/src/images/social-card.png" />
     <meta
       name="twitter:image:alt"
       content="Sala Geek - Comunidad geek hispana con noticias y reseñas"
@@ -97,14 +94,9 @@
     <link rel="dns-prefetch" href="//js-na1.hs-scripts.com" />
     <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
 
-    <!-- Preload critical CSS only (JS uses defer, no preload needed) -->
-    <link rel="preload" href="/src/css/style.min.css?v=300" as="style" />
-
-    <!-- 
-      Critical CSS inline para above-the-fold
-      Estilos mínimos para la primera pantalla (hero section)
-      Previene FOUC (Flash Of Unstyled Content) y mejora FCP
-      El resto del CSS se carga de forma no bloqueante
+    <!--
+      Critical CSS inline (hero section above-the-fold).
+      style.min.css loads async via media="print" onload trick.
     -->
     <style>
       body {
@@ -156,64 +148,280 @@
         }
       }
       /* Normalize (inlined to eliminate render-blocking request) */
-      html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub{font-size:.75em;line-height:0;position:relative;bottom:.25em}sup{font-size:.75em;line-height:0;position:relative;top:.25em}table{border-collapse:collapse;border-spacing:0}textarea{overflow:auto}button,input,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}button,input{overflow:visible}button,select{text-transform:none}button,[type="button"],[type="reset"],[type="submit"]{-webkit-appearance:button}button::-moz-focus-inner,[type="button"]::-moz-focus-inner,[type="reset"]::-moz-focus-inner,[type="submit"]::-moz-focus-inner{border:0;padding:0}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;outline-offset:2px}input[type="search"]::-webkit-search-decoration,input[type="search"]::-webkit-search-results-button,input[type="search"]::-webkit-search-results-decoration{display:none}
+      html {
+        line-height: 1.15;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        margin: 0;
+      }
+      h1 {
+        font-size: 2em;
+        margin: 0.67em 0;
+      }
+      hr {
+        box-sizing: content-box;
+        height: 0;
+        overflow: visible;
+      }
+      pre {
+        font-family: monospace, monospace;
+        font-size: 1em;
+      }
+      a {
+        background-color: transparent;
+      }
+      abbr[title] {
+        border-bottom: none;
+        text-decoration: underline;
+        text-decoration: underline dotted;
+      }
+      b,
+      strong {
+        font-weight: bolder;
+      }
+      code,
+      kbd,
+      pre,
+      samp {
+        font-family: monospace, monospace;
+        font-size: 1em;
+      }
+      small {
+        font-size: 80%;
+      }
+      sub {
+        font-size: 0.75em;
+        line-height: 0;
+        position: relative;
+        bottom: 0.25em;
+      }
+      sup {
+        font-size: 0.75em;
+        line-height: 0;
+        position: relative;
+        top: 0.25em;
+      }
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+      textarea {
+        overflow: auto;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+      }
+      button,
+      input {
+        overflow: visible;
+      }
+      button,
+      select {
+        text-transform: none;
+      }
+      button,
+      [type="button"],
+      [type="reset"],
+      [type="submit"] {
+        -webkit-appearance: button;
+      }
+      button::-moz-focus-inner,
+      [type="button"]::-moz-focus-inner,
+      [type="reset"]::-moz-focus-inner,
+      [type="submit"]::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+      }
+      input[type="checkbox"],
+      input[type="radio"] {
+        box-sizing: border-box;
+        padding: 0;
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        height: auto;
+      }
+      input[type="search"] {
+        -webkit-appearance: textfield;
+        outline-offset: 2px;
+      }
+      input[type="search"]::-webkit-search-decoration,
+      input[type="search"]::-webkit-search-results-button,
+      input[type="search"]::-webkit-search-results-decoration {
+        display: none;
+      }
       /* Hide Easter Egg tracker until CSS loads */
-      #easter-egg-tracker{display:none}
+      #easter-egg-tracker {
+        display: none;
+      }
     </style>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/src/css/style.min.css?v=300" />
+    <!-- CSS: async load (critical CSS is inlined above, hero covers 100vh) -->
+    <link
+      rel="stylesheet"
+      href="/src/css/style.min.css?v=300"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript><link rel="stylesheet" href="/src/css/style.min.css?v=300" /></noscript>
     <!-- Non-critical CSS: easter eggs loaded async -->
-    <link rel="stylesheet" href="/src/css/easter-eggs.min.css" media="print" onload="this.media='all';document.getElementById('easter-egg-tracker').style.display=''" />
+    <link
+      rel="stylesheet"
+      href="/src/css/easter-eggs.min.css"
+      media="print"
+      onload="
+        this.media = 'all';
+        document.getElementById('easter-egg-tracker').style.display = '';
+      "
+    />
     <noscript><link rel="stylesheet" href="/src/css/easter-eggs.min.css" /></noscript>
 
-    <script>document.documentElement.classList.add("js");</script>
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
 
     <!-- Schema.org Structured Data (SEO Avanzado) -->
     <script type="application/ld+json">
-      {"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Sala Geek","alternateName":"SalaGeek","url":"https://salageek.com","logo":"https://salageek.com/src/images/social-card.png","description":"La comunidad geek de habla hispana más grande. Noticias, reseñas y análisis de películas, series, anime, videojuegos, cómics y tecnología.","foundingDate":"2017","slogan":"Tu espacio geek definitivo","sameAs":["https://facebook.com/SalaGeek19","https://x.com/Sala_Geek","https://instagram.com/sala_geek","https://tiktok.com/@salageek19"],"contactPoint":{"@type":"ContactPoint","contactType":"Customer Service","email":"contacto@salageek.com","availableLanguage":["Spanish","es"]}},{"@type":"WebSite","name":"Sala Geek","url":"https://salageek.com","description":"Portal de noticias y comunidad geek en español","inLanguage":"es","publisher":{"@type":"Organization","name":"Sala Geek","logo":{"@type":"ImageObject","url":"https://salageek.com/src/images/social-card.png"}}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://salageek.com/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué es Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"Sala Geek es la comunidad geek hispana más grande, donde encontrarás noticias diarias, reseñas exclusivas y análisis profundos de películas, series, anime, videojuegos, cómics y tecnología. Todo el contenido está 100% en español y es completamente gratuito."}},{"@type":"Question","name":"¿Qué tipo de contenido puedo encontrar en Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"En Sala Geek encontrarás contenido variado sobre cultura geek: noticias de estrenos de películas y series, análisis de temporadas de anime, reseñas de videojuegos para PC, PS5, Xbox y Nintendo Switch, cobertura de eventos como Comic-Con, guías de juegos, teorías de series, y todo sobre Marvel, DC, Star Wars, y más franquicias."}},{"@type":"Question","name":"¿Es gratis unirse a Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"Sí, todo el contenido de Sala Geek es completamente gratuito. Puedes acceder a todas las noticias, reseñas, análisis y artículos sin ningún costo. También puedes suscribirte a nuestra newsletter Geeky Weekly para recibir las mejores noticias directamente en tu correo."}},{"@type":"Question","name":"¿Con qué frecuencia se actualiza Sala Geek?","acceptedAnswer":{"@type":"Answer","text":"Sala Geek se actualiza diariamente con las últimas noticias del mundo geek. Publicamos múltiples artículos al día sobre estrenos, rumores, trailers, análisis y reseñas. Nuestra newsletter semanal Geeky Weekly resume lo más destacado de cada semana."}}]}]}
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "Sala Geek",
+            "alternateName": "SalaGeek",
+            "url": "https://salageek.com",
+            "logo": "https://salageek.com/src/images/social-card.png",
+            "description": "La comunidad geek de habla hispana más grande. Noticias, reseñas y análisis de películas, series, anime, videojuegos, cómics y tecnología.",
+            "foundingDate": "2017",
+            "slogan": "Tu espacio geek definitivo",
+            "sameAs": [
+              "https://facebook.com/SalaGeek19",
+              "https://x.com/Sala_Geek",
+              "https://instagram.com/sala_geek",
+              "https://tiktok.com/@salageek19"
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "contactType": "Customer Service",
+              "email": "contacto@salageek.com",
+              "availableLanguage": ["Spanish", "es"]
+            }
+          },
+          {
+            "@type": "WebSite",
+            "name": "Sala Geek",
+            "url": "https://salageek.com",
+            "description": "Portal de noticias y comunidad geek en español",
+            "inLanguage": "es",
+            "publisher": {
+              "@type": "Organization",
+              "name": "Sala Geek",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://salageek.com/src/images/social-card.png"
+              }
+            }
+          },
+          {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://salageek.com/"
+              }
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "¿Qué es Sala Geek?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sala Geek es la comunidad geek hispana más grande, donde encontrarás noticias diarias, reseñas exclusivas y análisis profundos de películas, series, anime, videojuegos, cómics y tecnología. Todo el contenido está 100% en español y es completamente gratuito."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Qué tipo de contenido puedo encontrar en Sala Geek?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "En Sala Geek encontrarás contenido variado sobre cultura geek: noticias de estrenos de películas y series, análisis de temporadas de anime, reseñas de videojuegos para PC, PS5, Xbox y Nintendo Switch, cobertura de eventos como Comic-Con, guías de juegos, teorías de series, y todo sobre Marvel, DC, Star Wars, y más franquicias."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Es gratis unirse a Sala Geek?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sí, todo el contenido de Sala Geek es completamente gratuito. Puedes acceder a todas las noticias, reseñas, análisis y artículos sin ningún costo. También puedes suscribirte a nuestra newsletter Geeky Weekly para recibir las mejores noticias directamente en tu correo."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Con qué frecuencia se actualiza Sala Geek?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sala Geek se actualiza diariamente con las últimas noticias del mundo geek. Publicamos múltiples artículos al día sobre estrenos, rumores, trailers, análisis y reseñas. Nuestra newsletter semanal Geeky Weekly resume lo más destacado de cada semana."
+                }
+              }
+            ]
+          }
+        ]
+      }
     </script>
 
     <!-- Third-party scripts: delayed until user interaction or idle -->
     <script>
       // Delay non-essential third-party scripts to improve TBT and TTI
-      (function() {
+      (function () {
         var thirdPartyLoaded = false;
         function loadThirdParty() {
           if (thirdPartyLoaded) return;
           thirdPartyLoaded = true;
 
           // HubSpot
-          var hs = document.createElement('script');
-          hs.src = '//js-na1.hs-scripts.com/50792444.js';
+          var hs = document.createElement("script");
+          hs.src = "//js-na1.hs-scripts.com/50792444.js";
           hs.async = true;
           document.head.appendChild(hs);
 
           // Google Tag Manager
           window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
-          var gtm = document.createElement('script');
+          window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+          var gtm = document.createElement("script");
           gtm.async = true;
-          gtm.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-WBJXS2PX';
+          gtm.src = "https://www.googletagmanager.com/gtm.js?id=GTM-WBJXS2PX";
           document.head.appendChild(gtm);
 
           // AdSense
-          var ads = document.createElement('script');
+          var ads = document.createElement("script");
           ads.async = true;
-          ads.crossOrigin = 'anonymous';
-          ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435';
+          ads.crossOrigin = "anonymous";
+          ads.src =
+            "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884162231581435";
           document.head.appendChild(ads);
 
           // reCAPTCHA (only when needed for forms)
-          var rc = document.createElement('script');
+          var rc = document.createElement("script");
           rc.async = true;
-          rc.src = 'https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB';
+          rc.src =
+            "https://www.google.com/recaptcha/api.js?render=6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB";
           document.head.appendChild(rc);
         }
 
         // Load on first user interaction or after 5 seconds
-        ['scroll', 'click', 'touchstart', 'keydown'].forEach(function(evt) {
-          window.addEventListener(evt, loadThirdParty, {once: true, passive: true});
+        ["scroll", "click", "touchstart", "keydown"].forEach(function (evt) {
+          window.addEventListener(evt, loadThirdParty, { once: true, passive: true });
         });
         setTimeout(loadThirdParty, 5000);
       })();
@@ -228,22 +436,23 @@
     <!-- Non-critical JS: lazy-loaded after page is interactive -->
     <script>
       // Load secondary scripts after main content is interactive
-      (function(){
-        function loadSecondary(){
-          ['features-plus','cookie-consent','monetization'].forEach(function(name){
-            var s=document.createElement('script');
-            s.src='/src/js/'+name+'.min.js?v=100';
-            s.async=true;
+      (function () {
+        function loadSecondary() {
+          ["features-plus", "cookie-consent", "monetization"].forEach(function (name) {
+            var s = document.createElement("script");
+            s.src = "/src/js/" + name + ".min.js?v=100";
+            s.async = true;
             document.head.appendChild(s);
           });
         }
-        if('requestIdleCallback' in window){
-          requestIdleCallback(loadSecondary,{timeout:3000});
-        }else{
-          setTimeout(loadSecondary,2000);
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(loadSecondary, { timeout: 3000 });
+        } else {
+          setTimeout(loadSecondary, 2000);
         }
       })();
-      if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js'));
+      if ("serviceWorker" in navigator)
+        window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"));
     </script>
   </head>
   <body class="home">
@@ -291,7 +500,16 @@
           <div class="hero-image">
             <div class="hero-badge movies">
               <span class="badge-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
                   <line x1="7" y1="2" x2="7" y2="22"></line>
                   <line x1="17" y1="2" x2="17" y2="22"></line>
@@ -306,7 +524,16 @@
             </div>
             <div class="hero-badge series">
               <span class="badge-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
                   <polyline points="17 2 12 7 7 2"></polyline>
                 </svg>
@@ -315,8 +542,19 @@
             </div>
             <div class="hero-badge anime">
               <span class="badge-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2C8 2 4 6 4 10c0 2.5 1 4.5 2.5 6l-1 4 3-2c1 .6 2.2 1 3.5 1s2.5-.4 3.5-1l3 2-1-4c1.5-1.5 2.5-3.5 2.5-6 0-4-4-8-8-8z"></path>
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2C8 2 4 6 4 10c0 2.5 1 4.5 2.5 6l-1 4 3-2c1 .6 2.2 1 3.5 1s2.5-.4 3.5-1l3 2-1-4c1.5-1.5 2.5-3.5 2.5-6 0-4-4-8-8-8z"
+                  ></path>
                   <circle cx="9" cy="10" r="1.5" fill="currentColor"></circle>
                   <circle cx="15" cy="10" r="1.5" fill="currentColor"></circle>
                   <path d="M9 14c1 1 2 1.5 3 1.5s2-.5 3-1.5"></path>
@@ -328,7 +566,16 @@
             </div>
             <div class="hero-badge gaming">
               <span class="badge-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <line x1="6" y1="12" x2="10" y2="12"></line>
                   <line x1="8" y1="10" x2="8" y2="14"></line>
                   <line x1="15" y1="13" x2="15.01" y2="13"></line>
@@ -350,7 +597,16 @@
           <!-- Section Header -->
           <div class="news-hub-header">
             <span class="section-badge">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
               Noticias
@@ -369,17 +625,39 @@
                 <!-- Estado vacío cuando no hay artículos -->
                 <div class="carousel-empty-state">
                   <div class="empty-state-icon">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    <svg
+                      width="64"
+                      height="64"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+                      ></path>
                       <path d="M8 7h6"></path>
                       <path d="M8 11h8"></path>
                     </svg>
                   </div>
                   <h3 class="empty-state-title">Próximamente</h3>
-                  <p class="empty-state-text">Estamos preparando contenido increíble para ti.<br>¡Vuelve pronto!</p>
+                  <p class="empty-state-text">
+                    Estamos preparando contenido increíble para ti.<br />¡Vuelve pronto!
+                  </p>
                   <a href="/blog/" class="empty-state-cta">
                     <span>Explorar Blog</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <line x1="5" y1="12" x2="19" y2="12"></line>
                       <polyline points="12 5 19 12 12 19"></polyline>
                     </svg>
@@ -388,13 +666,39 @@
               </div>
 
               <!-- Carousel Controls - Solo visibles cuando hay artículos -->
-              <button class="featured-nav featured-prev" aria-label="Anterior noticia" style="display: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <button
+                class="featured-nav featured-prev"
+                aria-label="Anterior noticia"
+                style="display: none"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </button>
-              <button class="featured-nav featured-next" aria-label="Siguiente noticia" style="display: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <button
+                class="featured-nav featured-next"
+                aria-label="Siguiente noticia"
+                style="display: none"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
               </button>
@@ -410,7 +714,16 @@
           <div class="latest-news-section">
             <div class="latest-news-header">
               <h3 class="latest-news-title">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
@@ -420,11 +733,20 @@
 
             <div class="latest-news-grid">
               <!-- Noticias cargadas dinámicamente por blog-engine.js -->
-              
+
               <!-- Empty State cuando no hay noticias -->
               <div class="latest-news-empty-state" id="latest-news-empty">
                 <div class="empty-state-icon">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -433,7 +755,10 @@
                   </svg>
                 </div>
                 <h4 class="empty-state-title">Preparando Noticias</h4>
-                <p class="empty-state-text">Nuestro equipo está trabajando en nuevos artículos.<br>¡Vuelve pronto para más contenido!</p>
+                <p class="empty-state-text">
+                  Nuestro equipo está trabajando en nuevos artículos.<br />¡Vuelve pronto para más
+                  contenido!
+                </p>
               </div>
             </div>
           </div>
@@ -444,47 +769,88 @@
               <!-- Decorative elements -->
               <div class="cta-glow cta-glow-1"></div>
               <div class="cta-glow cta-glow-2"></div>
-              
+
               <div class="news-cta-header">
                 <div class="news-cta-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                    ></path>
                     <polyline points="22,6 12,13 2,6"></polyline>
                   </svg>
                 </div>
                 <div class="news-cta-text">
                   <h4 class="news-cta-title">¿No quieres perderte nada?</h4>
-                  <p class="news-cta-description">Únete a <strong>Geeky Weekly</strong> y recibe las mejores noticias cada semana</p>
+                  <p class="news-cta-description">
+                    Únete a <strong>Geeky Weekly</strong> y recibe las mejores noticias cada semana
+                  </p>
                 </div>
               </div>
-              
+
               <form class="news-subscribe-form" id="news-subscribe-form">
                 <div class="news-subscribe-input-wrapper">
-                  <svg class="news-input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <svg
+                    class="news-input-icon"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                    ></path>
                     <polyline points="22,6 12,13 2,6"></polyline>
                   </svg>
-                  <input 
-                    type="email" 
-                    name="email" 
-                    placeholder="Tu correo electrónico" 
-                    required 
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Tu correo electrónico"
+                    required
                     class="news-subscribe-input"
                     autocomplete="email"
                   />
                 </div>
                 <button type="submit" class="btn-subscribe-now">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M22 2L11 13"></path>
                     <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
                   </svg>
                   <span>Suscribirme</span>
                 </button>
               </form>
-              
+
               <div class="news-cta-footer">
                 <p class="news-subscribe-note">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     <polyline points="9 12 11 14 15 10"></polyline>
                   </svg>
@@ -495,7 +861,16 @@
                 </div>
                 <a href="/blog/" class="btn-blog-link">
                   Explorar el Blog
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                   </svg>
@@ -514,12 +889,25 @@
           <!-- Section Header -->
           <div class="about-header">
             <span class="section-badge" data-scroll="fade-down">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                ></path>
               </svg>
               Nuestra Historia
             </span>
-            <h2 class="section-title" data-scroll="fade-down" data-scroll-delay="100">Acerca de Sala Geek</h2>
+            <h2 class="section-title" data-scroll="fade-down" data-scroll-delay="100">
+              Acerca de Sala Geek
+            </h2>
             <p class="about-intro" data-scroll="fade-up" data-scroll-delay="200">
               Somos la comunidad geek de habla hispana más grande y activa. Desde 2017, conectamos a
               miles de fans apasionados por el entretenimiento, ofreciendo contenido de calidad,
@@ -532,7 +920,16 @@
             <article class="about-card" data-scroll="fade-up" data-scroll-delay="200">
               <div class="about-icon-wrapper">
                 <div class="about-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <circle cx="12" cy="12" r="10"></circle>
                     <circle cx="12" cy="12" r="6"></circle>
                     <circle cx="12" cy="12" r="2"></circle>
@@ -554,8 +951,19 @@
             <article class="about-card" data-scroll="fade-up" data-scroll-delay="300">
               <div class="about-icon-wrapper">
                 <div class="about-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    ></polygon>
                   </svg>
                 </div>
               </div>
@@ -569,7 +977,16 @@
             <article class="about-card" data-scroll="fade-up" data-scroll-delay="400">
               <div class="about-icon-wrapper">
                 <div class="about-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M6 3h12l4 6-10 13L2 9z"></path>
                     <path d="M11 3l1 6h10"></path>
                     <path d="M2 9l10-6"></path>
@@ -590,7 +1007,16 @@
             <div class="about-stats">
               <div class="about-stat" data-scroll="scale" data-scroll-delay="100">
                 <div class="stat-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                   </svg>
@@ -600,7 +1026,16 @@
               </div>
               <div class="about-stat" data-scroll="scale" data-scroll-delay="200">
                 <div class="stat-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -612,7 +1047,16 @@
               </div>
               <div class="about-stat" data-scroll="scale" data-scroll-delay="300">
                 <div class="stat-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -625,7 +1069,16 @@
               </div>
               <div class="about-stat" data-scroll="scale" data-scroll-delay="400">
                 <div class="stat-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                   </svg>
                 </div>
@@ -645,12 +1098,25 @@
           <!-- Section Header -->
           <div class="services-header">
             <span class="section-badge" data-scroll="fade-down">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                ></polygon>
               </svg>
               Nuestros Servicios
             </span>
-            <h2 class="section-title" data-scroll="fade-down" data-scroll-delay="100">¿Qué Ofrecemos?</h2>
+            <h2 class="section-title" data-scroll="fade-down" data-scroll-delay="100">
+              ¿Qué Ofrecemos?
+            </h2>
             <p class="section-description" data-scroll="fade-up" data-scroll-delay="200">
               Todo lo que necesitas para estar al día en el mundo geek
             </p>
@@ -660,7 +1126,14 @@
             <article class="feature-card" data-scroll="fade-up" data-scroll-delay="200">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
                     <line x1="7" y1="2" x2="7" y2="22"></line>
                     <line x1="17" y1="2" x2="17" y2="22"></line>
@@ -682,7 +1155,14 @@
             <article class="feature-card" data-scroll="fade-up" data-scroll-delay="300">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
                   </svg>
                 </div>
@@ -697,7 +1177,14 @@
             <article class="feature-card" data-scroll="fade-up" data-scroll-delay="400">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -715,7 +1202,14 @@
             <article class="feature-card" data-scroll="fade-up" data-scroll-delay="500">
               <div class="feature-icon-wrapper">
                 <div class="feature-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
                     <line x1="12" y1="18" x2="12.01" y2="18"></line>
                   </svg>
@@ -739,7 +1233,16 @@
           <!-- Section Header -->
           <div class="social-header">
             <span class="section-badge" data-scroll="fade-down">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
               </svg>
@@ -766,7 +1269,9 @@
             >
               <div class="social-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                  />
                 </svg>
               </div>
               <div class="social-content">
@@ -775,7 +1280,16 @@
                 <span class="social-followers">15K+ seguidores</span>
               </div>
               <div class="social-arrow">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -794,7 +1308,9 @@
             >
               <div class="social-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                  <path
+                    d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
+                  />
                 </svg>
               </div>
               <div class="social-content">
@@ -803,7 +1319,16 @@
                 <span class="social-followers">6.4K seguidores</span>
               </div>
               <div class="social-arrow">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -822,7 +1347,9 @@
             >
               <div class="social-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  <path
+                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                  />
                 </svg>
               </div>
               <div class="social-content">
@@ -831,7 +1358,16 @@
                 <span class="social-followers">2.1K seguidores</span>
               </div>
               <div class="social-arrow">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -850,7 +1386,9 @@
             >
               <div class="social-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                  />
                 </svg>
               </div>
               <div class="social-content">
@@ -859,7 +1397,16 @@
                 <span class="social-followers">1K seguidores</span>
               </div>
               <div class="social-arrow">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -877,7 +1424,16 @@
     <div id="easter-egg-tracker" class="easter-egg-tracker">
       <div class="tracker-header" id="tracker-toggle">
         <span class="tracker-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="6" y1="12" x2="10" y2="12"></line>
             <line x1="8" y1="10" x2="8" y2="14"></line>
             <line x1="15" y1="13" x2="15.01" y2="13"></line>
@@ -887,7 +1443,16 @@
         </span>
         <span class="tracker-title">Easter Egg Hunter</span>
         <span class="tracker-count" id="tracker-count">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
             <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
             <path d="M4 22h16"></path>
@@ -898,7 +1463,16 @@
           <span>0/9</span>
         </span>
         <span class="tracker-arrow">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
         </span>
@@ -913,7 +1487,16 @@
         <div class="achievements-list">
           <div class="achievement locked" data-egg="konami">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <line x1="6" y1="12" x2="10" y2="12"></line>
                 <line x1="8" y1="10" x2="8" y2="14"></line>
                 <line x1="15" y1="13" x2="15.01" y2="13"></line>
@@ -928,18 +1511,64 @@
           </div>
           <div class="achievement locked" data-egg="logo">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
               </svg>
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Glitch in the Matrix</div>
-              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Long press email | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> 5 clics en logo</div>
+              <div class="achievement-hint">
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+                Long press email |
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                5 clics en logo
+              </div>
             </div>
           </div>
           <div class="achievement locked desktop-only" data-egg="matrix">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="3" y1="9" x2="21" y2="9"></line>
                 <line x1="9" y1="21" x2="9" y2="9"></line>
@@ -952,7 +1581,16 @@
           </div>
           <div class="achievement locked" data-egg="retro">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <rect x="2" y="6" width="20" height="12" rx="2"></rect>
                 <circle cx="12" cy="12" r="2"></circle>
                 <path d="M6 12h.01M18 12h.01"></path>
@@ -960,23 +1598,99 @@
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Retro Gamer</div>
-              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Long press en CTA | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Escribe "retro"</div>
+              <div class="achievement-hint">
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+                Long press en CTA |
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                Escribe "retro"
+              </div>
             </div>
           </div>
           <div class="achievement locked" data-egg="thanos">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                ></polygon>
               </svg>
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Perfectly Balanced</div>
-              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Doble tap copyright | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Long press 3s</div>
+              <div class="achievement-hint">
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+                Doble tap copyright |
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                Long press 3s
+              </div>
             </div>
           </div>
           <div class="achievement locked desktop-only" data-egg="corners">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <polyline points="9 21 3 21 3 15"></polyline>
                 <polyline points="21 15 21 21 15 21"></polyline>
@@ -990,7 +1704,16 @@
           </div>
           <div class="achievement locked desktop-only" data-egg="shake">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="M2 12c0-3.5 2.5-6 6-6s6 2.5 6 6"></path>
                 <path d="M10 12c0-3.5 2.5-6 6-6s6 2.5 6 6"></path>
                 <circle cx="8" cy="12" r="2"></circle>
@@ -1004,19 +1727,67 @@
           </div>
           <div class="achievement locked" data-egg="combo">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
-                <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M6 16h8"></path>
+                <path
+                  d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M6 16h8"
+                ></path>
               </svg>
             </span>
             <div class="achievement-info">
               <div class="achievement-name">Combo Breaker</div>
-              <div class="achievement-hint"><svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Long press "Sala Geek" | <svg class="hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Ctrl+Shift+G</div>
+              <div class="achievement-hint">
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+                Long press "Sala Geek" |
+                <svg
+                  class="hint-icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                Ctrl+Shift+G
+              </div>
             </div>
           </div>
           <div class="achievement locked" data-egg="scroll">
             <span class="achievement-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="12" y1="18" x2="12" y2="12"></line>
@@ -1031,7 +1802,16 @@
         </div>
         <div class="tracker-footer">
           <button class="reset-btn" id="reset-achievements">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <polyline points="1 4 1 10 7 10"></polyline>
               <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
             </svg>
@@ -1041,47 +1821,69 @@
       </div>
     </div>
 
-    <!-- Blog Engine para News Hub -->
-    <script src="/src/js/blog-engine.min.js?v=300"></script>
+    <!--
+      News Hub – loads articles-summary.json (~3 KB) instead of the full
+      articles.json via BlogEngine, saving ~2.4 MB on every homepage visit.
+    -->
     <script>
-      // Cargar noticias dinámicamente en News Hub
-      window.addEventListener('load', async () => {
-        const blogEngine = new BlogEngine();
-        const loaded = await blogEngine.init();
-        
-        if (!loaded) {
-          console.error('No se pudieron cargar las noticias');
+      window.addEventListener("load", async () => {
+        /* ---------- helpers ---------- */
+        function fmtDate(d) {
+          const m = [
+            "ene",
+            "feb",
+            "mar",
+            "abr",
+            "may",
+            "jun",
+            "jul",
+            "ago",
+            "sep",
+            "oct",
+            "nov",
+            "dic",
+          ];
+          const o = new Date(d);
+          return `${o.getDate()} ${m[o.getMonth()]} ${o.getFullYear()}`;
+        }
+
+        /* ---------- fetch summary data ---------- */
+        let articles;
+        try {
+          const r = await fetch("/blog/data/articles-summary.json");
+          if (!r.ok) throw 0;
+          articles = (await r.json()).articles;
+        } catch (e) {
+          console.error("No se pudieron cargar las noticias");
           return;
         }
-        
-        // Cargar featured articles en carousel
-        const featured = blogEngine.getFeaturedArticles(3);
-        const featuredTrack = document.querySelector('.featured-carousel-track');
-        const indicatorsContainer = document.querySelector('.featured-indicators');
-        const prevBtn = document.querySelector('.featured-prev');
-        const nextBtn = document.querySelector('.featured-next');
-        
-        // Si no hay artículos destacados, mostrar estado vacío
-        if (!featured || featured.length === 0) {
-          // Ocultar controles del carrusel
-          if (prevBtn) prevBtn.style.display = 'none';
-          if (nextBtn) nextBtn.style.display = 'none';
-          if (indicatorsContainer) indicatorsContainer.style.display = 'none';
-          // El empty state ya está en el HTML, se mostrará automáticamente
+
+        /* ========== Featured Carousel ========== */
+        const featured = articles.filter((a) => a.featured).slice(0, 3);
+        const featuredTrack = document.querySelector(".featured-carousel-track");
+        const indicatorsContainer = document.querySelector(".featured-indicators");
+        const prevBtn = document.querySelector(".featured-prev");
+        const nextBtn = document.querySelector(".featured-next");
+
+        if (!featured.length) {
+          if (prevBtn) prevBtn.style.display = "none";
+          if (nextBtn) nextBtn.style.display = "none";
+          if (indicatorsContainer) indicatorsContainer.style.display = "none";
         } else {
-          // Hay artículos: mostrar controles y cargar contenido
-          if (prevBtn) prevBtn.style.display = '';
-          if (nextBtn) nextBtn.style.display = '';
-          if (indicatorsContainer) indicatorsContainer.style.display = '';
-          
+          if (prevBtn) prevBtn.style.display = "";
+          if (nextBtn) nextBtn.style.display = "";
+          if (indicatorsContainer) indicatorsContainer.style.display = "";
+
           if (featuredTrack) {
-          featuredTrack.innerHTML = featured.map(article => `
+            featuredTrack.innerHTML = featured
+              .map(
+                (article) => `
             <article class="featured-slide">
               <a href="${article.content}" class="featured-link">
                 <div class="featured-image-container">
-                  <img 
-                    src="${article.image}" 
-                    alt="${article.title}" 
+                  <img
+                    src="${article.image}"
+                    alt="${article.title}"
                     class="featured-image"
                     loading="lazy"
                   />
@@ -1106,7 +1908,7 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                       </svg>
-                      ${blogEngine.formatDate(article.publishDate)}
+                      ${fmtDate(article.publishDate)}
                     </time>
                     <span class="read-time">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1126,50 +1928,50 @@
                 </div>
               </a>
             </article>
-          `).join('');
-          
-          // Generar los dots dinámicamente según el número de artículos
-          if (indicatorsContainer) {
-            indicatorsContainer.innerHTML = featured.map((_, index) => `
-              <button class="featured-dot${index === 0 ? ' active' : ''}" aria-label="Slide ${index + 1}"></button>
-            `).join('');
-          }
-          
-          // Reinicializar el carrusel después de inyectar los slides
-          const slides = featuredTrack.querySelectorAll('.featured-slide');
-          const dots = document.querySelectorAll('.featured-dot');
-          
-          // Activar el primer slide
-          if (slides.length > 0) {
-            slides[0].classList.add('active');
-            if (dots.length > 0) dots[0].classList.add('active');
-          }
-          
-          // Reinicializar el carrusel completo si existe la función
-          if (typeof initFeaturedNewsCarousel === 'function') {
-            initFeaturedNewsCarousel();
-          }
+          `
+              )
+              .join("");
+
+            /* Carousel indicators (dots) */
+            if (indicatorsContainer) {
+              indicatorsContainer.innerHTML = featured
+                .map(
+                  (_, i) =>
+                    `<button class="featured-dot${i === 0 ? " active" : ""}" aria-label="Slide ${i + 1}"></button>`
+                )
+                .join("");
+            }
+
+            /* Activate first slide */
+            const slides = featuredTrack.querySelectorAll(".featured-slide");
+            const dots = document.querySelectorAll(".featured-dot");
+            if (slides.length) {
+              slides[0].classList.add("active");
+              if (dots.length) dots[0].classList.add("active");
+            }
+            if (typeof initFeaturedNewsCarousel === "function") initFeaturedNewsCarousel();
           }
         }
-        
-        // Cargar últimas noticias - máximo 4 artículos más recientes (ordenados por fecha descendente)
-        const latestArticles = [...blogEngine.articles].sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate)).slice(0, 4);
-        const latestGrid = document.querySelector('.latest-news-grid');
-        const latestEmptyState = document.getElementById('latest-news-empty');
-        
+
+        /* ========== Latest News Grid (4 most recent) ========== */
+        const latestArticles = [...articles]
+          .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate))
+          .slice(0, 4);
+        const latestGrid = document.querySelector(".latest-news-grid");
+        const latestEmptyState = document.getElementById("latest-news-empty");
+
         if (latestGrid) {
-          if (latestArticles && latestArticles.length > 0) {
-            // Hay noticias: ocultar empty state y mostrar artículos
-            if (latestEmptyState) latestEmptyState.style.display = 'none';
-            
-            // Insertar artículos antes del empty state
-            const articlesHTML = latestArticles.slice(0, 4).map(article => `
+          if (latestArticles.length) {
+            if (latestEmptyState) latestEmptyState.style.display = "none";
+            const html = latestArticles
+              .map(
+                (article) => `
               <article class="news-card">
                 <a href="${article.content}" class="news-card-link">
                   <div class="news-card-image">
-                    <img 
-                      src="${article.image}" 
-                      alt="${article.title}" 
+                    <img
+                      src="${article.image}"
+                      alt="${article.title}"
                       loading="lazy"
                     />
                     <span class="news-card-category category-${article.category}">${article.categoryDisplay}</span>
@@ -1177,24 +1979,20 @@
                   <div class="news-card-content">
                     <h4 class="news-card-title">${article.title}</h4>
                     <div class="news-card-meta">
-                      <time datetime="${article.publishDate}">${blogEngine.formatDate(article.publishDate)}</time>
+                      <time datetime="${article.publishDate}">${fmtDate(article.publishDate)}</time>
                       <span class="separator">·</span>
                       <span>${article.readTime}</span>
                     </div>
                   </div>
                 </a>
               </article>
-            `).join('');
-            
-            // Insertar antes del empty state o reemplazar contenido
-            if (latestEmptyState) {
-              latestEmptyState.insertAdjacentHTML('beforebegin', articlesHTML);
-            } else {
-              latestGrid.innerHTML = articlesHTML;
-            }
+            `
+              )
+              .join("");
+            if (latestEmptyState) latestEmptyState.insertAdjacentHTML("beforebegin", html);
+            else latestGrid.innerHTML = html;
           } else {
-            // No hay noticias: mostrar empty state
-            if (latestEmptyState) latestEmptyState.style.display = 'flex';
+            if (latestEmptyState) latestEmptyState.style.display = "flex";
           }
         }
       });

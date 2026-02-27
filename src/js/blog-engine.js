@@ -25,12 +25,12 @@ class BlogEngine {
         throw new Error(`Error cargando artículos: ${response.status}`);
       }
       const data = await response.json();
-      
+
       // Validar estructura de datos
       if (!data?.articles || !Array.isArray(data.articles)) {
-        throw new Error('Formato de datos inválido en articles.json');
+        throw new Error("Formato de datos inválido en articles.json");
       }
-      
+
       this.articles = data.articles;
       this.categories = data.categories || {};
       this.filteredArticles = [...this.articles];
@@ -51,9 +51,7 @@ class BlogEngine {
     if (category === "all") {
       this.filteredArticles = [...this.articles];
     } else {
-      this.filteredArticles = this.articles.filter(
-        (article) => article.category === category
-      );
+      this.filteredArticles = this.articles.filter((article) => article.category === category);
     }
 
     this.applySearch();
@@ -102,14 +100,10 @@ class BlogEngine {
   sortArticles() {
     switch (this.currentSort) {
       case "newest":
-        this.filteredArticles.sort(
-          (a, b) => new Date(b.publishDate) - new Date(a.publishDate)
-        );
+        this.filteredArticles.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
         break;
       case "oldest":
-        this.filteredArticles.sort(
-          (a, b) => new Date(a.publishDate) - new Date(b.publishDate)
-        );
+        this.filteredArticles.sort((a, b) => new Date(a.publishDate) - new Date(b.publishDate));
         break;
       case "popular":
         this.filteredArticles.sort((a, b) => b.views - a.views);
@@ -175,9 +169,7 @@ class BlogEngine {
     if (!currentArticle) return [];
 
     return this.articles
-      .filter(
-        (a) => a.category === currentArticle.category && a.id !== currentArticleId
-      )
+      .filter((a) => a.category === currentArticle.category && a.id !== currentArticleId)
       .slice(0, limit);
   }
 
@@ -185,11 +177,24 @@ class BlogEngine {
    * Formatea fecha para mostrar
    */
   formatDate(dateString) {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return '';
+    if (isNaN(date.getTime())) return "";
     const day = date.getDate();
-    const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const months = [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ];
     const month = months[date.getMonth()];
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
@@ -270,7 +275,7 @@ class BlogEngine {
     if (!container) return;
 
     // Marcar como inicializado para que CSS permita mostrar todos los artículos
-    container.classList.add('js-initialized');
+    container.classList.add("js-initialized");
 
     const articles = this.getArticlesForCurrentPage();
 
@@ -289,26 +294,29 @@ class BlogEngine {
     }
 
     // Fade out actual content
-    const existingCards = container.querySelectorAll('.article-card');
-    existingCards.forEach(card => card.classList.add('filtering-out'));
+    const existingCards = container.querySelectorAll(".article-card");
+    existingCards.forEach((card) => card.classList.add("filtering-out"));
 
     // Pequeño delay para permitir animación de salida
-    setTimeout(() => {
-      container.innerHTML = articles.map((article) => this.generateArticleCard(article)).join("");
-      
-      // Aplicar animación de entrada con stagger
-      const newCards = container.querySelectorAll('.article-card');
-      newCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-          card.classList.add('fade-in');
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, index * 50);
-      });
-    }, existingCards.length > 0 ? 200 : 0);
+    setTimeout(
+      () => {
+        container.innerHTML = articles.map((article) => this.generateArticleCard(article)).join("");
+
+        // Aplicar animación de entrada con stagger
+        const newCards = container.querySelectorAll(".article-card");
+        newCards.forEach((card, index) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+
+          setTimeout(() => {
+            card.classList.add("fade-in");
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, index * 50);
+        });
+      },
+      existingCards.length > 0 ? 200 : 0
+    );
   }
 
   /**
@@ -338,11 +346,7 @@ class BlogEngine {
 
     // Números de página
     for (let i = 1; i <= totalPages; i++) {
-      if (
-        i === 1 ||
-        i === totalPages ||
-        (i >= this.currentPage - 1 && i <= this.currentPage + 1)
-      ) {
+      if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
         html += `<button class="pagination-btn ${i === this.currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
       } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
         html += '<span class="pagination-dots">...</span>';

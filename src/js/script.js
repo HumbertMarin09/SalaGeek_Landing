@@ -130,79 +130,81 @@ function updateResponsiveState() {
  * Usa View Transitions API si está disponible, con fallback CSS
  */
 const PageTransitions = {
-  supportsViewTransitions: 'startViewTransition' in document,
-  
+  supportsViewTransitions: "startViewTransition" in document,
+
   init() {
     // Fade-in al cargar la página
     this.fadeInOnLoad();
-    
+
     // Interceptar clicks en enlaces internos
     this.interceptLinks();
   },
-  
+
   fadeInOnLoad() {
     // Solo aplicar si no hay View Transitions nativas
     if (this.supportsViewTransitions) return;
-    
-    document.body.classList.add('page-entering');
-    
+
+    document.body.classList.add("page-entering");
+
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        document.body.classList.remove('page-entering');
-        document.body.classList.add('page-entered');
-        
+        document.body.classList.remove("page-entering");
+        document.body.classList.add("page-entered");
+
         // Limpiar clase después de la transición
         setTimeout(() => {
-          document.body.classList.remove('page-entered');
+          document.body.classList.remove("page-entered");
         }, 350);
       });
     });
   },
-  
+
   interceptLinks() {
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
-      
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a");
+
       // Ignorar si no es un enlace válido
       if (!link) return;
-      
-      const href = link.getAttribute('href');
-      
+
+      const href = link.getAttribute("href");
+
       // Ignorar enlaces externos, anclas, javascript:, mailto:, tel:
-      if (!href || 
-          href.startsWith('#') || 
-          href.startsWith('javascript:') ||
-          href.startsWith('mailto:') ||
-          href.startsWith('tel:') ||
-          link.target === '_blank' ||
-          link.hasAttribute('download') ||
-          href.startsWith('http') && !href.includes(window.location.hostname)) {
+      if (
+        !href ||
+        href.startsWith("#") ||
+        href.startsWith("javascript:") ||
+        href.startsWith("mailto:") ||
+        href.startsWith("tel:") ||
+        link.target === "_blank" ||
+        link.hasAttribute("download") ||
+        (href.startsWith("http") && !href.includes(window.location.hostname))
+      ) {
         return;
       }
-      
+
       // Si el navegador soporta View Transitions, dejar que funcione nativamente
       if (this.supportsViewTransitions) return;
-      
+
       // Fallback: transición manual
       e.preventDefault();
       this.navigateTo(href);
     });
   },
-  
+
   navigateTo(url) {
     // Aplicar fade-out
-    document.body.classList.add('page-transitioning');
-    
+    document.body.classList.add("page-transitioning");
+
     // Navegar después de la animación de salida
     setTimeout(() => {
       window.location.href = url;
     }, 250);
-  }
+  },
 };
 
 // Inicializar transiciones de página
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => PageTransitions.init());
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => PageTransitions.init());
 } else {
   PageTransitions.init();
 }
@@ -294,7 +296,7 @@ function chooseAvailableLogo(candidates) {
         }
       };
       img.onerror = () => tryLoad(index + 1);
-      img.src = candidates[index] + '?v=300'; // versión fija para aprovechar cache
+      img.src = candidates[index] + "?v=300"; // versión fija para aprovechar cache
     };
 
     tryLoad(0);
@@ -455,13 +457,13 @@ async function loadPartial(selector, path) {
 async function loadIncludes() {
   try {
     // Selectores compatibles (blog usa header-container, resto usa header-placeholder)
-    const headerSelector = document.querySelector("#header-placeholder") 
-      ? "#header-placeholder" 
+    const headerSelector = document.querySelector("#header-placeholder")
+      ? "#header-placeholder"
       : "#header-container";
-    const footerSelector = document.querySelector("#footer-placeholder") 
-      ? "#footer-placeholder" 
+    const footerSelector = document.querySelector("#footer-placeholder")
+      ? "#footer-placeholder"
       : "#footer-container";
-    
+
     // Carga paralela para mejor performance (sin cache busters innecesarios)
     await Promise.all([
       loadPartial(headerSelector, "/src/pages/partials/header.html"),
@@ -480,7 +482,7 @@ async function loadIncludes() {
 
     // Inicializar navegación y búsqueda después de que el header esté cargado
     initNavigation();
-    
+
     // Pequeño delay para asegurar que el DOM esté completamente renderizado
     setTimeout(() => {
       initSearch();
@@ -518,7 +520,7 @@ function initNavigation() {
 
     // Prevenir scroll del body cuando el menú está abierto
     document.body.style.overflow = isOpen ? "hidden" : "";
-    
+
     // Clase para overlay CSS
     document.body.classList.toggle("menu-open", isOpen);
 
@@ -668,24 +670,24 @@ function initSearch() {
     // 🔄 CARGA DINÁMICA DE ARTÍCULOS DESDE articles.json
     // ═══════════════════════════════════════════════════════════
     let articles = [];
-    
+
     // Cargar artículos dinámicamente
     const loadArticles = async () => {
       try {
         const response = await fetch("/blog/data/articles.json");
         const data = await response.json();
-        articles = data.articles.map(article => ({
+        articles = data.articles.map((article) => ({
           title: article.title,
           url: article.content,
           category: article.categoryDisplay,
           excerpt: article.excerpt,
-          tags: article.tags || []
+          tags: article.tags || [],
         }));
       } catch (error) {
         articles = [];
       }
     };
-    
+
     // Cargar artículos al iniciar
     loadArticles();
 
@@ -713,24 +715,30 @@ function initSearch() {
         return;
       }
 
-      const results = articles.filter(a => 
-        a.title.toLowerCase().includes(q) || 
-        a.category.toLowerCase().includes(q) ||
-        (a.tags && a.tags.some(tag => tag.toLowerCase().includes(q))) ||
-        (a.excerpt && a.excerpt.toLowerCase().includes(q))
+      const results = articles.filter(
+        (a) =>
+          a.title.toLowerCase().includes(q) ||
+          a.category.toLowerCase().includes(q) ||
+          (a.tags && a.tags.some((tag) => tag.toLowerCase().includes(q))) ||
+          (a.excerpt && a.excerpt.toLowerCase().includes(q))
       );
 
       if (results.length === 0) {
-        resultsContainer.innerHTML = '<p class="search-no-results">No se encontraron resultados</p>';
+        resultsContainer.innerHTML =
+          '<p class="search-no-results">No se encontraron resultados</p>';
         return;
       }
 
-      resultsContainer.innerHTML = results.map(r => `
+      resultsContainer.innerHTML = results
+        .map(
+          (r) => `
         <a href="${r.url}" class="search-result-item">
           <div class="search-result-title">${r.title}</div>
           <div class="search-result-category">${r.category}</div>
         </a>
-      `).join("");
+      `
+        )
+        .join("");
     };
 
     // Event: Abrir
@@ -1038,7 +1046,7 @@ function initStatsCounter() {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const easedProgress = easeOutExpo(progress);
-      
+
       // Usar interpolación más precisa
       const currentValue = Math.round(easedProgress * target);
 
@@ -1235,7 +1243,7 @@ function initNewsHubAnimations() {
   const newsHub = document.querySelector(".news-hub-section");
   const latestNews = document.querySelector(".latest-news-section");
   const newsCta = document.querySelector(".news-cta-section");
-  
+
   if (!newsHub) return;
 
   // Force initial hidden state
@@ -1247,7 +1255,7 @@ function initNewsHubAnimations() {
   const observerOptions = {
     root: null,
     rootMargin: "-50px 0px",
-    threshold: 0.15
+    threshold: 0.15,
   };
 
   // Create observer for News Hub header section
@@ -1263,28 +1271,34 @@ function initNewsHubAnimations() {
   }, observerOptions);
 
   // Create observer for Latest News section
-  const latestNewsObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        requestAnimationFrame(() => {
-          entry.target.classList.add("in-view");
-        });
-        latestNewsObserver.unobserve(entry.target);
-      }
-    });
-  }, { ...observerOptions, threshold: 0.1 });
+  const latestNewsObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          requestAnimationFrame(() => {
+            entry.target.classList.add("in-view");
+          });
+          latestNewsObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { ...observerOptions, threshold: 0.1 }
+  );
 
   // Create observer for CTA section
-  const ctaObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        requestAnimationFrame(() => {
-          entry.target.classList.add("in-view");
-        });
-        ctaObserver.unobserve(entry.target);
-      }
-    });
-  }, { ...observerOptions, threshold: 0.2 });
+  const ctaObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          requestAnimationFrame(() => {
+            entry.target.classList.add("in-view");
+          });
+          ctaObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { ...observerOptions, threshold: 0.2 }
+  );
 
   // Start observing all sections
   newsHubObserver.observe(newsHub);
@@ -1328,7 +1342,7 @@ function initFeaturedNewsCarousel() {
   let autoplayTimeout = null;
   let isAnimating = false;
   let isPaused = false;
-  
+
   const AUTOPLAY_DELAY = 8000; // Tiempo entre slides automáticos
   const PAUSE_AFTER_INTERACTION = 12000; // Pausa más larga después de interacción del usuario
 
@@ -1338,28 +1352,28 @@ function initFeaturedNewsCarousel() {
 
   // Restart progress animation on active dot
   function restartDotProgress(dotIndex) {
-    dots.forEach(dot => dot.classList.remove("active"));
+    dots.forEach((dot) => dot.classList.remove("active"));
     const activeDot = dots[dotIndex];
     if (activeDot) {
       // Force animation restart
-      activeDot.style.animation = 'none';
+      activeDot.style.animation = "none";
       activeDot.offsetHeight; // Trigger reflow
-      activeDot.style.animation = '';
+      activeDot.style.animation = "";
       activeDot.classList.add("active");
     }
   }
 
-  function updateSlide(direction = 'next') {
+  function updateSlide(direction = "next") {
     if (isAnimating) return;
     isAnimating = true;
 
     const currentSlide = slides[currentIndex];
-    
+
     // Calculate next index based on direction
     let nextIndex;
-    if (direction === 'next') {
+    if (direction === "next") {
       nextIndex = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
-    } else if (direction === 'prev') {
+    } else if (direction === "prev") {
       nextIndex = currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
     } else {
       nextIndex = direction; // Direct index
@@ -1376,22 +1390,22 @@ function initFeaturedNewsCarousel() {
     restartDotProgress(nextIndex);
 
     // Animate out current slide
-    currentSlide.style.animation = 'carouselFadeOut 0.4s ease-out forwards';
-    
+    currentSlide.style.animation = "carouselFadeOut 0.4s ease-out forwards";
+
     // Wait for fade out, then switch
     setTimeout(() => {
       currentSlide.classList.remove("active");
-      currentSlide.style.animation = '';
-      
+      currentSlide.style.animation = "";
+
       // Show next slide with animation
       nextSlide.classList.add("active");
-      nextSlide.style.animation = 'carouselFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards';
-      
+      nextSlide.style.animation = "carouselFadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards";
+
       currentIndex = nextIndex;
-      
+
       // Clear animation after it completes
       setTimeout(() => {
-        nextSlide.style.animation = '';
+        nextSlide.style.animation = "";
         isAnimating = false;
       }, 600);
     }, 350);
@@ -1412,13 +1426,13 @@ function initFeaturedNewsCarousel() {
 
   function goToPrev() {
     if (isAnimating) return;
-    updateSlide('prev');
+    updateSlide("prev");
     pauseAndResumeAutoplay();
   }
 
   function goToNext() {
     if (isAnimating) return;
-    updateSlide('next');
+    updateSlide("next");
     pauseAndResumeAutoplay();
   }
 
@@ -1433,7 +1447,7 @@ function initFeaturedNewsCarousel() {
     stopAutoplay();
     autoplayInterval = setInterval(() => {
       if (!isAnimating && !isPaused) {
-        updateSlide('next');
+        updateSlide("next");
       }
     }, AUTOPLAY_DELAY);
   }
@@ -1453,7 +1467,7 @@ function initFeaturedNewsCarousel() {
   function pauseAndResumeAutoplay() {
     stopAutoplay();
     setPausedState(true);
-    
+
     autoplayTimeout = setTimeout(() => {
       setPausedState(false);
       startAutoplay();
@@ -1471,27 +1485,35 @@ function initFeaturedNewsCarousel() {
   // Touch support
   let touchStartX = 0;
 
-  track.addEventListener("touchstart", (e) => {
-    touchStartX = e.touches[0].clientX;
-    stopAutoplay();
-    setPausedState(true);
-  }, { passive: true });
+  track.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.touches[0].clientX;
+      stopAutoplay();
+      setPausedState(true);
+    },
+    { passive: true }
+  );
 
-  track.addEventListener("touchend", (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > 50 && !isAnimating) {
-      if (diff > 0) {
-        goToNext();
+  track.addEventListener(
+    "touchend",
+    (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > 50 && !isAnimating) {
+        if (diff > 0) {
+          goToNext();
+        } else {
+          goToPrev();
+        }
       } else {
-        goToPrev();
+        // Si no hubo swipe, reanudar autoplay después de pausa
+        pauseAndResumeAutoplay();
       }
-    } else {
-      // Si no hubo swipe, reanudar autoplay después de pausa
-      pauseAndResumeAutoplay();
-    }
-  }, { passive: true });
+    },
+    { passive: true }
+  );
 
   // Pause on hover
   const carouselWrapper = document.querySelector(".carousel-wrapper");
@@ -1510,10 +1532,10 @@ function initFeaturedNewsCarousel() {
   document.addEventListener("keydown", (e) => {
     const newsSection = document.querySelector(".news-hub-section");
     if (!newsSection) return;
-    
+
     const rect = newsSection.getBoundingClientRect();
     const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-    
+
     if (isVisible && !isAnimating) {
       if (e.key === "ArrowLeft") goToPrev();
       if (e.key === "ArrowRight") goToNext();
@@ -1882,10 +1904,13 @@ function initNewsSubscribeForm() {
       // Esperar a que reCAPTCHA esté listo
       if (typeof grecaptcha !== "undefined") {
         await new Promise((resolve) => grecaptcha.ready(resolve));
-        
-        const recaptchaToken = await grecaptcha.execute("6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB", {
-          action: "newsletter_subscribe",
-        });
+
+        const recaptchaToken = await grecaptcha.execute(
+          "6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB",
+          {
+            action: "newsletter_subscribe",
+          }
+        );
 
         const response = await fetch("/api/mailchimp-subscribe.php", {
           method: "POST",
@@ -1902,7 +1927,7 @@ function initNewsSubscribeForm() {
           emailInput.value = "";
           showNotification("¡Gracias por suscribirte! Revisa tu correo.", "success");
           localStorage.setItem("newsletter_subscribed", "true");
-          
+
           // Restaurar después de 3s
           setTimeout(() => {
             form.classList.remove("success");
@@ -1961,10 +1986,13 @@ function initBlogSubscribeForm() {
       // Esperar a que reCAPTCHA esté listo
       if (typeof grecaptcha !== "undefined") {
         await new Promise((resolve) => grecaptcha.ready(resolve));
-        
-        const recaptchaToken = await grecaptcha.execute("6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB", {
-          action: "newsletter_subscribe",
-        });
+
+        const recaptchaToken = await grecaptcha.execute(
+          "6LcJzwUsAAAAAC-ecsG89N36b8nnVCt64UOTHKqB",
+          {
+            action: "newsletter_subscribe",
+          }
+        );
 
         const response = await fetch("/api/mailchimp-subscribe.php", {
           method: "POST",
@@ -1981,7 +2009,7 @@ function initBlogSubscribeForm() {
           emailInput.value = "";
           showNotification("¡Gracias por suscribirte! Revisa tu correo.", "success");
           localStorage.setItem("newsletter_subscribed", "true");
-          
+
           // Restaurar después de 3s
           setTimeout(() => {
             form.classList.remove("success");
@@ -2231,9 +2259,10 @@ function initHeaderScroll() {
       }
 
       // Actualizar barra de progreso de scroll
-      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const windowHeight =
+        document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrollProgress = (currentScroll / windowHeight) * 100;
-      header.style.setProperty('--scroll-progress', `${scrollProgress}%`);
+      header.style.setProperty("--scroll-progress", `${scrollProgress}%`);
 
       lastScroll = currentScroll;
     },
@@ -2259,15 +2288,17 @@ function initAdaptiveMenu() {
   }
 
   // Detectar tipo de página por body class y ruta
-  const isMediaKitPage = document.body.classList.contains("media-kit-page") || 
-                         window.location.pathname.includes("media-kit.html") ||
-                         window.location.pathname.includes("/media-kit");
-  const isLegalPage = window.location.pathname.includes("/legal/") ||
-                      window.location.pathname.includes("/privacidad") ||
-                      window.location.pathname.includes("/terminos") ||
-                      window.location.pathname.includes("/cookies");
-  const isBlogPage = window.location.pathname.includes("/blog/") || 
-                     document.body.classList.contains("blog-page");
+  const isMediaKitPage =
+    document.body.classList.contains("media-kit-page") ||
+    window.location.pathname.includes("media-kit.html") ||
+    window.location.pathname.includes("/media-kit");
+  const isLegalPage =
+    window.location.pathname.includes("/legal/") ||
+    window.location.pathname.includes("/privacidad") ||
+    window.location.pathname.includes("/terminos") ||
+    window.location.pathname.includes("/cookies");
+  const isBlogPage =
+    window.location.pathname.includes("/blog/") || document.body.classList.contains("blog-page");
 
   // Ocultar todos los menús primero
   menuLanding.style.display = "none";
@@ -2286,10 +2317,12 @@ function initAdaptiveMenu() {
     blogLinks.forEach((link) => {
       link.classList.remove("active");
       const linkPath = new URL(link.href).pathname;
-      
+
       // Coincidencia exacta para /blog/ o incluir para categorías
-      if ((currentPath === "/blog/" && linkPath === "/blog/") ||
-          (currentPath.includes(linkPath) && linkPath !== "/index.html" && linkPath !== "/blog/")) {
+      if (
+        (currentPath === "/blog/" && linkPath === "/blog/") ||
+        (currentPath.includes(linkPath) && linkPath !== "/index.html" && linkPath !== "/blog/")
+      ) {
         link.classList.add("active");
       }
     });
@@ -2721,7 +2754,7 @@ function playSound(soundName) {
 /**
  * Helper para crear interacciones de Long Press
  * Reduce código duplicado en Easter Eggs móviles
- * 
+ *
  * @param {HTMLElement} element - Elemento al que añadir long press
  * @param {Object} options - Configuración
  * @param {Function} options.onActivate - Callback al completar long press
@@ -2731,51 +2764,42 @@ function playSound(soundName) {
  */
 function createLongPressHandler(element, options = {}) {
   if (!element) return null;
-  
-  const {
-    onActivate,
-    duration = 600,
-    mobileOnly = true,
-    feedback = {}
-  } = options;
-  
-  const {
-    scaleDown = 0.95,
-    scaleUp = 1.1,
-    glowColor = 'var(--accent-primary)'
-  } = feedback;
-  
+
+  const { onActivate, duration = 600, mobileOnly = true, feedback = {} } = options;
+
+  const { scaleDown = 0.95, scaleUp = 1.1, glowColor = "var(--accent-primary)" } = feedback;
+
   let timer = null;
   let activated = false;
-  
+
   const handleStart = (e) => {
     if (mobileOnly && window.innerWidth > 1024) return;
     if (window.areEasterEggsDisabled?.()) return;
-    
+
     activated = false;
     element.style.transform = `scale(${scaleDown})`;
-    element.style.transition = 'transform 0.1s ease';
-    
+    element.style.transition = "transform 0.1s ease";
+
     timer = setTimeout(() => {
       activated = true;
       if (onActivate) onActivate();
-      
+
       // Feedback visual
       element.style.transform = `scale(${scaleUp})`;
       element.style.boxShadow = `0 0 20px ${glowColor}`;
       if (navigator.vibrate) navigator.vibrate(200);
-      
+
       setTimeout(() => {
-        element.style.transform = '';
-        element.style.boxShadow = '';
+        element.style.transform = "";
+        element.style.boxShadow = "";
       }, 500);
     }, duration);
   };
-  
+
   const handleEnd = (e) => {
     clearTimeout(timer);
-    element.style.transform = '';
-    
+    element.style.transform = "";
+
     if (activated) {
       e?.preventDefault?.();
       e?.stopPropagation?.();
@@ -2783,30 +2807,32 @@ function createLongPressHandler(element, options = {}) {
       return false;
     }
   };
-  
+
   const handleMove = () => {
     clearTimeout(timer);
-    element.style.transform = '';
+    element.style.transform = "";
   };
-  
+
   // Touch events
-  element.addEventListener('touchstart', handleStart, { passive: true });
-  element.addEventListener('touchend', handleEnd);
-  element.addEventListener('touchmove', handleMove);
-  
+  element.addEventListener("touchstart", handleStart, { passive: true });
+  element.addEventListener("touchend", handleEnd);
+  element.addEventListener("touchmove", handleMove);
+
   // Mouse events (for responsive testing)
-  element.addEventListener('mousedown', handleStart);
-  element.addEventListener('mouseup', handleEnd);
-  element.addEventListener('mouseleave', handleEnd);
-  
-  return { destroy: () => {
-    element.removeEventListener('touchstart', handleStart);
-    element.removeEventListener('touchend', handleEnd);
-    element.removeEventListener('touchmove', handleMove);
-    element.removeEventListener('mousedown', handleStart);
-    element.removeEventListener('mouseup', handleEnd);
-    element.removeEventListener('mouseleave', handleEnd);
-  }};
+  element.addEventListener("mousedown", handleStart);
+  element.addEventListener("mouseup", handleEnd);
+  element.addEventListener("mouseleave", handleEnd);
+
+  return {
+    destroy: () => {
+      element.removeEventListener("touchstart", handleStart);
+      element.removeEventListener("touchend", handleEnd);
+      element.removeEventListener("touchmove", handleMove);
+      element.removeEventListener("mousedown", handleStart);
+      element.removeEventListener("mouseup", handleEnd);
+      element.removeEventListener("mouseleave", handleEnd);
+    },
+  };
 }
 
 /**
@@ -3207,7 +3233,7 @@ function initSecretWords() {
   document.addEventListener("keypress", (e) => {
     // No activar en modo Upside Down
     if (window.areEasterEggsDisabled && window.areEasterEggsDisabled()) return;
-    
+
     // Validar que e.key existe
     if (!e.key) return;
 
@@ -3771,7 +3797,9 @@ function activateMouseDodge() {
   easterEggTracker.unlock("shake");
 
   // Selectores actualizados: usar clases actuales del DOM
-  const elements = document.querySelectorAll(".hero-badge, .btn, .about-stat, .about-card, .feature-card");
+  const elements = document.querySelectorAll(
+    ".hero-badge, .btn, .about-stat, .about-card, .feature-card"
+  );
 
   elements.forEach((el) => {
     el.style.transition = "transform 0.15s ease-out";
@@ -5108,9 +5136,10 @@ function initMobileEasterEggs() {
   // 3. LONG PRESS en email input del Newsletter -> Glitch Stats
   let newsletterLongPressTimer = null;
   // Selector actualizado: buscar en múltiples formularios de newsletter
-  const newsletterInput = document.querySelector(".news-subscribe-form input[type='email']") || 
-                          document.querySelector("#news-subscribe-form input[type='email']") ||
-                          document.querySelector(".newsletter-form input[type='email']");
+  const newsletterInput =
+    document.querySelector(".news-subscribe-form input[type='email']") ||
+    document.querySelector("#news-subscribe-form input[type='email']") ||
+    document.querySelector(".newsletter-form input[type='email']");
 
   const handleNewsletterStart = (e) => {
     if (window.innerWidth > 1024) return;
@@ -5156,9 +5185,10 @@ function initMobileEasterEggs() {
   let copyrightTapCount = 0;
   let copyrightTapTimer = null;
   // Selector actualizado: usar .footer-copyright o fallback a .footer-bottom p
-  const copyright = document.querySelector(".footer-copyright") || 
-                    document.querySelector(".footer-bottom-left p") ||
-                    document.querySelector(".footer-bottom p");
+  const copyright =
+    document.querySelector(".footer-copyright") ||
+    document.querySelector(".footer-bottom-left p") ||
+    document.querySelector(".footer-bottom p");
 
   const handleCopyrightTap = (e) => {
     if (window.areEasterEggsDisabled?.()) return;
@@ -5217,10 +5247,11 @@ function initMobileEasterEggs() {
     let footerBrandLongPress = null;
 
     // PASO 1: Intentar selectores actualizados (estructura 2026)
-    let footerBrand = document.querySelector(".footer-copyright strong") ||
-                      document.querySelector(".footer-bottom-left strong") ||
-                      document.querySelector(".footer-brand-name") ||
-                      document.querySelector(".footer-bottom strong");
+    let footerBrand =
+      document.querySelector(".footer-copyright strong") ||
+      document.querySelector(".footer-bottom-left strong") ||
+      document.querySelector(".footer-brand-name") ||
+      document.querySelector(".footer-bottom strong");
 
     // PASO 2: Fallback - buscar por contenido de texto
     if (!footerBrand) {

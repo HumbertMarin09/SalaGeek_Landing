@@ -1,6 +1,6 @@
 # 🎮 Sala Geek - Landing Page
 
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/HumbertMarin09/SalaGeek_Landing)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/HumbertMarin09/SalaGeek_Landing)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-production-success.svg)](https://salageek.com)
 
@@ -51,7 +51,9 @@ SG_Landing/
 ├── blog/
 │   ├── index.html                # Blog principal
 │   ├── articulos/                # Artículos del blog
-│   └── data/articles.json        # Datos de artículos
+│   └── data/
+│       ├── articles.json         # Datos completos de artículos
+│       └── articles-summary.json # Resumen ligero (homepage)
 ├── src/
 │   ├── css/
 │   │   ├── style.css             # Estilos principales
@@ -61,7 +63,10 @@ SG_Landing/
 │   ├── js/
 │   │   ├── script.js             # JavaScript principal
 │   │   ├── blog-engine.js        # Motor del blog
-│   │   └── performance-boost.js  # Optimizaciones
+│   │   ├── performance-boost.js  # Optimizaciones
+│   │   ├── cookie-consent.js     # Gestión de cookies
+│   │   ├── features-plus.js      # Funcionalidades extras
+│   │   └── monetization.js       # Sistema de ads
 │   ├── images/                   # Recursos gráficos
 │   └── pages/
 │       ├── media-kit.html        # Media Kit
@@ -110,6 +115,7 @@ El proyecto se despliega en **Hostinger** (hosting compartido con PHP).
 **URL de producción:** [https://salageek.com](https://salageek.com)
 
 ### Configuración requerida en Hostinger:
+
 1. Subir todos los archivos vía FTP o File Manager
 2. Configurar variables en `api/config.php`
 3. Apuntar DNS del dominio a Hostinger

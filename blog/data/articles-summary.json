@@ -1,0 +1,69 @@
+{
+  "articles": [
+    {
+      "id": "mm45k0ypifx05o",
+      "title": "Paramount toma la ventaja ante Netflix por Warner Media",
+      "slug": "paramount-toma-la-ventaja-ante-netflix-por-warner-media",
+      "excerpt": "Paramount ha tomado ventaja en la puja por Warner Media tras mejorar su oferta, mientras Netflix decidió no incrementarla. Aunque la operación aún no es definitiva, la batalla por uno de los gigantes del entretenimiento está más intensa que nunca.",
+      "content": "/blog/articulos/paramount-toma-la-ventaja-ante-netflix-por-warner-media",
+      "image": "/src/images/blog/paramount-toma-la-ventaja-ante-netflix-por-warner-media.webp",
+      "category": "tecnologia",
+      "categoryDisplay": "Tecnología",
+      "publishDate": "2026-02-27T00:27:00.000Z",
+      "readTime": "5 min",
+      "featured": true
+    },
+    {
+      "id": "mm3ydplzqb8lqb",
+      "title": "Solo Necesitas Matar: anime de guerra, bucles y emociones",
+      "slug": "solo-necesitas-matar-anime-de-guerra-bucles-y-emociones",
+      "excerpt": "La adaptación animada de Solo Necesitas Matar reimagina la historia de bucles temporales con un enfoque más emocional y fiel al material original, combinando acción intensa, ciencia ficción y una narrativa centrada en sus personajes.",
+      "content": "/blog/articulos/solo-necesitas-matar-anime-de-guerra-bucles-y-emociones",
+      "image": "/src/images/blog/solo-necesitas-matar-anime-de-guerra-bucles-y-emociones.webp",
+      "category": "peliculas",
+      "categoryDisplay": "Películas",
+      "publishDate": "2026-02-26T20:48:00.000Z",
+      "readTime": "5 min",
+      "featured": false
+    },
+    {
+      "id": "mm3rsqbb15e9yh",
+      "title": "Resident Evil Requiem muestra a Leon como nunca antes visto",
+      "slug": "resident-evil-requiem-muestra-a-leon-como-nunca-antes-visto",
+      "excerpt": "Resident Evil Requiem llega mañana y presenta una versión más vulnerable de Leon S. Kennedy. Esto es lo que debes saber antes del estreno del nuevo capítulo de la saga.",
+      "content": "/blog/articulos/resident-evil-requiem-muestra-a-leon-como-nunca-antes-visto",
+      "image": "/src/images/blog/resident-evil-requiem-muestra-a-leon-como-nunca-antes-visto.webp",
+      "category": "gaming",
+      "categoryDisplay": "Gaming",
+      "publishDate": "2026-02-26T17:49:00.000Z",
+      "readTime": "5 min",
+      "featured": false
+    },
+    {
+      "id": "mm3r88cd52lzfq",
+      "title": "Evangelion vuelve con nuevo anime y promete cambiarlo todo",
+      "slug": "evangelion-vuelve-con-nuevo-anime-y-promete-cambiarlo-todo",
+      "excerpt": "Evangelion regresa con una nueva serie anime y la participación del creador de NieR: Automata. Esto es lo que sabemos sobre el esperado proyecto que podría cambiar el futuro de la franquicia.",
+      "content": "/blog/articulos/evangelion-vuelve-con-nuevo-anime-y-promete-cambiarlo-todo",
+      "image": "/src/images/blog/evangelion-vuelve-con-nuevo-anime-y-promete-cambiarlo-todo.webp",
+      "category": "anime",
+      "categoryDisplay": "Anime",
+      "publishDate": "2026-02-26T17:33:00.000Z",
+      "readTime": "5 min",
+      "featured": true
+    },
+    {
+      "id": "mkorkm6qbrl0lrfli2l",
+      "title": "TERROR EN SILENT HILL: ¿RESURECCIÓN O NUEVO FRACASO?",
+      "slug": "terror-en-silent-hill-resureccion-o-nuevo-fracaso",
+      "excerpt": "Terror en Silent Hill adapta Silent Hill 2 al cine, explorando el terror psicológico, la culpa y los recuerdos en una experiencia oscura e inquietante.",
+      "content": "/blog/articulos/terror-en-silent-hill-resureccion-o-nuevo-fracaso",
+      "image": "/src/images/blog/terror-en-silent-hill-resureccion-o-nuevo-fracaso.webp",
+      "category": "peliculas",
+      "categoryDisplay": "Películas",
+      "publishDate": "2026-01-22T00:46:00.000Z",
+      "readTime": "5 min",
+      "featured": false
+    }
+  ]
+}
