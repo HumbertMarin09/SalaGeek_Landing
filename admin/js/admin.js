@@ -69,14 +69,23 @@ const CONFIG = {
   MAX_GRID_COLUMNS: 4,            // Máximo columnas en grid
   DEFAULT_GRID_GAP: 8,            // Espaciado por defecto en grid (px)
   
+  // ─── Título del artículo (SEO) ───
+  TITLE_SEO_MIN: 50,              // Mínimo ideal SEO (verde)
+  TITLE_SEO_MAX: 60,              // Máximo ideal SEO (verde)
+  TITLE_WARN_MIN: 30,             // Mínimo aceptable (amarillo)
+  TITLE_WARN_MAX: 70,             // Máximo aceptable (amarillo)
+  
   // ─── Extracto del artículo ───
-  MAX_EXCERPT_LENGTH: 250,        // Máximo caracteres permitidos
-  EXCERPT_WARNING_LENGTH: 150,    // Umbral de advertencia (amarillo)
-  EXCERPT_DANGER_LENGTH: 200,     // Umbral de peligro (rojo)
+  EXCERPT_SEO_MIN: 100,           // Mínimo ideal (verde)
+  EXCERPT_SEO_MAX: 200,           // Máximo ideal (verde)
+  EXCERPT_WARN_MIN: 50,           // Mínimo aceptable (amarillo)
+  EXCERPT_WARN_MAX: 250,          // Máximo aceptable (amarillo)
   
   // ─── Meta Description (SEO) ───
-  META_DESC_OPTIMAL: 160,         // Longitud óptima para SEO
-  META_DESC_WARNING: 140,         // Umbral de advertencia
+  META_DESC_SEO_MIN: 150,         // Mínimo ideal SEO (verde)
+  META_DESC_SEO_MAX: 160,         // Máximo ideal SEO (verde)
+  META_DESC_WARN_MIN: 120,        // Mínimo aceptable (amarillo)
+  META_DESC_WARN_MAX: 170,        // Máximo aceptable (amarillo)
   
   // ─── URL/Slug ───
   MAX_SLUG_LENGTH: 60,            // Máximo caracteres en slug
@@ -1060,40 +1069,59 @@ class SalaGeekAdmin {
     document.getElementById('article-title')?.addEventListener('input', (e) => {
       const slug = this.generateSlug(e.target.value);
       document.getElementById('article-slug').value = slug;
-    });
-
-    // Excerpt character count with visual feedback
-    document.getElementById('article-excerpt')?.addEventListener('input', (e) => {
-      const count = e.target.value.length;
-      const countEl = document.getElementById('excerpt-count');
-      const charCount = countEl.parentElement;
-      countEl.textContent = count;
       
-      // Cambiar color según límite
-      if (count > CONFIG.EXCERPT_DANGER_LENGTH) {
-        charCount.style.color = 'var(--admin-danger)';
-      } else if (count > CONFIG.EXCERPT_WARNING_LENGTH) {
-        charCount.style.color = 'var(--admin-warning)';
-      } else {
-        charCount.style.color = 'var(--admin-text-muted)';
+      // Title character count - SEO traffic light
+      const count = e.target.value.length;
+      const countEl = document.getElementById('title-count');
+      if (countEl) {
+        const charCount = countEl.parentElement;
+        countEl.textContent = count;
+        if (count >= CONFIG.TITLE_SEO_MIN && count <= CONFIG.TITLE_SEO_MAX) {
+          charCount.style.color = 'var(--admin-success)';
+        } else if (count >= CONFIG.TITLE_WARN_MIN && count <= CONFIG.TITLE_WARN_MAX) {
+          charCount.style.color = 'var(--admin-warning)';
+        } else if (count === 0) {
+          charCount.style.color = 'var(--admin-text-muted)';
+        } else {
+          charCount.style.color = 'var(--admin-danger)';
+        }
       }
     });
 
-    // Meta description character count
+    // Excerpt character count - SEO traffic light
+    document.getElementById('article-excerpt')?.addEventListener('input', (e) => {
+      const count = e.target.value.length;
+      const countEl = document.getElementById('excerpt-count');
+      if (countEl) {
+        const charCount = countEl.parentElement;
+        countEl.textContent = count;
+        if (count >= CONFIG.EXCERPT_SEO_MIN && count <= CONFIG.EXCERPT_SEO_MAX) {
+          charCount.style.color = 'var(--admin-success)';
+        } else if (count >= CONFIG.EXCERPT_WARN_MIN && count <= CONFIG.EXCERPT_WARN_MAX) {
+          charCount.style.color = 'var(--admin-warning)';
+        } else if (count === 0) {
+          charCount.style.color = 'var(--admin-text-muted)';
+        } else {
+          charCount.style.color = 'var(--admin-danger)';
+        }
+      }
+    });
+
+    // Meta description character count - SEO traffic light
     document.getElementById('meta-description')?.addEventListener('input', (e) => {
       const count = e.target.value.length;
       const countEl = document.getElementById('meta-description-count');
       if (countEl) {
         const charCount = countEl.parentElement;
         countEl.textContent = count;
-        
-        // Cambiar color según límite óptimo para SEO
-        if (count > CONFIG.META_DESC_OPTIMAL) {
-          charCount.style.color = 'var(--admin-danger)';
-        } else if (count > CONFIG.META_DESC_WARNING) {
+        if (count >= CONFIG.META_DESC_SEO_MIN && count <= CONFIG.META_DESC_SEO_MAX) {
+          charCount.style.color = 'var(--admin-success)';
+        } else if (count >= CONFIG.META_DESC_WARN_MIN && count <= CONFIG.META_DESC_WARN_MAX) {
           charCount.style.color = 'var(--admin-warning)';
-        } else {
+        } else if (count === 0) {
           charCount.style.color = 'var(--admin-text-muted)';
+        } else {
+          charCount.style.color = 'var(--admin-danger)';
         }
       }
     });
@@ -4863,6 +4891,8 @@ class SalaGeekAdmin {
   populateArticleForm(article) {
     document.getElementById('article-id').value = article.id;
     document.getElementById('article-title').value = article.title;
+    const titleCounter = document.getElementById('title-count');
+    if (titleCounter) titleCounter.textContent = article.title.length;
     document.getElementById('article-slug').value = article.slug;
     document.getElementById('article-excerpt').value = article.excerpt;
     document.getElementById('excerpt-count').textContent = article.excerpt.length;
@@ -5093,8 +5123,8 @@ class SalaGeekAdmin {
       }
     }
     
-    if (excerpt.length > CONFIG.MAX_EXCERPT_LENGTH) {
-      this.showToast(`El extracto es demasiado largo (máx ${CONFIG.MAX_EXCERPT_LENGTH} caracteres)`, 'warning');
+    if (excerpt.length > CONFIG.EXCERPT_WARN_MAX) {
+      this.showToast(`El extracto es demasiado largo (máx ${CONFIG.EXCERPT_WARN_MAX} caracteres)`, 'warning');
       return;
     }
 
@@ -6817,30 +6847,36 @@ class SalaGeekAdmin {
       tags: false
     };
 
-    // 1. Título (50-60 caracteres ideal)
+    // 1. Título (50-60 caracteres ideal para SEO)
     const title = document.getElementById('article-title')?.value?.trim() || '';
     const titleLen = title.length;
-    if (titleLen >= 30 && titleLen <= 70) {
-      checks.title = titleLen >= 50 && titleLen <= 60 ? 'pass' : 'warn';
+    if (titleLen >= CONFIG.TITLE_SEO_MIN && titleLen <= CONFIG.TITLE_SEO_MAX) {
+      checks.title = 'pass';
+    } else if (titleLen >= CONFIG.TITLE_WARN_MIN && titleLen <= CONFIG.TITLE_WARN_MAX) {
+      checks.title = 'warn';
     } else if (titleLen > 0) {
       checks.title = 'fail';
     }
 
-    // 2. Meta descripción (150-160 caracteres ideal)
+    // 2. Meta descripción (150-160 caracteres ideal para SEO)
     const metaDesc = document.getElementById('meta-description')?.value?.trim() || '';
     const excerpt = document.getElementById('article-excerpt')?.value?.trim() || '';
     const descLen = metaDesc.length || excerpt.length;
-    if (descLen >= 120 && descLen <= 160) {
-      checks.description = descLen >= 150 ? 'pass' : 'warn';
+    if (descLen >= CONFIG.META_DESC_SEO_MIN && descLen <= CONFIG.META_DESC_SEO_MAX) {
+      checks.description = 'pass';
+    } else if (descLen >= CONFIG.META_DESC_WARN_MIN && descLen <= CONFIG.META_DESC_WARN_MAX) {
+      checks.description = 'warn';
     } else if (descLen > 0) {
-      checks.description = descLen < 120 ? 'warn' : 'fail';
+      checks.description = 'fail';
     }
 
-    // 3. Extracto definido
-    if (excerpt.length >= 50) {
+    // 3. Extracto definido (100-200 caracteres ideal)
+    if (excerpt.length >= CONFIG.EXCERPT_SEO_MIN && excerpt.length <= CONFIG.EXCERPT_SEO_MAX) {
       checks.excerpt = 'pass';
-    } else if (excerpt.length > 0) {
+    } else if (excerpt.length >= CONFIG.EXCERPT_WARN_MIN) {
       checks.excerpt = 'warn';
+    } else if (excerpt.length > 0) {
+      checks.excerpt = 'fail';
     }
 
     // 4. Imagen destacada - acepta http, data: URIs, y rutas relativas
