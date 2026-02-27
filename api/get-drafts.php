@@ -54,7 +54,11 @@ try {
     }
     
     $content = base64_decode($result['data']['content']);
+    // Eliminar BOM si existe
+    $content = stripBOM($content);
     $draftsData = json_decode($content, true);
+    // Reparar posible doble-codificación UTF-8
+    $draftsData = repairDoubleEncodedUTF8($draftsData);
     
     jsonResponse([
         'success' => true,

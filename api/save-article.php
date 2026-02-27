@@ -63,6 +63,7 @@ switch ($method) {
 
 /**
  * Obtiene un archivo de GitHub
+ * Maneja archivos >1MB automáticamente usando la API raw
  */
 function getGitHubFile($path) {
     $url = 'https://api.github.com/repos/' . GITHUB_REPO . '/contents/' . $path . '?ref=' . GITHUB_BRANCH;
@@ -77,11 +78,124 @@ function getGitHubFile($path) {
         return null;
     }
     
+    // Handle large files (>1MB): Contents API returns 403 or 200 with empty content
+    $isLargeFile = false;
+    $sha = null;
+    
+    if ($result['httpCode'] === 403) {
+        // GitHub returns 403 for files too large for Contents API
+        $isLargeFile = true;
+    } elseif ($result['success'] && is_array($result['data']) && empty($result['data']['content'])) {
+        // GitHub returned metadata but no content (file >1MB but <100MB)
+        $isLargeFile = true;
+        $sha = $result['data']['sha'] ?? null;
+    }
+    
+    if ($isLargeFile) {
+        // Get SHA if not available from initial response
+        if (!$sha) {
+            $sha = getGitHubFileSha($path);
+        }
+        
+        // Download raw content
+        $rawContent = downloadGitHubRawContent($path);
+        if ($rawContent === false) {
+            throw new Exception('Error al descargar archivo grande de GitHub: ' . $path);
+        }
+        
+        logError('Large file fetched via raw API', [
+            'path' => $path,
+            'size' => strlen($rawContent)
+        ]);
+        
+        // Return in same format as Contents API for compatibility
+        return [
+            'content' => base64_encode($rawContent),
+            'sha' => $sha,
+            'path' => $path,
+            'encoding' => 'base64',
+            'size' => strlen($rawContent)
+        ];
+    }
+    
     if (!$result['success']) {
         throw new Exception('Error al obtener archivo de GitHub: ' . ($result['error'] ?? 'Unknown error'));
     }
     
     return $result['data'];
+}
+
+/**
+ * Descarga contenido raw de un archivo de GitHub (para archivos >1MB)
+ * Usa la API con Accept: raw para obtener el contenido sin base64
+ */
+function downloadGitHubRawContent($path) {
+    $url = 'https://api.github.com/repos/' . GITHUB_REPO . '/contents/' . $path . '?ref=' . GITHUB_BRANCH;
+    
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: token ' . GITHUB_TOKEN,
+        'Accept: application/vnd.github.v3.raw',
+        'User-Agent: SalaGeek-Admin'
+    ]);
+    
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+    
+    if ($error || $httpCode !== 200) {
+        logError('downloadGitHubRawContent failed', [
+            'path' => $path,
+            'httpCode' => $httpCode,
+            'error' => $error
+        ]);
+        return false;
+    }
+    
+    return $response;
+}
+
+/**
+ * Obtiene el SHA de un archivo vía Git Trees API (fallback para archivos grandes)
+ */
+function getGitHubFileSha($path) {
+    // Get latest commit SHA for the branch
+    $refUrl = 'https://api.github.com/repos/' . GITHUB_REPO . '/git/ref/heads/' . GITHUB_BRANCH;
+    $refResult = httpRequest($refUrl, 'GET', null, [
+        'Authorization: token ' . GITHUB_TOKEN,
+        'Accept: application/vnd.github.v3+json',
+        'User-Agent: SalaGeek-Admin'
+    ]);
+    
+    if (!$refResult['success'] || !isset($refResult['data']['object']['sha'])) {
+        return null;
+    }
+    
+    $commitSha = $refResult['data']['object']['sha'];
+    
+    // Get tree recursively to find the file's blob SHA
+    $treeUrl = 'https://api.github.com/repos/' . GITHUB_REPO . '/git/trees/' . $commitSha . '?recursive=1';
+    $treeResult = httpRequest($treeUrl, 'GET', null, [
+        'Authorization: token ' . GITHUB_TOKEN,
+        'Accept: application/vnd.github.v3+json',
+        'User-Agent: SalaGeek-Admin'
+    ]);
+    
+    if ($treeResult['success'] && isset($treeResult['data']['tree'])) {
+        foreach ($treeResult['data']['tree'] as $item) {
+            if ($item['path'] === $path && $item['type'] === 'blob') {
+                return $item['sha'];
+            }
+        }
+    }
+    
+    return null;
 }
 
 /**
@@ -178,6 +292,8 @@ function handleCreateOrUpdate() {
         if ($draftsFile) {
             // GitHub API retorna base64 con saltos de línea, limpiar antes de decodificar
             $draftsContent = base64_decode(str_replace("\n", '', $draftsFile['content']));
+            // Eliminar BOM si existe (causa que json_decode retorne null)
+            $draftsContent = stripBOM($draftsContent);
             $decoded = json_decode($draftsContent, true);
             if (!is_array($decoded)) {
                 // ABORTAR: no continuar con datos vacíos para evitar sobrescribir
@@ -187,6 +303,8 @@ function handleCreateOrUpdate() {
                 ]);
                 throw new Exception('Error crítico: no se pudo leer drafts.json del repositorio. Guardado abortado para proteger datos existentes.');
             }
+            // Reparar posible doble-codificación UTF-8 en datos existentes
+            $decoded = repairDoubleEncodedUTF8($decoded);
             $drafts = $decoded;
             $draftsSha = $draftsFile['sha'];
         }
@@ -213,6 +331,8 @@ function handleCreateOrUpdate() {
         if ($articlesFile) {
             // GitHub API retorna base64 con saltos de línea, limpiar antes de decodificar
             $articlesContent = base64_decode(str_replace("\n", '', $articlesFile['content']));
+            // Eliminar BOM si existe (causa que json_decode retorne null)
+            $articlesContent = stripBOM($articlesContent);
             $decoded = json_decode($articlesContent, true);
             if (!is_array($decoded)) {
                 // ABORTAR: no continuar con datos vacíos para evitar sobrescribir
@@ -222,6 +342,8 @@ function handleCreateOrUpdate() {
                 ]);
                 throw new Exception('Error crítico: no se pudo leer articles.json del repositorio. Guardado abortado para proteger datos existentes.');
             }
+            // Reparar posible doble-codificación UTF-8 en datos existentes
+            $decoded = repairDoubleEncodedUTF8($decoded);
             $articles = $decoded;
             $articlesSha = $articlesFile['sha'];
         }
@@ -408,6 +530,8 @@ function handleDelete() {
         }
         
         $content = base64_decode(str_replace("\n", '', $dataFile['content']));
+        // Eliminar BOM si existe
+        $content = stripBOM($content);
         $data = json_decode($content, true);
         
         if (!is_array($data)) {
@@ -416,6 +540,9 @@ function handleDelete() {
             ]);
             jsonResponse(['error' => 'Error al leer datos del archivo'], 500);
         }
+        
+        // Reparar posible doble-codificación UTF-8 en datos existentes
+        $data = repairDoubleEncodedUTF8($data);
         
         $key = $isDraft ? 'drafts' : 'articles';
         

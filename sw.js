@@ -20,9 +20,9 @@
  * ============================================================================
  */
 
-const STATIC_CACHE = 'sg-static-v5';
-const DYNAMIC_CACHE = 'sg-dynamic-v5';
-const IMAGE_CACHE = 'sg-images-v5';
+const STATIC_CACHE = 'sg-static-v6';
+const DYNAMIC_CACHE = 'sg-dynamic-v6';
+const IMAGE_CACHE = 'sg-images-v6';
 
 // Recursos para pre-cachear (instalar inmediatamente)
 const PRECACHE_ASSETS = [
@@ -30,7 +30,9 @@ const PRECACHE_ASSETS = [
   '/404.html',
   '/src/css/normalize.css',
   '/src/css/style.min.css',
+  '/src/css/blog.min.css',
   '/src/js/script.min.js',
+  '/src/js/blog-engine.min.js',
   '/src/js/performance-boost.min.js',
   '/src/images/SalaGeek_LOGO.webp',
   '/src/images/Icono_SG.ico',
