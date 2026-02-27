@@ -200,13 +200,59 @@ function getGitHubFileSha($path) {
 
 /**
  * Genera articles-summary.json a partir del array completo de articles.
- * Contiene solo los campos necesarios para la homepage (~3 KB vs ~50 KB+).
+ * Contiene solo los campos necesarios para la homepage (~3 KB).
+ * 
+ * La homepage usa:
+ *   - 3 artículos featured (carrusel)
+ *   - 4 artículos más recientes (grid "Últimas Noticias")
+ * 
+ * Se incluyen los 3 featured más recientes + los 10 más recientes por fecha,
+ * deduplicados, para cubrir ambas secciones con margen.
  */
 function generateArticlesSummary($articles) {
     $summaryFields = ['id', 'title', 'slug', 'excerpt', 'content', 'image', 'category', 'categoryDisplay', 'publishDate', 'readTime', 'featured'];
-    $summary = ['articles' => []];
     
-    foreach ($articles['articles'] as $article) {
+    $allArticles = $articles['articles'] ?? [];
+    
+    // Ordenar por fecha de publicación descendente
+    usort($allArticles, function($a, $b) {
+        return strtotime($b['publishDate'] ?? '0') - strtotime($a['publishDate'] ?? '0');
+    });
+    
+    // Recopilar los artículos necesarios (featured + recientes), deduplicados
+    $includedIds = [];
+    $selected = [];
+    
+    // 1. Los 3 featured más recientes
+    $featuredCount = 0;
+    foreach ($allArticles as $article) {
+        if ($featuredCount >= 3) break;
+        if (!empty($article['featured'])) {
+            $selected[] = $article;
+            $includedIds[$article['id']] = true;
+            $featuredCount++;
+        }
+    }
+    
+    // 2. Los 10 más recientes (ya están ordenados por fecha)
+    $recentCount = 0;
+    foreach ($allArticles as $article) {
+        if ($recentCount >= 10) break;
+        if (!isset($includedIds[$article['id']])) {
+            $selected[] = $article;
+            $includedIds[$article['id']] = true;
+        }
+        $recentCount++;
+    }
+    
+    // Re-ordenar la selección final por fecha descendente
+    usort($selected, function($a, $b) {
+        return strtotime($b['publishDate'] ?? '0') - strtotime($a['publishDate'] ?? '0');
+    });
+    
+    // Extraer solo los campos ligeros
+    $summary = ['articles' => []];
+    foreach ($selected as $article) {
         $item = [];
         foreach ($summaryFields as $field) {
             if (isset($article[$field])) {

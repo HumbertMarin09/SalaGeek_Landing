@@ -1282,6 +1282,60 @@ class SalaGeekAdmin {
       });
     });
 
+    // Font size button + dropdown — guardamos selección al abrir
+    const fontSizeBtn = document.getElementById('font-size-btn');
+    const fontSizeDropdown = document.getElementById('font-size-dropdown');
+    let savedFontSizeRange = null;
+
+    fontSizeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Guardar selección antes de que se pierda
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+        savedFontSizeRange = sel.getRangeAt(0).cloneRange();
+      }
+      fontSizeDropdown.classList.toggle('visible');
+    });
+
+    fontSizeDropdown?.querySelectorAll('.size-option').forEach(btn => {
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault(); // No perder selección
+        e.stopPropagation();
+        const size = btn.dataset.size;
+        if (!size) return;
+
+        if (savedFontSizeRange && editor.contains(savedFontSizeRange.commonAncestorContainer)) {
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(savedFontSizeRange);
+
+          const range = sel.getRangeAt(0);
+          const span = document.createElement('span');
+          span.style.fontSize = size;
+          span.appendChild(range.extractContents());
+          range.insertNode(span);
+
+          range.selectNodeContents(span);
+          sel.removeAllRanges();
+          sel.addRange(range);
+
+          this.saveEditorState();
+          this.showToast(`Tamaño: ${btn.textContent.trim()}`, 'success');
+        } else {
+          this.showToast('Selecciona texto primero', 'warning');
+        }
+        savedFontSizeRange = null;
+        fontSizeDropdown.classList.remove('visible');
+      });
+    });
+
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', (e) => {
+      if (fontSizeDropdown && !fontSizeBtn?.contains(e.target) && !fontSizeDropdown.contains(e.target)) {
+        fontSizeDropdown.classList.remove('visible');
+      }
+    });
+
     // Word count update on input + guardar estado para Undo/Redo
     let saveStateTimeout;
     editor?.addEventListener('input', () => {
@@ -2559,6 +2613,23 @@ class SalaGeekAdmin {
           <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179zm10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5c-1.073 0-2.099-.49-2.748-1.179z"/>
         </svg>
       </button>
+      <span class="floating-toolbar-divider"></span>
+      <div class="ft-fontsize-wrap">
+        <button data-action="fontsize" title="Tamaño de fuente" aria-label="Tamaño de fuente" class="ft-fontsize-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 7 4 4 20 4 20 7"/>
+            <line x1="9" y1="20" x2="15" y2="20"/>
+            <line x1="12" y1="4" x2="12" y2="20"/>
+          </svg>
+        </button>
+        <div class="ft-fontsize-dropdown">
+          <button data-fontsize="0.85rem"><span class="ft-sz-a" style="font-size:0.65rem">A</span> Pequeño</button>
+          <button data-fontsize="1rem"><span class="ft-sz-a" style="font-size:0.8rem">A</span> Normal</button>
+          <button data-fontsize="1.15rem"><span class="ft-sz-a" style="font-size:0.95rem">A</span> Mediano</button>
+          <button data-fontsize="1.35rem"><span class="ft-sz-a" style="font-size:1.1rem">A</span> Grande</button>
+          <button data-fontsize="1.6rem"><span class="ft-sz-a" style="font-size:1.25rem">A</span> Extra grande</button>
+        </div>
+      </div>
       <button data-cmd="clear" title="Limpiar formato" aria-label="Limpiar formato">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -2580,6 +2651,38 @@ class SalaGeekAdmin {
         if (['h2', 'h3', 'p', 'quote', 'clear'].includes(cmd)) {
           this.hideFloatingToolbar();
         }
+      });
+    });
+
+    // Font-size toggle en floating toolbar
+    const ftSizeBtn = toolbar.querySelector('.ft-fontsize-btn');
+    const ftSizeDropdown = toolbar.querySelector('.ft-fontsize-dropdown');
+    ftSizeBtn?.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ftSizeDropdown.classList.toggle('visible');
+    });
+
+    ftSizeDropdown?.querySelectorAll('button[data-fontsize]').forEach(btn => {
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const size = btn.dataset.fontsize;
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+          const range = sel.getRangeAt(0);
+          const span = document.createElement('span');
+          span.style.fontSize = size;
+          span.appendChild(range.extractContents());
+          range.insertNode(span);
+          range.selectNodeContents(span);
+          sel.removeAllRanges();
+          sel.addRange(range);
+          this.saveEditorState();
+          this.showToast(`Tamaño: ${btn.textContent.trim()}`, 'success');
+        }
+        ftSizeDropdown.classList.remove('visible');
+        this.hideFloatingToolbar();
       });
     });
 

@@ -524,6 +524,35 @@
 
                       <span class="toolbar-divider"></span>
 
+                      <div class="toolbar-group font-size-group">
+                        <button type="button" id="font-size-btn" class="font-size-trigger" title="Tamaño de fuente">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="4 7 4 4 20 4 20 7"/>
+                            <line x1="9" y1="20" x2="15" y2="20"/>
+                            <line x1="12" y1="4" x2="12" y2="20"/>
+                          </svg>
+                        </button>
+                        <div id="font-size-dropdown" class="font-size-dropdown">
+                          <button type="button" data-size="0.85rem" class="size-option">
+                            <span class="size-preview" style="font-size:0.7rem">A</span> Pequeño
+                          </button>
+                          <button type="button" data-size="1rem" class="size-option">
+                            <span class="size-preview" style="font-size:0.85rem">A</span> Normal
+                          </button>
+                          <button type="button" data-size="1.15rem" class="size-option">
+                            <span class="size-preview" style="font-size:1rem">A</span> Mediano
+                          </button>
+                          <button type="button" data-size="1.35rem" class="size-option">
+                            <span class="size-preview" style="font-size:1.15rem">A</span> Grande
+                          </button>
+                          <button type="button" data-size="1.6rem" class="size-option">
+                            <span class="size-preview" style="font-size:1.3rem">A</span> Extra grande
+                          </button>
+                        </div>
+                      </div>
+
+                      <span class="toolbar-divider"></span>
+
                       <div class="toolbar-group">
                         <button type="button" data-command="justifyLeft" title="Alinear izquierda">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -603,14 +632,6 @@
                             <rect x="13" y="3" width="8" height="8" rx="1"/>
                             <rect x="3" y="13" width="8" height="8" rx="1"/>
                             <rect x="13" y="13" width="8" height="8" rx="1"/>
-                          </svg>
-                        </button>
-                        <button type="button" data-command="gallery" title="Mis imágenes subidas">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z"/>
-                            <path d="M8.5 10a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
-                            <path d="M21 15l-5-5L5 21"/>
-                            <path d="M14 14l3-3 4 4"/>
                           </svg>
                         </button>
                         <button type="button" data-command="youtube" title="Insertar video de YouTube">

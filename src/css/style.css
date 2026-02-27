@@ -3694,7 +3694,7 @@ body.menu-open main {
   width: 0%;
   background: var(--accent-primary);
   border-radius: 4px;
-  animation: dotProgress 8s linear forwards;
+  animation: dotProgress 5s linear forwards;
 }
 
 @keyframes dotProgress {

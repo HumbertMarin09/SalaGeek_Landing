@@ -1327,6 +1327,10 @@ function initNewsHubAnimations() {
    FEATURED NEWS CAROUSEL
    ============================================ */
 
+// Exposed globally so the inline script in index.html can call it
+// after dynamically populating the carousel with articles data.
+window.initFeaturedNewsCarousel = initFeaturedNewsCarousel;
+
 function initFeaturedNewsCarousel() {
   const track = document.querySelector(".featured-carousel-track");
   const slides = document.querySelectorAll(".featured-slide");
@@ -1343,8 +1347,8 @@ function initFeaturedNewsCarousel() {
   let isAnimating = false;
   let isPaused = false;
 
-  const AUTOPLAY_DELAY = 8000; // Tiempo entre slides automáticos
-  const PAUSE_AFTER_INTERACTION = 12000; // Pausa más larga después de interacción del usuario
+  const AUTOPLAY_DELAY = 5000; // Tiempo entre slides automáticos
+  const PAUSE_AFTER_INTERACTION = 8000; // Pausa más larga después de interacción del usuario
 
   // Initialize first slide
   slides[0].classList.add("active");
