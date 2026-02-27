@@ -4772,13 +4772,15 @@ class SalaGeekAdmin {
     thisMonthEl.textContent = thisMonth;
     thisMonthEl.className = 'health-value ' + (thisMonth >= 4 ? 'good' : thisMonth >= 2 ? 'warning' : 'danger');
 
-    // Average read time (proxy for words)
+    // Average word count
     if (this.articles.length > 0) {
-      const avgReadTime = this.articles.reduce((sum, a) => {
-        const mins = parseInt(a.readTime) || 3;
-        return sum + mins;
-      }, 0) / this.articles.length;
-      avgWordsEl.textContent = `~${Math.round(avgReadTime * 200)} palabras`;
+      const totalWords = this.articles.reduce((sum, a) => {
+        // Use stored wordCount, fallback to readTime estimate
+        const wc = a.wordCount || (parseInt(a.readTime) || 3) * 200;
+        return sum + wc;
+      }, 0);
+      const avg = Math.round(totalWords / this.articles.length);
+      avgWordsEl.textContent = `~${avg} palabras`;
     } else {
       avgWordsEl.textContent = '-';
     }
@@ -5077,6 +5079,10 @@ class SalaGeekAdmin {
       return;
     }
 
+    // Count words from editor content
+    const wordCountText = (content || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const wordCount = wordCountText.split(' ').filter(w => w.length > 0).length;
+
     // Category display names
     const categoryNames = {
       series: 'Series',
@@ -5101,6 +5107,7 @@ class SalaGeekAdmin {
       publishDate,
       modifiedDate: new Date().toISOString(),
       readTime,
+      wordCount,
       views: this.editingArticle?.views || 0,
       featured,
       trending,
