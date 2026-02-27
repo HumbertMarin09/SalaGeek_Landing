@@ -134,9 +134,9 @@
 
     <link rel="stylesheet" href="/src/css/normalize.css" />
     <link rel="stylesheet" href="/src/css/style.min.css?v=300" />
-    <link rel="stylesheet" href="/src/css/blog.min.css?v=300" />
+    <link rel="stylesheet" href="/src/css/blog.min.css?v=301" />
 
-    <script src="/src/js/blog-engine.min.js?v=300" defer></script>
+    <script src="/src/js/blog-engine.min.js?v=301" defer></script>
   </head>
 
   <body class="article-page">
@@ -701,6 +701,7 @@
       })();
 
       // Load related articles
+
       document.addEventListener("DOMContentLoaded", async function () {
         const blogEngine = new BlogEngine();
         await blogEngine.init();
@@ -757,6 +758,7 @@
                 );
               })
               .join("");
+
           } else if (relatedContainer) {
             relatedContainer.innerHTML =
               '<p class="no-related">No hay artículos relacionados disponibles.</p>';

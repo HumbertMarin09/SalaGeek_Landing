@@ -370,3 +370,119 @@ class BlogEngine {
 
 // Exportar para uso global
 window.BlogEngine = BlogEngine;
+
+// ── Related Articles Carousel (mobile auto-play) ──
+function initRelatedCarousel(container, cardCount) {
+  if (cardCount < 2) return;
+  const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+  if (!isMobile()) {
+    window.addEventListener(
+      "resize",
+      () => {
+        if (isMobile()) initRelatedCarousel(container, cardCount);
+      },
+      { once: true }
+    );
+    return;
+  }
+  const section = container.closest(".related-articles");
+  if (!section || section.querySelector(".related-carousel-dots")) return;
+
+  const dotsWrap = document.createElement("div");
+  dotsWrap.className = "related-carousel-dots";
+  for (let i = 0; i < cardCount; i++) {
+    const dot = document.createElement("button");
+    dot.className = "related-carousel-dot" + (i === 0 ? " active" : "");
+    dot.setAttribute("aria-label", "Ir a articulo " + (i + 1));
+    dot.addEventListener("click", () => goTo(i));
+    dotsWrap.appendChild(dot);
+  }
+  section.appendChild(dotsWrap);
+
+  let cur = 0,
+    timer = null;
+  const cards = container.querySelectorAll(".related-card");
+  const dots = dotsWrap.querySelectorAll(".related-carousel-dot");
+
+  function goTo(i) {
+    cur = i;
+    const cardWidth = container.offsetWidth;
+    container.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+    dots.forEach((d, j) => d.classList.toggle("active", j === i));
+  }
+  function next() {
+    goTo((cur + 1) % cardCount);
+  }
+  function play() {
+    stop();
+    timer = setInterval(next, 4000);
+  }
+  function stop() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  let st;
+  let isAutoScrolling = false;
+  const origGoTo = goTo;
+  goTo = function (i) {
+    isAutoScrolling = true;
+    origGoTo(i);
+    // Reset flag after scroll animation settles
+    setTimeout(() => { isAutoScrolling = false; }, 600);
+  };
+
+  container.addEventListener(
+    "scroll",
+    () => {
+      if (isAutoScrolling) return;
+      clearTimeout(st);
+      st = setTimeout(() => {
+        const idx = Math.round(container.scrollLeft / container.offsetWidth);
+        if (idx !== cur && idx >= 0 && idx < cardCount) {
+          cur = idx;
+          dots.forEach((d, j) => d.classList.toggle("active", j === cur));
+          // Reset timer so next auto-advance waits full 4s
+          if (timer) { stop(); setTimeout(play, 4000); }
+        }
+      }, 100);
+    },
+    { passive: true }
+  );
+  container.addEventListener("touchstart", stop, { passive: true });
+  container.addEventListener("touchend", () => setTimeout(play, 3000), { passive: true });
+  container.addEventListener("mouseenter", stop);
+  container.addEventListener("mouseleave", () => setTimeout(play, 2000));
+  play();
+  new IntersectionObserver(
+    (e) => {
+      e[0].isIntersecting ? play() : stop();
+    },
+    { threshold: 0.3 }
+  ).observe(section);
+}
+window.initRelatedCarousel = initRelatedCarousel;
+
+// Auto-detectar e inicializar carousel cuando se cargan artículos relacionados
+(function autoInitCarousel() {
+  const grid = document.getElementById("related-articles");
+  if (!grid) return;
+
+  const observer = new MutationObserver(() => {
+    const cards = grid.querySelectorAll(".related-card");
+    if (cards.length > 0) {
+      observer.disconnect();
+      initRelatedCarousel(grid, cards.length);
+    }
+  });
+  observer.observe(grid, { childList: true });
+
+  // Fallback: si ya están cargados al momento de ejecutar
+  const existing = grid.querySelectorAll(".related-card");
+  if (existing.length > 0) {
+    observer.disconnect();
+    initRelatedCarousel(grid, existing.length);
+  }
+})();

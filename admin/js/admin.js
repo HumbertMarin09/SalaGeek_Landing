@@ -6471,7 +6471,7 @@ class SalaGeekAdmin {
   <link rel="stylesheet" href="/src/css/style.min.css?v=300" />
   <link rel="stylesheet" href="/src/css/blog.min.css?v=300" />
   
-  <script src="/src/js/blog-engine.min.js?v=300" defer><\/script>
+  <script src="/src/js/blog-engine.min.js?v=301" defer><\/script>
 </head>
 
 <body class="article-page">

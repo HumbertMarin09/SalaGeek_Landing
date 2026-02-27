@@ -2891,6 +2891,16 @@ figure.resizable-image img {
   gap: 1.5rem;
 }
 
+/* Limitar a máximo 3 columnas */
+.related-grid .related-card:nth-child(n+4) {
+  display: none;
+}
+
+/* Carousel dots - hidden on desktop */
+.related-carousel-dots {
+  display: none;
+}
+
 /* ─── Card Design ─── */
 .related-card {
   background: linear-gradient(165deg, rgba(22, 28, 55, 0.9) 0%, rgba(12, 16, 38, 0.95) 100%);
@@ -4909,7 +4919,7 @@ figure.resizable-image img {
     font-size: 0.8rem;
   }
 
-  /* Related articles */
+  /* Related articles - Carousel on mobile */
   .related-articles {
     padding: 2rem 1.5rem;
     border-radius: 18px;
@@ -4917,23 +4927,35 @@ figure.resizable-image img {
   }
 
   .related-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.25rem;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  /* Single card: stack vertically on tablet */
-  .related-grid:has(.related-card:only-child) .related-card-link {
+  .related-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .related-grid .related-card {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    min-width: 0;
+  }
+
+  /* All cards: stack vertically */
+  .related-card-link {
     flex-direction: column;
   }
 
-  .related-grid:has(.related-card:only-child) .related-card-image {
+  .related-card-image {
     width: 100%;
     aspect-ratio: 16 / 9;
     min-height: auto;
-  }
-
-  .related-grid:has(.related-card:only-child) .related-card-title {
-    font-size: 1.1rem;
   }
 
   .related-card-excerpt {
@@ -4942,6 +4964,35 @@ figure.resizable-image img {
 
   .related-card-arrow span {
     display: none;
+  }
+
+  /* Carousel dots */
+  .related-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .related-carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .related-carousel-dot.active {
+    background: var(--accent-primary);
+    box-shadow: 0 0 8px rgba(255, 209, 102, 0.4);
+    transform: scale(1.2);
+  }
+
+  .related-carousel-dot:hover {
+    background: rgba(255, 209, 102, 0.5);
   }
 
   /* Comments responsive */
@@ -5244,7 +5295,7 @@ figure.resizable-image img {
     font-size: 0.75rem;
   }
 
-  /* Related articles - Vertical cards on mobile for premium look */
+  /* Related articles - Carousel on mobile */
   .related-articles {
     padding: 1.75rem 1.25rem;
     margin-top: 2rem;
@@ -5263,11 +5314,18 @@ figure.resizable-image img {
   }
 
   .related-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+    scrollbar-width: none;
   }
 
-  .related-card {
+  .related-grid .related-card {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
     border-radius: 14px;
   }
 
@@ -5280,7 +5338,7 @@ figure.resizable-image img {
     transform: translateY(-4px);
   }
 
-  /* All cards: vertical layout on mobile for better visual impact */
+  /* All cards: vertical layout on mobile */
   .related-card-link {
     flex-direction: column;
   }
@@ -5289,32 +5347,6 @@ figure.resizable-image img {
     width: 100%;
     aspect-ratio: 16 / 9;
     flex-shrink: 0;
-  }
-
-  /* Single card: same vertical layout */
-  .related-grid:has(.related-card:only-child) .related-card-link {
-    flex-direction: column;
-  }
-
-  .related-grid:has(.related-card:only-child) .related-card-image {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    min-height: auto;
-  }
-
-  .related-grid:has(.related-card:only-child) .related-card-content {
-    padding: 1rem 1.25rem 1.25rem;
-  }
-
-  .related-grid:has(.related-card:only-child) .related-card-title {
-    font-size: 1rem;
-    -webkit-line-clamp: 2;
-  }
-
-  .related-grid:has(.related-card:only-child) .related-card-excerpt {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    font-size: 0.82rem;
   }
 
   .related-card-content {
