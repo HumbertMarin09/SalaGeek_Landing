@@ -199,6 +199,58 @@ function getGitHubFileSha($path) {
 }
 
 /**
+ * Genera articles-summary.json a partir del array completo de articles.
+ * Contiene solo los campos necesarios para la homepage (~3 KB vs ~50 KB+).
+ */
+function generateArticlesSummary($articles) {
+    $summaryFields = ['id', 'title', 'slug', 'excerpt', 'content', 'image', 'category', 'categoryDisplay', 'publishDate', 'readTime', 'featured'];
+    $summary = ['articles' => []];
+    
+    foreach ($articles['articles'] as $article) {
+        $item = [];
+        foreach ($summaryFields as $field) {
+            if (isset($article[$field])) {
+                $item[$field] = $article[$field];
+            }
+        }
+        $summary['articles'][] = $item;
+    }
+    
+    return $summary;
+}
+
+/**
+ * Guarda articles-summary.json en GitHub y localmente.
+ * Debe llamarse cada vez que articles.json se modifica.
+ */
+function syncArticlesSummary($articles) {
+    $summary = generateArticlesSummary($articles);
+    $summaryJson = json_encode($summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    
+    // Guardar en GitHub
+    $summaryFile = getGitHubFile('blog/data/articles-summary.json');
+    $summarySha = $summaryFile['sha'] ?? null;
+    
+    saveGitHubFile(
+        'blog/data/articles-summary.json',
+        $summaryJson,
+        '🔄 Sync articles-summary.json',
+        $summarySha
+    );
+    
+    // Guardar localmente en Hostinger
+    try {
+        $baseDir = realpath(__DIR__ . '/..');
+        $localSummaryPath = $baseDir . '/blog/data/articles-summary.json';
+        file_put_contents($localSummaryPath, $summaryJson);
+    } catch (Exception $e) {
+        logError('Local articles-summary.json write failed (non-critical)', [
+            'error' => $e->getMessage()
+        ]);
+    }
+}
+
+/**
  * Guarda un archivo en GitHub
  */
 function saveGitHubFile($path, $content, $message, $sha = null) {
@@ -482,6 +534,17 @@ function handleCreateOrUpdate() {
             ]);
         }
         
+        // Sincronizar articles-summary.json cuando se modifica articles.json
+        if (!$isDraft) {
+            try {
+                syncArticlesSummary($articles);
+            } catch (Exception $syncErr) {
+                logError('articles-summary.json sync failed (non-critical)', [
+                    'error' => $syncErr->getMessage()
+                ]);
+            }
+        }
+        
         $statusMsg = $isDraft ? 'guardado como borrador' : ($isNew ? 'publicado' : 'actualizado');
         
         jsonResponse([
@@ -593,6 +656,17 @@ function handleDelete() {
             file_put_contents($localJsonPath, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         } catch (Exception $localErr) {
             logError('Local delete failed (non-critical)', ['error' => $localErr->getMessage()]);
+        }
+        
+        // Sincronizar articles-summary.json al eliminar un artículo publicado
+        if (!$isDraft) {
+            try {
+                syncArticlesSummary($data);
+            } catch (Exception $syncErr) {
+                logError('articles-summary.json sync failed on delete (non-critical)', [
+                    'error' => $syncErr->getMessage()
+                ]);
+            }
         }
         
         jsonResponse([

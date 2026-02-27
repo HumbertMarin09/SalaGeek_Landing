@@ -1,6 +1,38 @@
 {
   "articles": [
     {
+      "id": "mm4a9xqsf7k2d3",
+      "title": "Smiling Friends se despide pese a temporadas confirmadas",
+      "slug": "smiling-friends-se-despide-pese-a-temporadas-confirmadas",
+      "excerpt": "Smiling Friends terminará tras su tercera temporada, pese a tener más entregas confirmadas. Sus creadores decidieron cerrar la serie para mantener su calidad.",
+      "content": "/blog/articulos/smiling-friends-se-despide-pese-a-temporadas-confirmadas",
+      "image": "/src/images/blog/smiling-friends-se-despide-pese-a-temporadas-confirmadas.webp",
+      "category": "series",
+      "categories": [
+        "series",
+        "smiling friends",
+        "adult swim",
+        "animación adulta",
+        "series animadas",
+        "final de serie"
+      ],
+      "categoryDisplay": "Series",
+      "tags": ["smiling friends", "adult swim", "animación adulta", "series animadas", "final de serie"],
+      "author": "Humberto Marin",
+      "publishDate": "2026-02-27T05:00:00.000Z",
+      "modifiedDate": "2026-02-27T05:00:00.000Z",
+      "readTime": "5 min",
+      "views": 0,
+      "featured": true,
+      "trending": true,
+      "status": "published",
+      "metaDescription": "Smiling Friends terminará tras su tercera temporada pese a tener más entregas confirmadas. Sus creadores decidieron cerrar la serie para mantener su calidad.",
+      "metaKeywords": "smiling friends, adult swim, animación adulta, series animadas, final de serie",
+      "canonicalUrl": "",
+      "ogImage": "/src/images/blog/smiling-friends-se-despide-pese-a-temporadas-confirmadas.webp",
+      "noIndex": false
+    },
+    {
       "id": "mm45k0ypifx05o",
       "title": "Paramount toma la ventaja ante Netflix por Warner Media",
       "slug": "paramount-toma-la-ventaja-ante-netflix-por-warner-media",
