@@ -15,7 +15,7 @@
   <link rel="canonical" href="https://salageek.com/blog/articulos/resident-evil-requiem-muestra-a-leon-como-nunca-antes-visto" />
   
   <meta name="article:published_time" content="2026-02-26T17:49:00.000Z" />
-  <meta name="article:modified_time" content="2026-02-27T01:03:47.190Z" />
+  <meta name="article:modified_time" content="2026-02-27T01:31:17.581Z" />
   <meta name="article:section" content="Gaming" />
 
   <meta property="og:type" content="article" />
@@ -65,7 +65,7 @@
       }
     },
     "datePublished": "2026-02-26T17:49:00.000Z",
-    "dateModified": "2026-02-27T01:03:47.190Z",
+    "dateModified": "2026-02-27T01:31:17.581Z",
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": "https://salageek.com/blog/articulos/resident-evil-requiem-muestra-a-leon-como-nunca-antes-visto"
@@ -219,10 +219,9 @@
 <p data-start="1469" data-end="1571" style="text-align: justify;">Todo apunta a que el estudio quiere equilibrar survival horror clásico con una historia más emocional.</p><h3 style="text-align: justify;">¿Qué debes saber antes de jugar?</h3></div><div><p data-start="1615" data-end="1683" style="text-align: justify;">Con el lanzamiento programado para mañana, esto es lo más relevante:</p>
 <p data-start="1685" data-end="1827"></p><div style="text-align: justify;">✔ Leon tendrá un arco más introspectivo</div><div style="text-align: justify;">✔ La atmósfera regresa a un tono más oscuro</div><div style="text-align: justify;">✔ Se promete mayor tensión que en entregas recientes</div><p></p>
 <p data-start="1829" data-end="1917" style="text-align: justify;">Si eres fan de la saga, este podría ser uno de los capítulos más personales hasta ahora.</p><h3 style="text-align: justify;">🎥 Mira el tráiler oficial</h3><p data-start="1829" data-end="1917">
-</p><p data-start="1955" data-end="1998" style="text-align: justify;">Puedes revisar el avance más reciente aquí:</p><p data-start="1955" data-end="1998"></p><div class="video-container youtube-embed video-medium">
+</p><p data-start="1955" data-end="1998" style="text-align: justify;">Puedes revisar el avance más reciente aquí:</p><p data-start="1955" data-end="1998" style="text-align: justify;"></p><div class="video-container youtube-embed video-large">
   <iframe src="https://www.youtube.com/embed/0NlYsfPeJwI" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="">
-  </iframe>
-</div><h3 style="text-align: justify;">¿Será un acierto o un riesgo?</h3><p></p><p data-start="2122" data-end="2282" style="text-align: justify;">Cambiar a un personaje tan querido siempre es una apuesta arriesgada. Pero si algo ha demostrado Resident Evil, es que sabe reinventarse cuando más lo necesita.</p><div>
+  </iframe></div><p></p><h3 style="text-align: justify;">¿Será un acierto o un riesgo?</h3><p></p><p data-start="2122" data-end="2282" style="text-align: justify;">Cambiar a un personaje tan querido siempre es una apuesta arriesgada. Pero si algo ha demostrado Resident Evil, es que sabe reinventarse cuando más lo necesita.</p><div>
 <p data-start="2284" data-end="2349" style="text-align: justify;">Mañana sabremos si este nuevo enfoque realmente logra sorprender.</p><p data-start="2284" data-end="2349" style="text-align: justify;">🤓 Estaremos atentos a más novedades tras su estreno oficial.</p></div></div>
       
       
@@ -412,7 +411,17 @@
                 '</div>' +
                 '<div class="related-card-content">' +
                   '<h4 class="related-card-title">' + article.title + '</h4>' +
-                  '<span class="related-card-date">' + blogEngine.formatDate(article.publishDate) + '</span>' +
+                  '<p class="related-card-excerpt">' + (article.excerpt || '') + '</p>' +
+                  '<div class="related-card-meta">' +
+                    '<span class="related-card-date">' +
+                      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                      blogEngine.formatDate(article.publishDate) +
+                    '</span>' +
+                    '<span class="related-card-arrow">' +
+                      'Leer' +
+                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
+                    '</span>' +
+                  '</div>' +
                 '</div>' +
               '</a>' +
             '</article>';
