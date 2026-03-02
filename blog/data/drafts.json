@@ -1,3 +1,43 @@
 {
-    "drafts": []
+    "drafts": [
+        {
+            "id": "mm9hw26s1p0i774",
+            "title": "Actor Awards 2026: momentos destacados y ganadores",
+            "slug": "actor-awards-2026-momentos-destacados-y-ganadores",
+            "excerpt": "La gala de los Actor Awards 2026 dejó grandes ganadores, discursos emotivos y momentos inolvidables que marcaron la temporada de premios.",
+            "content": "\/blog\/articulos\/actor-awards-2026-momentos-destacados-y-ganadores",
+            "image": "https:\/\/salageek.com\/admin",
+            "category": "series",
+            "categories": [
+                "series",
+                "actor awards",
+                "sag awards",
+                "temporada de premios",
+                "cine y televisión",
+                "ganadores 2026"
+            ],
+            "categoryDisplay": "Series",
+            "tags": [
+                "actor awards",
+                "sag awards",
+                "temporada de premios",
+                "cine y televisión",
+                "ganadores 2026"
+            ],
+            "author": "Humberto Marin",
+            "publishDate": "2026-03-02T17:56:00.000Z",
+            "modifiedDate": "2026-03-02T18:11:06.388Z",
+            "readTime": "5 min",
+            "wordCount": 0,
+            "views": 0,
+            "featured": false,
+            "trending": true,
+            "status": "draft",
+            "metaDescription": "Revive los momentos más destacados de los Actor Awards 2026, con la lista completa de ganadores, discursos memorables y los mejores momentos de la gala.",
+            "metaKeywords": "actor awards 2026,sag awards 2026,ganadores actor awards,premios sag 2026,momentos destacados gala",
+            "canonicalUrl": "",
+            "ogImage": "https:\/\/salageek.com\/admin",
+            "noIndex": false
+        }
+    ]
 }
