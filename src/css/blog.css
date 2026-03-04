@@ -291,7 +291,7 @@
 
 .articles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
 
@@ -1375,9 +1375,9 @@
    4.1 FEATURED CARD EN GRID - Cuando está filtrado
    ============================================ */
 
-/* Artículo destacado ocupa 2 columnas en desktop (cuando se muestra "Todos") */
+/* Artículo destacado en grid */
 .article-card.featured-card {
-  grid-column: span 2;
+  grid-column: span 1;
   background: linear-gradient(135deg, rgba(26, 31, 58, 0.98) 0%, rgba(22, 32, 56, 0.98) 100%);
   border: 2px solid rgba(255, 209, 102, 0.25);
   border-radius: 20px;
@@ -1433,10 +1433,10 @@
   opacity: 0.85;
 }
 
-/* En tablet, el destacado sigue ocupando 2 columnas */
+/* En tablet, el destacado ocupa 1 columna */
 @media (max-width: 1024px) {
   .article-card.featured-card {
-    grid-column: span 2;
+    grid-column: span 1;
   }
 }
 
@@ -2884,10 +2884,10 @@ figure.resizable-image img {
   filter: drop-shadow(0 0 8px rgba(255, 209, 102, 0.4));
 }
 
-/* Grid - auto-fit adapts to card count */
+/* Grid - 3 columns on desktop, adapts on smaller screens */
 .related-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
@@ -3763,9 +3763,9 @@ figure.resizable-image img {
     padding: 2rem;
   }
 
-  /* Grid de artículos en tablet - 2 columnas fijas */
+  /* Grid de artículos en tablet - 3 columnas */
   .articles-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
 

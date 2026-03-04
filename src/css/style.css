@@ -94,6 +94,19 @@
   outline-offset: 2px;
 }
 
+/* Accesibilidad: Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 *,
 *::before,
 *::after {
@@ -4518,7 +4531,7 @@ body.menu-open main {
    ============================================ */
 @media (max-width: 1024px) {
   .latest-news-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .latest-news-empty-state {

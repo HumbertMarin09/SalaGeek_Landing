@@ -357,7 +357,8 @@
                 <circle cx="11" cy="11" r="8"/>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"/>
               </svg>
-              <input type="text" id="search-articles" placeholder="Buscar artículos...">
+              <label for="search-articles" class="sr-only">Buscar artículos</label>
+              <input type="text" id="search-articles" name="search-articles" placeholder="Buscar artículos...">
             </div>
             <button class="btn-primary" data-action="new-article">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -369,7 +370,8 @@
           </div>
 
           <div class="filter-bar">
-            <select id="filter-category">
+            <label for="filter-category" class="sr-only">Filtrar por categoría</label>
+            <select id="filter-category" name="filter-category">
               <option value="all">Todas las categorías</option>
               <option value="series">Series</option>
               <option value="peliculas">Películas</option>
@@ -406,7 +408,8 @@
                 <circle cx="11" cy="11" r="8"/>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"/>
               </svg>
-              <input type="text" id="search-drafts" placeholder="Buscar borradores...">
+              <label for="search-drafts" class="sr-only">Buscar borradores</label>
+              <input type="text" id="search-drafts" name="search-drafts" placeholder="Buscar borradores...">
             </div>
           </div>
 
@@ -738,6 +741,7 @@
                 <div class="sidebar-card">
                   <h4>Imagen Destacada</h4>
                   <div class="image-upload" id="image-upload">
+                    <label for="featured-image" class="sr-only">Subir imagen destacada</label>
                     <input type="file" id="featured-image" name="image" accept="image/*" hidden>
                     <div class="upload-placeholder" id="upload-placeholder">
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -773,6 +777,7 @@
                     Autor/a
                   </h4>
                   <div class="form-group" style="margin-top: 0.5rem;">
+                    <label for="article-author" class="sr-only">Autor/a</label>
                     <input type="text" id="article-author" name="author" 
                            placeholder="Nombre del autor/a" value="Sala Geek">
                   </div>
@@ -783,28 +788,28 @@
                   <p class="category-hint" style="margin-top: 0; margin-bottom: 0.75rem;">Aparece en los filtros del blog</p>
                   <div class="category-selector primary-category">
                     <label class="category-option">
-                      <input type="radio" name="category" value="series">
+                      <input type="radio" id="category-series" name="category" value="series">
                       <span class="category-badge category-series">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
                         Series
                       </span>
                     </label>
                     <label class="category-option">
-                      <input type="radio" name="category" value="peliculas">
+                      <input type="radio" id="category-peliculas" name="category" value="peliculas">
                       <span class="category-badge category-peliculas">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
                         Películas
                       </span>
                     </label>
                     <label class="category-option">
-                      <input type="radio" name="category" value="gaming">
+                      <input type="radio" id="category-gaming" name="category" value="gaming">
                       <span class="category-badge category-gaming">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="6.01" y2="12"/><line x1="10" y1="12" x2="18" y2="12"/></svg>
                         Gaming
                       </span>
                     </label>
                     <label class="category-option">
-                      <input type="radio" name="category" value="anime">
+                      <input type="radio" id="category-anime" name="category" value="anime">
                       <span class="category-badge category-anime">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M12 2C8 2 4 6 4 10c0 2.5 1 4.5 2.5 6l-1 4 3-2c1 .6 2.2 1 3.5 1s2.5-.4 3.5-1l3 2-1-4c1.5-1.5 2.5-3.5 2.5-6 0-4-4-8-8-8z"></path>
@@ -818,7 +823,7 @@
                       </span>
                     </label>
                     <label class="category-option">
-                      <input type="radio" name="category" value="tecnologia">
+                      <input type="radio" id="category-tecnologia" name="category" value="tecnologia">
                       <span class="category-badge category-tecnologia">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
                         Tecnología
@@ -835,7 +840,8 @@
                   <p class="category-hint" style="margin-top: 0; margin-bottom: 0.75rem;">Subcategorías y palabras clave SEO</p>
                   <div class="tags-input">
                     <div class="tags-list" id="tags-list"></div>
-                    <input type="text" id="tags-input" placeholder="Ej: Netflix, Marvel, PS5... (Enter para agregar)">
+                    <label for="tags-input" class="sr-only">Tags</label>
+                    <input type="text" id="tags-input" name="tags" placeholder="Ej: Netflix, Marvel, PS5... (Enter para agregar)">
                   </div>
                 </div>
 
@@ -973,8 +979,8 @@
         <!-- Tab URL -->
         <div class="tab-content active" id="tab-url">
           <div class="form-group">
-            <label>URL de la imagen</label>
-            <input type="url" id="modal-image-url" placeholder="https://ejemplo.com/imagen.jpg">
+            <label for="modal-image-url">URL de la imagen</label>
+            <input type="url" id="modal-image-url" name="image-url" placeholder="https://ejemplo.com/imagen.jpg">
           </div>
         </div>
 
@@ -988,7 +994,8 @@
             </svg>
             <p>Arrastra una imagen aquí</p>
             <span>o haz clic para seleccionar</span>
-            <input type="file" id="modal-file-input" accept="image/*" hidden>
+            <label for="modal-file-input" class="sr-only">Subir imagen</label>
+            <input type="file" id="modal-file-input" name="modal-file" accept="image/*" hidden>
           </div>
           <div class="upload-preview hidden" id="upload-preview">
             <img src="" alt="Preview" id="uploaded-img">
@@ -1002,25 +1009,25 @@
         </div>
 
         <div class="form-group">
-          <label>Texto alternativo (ALT)</label>
-          <input type="text" id="modal-image-alt" placeholder="Descripción de la imagen para accesibilidad">
+          <label for="modal-image-alt">Texto alternativo (ALT)</label>
+          <input type="text" id="modal-image-alt" name="image-alt" placeholder="Descripción de la imagen para accesibilidad">
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Ancho (px o %)</label>
+            <label for="image-width">Ancho (px o %)</label>
             <div class="size-input-group">
-              <input type="number" id="image-width" placeholder="auto">
-              <select id="modal-image-width-unit">
+              <input type="number" id="image-width" name="image-width" placeholder="auto">
+              <select id="modal-image-width-unit" name="image-width-unit">
                 <option value="px">px</option>
                 <option value="%">%</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label>Alto (px)</label>
+            <label for="image-height">Alto (px)</label>
             <div class="size-input-group">
-              <input type="number" id="image-height" placeholder="auto">
+              <input type="number" id="image-height" name="image-height" placeholder="auto">
               <span class="unit-label">px</span>
             </div>
           </div>
@@ -1059,10 +1066,10 @@
 
         <div class="form-group">
           <label>
-            <input type="checkbox" id="image-caption">
+            <input type="checkbox" id="image-caption" name="image-caption">
             Agregar pie de foto (caption)
           </label>
-          <input type="text" id="image-caption-text" class="hidden" placeholder="Escribe el pie de foto..." style="margin-top: 0.5rem;">
+          <input type="text" id="image-caption-text" name="image-caption-text" class="hidden" placeholder="Escribe el pie de foto..." style="margin-top: 0.5rem;">
         </div>
 
         <div class="modal-actions">
@@ -1101,7 +1108,8 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <input type="text" id="gallery-search" placeholder="Buscar imagen...">
+            <label for="gallery-search" class="sr-only">Buscar imagen</label>
+            <input type="text" id="gallery-search" name="gallery-search" placeholder="Buscar imagen...">
           </div>
           <button type="button" id="gallery-upload-btn" class="btn-primary btn-sm">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1162,7 +1170,8 @@
           </svg>
           <p>Arrastra una imagen aquí</p>
           <span>o haz clic para seleccionar</span>
-          <input type="file" id="gallery-file-input" accept="image/*" hidden>
+          <label for="gallery-file-input" class="sr-only">Subir imagen a galería</label>
+          <input type="file" id="gallery-file-input" name="gallery-file" accept="image/*" hidden>
         </div>
         
         <div class="upload-preview hidden" id="upload-preview-container">
@@ -1219,13 +1228,14 @@
                 </svg>
                 <p>Arrastra imágenes aquí</p>
                 <span>o pega URLs abajo</span>
-                <input type="file" id="grid-file-input" accept="image/*" multiple hidden>
+                <label for="grid-file-input" class="sr-only">Subir imágenes a galería</label>
+                <input type="file" id="grid-file-input" name="grid-file" accept="image/*" multiple hidden>
               </div>
             </div>
 
             <div class="form-group">
-              <label>URLs de imágenes <small>(una por línea - puedes agregar ilimitadas)</small></label>
-              <textarea id="grid-images" rows="6" placeholder="https://ejemplo.com/imagen1.jpg&#10;https://ejemplo.com/imagen2.jpg&#10;https://ejemplo.com/imagen3.jpg&#10;https://ejemplo.com/imagen4.jpg"></textarea>
+              <label for="grid-images">URLs de imágenes <small>(una por línea - puedes agregar ilimitadas)</small></label>
+              <textarea id="grid-images" name="grid-images" rows="6" placeholder="https://ejemplo.com/imagen1.jpg&#10;https://ejemplo.com/imagen2.jpg&#10;https://ejemplo.com/imagen3.jpg&#10;https://ejemplo.com/imagen4.jpg"></textarea>
               <div style="display: flex; gap: 8px; margin-top: 8px;">
                 <button type="button" id="add-url-btn" class="btn-sm btn-secondary" style="flex: 1;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1371,7 +1381,7 @@
                 Ancho
               </label>
               <div class="resize-input-group">
-                <input type="number" id="resize-width" min="50" max="1920" placeholder="Ancho">
+                <input type="number" id="resize-width" name="resize-width" min="50" max="1920" placeholder="Ancho">
                 <span class="resize-unit">px</span>
               </div>
             </div>
@@ -1387,7 +1397,7 @@
                 Alto
               </label>
               <div class="resize-input-group">
-                <input type="number" id="resize-height" min="50" max="1920" placeholder="Alto">
+                <input type="number" id="resize-height" name="resize-height" min="50" max="1920" placeholder="Alto">
                 <span class="resize-unit">px</span>
               </div>
             </div>
@@ -1435,7 +1445,7 @@
       <div class="modal-body">
         <div class="form-group">
           <label for="youtube-url">URL del video</label>
-          <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="input-large">
+          <input type="url" id="youtube-url" name="youtube-url" placeholder="https://www.youtube.com/watch?v=..." class="input-large">
           <span class="input-hint">Formatos: youtube.com/watch?v=xxx • youtu.be/xxx</span>
         </div>
         <div id="youtube-preview" class="youtube-preview hidden">
@@ -1486,7 +1496,7 @@
         <div class="form-group">
           <label for="current-password">Contraseña actual</label>
           <div class="password-input-wrapper">
-            <input type="password" id="current-password" required autocomplete="current-password" placeholder="••••••••">
+            <input type="password" id="current-password" name="current-password" required autocomplete="current-password" placeholder="••••••••">
             <button type="button" class="toggle-password" data-target="current-password">
               <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -1502,7 +1512,7 @@
         <div class="form-group">
           <label for="new-password">Nueva contraseña</label>
           <div class="password-input-wrapper">
-            <input type="password" id="new-password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+            <input type="password" id="new-password" name="new-password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
             <button type="button" class="toggle-password" data-target="new-password">
               <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -1522,7 +1532,7 @@
         <div class="form-group">
           <label for="confirm-new-password">Confirmar nueva contraseña</label>
           <div class="password-input-wrapper">
-            <input type="password" id="confirm-new-password" required minlength="8" autocomplete="new-password" placeholder="Repite la contraseña">
+            <input type="password" id="confirm-new-password" name="confirm-new-password" required minlength="8" autocomplete="new-password" placeholder="Repite la contraseña">
             <button type="button" class="toggle-password" data-target="confirm-new-password">
               <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -1651,13 +1661,13 @@
       <form id="reset-password-form" class="modal-body">
         <div class="form-group">
           <label for="reset-token">Token de Recuperación</label>
-          <input type="text" id="reset-token" required placeholder="Ingresa el token generado" maxlength="64">
+          <input type="text" id="reset-token" name="reset-token" required placeholder="Ingresa el token generado" maxlength="64">
           <small class="form-hint">El token expira en 15 minutos</small>
         </div>
         <div class="form-group">
           <label for="reset-new-password">Nueva Contraseña</label>
           <div class="password-input-wrapper">
-            <input type="password" id="reset-new-password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
+            <input type="password" id="reset-new-password" name="reset-new-password" required minlength="8" autocomplete="new-password" placeholder="Mínimo 8 caracteres">
             <button type="button" class="toggle-password" data-target="reset-new-password">
               <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -1677,7 +1687,7 @@
         <div class="form-group">
           <label for="reset-confirm-password">Confirmar Contraseña</label>
           <div class="password-input-wrapper">
-            <input type="password" id="reset-confirm-password" required minlength="8" autocomplete="new-password" placeholder="Repite la contraseña">
+            <input type="password" id="reset-confirm-password" name="reset-confirm-password" required minlength="8" autocomplete="new-password" placeholder="Repite la contraseña">
             <button type="button" class="toggle-password" data-target="reset-confirm-password">
               <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
