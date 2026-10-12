@@ -80,3 +80,4 @@ web/.env*
 web/.content/
 web/public/src/images/
 web/src/generated/
+web/.astro/

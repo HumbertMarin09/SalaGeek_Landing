@@ -1,0 +1,4 @@
+Contact: mailto:contacto@salageek.com
+Hiring: https://salageek.com/media-kit#contacto
+Preferred-Languages: es
+Canonical: https://salageek.com/.well-known/security.txt

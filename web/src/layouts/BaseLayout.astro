@@ -1,0 +1,111 @@
+---
+import '../styles/guide.css';
+import { CANONICAL_ORIGIN } from '../lib/content/format';
+import { CATEGORIES } from '../lib/content/types';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+  ogType?: 'website' | 'article';
+  noIndex?: boolean;
+  jsonLd?: Record<string, unknown>[];
+  home?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  image = '/src/images/social-card.png',
+  ogType = 'website',
+  noIndex = false,
+  jsonLd = [],
+  home = false,
+} = Astro.props;
+
+const canonical = `${CANONICAL_ORIGIN}${path}`;
+const staging = import.meta.env.PUBLIC_ENV === 'staging';
+const robots = staging || noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
+const sha = import.meta.env.PUBLIC_BUILD_SHA || 'local';
+const ads = import.meta.env.PUBLIC_ADS_ENABLED === 'true';
+const analytics = import.meta.env.PUBLIC_ANALYTICS_ENABLED === 'true';
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Sala Geek" />
+    <meta name="robots" content={robots} />
+    <meta name="sg-build" content={sha} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/src/images/Icono_SG.ico" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Sala Geek" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${CANONICAL_ORIGIN}${image}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Sala_Geek" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${CANONICAL_ORIGIN}${image}`} />
+    {jsonLd.map((entry) => <script type="application/ld+json" set:html={JSON.stringify(entry)} />)}
+    <script define:vars={{ ads, analytics }}>
+      window.__sgFlags = { ads, analytics };
+    </script>
+  </head>
+  <body class:list={['guide', { home }]} data-easter-eggs={home ? 'on' : 'off'}>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <header class="mast">
+      <a href="/"><img class="logo" src="/src/images/SalaGeek_LOGO.webp" alt="Sala Geek" width="120" height="120" /></a>
+      <div>
+        <p class="mast-kicker">Guía de hoy</p>
+        <p class="mast-date" id="hoy"></p>
+      </div>
+      <form class="search" action="/blog/" role="search">
+        <label for="q">Buscar en Sala Geek</label>
+        <input id="q" name="q" type="search" autocomplete="off" />
+        <div class="search-panel" id="search-panel" hidden></div>
+      </form>
+    </header>
+    <nav class="nav-channels" aria-label="Canales">
+      <a class="is-quiet" href="/blog/">Todos</a>
+      {CATEGORIES.map((category) => (
+        <a href={`/blog/?categoria=${category.id}`} data-channel={category.id}>{category.name}</a>
+      ))}
+    </nav>
+    <div id="ad-top"></div>
+    <slot />
+    <footer class="site-footer">
+      <p>Sala Geek publica cobertura gratuita en español desde 2017.</p>
+      <p>
+        <a href="/media-kit">Media kit</a>
+        <a href="/privacidad">Privacidad</a>
+        <a href="/terminos">Términos</a>
+        <a href="/cookies">Cookies</a>
+        <a href="mailto:contacto@salageek.com">contacto@salageek.com</a>
+      </p>
+      <p id="copyright">© 2017-2026 Sala Geek</p>
+    </footer>
+    <div class="cookie" id="cookie-banner" hidden>
+      <p id="cookie-title"><strong>Usamos cookies</strong></p>
+      <p id="cookie-copy">Para mejorar tu experiencia y mostrarte contenido relevante. Puedes aceptar todas o personalizar.</p>
+      <div class="cookie-actions">
+        <button type="button" id="cookie-necessary">Solo necesarias</button>
+        <button type="button" id="cookie-all">Aceptar todas</button>
+        <a href="/cookies">Ver política de cookies</a>
+      </div>
+    </div>
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

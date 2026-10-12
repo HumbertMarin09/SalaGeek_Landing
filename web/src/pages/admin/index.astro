@@ -1,0 +1,28 @@
+---
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin | Sala Geek</title>
+    <style>
+      body { margin: 0; font-family: Barlow, "Segoe UI", sans-serif; background: #f3f1ea; color: #16181d; }
+      main { max-width: 68rem; margin: 0 auto; padding: 1rem; display: grid; gap: 1rem; }
+      button, input, textarea, select { min-height: 44px; font: inherit; }
+      .row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .editor { min-height: 16rem; border: 2px solid #16181d; background: white; padding: 0.6rem; }
+      table { width: 100%; border-collapse: collapse; }
+      td, th { text-align: left; padding: 0.4rem; border-bottom: 1px solid #ccc; }
+      .warn { color: #8a3b12; } .ok { color: #1e6b45; }
+    </style>
+  </head>
+  <body>
+    <main id="admin-root"></main>
+    <script>
+      import { mountAdmin } from '../../admin/main';
+      mountAdmin(document.querySelector('#admin-root'));
+    </script>
+  </body>
+</html>

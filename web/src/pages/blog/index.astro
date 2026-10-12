@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { slotTime } from '../../lib/content/format';
+import { getPublishedArticles, loadSnapshot } from '../../lib/content/queries';
+import { CATEGORIES } from '../../lib/content/types';
+
+const categoria = Astro.url.searchParams.get('categoria') ?? 'all';
+const allowed = new Set(CATEGORIES.map((category) => category.id));
+const filter = allowed.has(categoria as (typeof CATEGORIES)[number]['id']) ? categoria : 'all';
+const articles = getPublishedArticles(loadSnapshot()).filter((article) =>
+  filter === 'all' ? true : article.category.id === filter,
+);
+const featured = filter === 'all' ? articles.filter((article) => article.featured).slice(0, 3) : [];
+---
+
+<BaseLayout
+  title="Blog | Sala Geek"
+  description="Noticias, análisis y guías sobre cine, series, anime y videojuegos."
+  path="/blog/"
+  jsonLd={[{
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Blog Sala Geek',
+    url: 'https://salageek.com/blog/',
+  }]}
+>
+  <main class="sheet" id="contenido">
+    <p class="crumbs"><a href="/">Inicio</a> <span>Blog</span></p>
+    <h1 class="mast-date">Blog Sala Geek</h1>
+    <p>Noticias, análisis y guías sobre lo que más te apasiona del mundo geek.</p>
+    <nav class="nav-channels" aria-label="Filtrar por canal">
+      <a class="is-quiet" href="/blog/">Todos</a>
+      {CATEGORIES.map((category) => (
+        <a href={`/blog/?categoria=${category.id}`} data-channel={category.id} aria-current={filter === category.id ? 'true' : undefined}>{category.name}</a>
+      ))}
+    </nav>
+    {featured.length > 0 && (
+      <section>
+        <h2>Artículos destacados</h2>
+        <ol class="slots">
+          {featured.map((article) => (
+            <li><a class="slot" href={`/blog/articulos/${article.slug}`}><time datetime={article.publishedAt}>{slotTime(article.publishedAt)}</time><strong>{article.title}</strong></a></li>
+          ))}
+        </ol>
+      </section>
+    )}
+    <section>
+      <h2>Últimos artículos</h2>
+      <p>{articles.length} artículos</p>
+      <ol class="slots" data-paginate>
+        {articles.map((article) => (
+          <li data-item>
+            <a class="slot" href={`/blog/articulos/${article.slug}`}>
+              <time datetime={article.publishedAt}>{slotTime(article.publishedAt)}</time>
+              <strong>{article.title}</strong>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <nav class="pager" data-pager aria-label="Páginas"></nav>
+    </section>
+    <form class="coupon" data-subscribe>
+      <legend>¿Te gusta nuestro contenido?</legend>
+      <p>Sin spam. Cancelas cuando quieras.</p>
+      <div class="coupon-row">
+        <label for="blog-email">Correo</label>
+        <input id="blog-email" name="email" type="email" required />
+        <button type="submit">Suscribirme</button>
+      </div>
+      <p data-status></p>
+    </form>
+  </main>
+</BaseLayout>

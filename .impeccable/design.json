@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-12T23:00:00.000Z",
+  "title": "Design System: Sala Geek",
+  "extensions": {
+    "colorMeta": {
+      "paper": { "role": "neutral", "displayName": "Papel de guía", "canonical": "#d9d6cc", "tonalRamp": ["#2a2926", "#4a4740", "#6b675e", "#8c877c", "#ada89b", "#c4c0b4", "#d9d6cc", "#f4f1e8"] },
+      "ink": { "role": "primary", "displayName": "Tinta", "canonical": "#16181d", "tonalRamp": ["#16181d", "#2c2e33", "#45474d", "#5e6168", "#787b83", "#a1a4ab", "#c8cacf", "#eef0f2"] },
+      "on-air": { "role": "accent", "displayName": "En antena", "canonical": "#f4d35e", "tonalRamp": ["#3d3208", "#6b5810", "#9a7e18", "#c4a322", "#f4d35e", "#f8e08a", "#fbecb3", "#fdf6dc"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Horario estelar", "purpose": "El título de la nota en antena." },
+      "body": { "displayName": "Texto de la guía", "purpose": "Extractos, cupón y páginas legales." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "print-bar", "value": "700ms ease-out", "purpose": "La marca En antena se imprime una vez. Reduced motion la deja impresa." }
+    ],
+    "breakpoints": [
+      { "name": "stack", "value": "800px" },
+      { "name": "blog-page", "value": "480px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ver esta nota",
+      "kind": "button",
+      "refersTo": "button-watch",
+      "description": "Abre la nota que está en antena.",
+      "html": "<a class=\"ds-watch\" href=\"/blog/\">Ver esta nota</a>",
+      "css": ".ds-watch { display: inline-flex; align-items: center; min-height: 44px; padding: 0.4rem 0.9rem; background: #f4f1e8; color: #16181d; border: 2px solid #16181d; text-decoration: none; font-weight: 600; } .ds-watch:focus-visible { outline: 3px solid #16181d; outline-offset: 3px; }"
+    },
+    {
+      "name": "Cupón Geeky Weekly",
+      "kind": "custom",
+      "refersTo": "button-coupon",
+      "description": "La segunda acción de la home.",
+      "html": "<form class=\"ds-coupon\"><p>El resumen de la semana.</p><button type=\"submit\">Quiero el resumen</button></form>",
+      "css": ".ds-coupon { background: #f4f1e8; color: #16181d; border: 2px dashed #16181d; padding: 0.7rem; } .ds-coupon button { min-height: 44px; background: #16181d; color: #f4f1e8; border: 2px solid #16181d; font-weight: 600; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La guía de programación de hoy",
+    "overview": "La página es una hoja de guía de TV. La nota en antena abre, y Geeky Weekly es el cupón.",
+    "keyCharacteristics": ["Una sola hoja", "Un color por canal", "El logo intacto"],
+    "rules": [{ "name": "Sin cifras inventadas", "body": "No se publican audiencias ni superlativos que no estén confirmados.", "section": "colors" }],
+    "dos": ["Poner el título dentro de la celda", "Marcar una sola nota como En antena"],
+    "donts": ["Portal azul marino con dorado", "HubSpot", "PWA"]
+  }
+}

@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { slotTime } from '../lib/content/format';
+import {
+  getFeaturedArticles,
+  getPublishedArticles,
+  loadSnapshot,
+} from '../lib/content/queries';
+import { CATEGORIES } from '../lib/content/types';
+
+const snapshot = loadSnapshot();
+const articles = getPublishedArticles(snapshot);
+const lead = getFeaturedArticles(1, snapshot)[0] ?? articles[0];
+const rest = articles.filter((article) => article.slug !== lead?.slug);
+const description = 'Cobertura gratuita en español de películas, series, anime y videojuegos. La nota de hoy abre la guía.';
+const faq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: '¿Qué es Sala Geek?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sala Geek publica cobertura gratuita en español de películas, series, anime y videojuegos, y resume la semana en Geeky Weekly.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Qué tipo de contenido puedo encontrar en Sala Geek?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Notas sobre cine, series, anime y videojuegos.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Es gratis unirse a Sala Geek?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Sí. El contenido es gratuito. Geeky Weekly manda el resumen semanal al correo.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: '¿Con qué frecuencia se actualiza Sala Geek?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'La cobertura es diaria y Geeky Weekly sale cada semana.',
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Sala Geek - Tu espacio geek definitivo"
+  description={description}
+  path="/"
+  home
+  jsonLd={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Sala Geek',
+      url: 'https://salageek.com',
+      logo: 'https://salageek.com/src/images/SalaGeek_LOGO.webp',
+      email: 'contacto@salageek.com',
+    },
+    { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Sala Geek', url: 'https://salageek.com' },
+    faq,
+  ]}
+>
+  <main class="sheet" id="contenido">
+    {lead && (
+      <article class="prime" data-channel={lead.category.id}>
+        <div class="prime-copy">
+          <p class="on-air">{slotTime(lead.publishedAt)} · En antena</p>
+          <h1><a href={`/blog/articulos/${lead.slug}`}>{lead.title}</a></h1>
+          <p>{lead.excerpt}</p>
+          <a class="watch" href={`/blog/articulos/${lead.slug}`}>Ver esta nota</a>
+          <form class="coupon" id="geeky-weekly" data-subscribe>
+            <legend>Geeky Weekly</legend>
+            <p>El resumen de la semana, en tu correo. Sin spam. Cancelas cuando quieras.</p>
+            <div class="coupon-row">
+              <label class="hp" for="email">Correo</label>
+              <input id="email" name="email" type="email" required autocomplete="email" placeholder="tu@correo.com" />
+              <button type="submit">Quiero el resumen</button>
+            </div>
+            <p data-status></p>
+          </form>
+        </div>
+        <figure class="prime-still">
+          {lead.coverImage && <img src={lead.coverImage} alt="" />}
+        </figure>
+      </article>
+    )}
+    <div class="channels">
+      {CATEGORIES.map((category) => {
+        const slots = rest.filter((article) => article.category.id === category.id).slice(0, 3);
+        if (!slots.length) return null;
+        return (
+          <section class="channel" data-channel={category.id}>
+            <h2 class="channel-name">{category.name}</h2>
+            <ol class="slots">
+              {slots.map((article) => (
+                <li>
+                  <a class="slot" href={`/blog/articulos/${article.slug}`}>
+                    <time datetime={article.publishedAt}>{slotTime(article.publishedAt)}</time>
+                    <strong>{article.title}</strong>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </section>
+        );
+      })}
+    </div>
+    <section class="prose">
+      <h2>Acerca de Sala Geek</h2>
+      <p>Desde 2017 publicamos cobertura gratuita en español para quien quiere ponerse al día con películas, series, anime y videojuegos.</p>
+    </section>
+  </main>
+</BaseLayout>

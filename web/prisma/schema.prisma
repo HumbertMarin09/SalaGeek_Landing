@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model Category {
+  id        String    @id @db.VarChar(20)
+  name      String    @db.VarChar(40)
+  sortOrder Int       @map("sort_order")
+  articles  Article[]
+
+  @@map("categories")
+}
+
+model Author {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique @db.VarChar(80)
+  slug     String    @unique @db.VarChar(80)
+  articles Article[]
+
+  @@map("authors")
+}
+
+model Article {
+  id              String        @id @db.VarChar(32)
+  slug            String        @unique @db.VarChar(80)
+  title           String        @db.VarChar(200)
+  excerpt         String        @db.Text
+  bodyHtml        String        @map("body_html") @db.MediumText
+  coverImage      String?       @map("cover_image") @db.VarChar(255)
+  ogImage         String?       @map("og_image") @db.VarChar(255)
+  categoryId      String        @map("category_id") @db.VarChar(20)
+  category        Category      @relation(fields: [categoryId], references: [id])
+  authorId        Int           @map("author_id")
+  author          Author        @relation(fields: [authorId], references: [id])
+  status          ArticleStatus @default(DRAFT)
+  featured        Boolean       @default(false)
+  trending        Boolean       @default(false)
+  readMinutes     Int           @map("read_minutes")
+  metaDescription String?       @map("meta_description") @db.VarChar(320)
+  metaKeywords    String?       @map("meta_keywords") @db.VarChar(500)
+  canonicalUrl    String?       @map("canonical_url") @db.VarChar(255)
+  noIndex         Boolean       @default(false) @map("no_index")
+  publishedAt     DateTime?     @map("published_at")
+  modifiedAt      DateTime?     @map("modified_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
+  legacySource    String?       @map("legacy_source") @db.VarChar(20)
+  tags            ArticleTag[]
+  views           ArticleViews?
+
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@map("articles")
+}
+
+model Tag {
+  id       Int          @id @default(autoincrement())
+  slug     String       @unique @db.VarChar(80)
+  name     String       @db.VarChar(80)
+  articles ArticleTag[]
+
+  @@map("tags")
+}
+
+model ArticleTag {
+  articleId String  @map("article_id") @db.VarChar(32)
+  tagId     Int     @map("tag_id")
+  article   Article @relation(fields: [articleId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}
+
+model ArticleViews {
+  articleId String   @id @map("article_id") @db.VarChar(32)
+  count     Int      @default(0)
+  updatedAt DateTime @updatedAt @map("updated_at")
+  article   Article  @relation(fields: [articleId], references: [id])
+
+  @@map("article_views")
+}
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  path      String   @unique @db.VarChar(255)
+  mime      String   @db.VarChar(40)
+  width     Int?
+  height    Int?
+  bytes     Int?
+  alt       String?  @db.VarChar(255)
+  legacy    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("media")
+}
+
+model AdminUser {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique @db.VarChar(190)
+  name         String    @db.VarChar(80)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("admin_users")
+}
+
+model RateLimit {
+  key         String   @id @db.VarChar(190)
+  windowStart DateTime @map("window_start")
+  hits        Int
+
+  @@map("rate_limits")
+}
+
+model AuditLog {
+  id       Int      @id @default(autoincrement())
+  actor    String   @db.VarChar(190)
+  action   String   @db.VarChar(40)
+  entity   String   @db.VarChar(40)
+  entityId String   @map("entity_id") @db.VarChar(64)
+  detail   String?  @db.Text
+  at       DateTime @default(now())
+
+  @@map("audit_log")
+}
+
+model SyncRun {
+  id               Int       @id @default(autoincrement())
+  sourceCommit     String    @map("source_commit") @db.VarChar(40)
+  startedAt        DateTime  @default(now()) @map("started_at")
+  finishedAt       DateTime? @map("finished_at")
+  articlesUpserted Int       @default(0) @map("articles_upserted")
+  viewsMerged      Int       @default(0) @map("views_merged")
+
+  @@map("sync_runs")
+}

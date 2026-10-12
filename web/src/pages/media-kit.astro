@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Media kit | Sala Geek" description="Colabora con Sala Geek. El formulario llega a contacto@salageek.com." path="/media-kit">
+  <main class="sheet prose" id="contenido">
+    <h1>Media kit</h1>
+    <p>Sala Geek publica, desde 2017, cobertura gratuita en español de películas, series, anime y videojuegos. Las cifras de audiencia no se publican aquí hasta que estén confirmadas.</p>
+    <h2 id="contacto">Colaborar</h2>
+    <form class="form-grid" method="post" action="/api/v3/contact.php">
+      <label class="hp">No llenar<input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      <label class="field">Empresa<input name="company" required /></label>
+      <label class="field">Nombre<input name="name" required /></label>
+      <label class="field">Correo<input name="email" type="email" required /></label>
+      <label class="field">Teléfono<input name="phone" /></label>
+      <label class="field">Servicio
+        <select name="service" required>
+          <option value="post">Publicación</option>
+          <option value="stories">Historias</option>
+          <option value="newsletter">Newsletter</option>
+          <option value="review">Reseña</option>
+          <option value="event">Evento</option>
+          <option value="campaign">Campaña</option>
+          <option value="ambassador">Embajador</option>
+          <option value="banner">Banner</option>
+          <option value="article">Artículo</option>
+          <option value="custom">Otro</option>
+        </select>
+      </label>
+      <label class="field">Mensaje<textarea name="message" required></textarea></label>
+      <button class="button-ink" type="submit">Enviar solicitud</button>
+    </form>
+  </main>
+</BaseLayout>
