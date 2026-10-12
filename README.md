@@ -72,8 +72,9 @@ SG_Landing/
 │       ├── media-kit.html        # Media Kit
 │       ├── legal/                # Páginas legales
 │       └── partials/             # Header y Footer
-├── email-templates/              # Templates de email
-├── newsletter-templates/         # Newsletter semanal
+├── templates/
+│   ├── email/                    # Templates de email
+│   └── newsletter/               # Newsletter semanal
 └── assets/                       # Media Kit PDF
 ```
 
