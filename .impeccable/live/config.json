@@ -1,0 +1,13 @@
+{
+  "files": ["**/*.html"],
+  "exclude": [
+    "templates/email/**",
+    "templates/newsletter/**",
+    "assets/**",
+    "blog/articulos/_template.html",
+    "google*.html"
+  ],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

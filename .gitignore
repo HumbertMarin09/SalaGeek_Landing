@@ -66,3 +66,17 @@ AUDITORIA-PROYECTO.md
 OPTIMIZACION-RESUMEN.md
 ROADMAP_FASE_2.md
 SESION-*.md
+
+# === Impeccable local y transcripciones ===
+.impeccable/config.local.json
+.impeccable/review/
+agent-transcripts/
+.cmem-projects/
+
+# === Sala Geek v3 ===
+web/node_modules/
+web/dist/
+web/.env*
+web/.content/
+web/public/src/images/
+web/src/generated/
