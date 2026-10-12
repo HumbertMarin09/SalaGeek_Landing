@@ -1,0 +1,94 @@
+name: v3 deploy
+
+on:
+  workflow_run:
+    workflows: ['v3 CI']
+    types: [completed]
+    branches: [v3]
+  repository_dispatch:
+    types: [content-published]
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: staging o production
+        required: true
+        default: staging
+        type: choice
+        options: [staging, production]
+
+concurrency:
+  group: v3-${{ github.event_name == 'workflow_dispatch' && inputs.target || 'staging' }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') &&
+      (github.event_name != 'schedule' || vars.LEGACY_SYNC_ENABLED == 'true')
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'production' && 'production' || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v3
+      - name: Saltar si el cambio de dominio no está aprobado
+        if: github.event_name == 'workflow_dispatch' && inputs.target == 'production'
+        run: test "${{ vars.CUTOVER_APPROVED }}" = "true"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Instalar
+        working-directory: web
+        run: npm ci
+        env:
+          DATABASE_URL: mysql://unused:unused@127.0.0.1:3306/unused
+      - name: SSH
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.HOSTINGER_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+      - name: Túnel a MySQL
+        run: ssh -fN -o ExitOnForwardFailure=yes -p "${{ secrets.HOSTINGER_SSH_PORT }}" -L 3307:127.0.0.1:3306 "${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}"
+      - name: Guardia, migración, sync y build
+        working-directory: web
+        env:
+          DATABASE_URL: mysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:3307/${{ secrets.DB_NAME }}
+          DATABASE_HOST: 127.0.0.1
+          DATABASE_PORT: 3307
+          DATABASE_USER: ${{ secrets.DB_USER }}
+          DATABASE_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DATABASE_NAME: ${{ secrets.DB_NAME }}
+          SOURCE_COMMIT: ${{ github.sha }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          PUBLIC_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'production' && 'production' || 'staging' }}
+          PUBLIC_ADS_ENABLED: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'production' && 'true' || 'false' }}
+          PUBLIC_ANALYTICS_ENABLED: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'production' && 'true' || 'false' }}
+          HTACCESS_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.target == 'production' && 'production' || 'staging' }}
+          PUBLIC_BUILD_SHA: ${{ github.sha }}
+        run: |
+          npm run db:guard
+          npx prisma migrate deploy
+          npm run sync:legacy
+          npm run content:export
+          npm run build
+      - name: Publicar
+        env:
+          PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
+          USER: ${{ secrets.HOSTINGER_SSH_USER }}
+          HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          if [ "${{ github.event_name == 'workflow_dispatch' && inputs.target == 'production' && 'production' || 'staging' }}" = "production" ]; then
+            rsync -az --exclude '/uploads/' --exclude '/v3/' -e "ssh -p $PORT" web/dist/ "$USER@$HOST:$DEPLOY_PATH/"
+          else
+            rsync -az --delete --exclude '/uploads/' -e "ssh -p $PORT" web/dist/ "$USER@$HOST:$DEPLOY_PATH/"
+          fi
+      - name: Resumen
+        run: |
+          echo "SHA ${{ github.sha }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Destino ${{ github.event_name == 'workflow_dispatch' && inputs.target || 'staging' }}" >> "$GITHUB_STEP_SUMMARY"
